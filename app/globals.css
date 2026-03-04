@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+/* ===== Base Reset & Global Styles ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --h1-font-size: 9vw;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  scrollbar-width: none;
+  background-color: #f0f1fa;
+  -ms-overflow-style: none;
+  color: #1c1d21;
+  opacity: 1;
+  transition: opacity 0.1s;
+  overscroll-behavior-y: none;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* ===== Home Content Fade ===== */
+
+#home-content {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+#home-content.fade-out {
+  opacity: 0;
+}
+
+/* ===== Button Styles ===== */
+
+a.button {
+  padding: 16px 26px;
+  border-radius: 26px;
+  background-color: #2b2e3a;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+}
+
+a.button:hover {
+  background-color: #0016ec;
+}
+
+/* ===== Project Tile Modal ===== */
+
+.project-tile-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #22232e;
+  color: white;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 1s;
+  z-index: 100;
+}
+
+.project-tile-content.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== Video Panel End Parent ===== */
+
+#video-panel-end-parent {
+  position: relative;
+  width: 100%;
+  margin: 20vh auto 10vh auto;
+  aspect-ratio: 16/9;
+}
+
+@media (min-aspect-ratio: 3/2) {
+  #video-panel-end-parent {
+    height: 70vh;
+    aspect-ratio: unset;
+  }
+}
+
+/* ===== Animated Headings ===== */
+
+#h1-topline.animate {
+  visibility: visible !important;
+  animation: animate-topline 2s forwards;
+}
+
+#h1-tagline.animate {
+  visibility: visible !important;
+  animation: animate-tagline 2s forwards;
+}
+
+@keyframes animate-topline {
+  0% {
+    transform: translateY(var(--h1-font-size));
+  }
+
+  40% {
+    transform: translateY(0);
+    transform: translateX(0);
+    margin-left: 0;
+  }
+
+  100% {
+    transform: translateX(-50%);
+    margin-left: 50%;
+  }
+}
+
+@keyframes animate-tagline {
+  0% {
+    transform: translateY(calc(-1 * var(--h1-font-size)));
+  }
+
+  20% {
+    transform: translateY(calc(-1 * var(--h1-font-size)));
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
