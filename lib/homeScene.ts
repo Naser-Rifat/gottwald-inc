@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
-import { AnimatedTube } from "./animatedTube";
+// import { AnimatedTube } from "./animatedTube";
 import { getDebugGui, initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
 import PhysicsSandbox from "./physicsSandbox";
@@ -16,7 +16,7 @@ export default class HomeScene {
   scene!: THREE.Scene;
   loadingGroup?: LoadingGroup;
   physicsSandbox?: PhysicsSandbox;
-  animatedTube?: AnimatedTube;
+  // animatedTube?: AnimatedTube;
   videoPanel?: VideoPanelShader;
   projectTiles?: ProjectTiles;
   stats?: { dom: HTMLElement; update: () => void };
@@ -90,8 +90,8 @@ export default class HomeScene {
     this.physicsSandbox = new PhysicsSandbox(this.camera);
     this.scene.add(this.physicsSandbox);
 
-    this.animatedTube = new AnimatedTube(this.camera);
-    this.scene.add(this.animatedTube);
+    // this.animatedTube = new AnimatedTube(this.camera);
+    // this.scene.add(this.animatedTube);
 
     this.videoPanel = new VideoPanelShader(this.camera);
     this.scene.add(this.videoPanel);
@@ -118,7 +118,7 @@ export default class HomeScene {
     updateCameraIntrisics(this.camera, this.frustumSize);
 
     this.physicsSandbox?.resize();
-    this.animatedTube?.resize();
+    // this.animatedTube?.resize();
     this.videoPanel?.resize();
     this.projectTiles?.resize();
   };
@@ -129,7 +129,7 @@ export default class HomeScene {
 
     this.loadingGroup?.update(dt);
     this.physicsSandbox?.update(dt);
-    this.animatedTube?.update(dt);
+    // this.animatedTube?.update(dt);
     this.videoPanel?.update();
     this.projectTiles?.update(dt, this.renderer);
 
@@ -154,7 +154,7 @@ export default class HomeScene {
 
     this.renderer?.setAnimationLoop(null);
     this.physicsSandbox?.dispose();
-    this.animatedTube?.dispose();
+    // this.animatedTube?.dispose();
     this.videoPanel?.dispose();
     this.renderer?.dispose();
   };

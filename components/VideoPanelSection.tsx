@@ -40,6 +40,7 @@ export default function VideoPanelSection() {
           Nisi finibus magna pellentesque sapien conubia ante consequat morbi
           at. Ante turpis auctor posuere aptent nostra.
         </p>
+
       </div>
 
       {/* Video panel anchors */}
