@@ -2,35 +2,35 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center py-5 relative z-20 text-white w-full">
-      {/* Logo - LUSION : LABS in bordered rectangle */}
+    <header className="flex justify-between items-center pt-6 pb-4 relative z-20 text-white w-full">
+      {/* Logo */}
       <div className="shrink-0">
         <Link href="/" className="inline-block group">
-          <div className="border-2 border-white px-4 py-2.5 flex items-center gap-1.5 hover:bg-white/10 transition-colors">
-            <span className="text-[13px] font-extrabold tracking-widest leading-none">
+          <div className="border border-white/60 px-4 py-2 flex items-center gap-1.5 hover:bg-white/10 transition-colors">
+            <span className="text-[12px] font-extrabold tracking-[0.15em] leading-none">
               GOTT
             </span>
-            <span className="text-[13px] font-light text-white/40 leading-none">
+            <span className="text-[12px] font-light text-white/30 leading-none">
               :
             </span>
-            <span className="text-[13px] font-extrabold tracking-widest leading-none">
+            <span className="text-[12px] font-extrabold tracking-[0.15em] leading-none">
               WALD
             </span>
           </div>
         </Link>
       </div>
 
-      {/* Navigation links - grouped center-right with tight spacing */}
+      {/* Navigation links */}
       <nav className="flex items-center gap-8">
         <a
           href="#"
-          className="text-[11px] tracking-[0.2em] font-normal hover:text-gray-300 transition-colors"
+          className="text-[11px] tracking-[0.2em] font-normal text-white/70 hover:text-white transition-colors"
         >
           ABOUT
         </a>
         <a
           href="#"
-          className="text-[11px] tracking-[0.2em] font-normal hover:text-gray-300 transition-colors"
+          className="text-[11px] tracking-[0.2em] font-normal text-white/70 hover:text-white transition-colors"
         >
           CONTACT
         </a>
@@ -38,15 +38,15 @@ export default function Header() {
           href="https://lusion.co"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[11px] tracking-[0.2em] font-normal hover:text-gray-300 transition-colors flex items-center gap-1"
+          className="text-[11px] tracking-[0.2em] font-normal text-white/70 hover:text-white transition-colors flex items-center gap-1"
         >
           LUSION <span className="text-[10px]">↗</span>
         </a>
       </nav>
 
-      {/* Right controls: GRID/LIST toggle + B theme icon */}
+      {/* Right controls */}
       <div className="flex items-center gap-5">
-        <div className="flex items-center rounded-full border border-white/40 p-[2px]">
+        <div className="flex items-center rounded-full border border-white/30 p-[2px]">
           <button className="px-3.5 py-1 bg-white text-black rounded-full text-[10px] font-bold tracking-[0.12em]">
             GRID
           </button>
