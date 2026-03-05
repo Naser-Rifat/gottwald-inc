@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 // import { AnimatedTube } from "./animatedTube";
+import CosmicDust from "./cosmicDust";
 import { getDebugGui, initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
 import PhysicsSandbox from "./physicsSandbox";
@@ -17,6 +18,7 @@ export default class HomeScene {
   loadingGroup?: LoadingGroup;
   physicsSandbox?: PhysicsSandbox;
   // animatedTube?: AnimatedTube;
+  cosmicDust?: CosmicDust;
   videoPanel?: VideoPanelShader;
   projectTiles?: ProjectTiles;
   stats?: { dom: HTMLElement; update: () => void };
@@ -68,9 +70,7 @@ export default class HomeScene {
     this.onScroll();
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(
-      window.getComputedStyle(document.body).backgroundColor,
-    );
+    this.scene.background = new THREE.Color(0x000000);
 
     new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -87,8 +87,11 @@ export default class HomeScene {
     });
     this.scene.add(this.loadingGroup);
 
-    this.physicsSandbox = new PhysicsSandbox(this.camera);
-    this.scene.add(this.physicsSandbox);
+    // this.cosmicDust = new CosmicDust();
+    // this.scene.add(this.cosmicDust);
+
+    // this.physicsSandbox = new PhysicsSandbox(this.camera);
+    // this.scene.add(this.physicsSandbox);
 
     // this.animatedTube = new AnimatedTube(this.camera);
     // this.scene.add(this.animatedTube);
@@ -117,7 +120,8 @@ export default class HomeScene {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     updateCameraIntrisics(this.camera, this.frustumSize);
 
-    this.physicsSandbox?.resize();
+    // this.cosmicDust?.resize();
+    // this.physicsSandbox?.resize();
     // this.animatedTube?.resize();
     this.videoPanel?.resize();
     this.projectTiles?.resize();
@@ -128,7 +132,8 @@ export default class HomeScene {
     const dt = this.clock.getDelta();
 
     this.loadingGroup?.update(dt);
-    this.physicsSandbox?.update(dt);
+    // this.cosmicDust?.update(dt);
+    // this.physicsSandbox?.update(dt);
     // this.animatedTube?.update(dt);
     this.videoPanel?.update();
     this.projectTiles?.update(dt, this.renderer);
@@ -153,7 +158,8 @@ export default class HomeScene {
     window.removeEventListener("resize", this.resizeHandler);
 
     this.renderer?.setAnimationLoop(null);
-    this.physicsSandbox?.dispose();
+    // this.cosmicDust?.dispose();
+    // this.physicsSandbox?.dispose();
     // this.animatedTube?.dispose();
     this.videoPanel?.dispose();
     this.renderer?.dispose();
