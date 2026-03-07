@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+
+- Default to App Router and Server Components.
+- Use "use client" only when interactivity or browser APIs are needed.
+- Use client-side fetching (SWR/React Query) only for real-time or user-specific data.
+- Image: always next/image. Links: always next/link.
+- Use loading.tsx/error.tsx for route-level states. Inline for component-level.
+- No hardcoded secrets. Use env variables.

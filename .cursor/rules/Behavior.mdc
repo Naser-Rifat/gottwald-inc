@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+
+## Behavior
+- If ambiguous, state assumption in 1 line then proceed.
+- Never ask "Would you like me to..." — just do it.
+- Prefer patch edits. Full rewrite only when >50% of file changes.
+- Never repeat unchanged code.
+- Handle errors explicitly. No silent catches.
+- Remove unused imports and dead code.
+- No explanation unless asked or logic is non-obvious.

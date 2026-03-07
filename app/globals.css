@@ -1,44 +1,53 @@
 @import "tailwindcss";
 
+@theme {
+  --color-base: #000000;
+  --color-text-primary: #1c1d21;
+  --color-text-secondary: rgba(255, 255, 255, 0.5);
+  --spacing-gutter: 5vw;
+}
+
 /* ===== Base Reset & Global Styles ===== */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-:root {
-  --h1-font-size: 9vw;
-}
+  :root {
+    --h1-font-size: 9vw;
+  }
 
-html {
-  scroll-behavior: smooth;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-}
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
 
-body {
-  margin: 0;
-  scrollbar-width: none;
-  background-color: #000000;
-  -ms-overflow-style: none;
-  color: #1c1d21;
-  opacity: 1;
-  transition: opacity 0.1s;
-  overscroll-behavior-y: none;
-}
+  body {
+    margin: 0;
+    scrollbar-width: none;
+    background-color: var(--color-base);
+    -ms-overflow-style: none;
+    color: var(--color-text-primary);
+    opacity: 1;
+    transition: opacity 0.1s;
+    overscroll-behavior-y: none;
+  }
 
-body.no-scroll {
-  overflow: hidden;
-}
+  body.no-scroll {
+    overflow: hidden;
+  }
 
-::-webkit-scrollbar {
-  display: none;
-}
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
-::-webkit-scrollbar-button {
-  display: none;
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
 }
 
 /* ===== Home Content Fade ===== */
@@ -147,5 +156,19 @@ a.button:hover {
 
   100% {
     transform: translateY(0);
+  }
+}
+
+/* ===== Next Page Transition Flash ===== */
+
+@keyframes flash-out {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

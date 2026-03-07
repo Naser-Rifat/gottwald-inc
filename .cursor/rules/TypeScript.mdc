@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+
+- Strict types. No `any`. Use `unknown` + narrowing for complex types.
+- If forced to use type assertion, add a TODO comment explaining why.
+- const > let. Never var.
+- async/await over .then()
+- camelCase vars, PascalCase components/types.
+- Keep functions single-responsibility. Split only when doing 2+ things.
+- Early returns over nested ifs.

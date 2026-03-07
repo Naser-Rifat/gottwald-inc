@@ -1,0 +1,9 @@
+---
+alwaysApply: true
+---
+
+- Tailwind only. No inline styles. No CSS modules unless asked.
+- Mobile-first. Use sm: md: lg: breakpoints consistently.
+- Avoid arbitrary values like w-[123px] unless no Tailwind equivalent exists.
+- No !important overrides. No mixing Tailwind with inline styles.
+- Break long className strings into multiple lines for readability.

@@ -2,7 +2,7 @@ export default function VideoPanelSection() {
   return (
     <section
       id="video-panel-section"
-      className="flex flex-col px-[5vw] w-screen min-h-screen pt-[15vh] pb-[10vh]"
+      className="flex flex-col px-[5vw] w-full min-h-screen py-[15vh]"
     >
       {/* Animated headings */}
       <div className="about-headers pb-[8vh]">
