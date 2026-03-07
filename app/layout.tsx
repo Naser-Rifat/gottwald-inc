@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={satoshi.variable}>
+    <html lang="en" className={satoshi.variable} suppressHydrationWarning>
       <body className="bg-base text-text-primary font-sans antialiased">
         {children}
       </body>
