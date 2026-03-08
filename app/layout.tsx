@@ -4,8 +4,9 @@ import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
 import CustomCursor from "@/components/CustomCursor";
-import TransitionProvider from "@/components/TransitionProvider";
 import NoiseOverlay from "@/components/NoiseOverlay";
+import RouteCleanup from "@/components/RouteCleanup";
+import DomSafetyPatch from "@/components/DomSafetyPatch";
 
 const satoshi = localFont({
   src: [
@@ -50,6 +51,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-black text-text-primary font-sans antialiased">
+        <DomSafetyPatch />
+        <RouteCleanup />
         <GlobalCanvas />
         <NoiseOverlay />
         <CustomCursor />

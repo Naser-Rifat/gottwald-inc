@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
+import NextChapterTransition from "@/components/NextChapterTransition";
 import React from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -747,6 +748,7 @@ export default function AboutPage() {
       </main>
 
       <FooterSection />
+      <NextChapterTransition nextTitle="PARTNERSHIP" nextHref="/partnership" />
     </div>
   );
 }

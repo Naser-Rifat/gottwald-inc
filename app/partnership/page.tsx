@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
+import NextChapterTransition from "@/components/NextChapterTransition";
 import Link from "next/link";
 import {
   MANIFESTO_LINES,
@@ -613,6 +614,9 @@ export default function PartnershipPage() {
         <section className="relative z-10 bg-[#0a0a0a]">
           <FooterSection />
         </section>
+
+        {/* ── NEXT CHAPTER ── */}
+        <NextChapterTransition nextTitle="CAREERS" nextHref="/careers" />
       </main>
     </div>
   );

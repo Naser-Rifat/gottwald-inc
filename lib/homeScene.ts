@@ -156,14 +156,36 @@ export default class HomeScene {
 
   dispose = () => {
     this.isDisposed = true;
+
+    // 1. Stop the animation loop IMMEDIATELY
+    this.renderer?.setAnimationLoop(null);
+
+    // 2. Remove all event listeners
     window.removeEventListener("scroll", this.scrollHandler);
     window.removeEventListener("resize", this.resizeHandler);
 
-    this.renderer?.setAnimationLoop(null);
-    // this.cosmicDust?.dispose();
-    // this.physicsSandbox?.dispose();
-    // this.animatedTube?.dispose();
+    // 3. Dispose scene children
     this.videoPanel?.dispose();
-    this.renderer?.dispose();
+
+    // 4. Clear the scene
+    if (this.scene) {
+      this.scene.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry?.dispose();
+          if (Array.isArray(object.material)) {
+            object.material.forEach((m) => m.dispose());
+          } else {
+            object.material?.dispose();
+          }
+        }
+      });
+      this.scene.clear();
+    }
+
+    // 5. Force WebGL context loss to release GPU resources
+    if (this.renderer) {
+      this.renderer.forceContextLoss();
+      this.renderer.dispose();
+    }
   };
 }
