@@ -35,6 +35,11 @@ const MENU_ITEMS = [
     href: "/careers",
     motto: "JOIN OUR AWARD-WINNING TEAM.",
   },
+  {
+    title: "PARTNERSHIP",
+    href: "/partnership",
+    motto: "ALIGNMENT. NOT PROCUREMENT.",
+  },
 ];
 
 export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {

@@ -5,6 +5,7 @@ import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
 import CustomCursor from "@/components/CustomCursor";
 import TransitionProvider from "@/components/TransitionProvider";
+import NoiseOverlay from "@/components/NoiseOverlay";
 
 const satoshi = localFont({
   src: [
@@ -50,6 +51,7 @@ export default function RootLayout({
     >
       <body className="bg-black text-text-primary font-sans antialiased">
         <GlobalCanvas />
+        <NoiseOverlay />
         <CustomCursor />
         {children}
       </body>
