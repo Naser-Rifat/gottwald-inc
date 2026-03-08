@@ -125,6 +125,18 @@ export default class LoadingGroup extends THREE.Group {
         1,
       );
 
+      // Fade in the dark fluid in perfect sync with the WebGL background vanishing
+      if (this.postLoadSequenceProgress.value >= 0.8) {
+        let t = (this.postLoadSequenceProgress.value - 0.8) / 0.2;
+        t = Math.max(0, Math.min(1, t));
+        const smoothstep = t * t * (3 - 2 * t);
+
+        const gc = document.getElementById("global-fluid-canvas");
+        if (gc) {
+          gc.style.opacity = smoothstep.toString();
+        }
+      }
+
       if (this.postLoadSequenceProgress.value === 1) {
         this.isSequenceFinished = true;
 

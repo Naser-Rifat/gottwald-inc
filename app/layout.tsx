@@ -1,18 +1,35 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
+import GlobalCanvas from "@/components/GlobalCanvas";
+import CustomCursor from "@/components/CustomCursor";
+import TransitionProvider from "@/components/TransitionProvider";
 
 const satoshi = localFont({
   src: [
     {
-      path: "../public/fonts/satoshi-variable.woff2",
+      path: "../public/fonts/Satoshi-Variable.woff2",
       weight: "300 900",
       style: "normal",
     },
+    {
+      path: "../public/fonts/Satoshi-VariableItalic.woff2",
+      weight: "300 900",
+      style: "italic",
+    },
   ],
-  variable: "--font-satoshi",
+  variable: "--font-sans",
   display: "swap",
   preload: true,
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -26,8 +43,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={satoshi.variable} suppressHydrationWarning>
-      <body className="bg-base text-text-primary font-sans antialiased">
+    <html
+      lang="en"
+      className={`${satoshi.variable} ${playfair.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="bg-black text-text-primary font-sans antialiased">
+        <GlobalCanvas />
+        <CustomCursor />
         {children}
       </body>
     </html>

@@ -59,24 +59,31 @@ export default function PhysicsSandboxSection() {
         {/* Left: Label + Title */}
         <div className="flex-1">
           <div className="mb-5 text-[10px] md:text-[11px] tracking-[0.35em] text-white/35 font-normal uppercase">
-            LABS AREA
+            GOTT WALD
           </div>
           <h1
-            className="font-bold tracking-[-0.03em] leading-[0.88]"
+            className="font-bold tracking-[-0.03em] leading-[0.88] mix-blend-difference text-white/90 z-30 relative"
             style={{ fontSize: "clamp(2.8rem, 7vw, 9rem)" }}
           >
-            PLAY GROUND
+            WE TURN
             <br />
-            R&D COLLECTION
+            COMPLEXITY
             <br />
-            EXPERIMENTS
+            INTO INEVITABILITY.
           </h1>
         </div>
 
         {/* Right: Description — anchored to bottom of title block, cleared above scroll zone */}
-        <div className="hidden md:block max-w-[22rem] text-white/45 text-[13px] leading-[1.75] pointer-events-auto self-end pb-24">
-          A space dedicated to anticipate how new technologies will affect
-          brands and how we interact with them through R&D.
+        <div className="hidden md:block max-w-[22rem] pointer-events-auto self-end pb-24 flex flex-col items-start gap-8">
+          <p className="text-white/60 text-[18px] font-serif italic leading-[1.6]">
+            One system. One standard. Outcomes that hold.
+          </p>
+          <button className="h-[46px] mt-6 rounded-full bg-white text-black flex items-center gap-3 px-6 hover:bg-white/90 transition-colors">
+            <span className="w-1.5 h-1.5 bg-black rounded-full" />
+            <span className="text-[11px] font-bold tracking-[0.1em] uppercase mt-[1px]">
+              Request a Strategic Conversation
+            </span>
+          </button>
         </div>
       </div>
 
@@ -85,7 +92,7 @@ export default function PhysicsSandboxSection() {
         ref={scrollIndicatorRef}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-auto z-10 opacity-0"
       >
-        <span className="text-[9px] tracking-[0.3em] uppercase text-white/40 font-medium">
+        <span className="text-[10px] tracking-[0.3em] uppercase text-white/40 font-bold">
           Scroll
         </span>
         <div className="relative flex items-center justify-center">

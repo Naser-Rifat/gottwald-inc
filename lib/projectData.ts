@@ -19,40 +19,33 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: "dream-machine",
-    title: "Porsche:\nDream Machine",
-    tags: ["CONCEPT", "3D ILLUSTRATION", "MOGRAPH", "VIDEO"],
+    slug: "solution-finder",
+    title: "Solution Finder",
+    tags: ["CONSULTING", "STRATEGY"],
     image: "/assets/projects/dream-machine.png",
-    description:
-      "Lusion was commissioned by Wallpaper* and Porsche GB to create a CG short film captured the visionary dreams of Porsche's founder, Ferry Porsche.",
+    description: "Root cause. Leverage. Sequence.",
     details:
-      "Our Creative Director Edan Kwan introduced a 4 phases journey to take the audiences through the evolution of Porsche's sports cars through digital art and motion graphics. The artwork was also made public at Outernet features 23,000 square feet of giant wrap-around, floor-to-ceiling 16K LED screens in central London.",
-    services: ["Concept", "3D Design", "Motion Design", "Compositing"],
-    recognitions: ["Wallpaper*", "Porsche Newsroom", "Litsuit"],
+      "A strategic dissection of your core challenges, mapping the precise sequence of operations required to unblock growth and eliminate friction within the ecosystem.",
+    services: ["Diagnostics", "Strategic Positioning", "Risk Analysis"],
     theme: {
-      background: "#ead1ce",
-      text: "#000000",
-      accent: "#8c1e22",
+      background: "#121212",
+      text: "#ffffff",
+      accent: "#d4af37",
     },
   },
   {
-    slug: "synthetic-human",
-    title: "Synthetic\nHuman",
-    tags: ["WEB", "DESIGN", "DEVELOPMENT", "3D"],
+    slug: "consulting",
+    title: "Consulting",
+    tags: ["STRUCTURE", "OPERATIONS"],
     image: "/assets/projects/synthetic-human.png",
-    description:
-      "We worked with Fantasy to launch the campaign website for their new AI product Synthetic Humans.",
+    description: "Structure that makes decisions inevitable.",
     details:
-      "In the project, we developed a system in Houdini FX to optimize the high quality 3D assets and built the interactive front-end layer of the website. We also designed and developed the procedural animations and other vfx used in the experience.",
+      "Transforming complex, ambiguous environments into highly structured operational frameworks. We don't advise; we architect paths of least resistance.",
     services: [
-      "Creative Direction",
-      "Design",
-      "3D Development",
-      "WebGL",
-      "Animation",
+      "Process Architecture",
+      "Executive Alignment",
+      "Decision Frameworks",
     ],
-    recognitions: ["Awwwards SOTD", "FWA of the Day", "Webby Nominee"],
-    launchUrl: "https://synthetic-humans.ai/",
     theme: {
       background: "#b7adfd",
       text: "#101018",
@@ -60,20 +53,17 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "spatial-fusion",
-    title: "Meta:\nSpatial Fusion",
-    tags: ["WEB", "DESIGN", "DEVELOPMENT", "3D"],
+    slug: "marketing-communication",
+    title: "Marketing &\nCommunication",
+    tags: ["BRAND", "MEDIA"],
     image: "/assets/projects/spatial-fusion.png",
-    description:
-      "A mixed reality experience for Meta Quest, blending physical and digital worlds through spatial computing.",
+    description: "Trust infrastructure — not campaigns.",
     details:
-      "Interactive crystal environments respond to user presence and gesture. We pushed the boundaries of WebXR to create an immersive AR experience that seamlessly merges digital objects with the physical world.",
+      "Building a communication ecosystem grounded in irrefutable reality. We generate authority and trust through exact language and systemic narrative distribution rather than fleeting advertisements.",
     services: [
-      "Concept",
-      "WebXR Development",
-      "3D Modeling",
-      "Spatial Design",
-      "Interaction Design",
+      "Narrative Architecture",
+      "Digital Presence",
+      "Authority Building",
     ],
     theme: {
       background: "#1e1332",
@@ -82,25 +72,48 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "choo-choo-world",
-    title: "Choo Choo\nWorld",
-    tags: ["CONCEPT", "WEB", "GAME DESIGN", "3D"],
+    slug: "it-solutions-2030",
+    title: "IT Solutions 2030",
+    tags: ["TECHNOLOGY", "SYSTEMS"],
     image: "/assets/projects/choo-choo-world.png",
-    description:
-      "A whimsical interactive game world featuring miniature landscapes, trains, and playful architecture.",
+    description: "Your website as a growth engine.",
     details:
-      "Designed to bring joy through colorful, toy-like 3D environments. Players explore a vibrant floating island filled with charming buildings, winding railroads, and delightful surprises around every corner.",
-    services: [
-      "Game Design",
-      "3D World Building",
-      "Character Design",
-      "WebGL Development",
-      "Sound Design",
-    ],
+      "Engineering future-proof digital assets capable of supporting elite-level scale without technical debt. From underlying architecture to front-facing conversion mechanisms.",
+    services: ["Web Development", "System Integration", "Data Security"],
     theme: {
       background: "#a5d6a7",
       text: "#1e3a1f",
       accent: "#2e7d32",
+    },
+  },
+  {
+    slug: "coaching-mentoring",
+    title: "Coaching &\nMentoring",
+    tags: ["LEADERSHIP", "PERFORMANCE"],
+    image: "/assets/projects/dream-machine.png",
+    description: "Sustainable performance from the inside out.",
+    details:
+      "Fostering alignment between personal capacity and executive demands. Equipping leaders with the frequency and resilience required to command complex ecosystems.",
+    services: ["Executive Coaching", "Performance Metrics", "Mindset Tuning"],
+    theme: {
+      background: "#ead1ce",
+      text: "#000000",
+      accent: "#8c1e22",
+    },
+  },
+  {
+    slug: "structure-deployment",
+    title: "Structure\nDeployment",
+    tags: ["EXECUTION", "COMPLIANCE"],
+    image: "/assets/projects/synthetic-human.png",
+    description: "Clean setup. Compliant. Operational from day one.",
+    details:
+      "The physical application of strategic planning. We embed our frameworks deeply into your operational reality, ensuring total compliance and immediate velocity.",
+    services: ["Implementation", "Compliance Audits", "Operational Rollout"],
+    theme: {
+      background: "#111111",
+      text: "#ffffff",
+      accent: "#d4af37",
     },
   },
 ];

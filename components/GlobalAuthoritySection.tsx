@@ -1,582 +1,331 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-/* ──────────────────────────────────────────────
-   GEOGRAPHIC DATA — real lat/lng coordinates
-   ────────────────────────────────────────────── */
-
-interface MapMarker {
-  name: string;
-  lat: number;
-  lng: number;
-  tier: "control" | "hub" | "presence";
-}
-
-const markers: MapMarker[] = [
-  // ── Control Node ──
-  { name: "Tbilisi", lat: 41.72, lng: 44.79, tier: "control" },
-
-  // ── Strategic Hubs (DACH) ──
-  { name: "Munich", lat: 48.14, lng: 11.58, tier: "hub" },
-  { name: "Vienna", lat: 48.21, lng: 16.37, tier: "hub" },
-  { name: "Zurich", lat: 47.38, lng: 8.54, tier: "hub" },
-
-  // ── Active Presence (26 countries) ──
-  { name: "London", lat: 51.51, lng: -0.13, tier: "presence" },
-  { name: "Paris", lat: 48.86, lng: 2.35, tier: "presence" },
-  { name: "Amsterdam", lat: 52.37, lng: 4.9, tier: "presence" },
-  { name: "Stockholm", lat: 59.33, lng: 18.07, tier: "presence" },
-  { name: "Madrid", lat: 40.42, lng: -3.7, tier: "presence" },
-  { name: "Rome", lat: 41.9, lng: 12.5, tier: "presence" },
-  { name: "Warsaw", lat: 52.23, lng: 21.01, tier: "presence" },
-  { name: "Prague", lat: 50.08, lng: 14.44, tier: "presence" },
-  { name: "Istanbul", lat: 41.01, lng: 28.98, tier: "presence" },
-  { name: "Dubai", lat: 25.2, lng: 55.27, tier: "presence" },
-  { name: "Singapore", lat: 1.35, lng: 103.82, tier: "presence" },
-  { name: "Tokyo", lat: 35.68, lng: 139.69, tier: "presence" },
-  { name: "New York", lat: 40.71, lng: -74.01, tier: "presence" },
-  { name: "São Paulo", lat: -23.55, lng: -46.63, tier: "presence" },
-  { name: "Sydney", lat: -33.87, lng: 151.21, tier: "presence" },
-  { name: "Nairobi", lat: -1.29, lng: 36.82, tier: "presence" },
-  { name: "Mumbai", lat: 19.08, lng: 72.88, tier: "presence" },
-  { name: "Seoul", lat: 37.57, lng: 127.0, tier: "presence" },
-  { name: "Helsinki", lat: 60.17, lng: 24.94, tier: "presence" },
-  { name: "Bucharest", lat: 44.43, lng: 26.1, tier: "presence" },
-  { name: "Brussels", lat: 50.85, lng: 4.35, tier: "presence" },
-  { name: "Copenhagen", lat: 55.68, lng: 12.57, tier: "presence" },
-  { name: "Lisbon", lat: 38.72, lng: -9.14, tier: "presence" },
-  { name: "Tallinn", lat: 59.44, lng: 24.75, tier: "presence" },
-  { name: "Cape Town", lat: -33.93, lng: 18.42, tier: "presence" },
-];
-
-/**
- * Convert lat/lng → % position on the Wikimedia SVG map.
- * The SVG uses a standard equirectangular (plate carrée) projection:
- * - Longitude: -180° → +180° maps to 0% → 100% (x)
- * - Latitude:  ~90°N → ~90°S maps to 0% → 100% (y)
- */
-function geoToPercent(lat: number, lng: number) {
-  const x = ((lng + 180) / 360) * 100;
-  const y = ((90 - lat) / 180) * 100;
-  return { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) };
-}
-
-/* ──────────────────────────────────────────────
-   COMPONENT
-   ────────────────────────────────────────────── */
+import Image from "next/image";
 
 export default function GlobalAuthoritySection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const copyRef = useRef<HTMLDivElement>(null);
-  const legendRef = useRef<HTMLDivElement>(null);
-  const [counters, setCounters] = useState({
-    countries: 0,
-    partners: 0,
-    languages: 0,
-    capacity: 0,
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const metricsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
     const ctx = gsap.context(() => {
-      // Setup initial state for elements before timeline so they don't flash
-      const mapImg = mapContainerRef.current?.querySelector(".world-map-img");
-      if (mapImg) gsap.set(mapImg, { opacity: 0, scale: 1.05 });
-
-      const dataStreams =
-        mapContainerRef.current?.querySelectorAll(".data-stream-path");
-      if (dataStreams)
-        gsap.set(dataStreams, { strokeDashoffset: 1, opacity: 0 });
-
-      // Master Choreography Timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 65%",
-          toggleActions: "play none none none",
+      // Fade in the section on scroll
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 70%",
+          },
         },
-      });
+      );
 
-      // --- SECTION 1: Copy & Map Fade In ---
-      if (copyRef.current) {
-        const els = copyRef.current.querySelectorAll(".ga-animate");
-        tl.fromTo(
-          els,
-          { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.1 },
-          0,
-        );
-      }
-
-      if (mapImg) {
-        tl.to(
-          mapImg,
-          { opacity: 0.8, scale: 1, duration: 1.5, ease: "power2.out" },
-          0.2,
-        );
-      }
-
-      // --- SECTION 2: Node Ignition Sequence ---
-      if (mapContainerRef.current) {
-        const controlPin =
-          mapContainerRef.current.querySelectorAll(".pin-control");
-        const hubPins = mapContainerRef.current.querySelectorAll(".pin-hub");
-        const presencePins =
-          mapContainerRef.current.querySelectorAll(".pin-presence");
-
-        // Ignite Control Node
-        tl.fromTo(
-          controlPin,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(2)" },
-          0.5,
-        );
-
-        // Ignite Strategic Hubs
-        tl.fromTo(
-          hubPins,
-          { scale: 0, opacity: 0 },
+      // Stagger text elements (Left Column)
+      if (textRef.current) {
+        gsap.fromTo(
+          textRef.current.children,
+          { y: 30, opacity: 0 },
           {
-            scale: 1,
+            y: 0,
             opacity: 1,
-            duration: 0.5,
-            ease: "back.out(2.5)",
+            duration: 1,
             stagger: 0.1,
-          },
-          0.7,
-        );
-
-        // Stagger Ignite Presence Points
-        tl.fromTo(
-          presencePins,
-          { scale: 0, opacity: 0 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out",
-            stagger: 0.02,
-          },
-          0.9,
-        );
-
-        // --- SECTION 3: Draw SVG Data Streams ---
-        if (dataStreams) {
-          tl.to(
-            dataStreams,
-            {
-              strokeDashoffset: 0,
-              opacity: 0.5,
-              duration: 1.2,
-              ease: "power2.inOut",
-              stagger: 0.01,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: textRef.current,
+              start: "top 80%",
             },
-            1.2,
-          );
-        }
-      }
-
-      // --- SECTION 4: Show Legend ---
-      if (legendRef.current) {
-        tl.fromTo(
-          legendRef.current,
-          { y: 16, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
-          1.5,
+          },
         );
       }
 
-      // --- SECTION 5: Start Data Metrics Tick ---
-      // We trigger the state updates precisely when the lines finish drawing
-      tl.add(() => {
-        [
-          { key: "countries", to: 26, dur: 1.5 },
-          { key: "partners", to: 71, dur: 1.8 },
-          { key: "languages", to: 17, dur: 1.3 },
-          { key: "capacity", to: 888, dur: 2.2 },
-        ].forEach(({ key, to, dur }) => {
-          const obj = { val: 0 };
-          gsap.to(obj, {
-            val: to,
-            duration: dur,
-            ease: "power2.out",
-            onUpdate: () =>
-              setCounters((prev) => ({
-                ...prev,
-                [key]: Math.round(obj.val),
-              })),
-          });
-        });
-      }, 1.8);
+      // Stagger HUD elements (Right Column)
+      if (hudRef.current) {
+        gsap.fromTo(
+          hudRef.current.children,
+          { x: 30, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.2, // slightly slower stagger for the HUD to sequence after the left text
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: textRef.current, // trigger based on left column so they start together
+              start: "top 80%",
+            },
+          },
+        );
+      }
 
-      // Note: Removed old 'pulseRings' GSAP block.
-      // Pulse effects are now purely driven by 60fps CSS @keyframes (animate-ping-large)
-    }, section);
+      // Stagger bottom metrics
+      if (metricsRef.current) {
+        gsap.fromTo(
+          metricsRef.current.children,
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: textRef.current,
+              start: "top 80%",
+            },
+          },
+        );
+      }
+    });
 
     return () => ctx.revert();
   }, []);
 
   return (
     <section
-      ref={sectionRef}
-      className="relative w-full min-h-screen bg-gradient-to-b from-transparent via-[#0a0a0a] to-[#0a0a0a] overflow-hidden flex flex-col"
+      ref={containerRef}
+      className="relative w-full min-h-screen bg-transparent overflow-hidden flex flex-col justify-center items-center py-20 px-[5vw]"
     >
-      {/* ── Top Copy ── */}
-      <div ref={copyRef} className="relative z-[15] pt-[15vh] px-[5vw]">
-        <p
-          className="ga-animate"
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.3)",
-            marginBottom: "12px",
-            opacity: 0,
-          }}
-        >
-          01 — Global Authority
-        </p>
-        <h2
-          className="ga-animate"
-          style={{
-            fontSize: "clamp(2rem, 4vw, 3.6rem)",
-            fontWeight: 700,
-            color: "#fff",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-            marginBottom: "16px",
-            opacity: 0,
-          }}
-        >
-          GLOBAL AUTHORITY.
-        </h2>
-        <p
-          className="ga-animate"
-          style={{
-            fontSize: "14px",
-            lineHeight: 1.75,
-            color: "rgba(255,255,255,0.5)",
-            maxWidth: "540px",
-            marginBottom: "6px",
-            opacity: 0,
-          }}
-        >
-          A global operating system for strategic assets and engineered systems
-          — coordinated from our Head Office in Tbilisi and deployed worldwide.
-        </p>
-        <p
-          className="ga-animate"
-          style={{
-            fontSize: "12px",
-            lineHeight: 1.7,
-            color: "rgba(255,255,255,0.3)",
-            maxWidth: "460px",
-            opacity: 0,
-          }}
-        >
-          Not loud. Effective. Precise, responsibility-led, long-term.
-        </p>
-      </div>
-
-      {/* ═══════ MAP AREA ═══════ */}
-      {/* Container with known dimensions so pin coordinates align */}
+      {/* Background Map Container */}
       <div
-        ref={mapContainerRef}
+        className="absolute inset-0 w-full h-[120%] -top-[10%] z-0 pointer-events-none flex items-center justify-center opacity-90"
         style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
         }}
       >
-        {/* SVG World Map — real Wikimedia Commons vector, perfectly crisp */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/world-map-dark.svg"
-          alt="Global presence map"
-          className="world-map-img"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center 35%",
-            opacity: 0.8,
-          }}
-        />
+        <div className="relative w-[150%] md:w-[120%] lg:w-[90%] max-w-[1600px] aspect-[1.47]">
+          <Image
+            src="/assets/world-map-dark.svg"
+            alt="Global Network Map"
+            fill
+            className="object-contain opacity-20"
+            priority
+          />
 
-        {/* ── LIVE NETWORK LAYER (SVG DATA LINES) ── */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-[9]"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient
-              id="line-gradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop offset="0%" stopColor="rgba(77, 166, 255, 0)" />
-              <stop offset="50%" stopColor="rgba(77, 166, 255, 0.5)" />
-              <stop offset="100%" stopColor="rgba(255, 180, 60, 0.8)" />
-            </linearGradient>
-          </defs>
-          {markers.map((m, idx) => {
-            if (m.tier === "control") return null;
-            // Control Node Position (Tbilisi) mapped to %
-            const startNode = geoToPercent(41.72, 44.79);
-            const endNode = geoToPercent(m.lat, m.lng);
+          {/* Radar Scanning Line */}
+          <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden rounded-full opacity-30 mix-blend-screen hidden md:block">
+            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent animate-[scan_6s_linear_infinite] absolute" />
+          </div>
 
-            return (
-              <path
-                key={`curve-${idx}`}
-                d={`M ${startNode.x}% ${startNode.y}% Q ${endNode.x}% ${startNode.y}% ${endNode.x}% ${endNode.y}%`}
-                fill="none"
-                stroke="url(#line-gradient)"
-                strokeWidth="1.5"
-                pathLength="1"
-                strokeDasharray="1"
-                className="data-stream-path"
+          {/* Connected Map Nodes (Animated) */}
+          <div
+            ref={hudRef}
+            className="absolute inset-0 w-full h-full pointer-events-auto"
+          >
+            {/* 1. Tbilisi Control Node */}
+            <div className="absolute top-[32%] left-[58%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+              {/* Precision Dot */}
+              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10" />
+              {/* Radar Rings */}
+              <div
+                className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full border border-[#d4af37]/40 animate-ping"
+                style={{ animationDuration: "3s" }}
               />
-            );
-          })}
-        </svg>
-
-        {/* ── Location pin overlays ── */}
-        {markers.map((m) => {
-          const pos = geoToPercent(m.lat, m.lng);
-
-          if (m.tier === "control") {
-            return (
               <div
-                key={m.name}
-                className="pin-control"
-                style={{
-                  position: "absolute",
-                  left: `${pos.x}%`,
-                  top: `${pos.y}%`,
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 20,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <div className="relative">
-                  {/* Expanding pulse */}
-                  <div className="absolute inset-0 rounded-full bg-[#ffb43c] animate-ping-large" />
-                  {/* Core dot */}
-                  <div
-                    className="relative"
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      backgroundColor: "#ffb43c",
-                      borderRadius: "50%",
-                      border: "1.5px solid rgba(255,255,255,0.8)",
-                      boxShadow: "0 0 10px rgba(255,180,60,0.8)",
-                    }}
-                  />
-                </div>
-                <p
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: 500,
-                    color: "rgba(255,180,60,0.9)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    marginTop: "6px",
-                  }}
-                >
-                  {m.name}
-                </p>
-              </div>
-            );
-          }
-
-          // Hubs (DACH)
-          if (m.name.includes("Hub")) {
-            return (
-              <div
-                key={m.name}
-                className="pin-hub"
-                style={{
-                  position: "absolute",
-                  left: `${pos.x}%`,
-                  top: `${pos.y}%`,
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 15,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <div className="relative">
-                  {/* Expanding pulse */}
-                  <div className="absolute inset-0 rounded-full bg-[#4da6ff] animate-ping-medium" />
-                  {/* Core dot */}
-                  <div
-                    className="relative"
-                    style={{
-                      width: "7px",
-                      height: "7px",
-                      backgroundColor: "#4da6ff",
-                      borderRadius: "50%",
-                      border: "1px solid rgba(255,255,255,0.6)",
-                      boxShadow: "0 0 8px rgba(77,166,255,0.6)",
-                    }}
-                  />
-                </div>
-                <p
-                  style={{
-                    fontSize: "8px",
-                    color: "rgba(77,166,255,0.65)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    marginTop: "4px",
-                  }}
-                >
-                  {m.name}
-                </p>
-              </div>
-            );
-          }
-
-          // Presence dot
-          return (
-            <div
-              key={m.name}
-              className="pin-presence"
-              style={{
-                position: "absolute",
-                left: `${pos.x}%`,
-                top: `${pos.y}%`,
-                transform: "translate(-50%, -50%)",
-                zIndex: 10,
-              }}
-            >
-              <div
-                style={{
-                  width: "4px",
-                  height: "4px",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(255,255,255,0.35)",
-                  boxShadow: "0 0 4px rgba(255,255,255,0.15)",
-                }}
+                className="absolute w-24 h-24 md:w-32 md:h-32 rounded-full border border-[#d4af37]/10 animate-ping hidden md:block"
+                style={{ animationDuration: "3s", animationDelay: "1s" }}
               />
+
+              {/* Tech Line Connector & HUD */}
+              <div className="hidden md:flex absolute top-1/2 left-4 items-center">
+                <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-[#d4af37]/60 to-[#d4af37]/10" />
+                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-[#d4af37]/30 pl-4 w-max backdrop-blur-sm bg-base/30 rounded-r-lg pr-4">
+                  <h4 className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[10px]">
+                    01 — HEAD OFFICE
+                  </h4>
+                  <p className="text-white font-serif italic text-2xl lg:text-3xl my-1">
+                    Tbilisi, Georgia
+                  </p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-[9px] uppercase tracking-widest text-white/50">
+                    <span className="text-white/80">Governance</span>
+                    <span>/</span>
+                    <span className="text-white/80">Engineering</span>
+                    <span>/</span>
+                    <span className="text-white/80">Quality</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          );
-        })}
-      </div>
 
-      {/* ── GRADIENT FADES ── */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[30%] z-[8] pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.6) 40%, transparent 100%)",
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[40%] z-[8] pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, #000 0%, #000 15%, rgba(0,0,0,0.8) 45%, transparent 100%)",
-        }}
-      />
+            {/* 2. DACH Hubs (Munich Anchored) */}
+            <div className="absolute top-[28%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+              {/* Precision Dot */}
+              <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10" />
+              {/* Radar Rings */}
+              <div
+                className="absolute w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/30 animate-ping hidden md:block"
+                style={{ animationDuration: "4s" }}
+              />
 
-      {/* Spacer to push stats bar down */}
-      <div style={{ flex: 1 }} />
-
-      {/* ── STATS & TYPOGRAPHY SECTION ── */}
-      <div className="relative z-[15] flex flex-col items-center w-full px-[5vw] pb-12 pt-8 border-t border-white/5 bg-gradient-to-t from-black to-transparent">
-        {/* Caption moved above stats */}
-        <p className="text-[11px] md:text-[12px] text-white/40 tracking-[0.25em] hoverline uppercase mb-8 font-medium">
-          Centralized in Tbilisi. Adopted worldwide.
-        </p>
-
-        {/* Stats Grid */}
-        <div className="flex justify-center gap-12 md:gap-32 flex-wrap max-w-6xl w-full">
-          {[
-            { val: counters.countries, suffix: "", label: "Countries" },
-            { val: counters.partners, suffix: "", label: "Partner Origins" },
-            { val: counters.languages, suffix: "", label: "Languages" },
-            { val: counters.capacity, suffix: "±", label: "Network Capacity" },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="text-center flex flex-col items-center"
-            >
-              <span className="text-4xl md:text-5xl lg:text-[4rem] font-light text-white tracking-tight leading-none drop-shadow-lg">
-                {s.val}
-                {s.suffix}
-              </span>
-              <p className="text-[9px] md:text-[10px] text-white/30 tracking-[0.2em] uppercase mt-4">
-                {s.label}
-              </p>
+              {/* Tech Line Connector & HUD - Pointing Down */}
+              <div className="hidden md:flex absolute top-4 left-1/2 -translate-x-1/2 flex-col items-center">
+                <div className="h-10 lg:h-16 w-px bg-gradient-to-b from-white/60 to-white/10" />
+                <div className="flex flex-col gap-1 items-center mt-3 pt-3 border-t border-white/20 px-6 backdrop-blur-sm bg-base/20 rounded-b-lg w-max">
+                  <h4 className="text-white/80 font-bold tracking-[0.3em] uppercase text-[9px]">
+                    02 — STRATEGIC HUBS
+                  </h4>
+                  <p className="text-white font-light tracking-wide text-xl my-1">
+                    DACH Region
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[8px] uppercase tracking-[0.2em] text-white/40">
+                    <span className="text-white/70">Germany</span>
+                    <span>/</span>
+                    <span className="text-white/70">Austria</span>
+                    <span>/</span>
+                    <span className="text-white/70">Switzerland</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+
+            {/* Vienna & Zurich Micro Nodes */}
+            <div className="absolute top-[28.5%] left-[51%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
+            <div className="absolute top-[29%] left-[49%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
+
+            {/* Footprints */}
+            <div className="absolute top-[38%] left-[23%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+            <div className="absolute top-[25%] left-[20%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+            <div className="absolute top-[45%] left-[65%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+            <div className="absolute top-[30%] left-[75%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+            <div className="absolute top-[65%] left-[30%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+            <div className="absolute top-[75%] left-[80%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
+          </div>
         </div>
       </div>
 
-      {/* ── Legend (bottom-right) ── */}
-      <div
-        ref={legendRef}
-        className="absolute bottom-32 md:bottom-20 right-[5vw] z-[15] flex flex-col gap-3 opacity-0"
-      >
-        {[
-          {
-            color: "#ffb43c",
-            border: "rgba(255,255,255,0.8)",
-            size: 10,
-            glow: true,
-            label: "Head Office (Control Node)",
-          },
-          {
-            color: "#4da6ff",
-            border: "rgba(255,255,255,0.6)",
-            size: 7,
-            glow: true,
-            label: "Strategic Hub",
-          },
-          {
-            color: "rgba(255,255,255,0.35)",
-            border: "transparent",
-            size: 4,
-            glow: false,
-            label: "Active Presence",
-          },
-        ].map((item) => (
-          <div key={item.label} className="flex items-center gap-3">
-            <div
-              style={{
-                width: `${item.size}px`,
-                height: `${item.size}px`,
-                borderRadius: "50%",
-                backgroundColor: item.color,
-                border: `1.5px solid ${item.border}`,
-                boxShadow: item.glow ? `0 0 6px ${item.color}50` : "none",
-                flexShrink: 0,
-              }}
-            />
-            <span className="text-[9px] text-white/40 tracking-[0.08em] uppercase">
-              {item.label}
-            </span>
+      {/* Foreground Content Stack */}
+      <div className="relative z-10 w-full h-full flex flex-col justify-between flex-grow pointer-events-none max-w-[1400px] mx-auto mt-10">
+        {/* Top Left: Title Copy */}
+        <div
+          ref={textRef}
+          className="w-full xl:w-[50%] flex flex-col gap-8 pointer-events-auto mix-blend-difference"
+        >
+          <div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse" />
+              <span className="text-[10px] sm:text-xs tracking-[0.4em] text-[#d4af37] uppercase font-bold">
+                Node 001. Worldwide Execution.
+              </span>
+            </div>
+            <h2 className="text-[clamp(3.5rem,8vw,8rem)] font-bold text-white tracking-[-0.04em] leading-[0.8] uppercase">
+              GLOBAL
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
+                AUTHORITY.
+              </span>
+            </h2>
           </div>
-        ))}
+          <div className="flex flex-col gap-2 border-l-2 border-[#d4af37] pl-6 ml-2">
+            <p className="text-2xl md:text-4xl text-white leading-tight font-light tracking-tight">
+              One system. One standard.
+            </p>
+            <p className="text-xl md:text-3xl text-[#d4af37] italic font-serif opacity-90">
+              Outcomes that hold.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Metrics & Caption */}
+        <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-16 pointer-events-auto mt-20 lg:mt-auto">
+          {/* Caption */}
+          <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-2">
+            <span className="w-8 h-px bg-white/50 block" />
+            <p className="text-white/70 text-[10px] font-serif italic tracking-wide drop-shadow-sm">
+              Data architecture actively plotting. Centralized in Tbilisi.
+            </p>
+          </div>
+
+          {/* 03 Global Presence Metrics */}
+          <div
+            ref={metricsRef}
+            className="order-1 lg:order-2 flex flex-col gap-10 w-full lg:max-w-4xl bg-black/40 backdrop-blur-xl p-8 rounded-none border-t border-white/10 lg:p-10"
+          >
+            {/* Mobile Fallback Nodes */}
+            <div className="md:hidden flex flex-col gap-8 pb-8 border-b border-white/10">
+              <div className="flex flex-col gap-1 border-l-2 border-[#d4af37] pl-4">
+                <h4 className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[9px]">
+                  01 — HEAD OFFICE
+                </h4>
+                <p className="text-white font-serif italic text-2xl">
+                  Tbilisi, Georgia
+                </p>
+              </div>
+              <div className="flex flex-col gap-1 border-l-2 border-white/30 pl-4">
+                <h4 className="text-white/60 font-bold tracking-[0.3em] uppercase text-[9px]">
+                  02 — STRATEGIC HUBS
+                </h4>
+                <p className="text-white text-xl font-light tracking-wide">
+                  DACH Region
+                </p>
+              </div>
+            </div>
+
+            {/* Data Grid */}
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-1.5 h-1.5 bg-white/50 rounded-full" />
+              <h4 className="text-white/60 font-bold tracking-[0.4em] uppercase text-[10px] hidden lg:block">
+                03 — GLOBAL PRESENCE
+              </h4>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 text-sm w-full">
+              <div className="flex flex-col gap-2">
+                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
+                  <span className="w-3 h-px bg-white/30 block" /> Coverage
+                </span>
+                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                  26
+                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
+                    Countries
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
+                  <span className="w-3 h-px bg-white/30 block" /> Partners
+                </span>
+                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                  71
+                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
+                    Origins
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#d4af37]/70 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
+                  <span className="w-3 h-px bg-[#d4af37]/50 block" /> Network
+                </span>
+                <span className="text-[#d4af37] text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                  888<span className="text-2xl -ml-1">±</span>
+                  <span className="text-[#d4af37]/50 text-sm tracking-widest uppercase font-semibold">
+                    Signature
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
+                  <span className="w-3 h-px bg-white/30 block" /> Language
+                </span>
+                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                  17
+                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
+                    Spoken
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

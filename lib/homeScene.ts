@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 // import { AnimatedTube } from "./animatedTube";
 import CosmicDust from "./cosmicDust";
-import { getDebugGui, initDebugGui } from "./debugGui";
+import { initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
 import PhysicsSandbox from "./physicsSandbox";
 import ProjectTiles from "./projectTiles/projectTiles";
@@ -54,7 +54,9 @@ export default class HomeScene {
       antialias: true,
       canvas,
       stencil: true,
+      alpha: true,
     });
+    this.renderer.setClearColor(0x000000, 0);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animate);
@@ -70,7 +72,7 @@ export default class HomeScene {
     this.onScroll();
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x000000);
+    // this.scene.background = new THREE.Color(0x000000);
 
     new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping;

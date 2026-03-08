@@ -6,16 +6,14 @@ import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import ProjectTilesSection from "@/components/ProjectTilesSection";
 import VideoPanelSection from "@/components/VideoPanelSection";
-import WebGLCanvas from "@/components/WebGLCanvas";
 import FooterSection from "@/components/FooterSection";
 import NextPageTransition from "@/components/NextPageTransition";
+import WebGLCanvas from "@/components/WebGLCanvas";
 
 export default function Home() {
   return (
     <>
-      {/* Fixed WebGL canvas behind everything */}
       <WebGLCanvas />
-
       {/* Loading counter overlay */}
       <LoadingOverlay />
 
