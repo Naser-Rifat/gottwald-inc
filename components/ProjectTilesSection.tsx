@@ -13,13 +13,16 @@ const arrowContainerVariants: Variants = {
     width: "auto",
     opacity: 1,
     marginRight: 16,
-    transition: { type: "spring", stiffness: 300, damping: 20 },
+    transition: { type: "spring" as const, stiffness: 300, damping: 20 },
   },
 };
 
 const arrowVariants: Variants = {
   initial: { x: -20 },
-  hover: { x: 0, transition: { type: "spring", stiffness: 300, damping: 20 } },
+  hover: {
+    x: 0,
+    transition: { type: "spring" as const, stiffness: 300, damping: 20 },
+  },
 };
 
 const titleVariants: Variants = {
@@ -27,13 +30,16 @@ const titleVariants: Variants = {
   hover: {
     x: 4,
     color: "#d4af37",
-    transition: { type: "spring", stiffness: 300, damping: 20 },
+    transition: { type: "spring" as const, stiffness: 300, damping: 20 },
   },
 };
 
 const imageVariants: Variants = {
   initial: { scale: 1 },
-  hover: { scale: 1.05, transition: { duration: 0.7, ease: "easeOut" } },
+  hover: {
+    scale: 1.05,
+    transition: { duration: 0.7, ease: "easeOut" as const },
+  },
 };
 
 const overlayVariants: Variants = {
