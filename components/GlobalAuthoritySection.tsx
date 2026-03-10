@@ -158,7 +158,7 @@ export default function GlobalAuthoritySection() {
             </div>
 
             {/* 2. DACH Hubs (Munich Anchored) */}
-            <div className="absolute top-[28%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+            <div className="absolute top-[28%] left-[55%] md:left-[60%] lg:left-[55%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
               {/* Precision Dot */}
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10" />
               {/* Radar Rings */}
@@ -208,7 +208,7 @@ export default function GlobalAuthoritySection() {
         {/* Top Left: Title Copy */}
         <div
           ref={textRef}
-          className="w-full xl:w-[50%] flex flex-col gap-8 pointer-events-auto mix-blend-difference"
+          className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto mix-blend-difference relative z-30"
         >
           <div>
             <div className="flex items-center gap-4 mb-6">

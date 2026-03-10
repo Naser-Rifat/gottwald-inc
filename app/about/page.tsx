@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
+import CinematicImage from "@/components/CinematicImage";
 import React from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,12 +19,35 @@ export default function AboutPage() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Hero massive scale and fade
+      // 1. Hero: dedicated entrance animation (fires immediately on mount)
       if (heroTextRef.current) {
+        const heroChildren =
+          heroTextRef.current.querySelectorAll(".hero-reveal");
+        // Set all hero elements invisible immediately on first paint
+        gsap.set(heroChildren, { opacity: 0, y: 40 });
+        const heroRule = document.getElementById("about-hero-rule");
+
+        // Staggered reveal timeline: content → rule draws
+        const tl = gsap.timeline({ delay: 0.2 });
+        tl.to(heroChildren, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.15,
+          ease: "expo.out",
+        });
+        if (heroRule)
+          tl.to(
+            heroRule,
+            { width: "100%", duration: 0.8, ease: "expo.out" },
+            "-=0.4",
+          );
+
+        // Scroll-out parallax (scale + fade when user scrolls away)
         gsap.to(heroTextRef.current, {
-          scale: 0.7,
+          scale: 0.85,
           opacity: 0,
-          y: 100,
+          y: 80,
           ease: "none",
           scrollTrigger: {
             trigger: heroTextRef.current.parentElement,
@@ -110,26 +134,93 @@ export default function AboutPage() {
       </div>
 
       <main>
-        {/* ── HERO PINNED SECTION ── */}
-        <section className="h-screen w-full flex items-center justify-center relative bg-[#020202]">
+        {/* ── HERO — SPLIT EDITORIAL ── */}
+        <section className="h-screen w-full flex items-end relative bg-[#020202] overflow-hidden">
+          {/* Ambient glow background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="float-glow absolute top-[20%] left-[20%] w-[40vw] h-[40vw] bg-white/[0.02] blur-[100px] rounded-full" />
-            <div className="float-glow absolute bottom-[10%] right-[10%] w-[50vw] h-[50vw] bg-[#d4af37]/[0.02] blur-[150px] rounded-full" />
+            <div
+              className="float-glow absolute top-[10%] left-[-10%] w-[60vw] h-[60vw] rounded-full opacity-40"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 60%)",
+              }}
+            />
+            <div
+              className="float-glow absolute bottom-[-20%] right-[-5%] w-[50vw] h-[50vw] rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%)",
+              }}
+            />
           </div>
 
+          {/* Main bottom-anchored content */}
           <div
             ref={heroTextRef}
-            className="flex flex-col items-center justify-center w-full px-[5vw]"
+            className="relative w-full px-[5vw] pb-16 will-change-transform"
           >
-            <span className="text-xs uppercase tracking-[0.5em] text-white/30 mb-8 font-bold reveal-up">
-              ABOUT US — GOTTWALD HOLDING
-            </span>
-            <h1 className="text-[clamp(5rem,14vw,18rem)] leading-[0.8] font-black tracking-tighter uppercase text-center w-[120vw] !max-w-none text-white overflow-hidden mix-blend-screen">
-              WE TURN COMPLEXITY <br />
-              <span className="text-white/20 italic font-serif opacity-80 pl-[10vw]">
-                INTO INEVITABILITY
-              </span>
-            </h1>
+            {/* Main Split Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-0 lg:gap-20 items-end">
+              {/* LEFT: Massive flush-left typography */}
+              <div className="hero-reveal">
+                {/* Gold chapter number */}
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-gold text-[11px] font-bold tracking-[0.4em] uppercase">
+                    03/
+                  </span>
+                  <span className="w-12 h-px bg-white/15" />
+                  <span className="text-[10px] tracking-[0.35em] text-white/30 uppercase font-bold">
+                    About Us
+                  </span>
+                </div>
+
+                <h1 className="text-[clamp(2.8rem,8vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white">
+                  WE TURN
+                  <br />
+                  COM
+                  <span className="text-gold/80 italic font-serif font-normal px-2">
+                    PLEXI
+                  </span>
+                  TY
+                  <br />
+                  <span className="text-[clamp(2rem,5vw,6rem)] text-gold/60 italic font-serif font-normal tracking-tight block mt-4">
+                    into inevitability.
+                  </span>
+                </h1>
+              </div>
+
+              {/* RIGHT: Editorial column — elevated in frosted glass */}
+              <div className="hero-reveal hidden lg:flex flex-col gap-6 self-end bg-black/40 backdrop-blur-sm rounded-sm p-8 -m-8 border border-white/5">
+                {/* Column header */}
+                <div className="flex items-center gap-3 pb-4 border-b border-gold/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                  <p className="text-[9px] uppercase tracking-[0.4em] text-gold/70 font-bold">
+                    The Mandate
+                  </p>
+                </div>
+
+                <p className="text-white/70 text-base font-light leading-[1.75]">
+                  We don&apos;t manage complexity. We architect around it. One
+                  system. One standard. Built for outcomes that remain.
+                </p>
+
+                {/* Animated gold rule under text */}
+                <div
+                  id="about-hero-rule"
+                  className="w-0 h-px bg-gold origin-left mt-2 mb-2"
+                />
+
+                <a
+                  href="#intro"
+                  className="group inline-flex items-center gap-3 text-white/40 hover:text-gold transition-colors duration-300 w-max"
+                >
+                  <span className="w-6 h-px bg-white/30 group-hover:bg-gold group-hover:w-10 transition-all duration-300" />
+                  <span className="text-[10px] tracking-[0.3em] uppercase font-bold">
+                    Scroll to read
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -193,9 +284,26 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* ── EDITORIAL IMAGE (BRUTALIST ARCHITECTURE) ── */}
+        <section className="px-[5vw] pt-[5vh] pb-[15vh]">
+          <div className="max-w-7xl mx-auto">
+            <CinematicImage
+              src="/images/about_office.png"
+              alt="Gott Wald Office Architecture"
+              className="w-full aspect-21/9 md:aspect-2.5/1 rounded-sm filter grayscale contrast-125 brightness-90 border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
+            />
+          </div>
+        </section>
+
         {/* ── DIFFERENCE / STAND FOR ── */}
         <section className="px-[5vw] py-[30vh] bg-[#020202] border-y border-white/5 relative flex flex-col items-center text-center">
-          <div className="float-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-white/[0.01] blur-[150px] rounded-full pointer-events-none" />
+          <div
+            className="float-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(255,255,255,0.01) 0%, transparent 70%)",
+            }}
+          />
 
           <div className="max-w-6xl relative z-10">
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-medium block mb-12 reveal-up">
@@ -272,7 +380,7 @@ export default function AboutPage() {
 
           <div
             ref={horizontalWrapperRef}
-            className="flex h-full w-[max-content]"
+            className="flex h-full w-[max-content] will-change-transform"
           >
             {/* Panel 1 */}
             <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
@@ -584,7 +692,13 @@ export default function AboutPage() {
 
         {/* ── THE PATRON MANIFESTO (Cinematic Typography) ── */}
         <section className="px-[5vw] py-[30vh] bg-[#000] relative overflow-hidden">
-          <div className="float-glow absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-[50vh] bg-[#0f0a00] blur-[150px] opacity-50 pointer-events-none" />
+          <div
+            className="float-glow absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-[50vh] opacity-50 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse, rgba(15,10,0,1) 0%, transparent 70%)",
+            }}
+          />
 
           {/* Huge background text */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none">
@@ -723,7 +837,13 @@ export default function AboutPage() {
 
         {/* ── FINAL CTA ── */}
         <section className="px-[5vw] py-[25vh] border-t border-[#d4af37]/20 relative overflow-hidden bg-[#0a0800]">
-          <div className="float-glow absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-[#d4af37]/[0.05] blur-[200px] rounded-full pointer-events-none mix-blend-screen" />
+          <div
+            className="float-glow absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] rounded-full pointer-events-none mix-blend-screen"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%)",
+            }}
+          />
 
           <div className="max-w-4xl mx-auto flex flex-col gap-24 relative z-10">
             <div className="text-center reveal-up">

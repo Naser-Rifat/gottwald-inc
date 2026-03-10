@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
-import Image from "next/image";
+import CinematicImage from "@/components/CinematicImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -198,7 +198,13 @@ export default function CareersPage() {
       <main className="pt-[25vh]">
         {/* ── HERO SECTION ── */}
         <section className="px-[5vw] pb-[20vh] flex flex-col gap-16 relative">
-          <div className="absolute right-[5vw] top-[-5vh] w-[40vw] h-[40vw] bg-white/[0.03] blur-[150px] rounded-full pointer-events-none" />
+          <div
+            className="absolute right-[5vw] top-[-5vh] w-[40vw] h-[40vw] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
+            }}
+          />
 
           <div className="max-w-6xl z-10">
             <h1 className="reveal-text text-[clamp(4rem,9vw,10rem)] leading-[0.85] font-extrabold tracking-tighter uppercase mb-12">
@@ -207,20 +213,15 @@ export default function CareersPage() {
             </h1>
 
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
-              <div className="flex-1 flex flex-col gap-6 text-lg md:text-xl text-white/70 font-light leading-relaxed tracking-wide reveal-text">
-                <p>
-                  We don’t hire “staff.” We select people with foundation —
-                  worldwide. <br />
-                  GOTT WALD is not a typical company.
+              <div className="flex-1 flex flex-col gap-6 text-white/80 font-light leading-relaxed tracking-wide reveal-text">
+                <p className="text-2xl md:text-3xl font-medium tracking-tight">
+                  We don&apos;t hire &quot;staff&quot;. We select people with
+                  foundation.
                 </p>
-                <p>
-                  GOTT WALD is an ecosystem — built on standards,
-                  responsibility, and real execution. We recruit globally.
-                  Remote is the default — on-site when it truly matters.
-                </p>
-                <p>
-                  If you are clear, deliver under pressure, and treat discretion
-                  as normal, this may be your place — wherever you live.
+                <p className="text-base text-white/50 max-w-md">
+                  GOTT WALD is a global ecosystem built on standards,
+                  responsibility, and real execution. Remote by default.
+                  Discreet by design.
                 </p>
               </div>
 
@@ -253,6 +254,19 @@ export default function CareersPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── ATMOSPHERIC WORKSPACE IMAGE ── */}
+        <section className="px-[5vw] pb-[15vh] bg-transparent">
+          <div className="max-w-7xl mx-auto">
+            <CinematicImage
+              src="/images/careers_workspace.png"
+              alt="Gott Wald Atmospheric Workspace"
+              priority
+              overlay
+              className="w-full aspect-[16/9] md:aspect-[21/9] rounded-none filter contrast-125 brightness-90 border border-white/5 shadow-[0_30px_80px_rgba(0,0,0,0.9)]"
+            />
           </div>
         </section>
 
@@ -345,7 +359,7 @@ export default function CareersPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
               {/* 1 */}
-              <div className="stagger-item border border-white/10 rounded-2xl p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 01
                 </div>
@@ -357,7 +371,7 @@ export default function CareersPage() {
               </div>
 
               {/* 2 */}
-              <div className="stagger-item border border-white/10 rounded-2xl p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 02
                 </div>
@@ -371,7 +385,7 @@ export default function CareersPage() {
               </div>
 
               {/* 3 */}
-              <div className="stagger-item border border-white/10 rounded-2xl p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 03
                 </div>
@@ -385,20 +399,19 @@ export default function CareersPage() {
           </div>
         </section>
 
-        {/* ── WHO WE'RE LOOKING FOR ── */}
-        <section className="px-[5vw] py-[15vh]">
+        <section className="px-gutter py-[15vh]">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div className="flex-1 reveal-text">
               <h2 className="text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8">
-                WHO WE'RE <br /> LOOKING FOR
+                WHO WE&apos;RE <br /> LOOKING FOR
               </h2>
-              <p className="text-white/50 italic text-lg border-l border-[#d4af37] pl-6 mt-12">
-                "If this feels 'normal' to you, you’re probably in the right
-                room."
+              <p className="text-white/50 italic text-lg border-l border-gold pl-6 mt-12">
+                &quot;If this feels &apos;normal&apos; to you, you&apos;re
+                probably in the right room.&quot;
               </p>
             </div>
 
-            <div className="flex-1 border border-white/10 rounded-3xl p-10 md:p-16 bg-white/[0.01] stagger-group">
+            <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/[0.01] stagger-group">
               <ul className="flex flex-col gap-6 text-lg md:text-xl font-light text-white/80 tracking-wide">
                 <li className="stagger-item flex items-center gap-4">
                   <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />{" "}
@@ -451,16 +464,16 @@ export default function CareersPage() {
                     onClick={() => toggleAccordion(i)}
                     className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none"
                   >
-                    <div className="flex items-center gap-6 md:gap-12 w-[80%]">
-                      <span className="text-2xl md:text-4xl font-light text-white/20 group-hover:text-[#d4af37] transition-colors">
+                    <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
+                      <span className="text-2xl md:text-4xl font-light text-white/20 group-hover:text-[#d4af37] transition-colors w-12 md:w-20 shrink-0">
                         {pillar.letter}
                       </span>
-                      <h3 className="text-xl md:text-3xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500">
+                      <h3 className="text-xl md:text-3xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500 leading-tight">
                         {pillar.title}
                       </h3>
                     </div>
                     <div
-                      className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500
+                      className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
                        ${openAccordion === i ? "border-white bg-white text-black -rotate-180" : "border-white/20 text-white/50 group-hover:border-white/60"}
                      `}
                     >
@@ -503,7 +516,7 @@ export default function CareersPage() {
                           Impact Profile
                         </h4>
                         <p className="text-white font-medium tracking-wide">
-                          "{pillar.impact}"
+                          &quot;{pillar.impact}&quot;
                         </p>
                       </div>
                     </div>
@@ -520,7 +533,7 @@ export default function CareersPage() {
             {/* What you'll find */}
             <div className="reveal-text">
               <h2 className="text-3xl font-bold mb-10 tracking-tight">
-                WHAT YOU'LL FIND HERE
+                WHAT YOU&apos;LL FIND HERE
               </h2>
               <ul className="flex flex-col gap-6 font-light text-xl text-white/70">
                 <li className="flex justify-between border-b border-white/10 pb-4">
@@ -565,7 +578,7 @@ export default function CareersPage() {
             </div>
 
             {/* Application Process */}
-            <div className="reveal-text p-10 md:p-14 bg-white text-black rounded-3xl">
+            <div className="reveal-text p-10 md:p-14 bg-white text-black">
               <h2 className="text-3xl font-bold mb-10 tracking-tight">
                 APPLICATION PROCESS
               </h2>
@@ -596,7 +609,7 @@ export default function CareersPage() {
                 ))}
               </div>
 
-              <div className="mt-12 bg-black/5 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest text-black/40">
+              <div className="mt-12 bg-black/5 p-6 text-xs font-bold uppercase tracking-widest text-black/40">
                 Note: Global means time zones are manageable — the standard
                 stays the same.
               </div>
@@ -606,7 +619,13 @@ export default function CareersPage() {
 
         {/* ── CTA / PRE-FORM ── */}
         <section className="px-[5vw] py-[20vh] text-center border-t border-white/10 relative overflow-hidden">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-[#d4af37]/[0.05] blur-[150px] rounded-full pointer-events-none" />
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%)",
+            }}
+          />
 
           <div className="max-w-4xl mx-auto flex flex-col items-center gap-12 relative z-10 reveal-text">
             <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-tighter leading-[1] uppercase">
@@ -664,21 +683,23 @@ export default function CareersPage() {
               {/* Personal Info Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     First & Last Name *
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="Your Name"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Email / Phone *
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="Contact Info"
                   />
                 </div>
               </div>
@@ -686,21 +707,23 @@ export default function CareersPage() {
               {/* Location Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Country / City / Time Zone
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="Location"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Languages Spoken
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="Languages"
                   />
                 </div>
               </div>
@@ -708,10 +731,10 @@ export default function CareersPage() {
               {/* Selection Grids */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Work Model
                   </label>
-                  <select className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white/80 text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors appearance-none cursor-pointer">
+                  <select className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer">
                     <option value="remote" className="text-black">
                       Remote
                     </option>
@@ -727,10 +750,10 @@ export default function CareersPage() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Entry Path
                   </label>
-                  <select className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white/80 text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors appearance-none cursor-pointer">
+                  <select className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer">
                     <option value="employee" className="text-black">
                       Employee
                     </option>
@@ -746,74 +769,75 @@ export default function CareersPage() {
 
               {/* Roles */}
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                   Desired Role(s) & Pillars of Interest
                 </label>
                 <input
                   type="text"
                   placeholder="e.g. Pillar F - Frontend Engineer"
-                  className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/30 focus:border-gold transition-colors"
                 />
               </div>
 
               {/* Proof */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     LinkedIn / Website
                   </label>
                   <input
                     type="url"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="URL"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Portfolio / Proof Links (Max 3)
                   </label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-full h-[54px] px-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                    placeholder="URLs"
                   />
                 </div>
               </div>
 
               {/* Text Areas */}
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold ml-4">
+                <label className="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">
                   Foundation Fit (Required) *
                 </label>
-                <p className="text-[10px] text-white/30 ml-4 mb-2">
+                <p className="text-[10px] text-white/30 mb-2">
                   2–3 sentences on truth, responsibility, justice, compassion,
                   discretion, and excellence.
                 </p>
                 <textarea
                   rows={4}
-                  className="w-full bg-white/5 border border-[#d4af37]/30 rounded-3xl p-6 text-white text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white/10 transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-[#d4af37]/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-[#d4af37] transition-colors resize-none"
                 />
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold ml-4">
+                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                   Short Message (Optional)
                 </label>
                 <textarea
                   rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 text-white text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-white transition-colors resize-none"
                 />
               </div>
 
               <div className="pt-8 border-t border-white/10 flex flex-col items-center sm:items-start gap-6">
                 <button
                   type="button"
-                  onClick={() =>
-                    alert(
-                      "Thank you. If there’s a fit, we’ll reach out with next steps.",
-                    )
-                  }
-                  className="h-[60px] rounded-full bg-white text-black flex items-center justify-center px-16 hover:bg-white/90 transition-colors uppercase text-sm tracking-[0.2em] font-bold w-full sm:w-auto"
+                  data-magnetic
+                  className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 overflow-hidden w-max mt-8"
                 >
-                  Submit Application
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors duration-300">
+                    Submit Application
+                  </span>
+                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
                 </button>
                 <span className="text-[10px] text-white/30 tracking-widest uppercase">
                   Your submisson is confidential.

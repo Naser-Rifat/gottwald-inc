@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 interface MenuOverlayProps {
   isOpen: boolean;
@@ -46,74 +48,185 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const menuListRef = useRef<HTMLUListElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Initialize GSAP timeline (paused)
+    setMounted(true);
+  }, []);
+
+  const closeMenu = (onComplete?: () => void) => {
+    if (!isOpen) return;
+
+    // Instantly disable native pointer events to prevent massive GSAP spam
+    if (overlayRef.current) {
+      overlayRef.current.style.pointerEvents = "none";
+    }
+    document.body.classList.remove("no-scroll");
+
+    if (tl.current) {
+      // Clear previous callbacks just in case
+      tl.current.eventCallback("onReverseComplete", null);
+
+      // Instantly collapse the menu timeline (4x speed) so the user doesn't feel lag
+      tl.current
+        .timeScale(4)
+        .reverse()
+        .eventCallback("onReverseComplete", () => {
+          onClose();
+          if (onComplete) onComplete();
+        });
+    } else {
+      onClose();
+      if (onComplete) onComplete();
+    }
+  };
+
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    e.preventDefault(); // Stop instant navigation!
+
+    if (pathname === href) {
+      closeMenu();
+      return;
+    }
+
+    // Pass the router.push into the GSAP completion callback
+    closeMenu(() => {
+      router.push(href);
+    });
+  };
+
+  useEffect(() => {
+    // 0. Wait for React Portal to mount the DOM nodes before referencing them
+    if (!mounted || !overlayRef.current || !menuListRef.current) return;
+
+    // 1. Initialize GSAP timeline (paused)
     const ctx = gsap.context(() => {
       tl.current = gsap.timeline({ paused: true });
 
-      // 1. Overlay background fades in
+      // Overlay background fades in
       tl.current.to(overlayRef.current, {
         autoAlpha: 1, // handles visibility and opacity
         duration: 0.6,
         ease: "power3.inOut",
       });
 
-      // 2. Staggered reveal of menu items (sliding up)
+      // Header/Footer fade in
+      tl.current.fromTo(
+        ".menu-fade-in",
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        "-=0.4",
+      );
+
+      // Staggered cinematic reveal of menu items (sliding up out of their clip-box)
       if (menuListRef.current) {
         const items = menuListRef.current.querySelectorAll(".menu-item-text");
         tl.current.fromTo(
           items,
-          { y: 60, opacity: 0 },
+          { yPercent: 120, rotationZ: 3, opacity: 0 },
           {
-            y: 0,
+            yPercent: 0,
+            rotationZ: 0,
             opacity: 1,
-            duration: 0.8,
+            duration: 1,
             stagger: 0.05,
-            ease: "power4.out",
+            ease: "expo.out",
           },
-          "-=0.2", // overlap slightly with background fade
+          "-=0.6",
         );
       }
-
-      // 3. Header/Footer fade in
-      tl.current.fromTo(
-        ".menu-fade-in",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.6, ease: "power2.out" },
-        "-=0.6",
-      );
     }, overlayRef);
 
+    // 2. Setup Native GSAP Hover Interactions (Zero React State = Zero Lag)
+    const listItems = menuListRef.current?.querySelectorAll("li.group");
+    if (listItems) {
+      listItems.forEach((item) => {
+        const textGroup = item.querySelector(".menu-item-text-group");
+        const motto = item.querySelector(".menu-motto");
+
+        item.addEventListener("mouseenter", () => {
+          // Dim all other items
+          gsap.to(
+            Array.from(listItems).filter((el) => el !== item),
+            { opacity: 0.2, duration: 0.3, ease: "power2.out" },
+          );
+
+          // Animate hovered item
+          gsap.to(textGroup, {
+            x: 20, // Slide right slightly
+            color: "rgba(255, 255, 255, 0.6)",
+            duration: 0.4,
+            ease: "power2.out",
+          });
+
+          // Reveal motto
+          gsap.to(motto, {
+            opacity: 1,
+            x: 0,
+            duration: 0.4,
+            ease: "back.out(1.5)",
+            delay: 0.1, // Slight offset for fluidity
+          });
+        });
+
+        item.addEventListener("mouseleave", () => {
+          // Restore all items
+          gsap.to(listItems, { opacity: 1, duration: 0.3, ease: "power2.out" });
+
+          // Reset hovered item
+          gsap.to(textGroup, {
+            x: 0,
+            color: "rgba(255, 255, 255, 1)", // Reset to pure white
+            duration: 0.4,
+            ease: "power2.out",
+          });
+
+          // Hide motto
+          gsap.to(motto, {
+            opacity: 0,
+            x: -20,
+            duration: 0.3,
+            ease: "power2.in",
+          });
+        });
+      });
+    }
+
     return () => ctx.revert();
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
+    if (!mounted || !tl.current) return;
+
     if (isOpen) {
-      tl.current?.play();
-      document.body.classList.add("no-scroll"); // Prevent background scrolling
-    } else {
-      tl.current?.reverse();
+      if (overlayRef.current) overlayRef.current.style.pointerEvents = "auto";
+      tl.current.timeScale(1).play();
+      document.body.classList.add("no-scroll");
+    } else if (tl.current.progress() > 0) {
+      // Fallback cleanup if closed purely via external React state
+      tl.current.timeScale(2).reverse();
       document.body.classList.remove("no-scroll");
     }
-  }, [isOpen]);
+  }, [isOpen, mounted]);
 
-  // Handle z-indexing and pointer events based on isOpen state natively via Tailwind
-  // but let GSAP manage visibility
-  return (
+  const overlayContent = (
     <div
       ref={overlayRef}
-      className={`fixed inset-0 bg-[#060606] z-[100] flex flex-col justify-between px-[5vw] py-[6vh] invisible opacity-0 text-white`}
+      className={`fixed inset-0 bg-[#060606] z-9999 flex flex-col justify-between p-gutter invisible opacity-0 text-white`}
       style={{ pointerEvents: isOpen ? "auto" : "none" }}
     >
       {/* ── Header Area ── */}
-      <div className="flex justify-between items-center menu-fade-in">
+      <div className="flex justify-between items-center menu-fade-in flex-none">
         {/* 'G' Logo Circle */}
         <button
-          onClick={onClose}
-          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-white/50 transition-colors"
+          onClick={() => closeMenu()}
+          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-gold hover:text-gold transition-colors"
         >
           <span className="text-[10px] font-bold tracking-widest mt-[1px]">
             G
@@ -122,8 +235,8 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
 
         {/* CLOSE Button */}
         <button
-          onClick={onClose}
-          className="flex items-center gap-3 text-[10px] uppercase font-medium tracking-[0.2em] hover:text-white/70 transition-colors"
+          onClick={() => closeMenu()}
+          className="flex items-center gap-3 text-[10px] uppercase font-bold tracking-[0.2em] text-white/50 hover:text-white transition-colors"
         >
           <span>CLOSE</span>
           <svg
@@ -144,53 +257,51 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       </div>
 
       {/* ── Main Menu List ── */}
-      <div className="flex-grow flex items-center mt-[4vh]">
-        <ul ref={menuListRef} className="flex flex-col gap-[3vh] w-full">
-          {MENU_ITEMS.map((item, i) => {
-            const isHovered = hoveredIndex === i;
-            const isOtherHovered = hoveredIndex !== null && hoveredIndex !== i;
-
-            return (
-              <li
-                key={item.title}
-                className="relative group w-full flex items-center"
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
+      {/* 
+        Using flex-1 min-h-0 so the middle section can scroll if needed on very small devices, 
+        preventing header/footer overlap issues. 
+      */}
+      <div className="flex-1 min-h-0 flex items-center justify-start overflow-y-auto overflow-x-hidden my-[4vh] lg:my-0">
+        <ul
+          ref={menuListRef}
+          className="flex flex-col gap-[1vh] lg:gap-[2vh] w-full"
+        >
+          {MENU_ITEMS.map((item) => (
+            <li
+              key={item.title}
+              className="group w-full flex flex-col lg:flex-row lg:items-center relative"
+            >
+              <a
+                href={item.href}
+                onClick={(e) => handleLinkClick(e, item.href)}
+                className="block relative z-10 w-max"
               >
-                <Link
-                  href={item.href}
-                  onClick={onClose}
-                  className="block relative overflow-hidden"
-                >
-                  <span
-                    className={`menu-item-text block text-[7vw] leading-[0.85] font-extrabold uppercase tracking-tight transition-all duration-500 ease-out
-                      ${isOtherHovered ? "text-white/20" : "text-white"}
-                      ${isHovered ? "text-white/60" : ""}
-                    `}
-                  >
-                    {item.title}
-                  </span>
-                </Link>
-
-                {/* Motto (Revealed on hover) */}
-                <div
-                  className={`absolute left-[50vw] transition-all duration-500 ease-out flex items-center gap-4
-                    ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8 pointer-events-none"}
-                  `}
-                >
-                  <span className="text-[10px] font-medium tracking-[0.2em] text-[#d4af37] uppercase">
-                    {item.motto}
-                  </span>
+                <div className="menu-item-text-group will-change-transform">
+                  {/* Overflow hidden mask now inside the group so hover x: 20 moves the mask too. 
+                      Added generous padding and negative margins to prevent tracking-tighter and tight leading text from clipping on any edge. */}
+                  <div className="overflow-hidden pt-2 pb-6 pr-12 pl-2 -mt-2 -mb-6 -mr-12 -ml-2">
+                    <span className="menu-item-text block text-[clamp(2.5rem,7vw,8rem)] leading-[0.85] font-black uppercase tracking-tighter will-change-transform origin-left text-white">
+                      {item.title}
+                    </span>
+                  </div>
                 </div>
-              </li>
-            );
-          })}
+              </a>
+
+              {/* Motto (Hidden by default, Revealed via GSAP hover) */}
+              <div className="menu-motto opacity-0 -translate-x-5 pointer-events-none lg:absolute lg:left-[55vw] lg:top-1/2 lg:-translate-y-1/2 mt-2 lg:mt-0 flex items-center gap-4">
+                <span className="w-8 h-px bg-gold hidden lg:block" />
+                <span className="text-[9px] lg:text-[10px] font-medium tracking-[0.3em] text-gold uppercase whitespace-nowrap">
+                  {item.motto}
+                </span>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* ── Footer Area ── */}
-      <div className="flex justify-between items-end menu-fade-in text-[9px] uppercase tracking-[0.2em] text-white/40">
-        <div className="flex gap-8">
+      <div className="flex justify-between items-end menu-fade-in flex-none text-[9px] lg:text-[10px] uppercase tracking-[0.2em] text-white/40">
+        <div className="flex gap-6 lg:gap-8 flex-col sm:flex-row">
           <a href="#" className="hover:text-white transition-colors">
             TWITTER
           </a>
@@ -201,10 +312,14 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
             INSTAGRAM
           </a>
         </div>
-        <div className="text-right">
-          GOTTWALD PRO STANDARD — ARCHITECTURE 2026
+        <div className="hidden sm:block text-right tracking-[0.3em]">
+          GOTT WALD PRO STANDARD — ARCHITECTURE 2026
         </div>
       </div>
     </div>
   );
+
+  if (!mounted) return null;
+
+  return createPortal(overlayContent, document.body);
 }

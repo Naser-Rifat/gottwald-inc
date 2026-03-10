@@ -4,7 +4,7 @@ import { memo } from "react";
 
 const NoiseOverlay = memo(function NoiseOverlay() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.03] mix-blend-overlay">
+    <div className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.03] mix-blend-overlay hidden md:block">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-full w-full"

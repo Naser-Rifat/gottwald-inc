@@ -3,10 +3,11 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
-import Link from "next/link";
+import CinematicImage from "@/components/CinematicImage";
 import {
   MANIFESTO_LINES,
   PARTNER_BENEFITS,
@@ -27,8 +28,27 @@ export default function PartnershipPage() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Hero Text Scale & Pin
+      // 1. Immediate Hero Entrance — no ScrollTrigger, fires on mount
       if (heroTextRef.current) {
+        const heroChildren =
+          heroTextRef.current.querySelectorAll(".hero-reveal");
+
+        // Set initial state instantly (no flash of unstyled content)
+        gsap.set(heroChildren, { opacity: 0, y: 30 });
+
+        // Staggered entrance timeline
+        const heroTl = gsap.timeline({ delay: 0.2 });
+
+        // Text reveals with stagger
+        heroTl.to(heroChildren, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.12,
+          ease: "expo.out",
+        });
+
+        // Hero parallax on scroll (pin + scale down)
         gsap.to(heroTextRef.current, {
           scale: 0.8,
           opacity: 0,
@@ -44,7 +64,7 @@ export default function PartnershipPage() {
         });
       }
 
-      // 2. Global Reveal Up
+      // 2. Global Reveal Up (below-fold sections only)
       const reveals = document.querySelectorAll(".reveal-up");
       reveals.forEach((el) => {
         gsap.fromTo(
@@ -129,65 +149,149 @@ export default function PartnershipPage() {
       </div>
 
       <main>
-        {/* ── HERO ── */}
-        <section className="h-screen w-full flex flex-col items-center justify-center relative bg-transparent">
+        {/* ── HERO — PARTNERSHIP MANIFESTO ── */}
+        <section className="h-screen w-full flex items-end relative bg-transparent overflow-hidden">
+          {/* Subtle depth gradient overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none z-1"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(0,0,0,0.4) 0%, transparent 50%, rgba(0,0,0,0.2) 100%)",
+            }}
+          />
+
+          {/* Thin top rule — entry signal */}
+          <div className="absolute top-0 left-0 w-full h-px bg-white/5 z-2" />
+
+          {/* Main hero content */}
           <div
             ref={heroTextRef}
-            className="flex flex-col items-center justify-center w-full px-gutter text-center"
+            className="relative w-full px-gutter pb-12 will-change-transform z-5"
           >
-            <span className="text-[10px] md:text-sm uppercase tracking-[0.5em] text-gold mb-6 font-bold reveal-up">
-              PARTNERSHIPS AT GOTT WALD
-            </span>
-            <h1 className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.8] font-black tracking-tighter uppercase text-white mix-blend-screen reveal-up">
-              WE DON&apos;T BUY VENDORS.
-              <br />
-              <span className="text-white/40 italic font-serif">
-                WE SELECT PARTNERS.
-              </span>
-            </h1>
+            {/* Main two-column grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_340px] gap-12 lg:gap-16 items-end">
+              {/* LEFT: Power-statement manifesto */}
+              <div className="hero-reveal">
+                {/* Gold chapter number */}
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-gold text-[11px] font-bold tracking-[0.4em] uppercase">
+                    02/
+                  </span>
+                  <span className="w-12 h-px bg-white/15" />
+                  <span className="text-[10px] tracking-[0.35em] text-white/30 uppercase font-bold">
+                    Partnerships
+                  </span>
+                </div>
 
-            <div className="mt-16 flex flex-col items-center gap-6 reveal-up">
-              <p className="text-lg md:text-2xl font-light text-white/70 max-w-2xl">
-                GOTT WALD is not a marketplace. GOTT WALD is a standard. We only
-                work with companies that have principle — and can deliver.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                <h1 className="text-[clamp(2.8rem,8vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white">
+                  WE DON&apos;T
+                  <br />
+                  BUY
+                  <br />
+                  VENDORS.
+                </h1>
+
+                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.6rem,3.5vw,4.5rem)] font-serif italic text-gold/60 tracking-tight leading-tight mt-12 pl-0.5">
+                  <span className="w-8 md:w-12 h-0.5 bg-gold/50" />
+                  We select partners.
+                </p>
+              </div>
+
+              {/* RIGHT: HUD Metric Strip — elevated */}
+              <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-black/70 backdrop-blur-md rounded-sm p-8 -m-8 border border-white/10 shadow-2xl">
+                {/* Column header */}
+                <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gold/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                  <p className="text-[9px] uppercase tracking-[0.4em] text-gold/70 font-bold">
+                    Our Reach — Live
+                  </p>
+                </div>
+
+                {/* Metric rows */}
+                {[
+                  { label: "Countries", value: "26" },
+                  { label: "Partner Origins", value: "71" },
+                  { label: "Network Size", value: "888+" },
+                  { label: "Languages", value: "17" },
+                ].map(({ label, value }) => (
+                  <div
+                    key={label}
+                    className="group flex items-baseline justify-between py-4 border-b border-white/5 last:border-0 cursor-default"
+                  >
+                    <span className="text-[11px] uppercase tracking-widest text-white/50 group-hover:text-white/70 transition-colors duration-300">
+                      {label}
+                    </span>
+                    <span className="text-3xl font-light text-white/90 tabular-nums group-hover:text-gold transition-colors duration-300">
+                      {value}
+                    </span>
+                  </div>
+                ))}
+
+                {/* CTA link — prominent gold */}
                 <a
                   href="#apply"
-                  className="px-8 py-4 bg-white text-black rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gold transition-colors"
+                  className="group mt-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-max"
                 >
-                  Apply for Partnership
+                  <span className="text-[10px] tracking-[0.3em] uppercase font-bold">
+                    Apply Now
+                  </span>
+                  <span className="text-sm group-hover:translate-x-1 transition-transform duration-300">
+                    →
+                  </span>
                 </a>
-                <button className="px-8 py-4 bg-transparent border border-white/20 text-white rounded-full text-sm font-bold uppercase tracking-widest hover:border-white transition-colors">
-                  Request an Intro Call
-                </button>
               </div>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 mt-4">
-                Confidential by default. NDA-ready on request.
-              </p>
             </div>
           </div>
         </section>
 
         {/* ── MANIFESTO ── */}
-        <section className="px-gutter py-[20vh] bg-black/40 backdrop-blur-md relative z-10 border-t border-white/5 manifesto-container">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-20">
-            <div className="md:w-1/3">
-              <h2 className="text-xs uppercase tracking-[0.4em] text-gold font-medium mb-8 sticky top-[30vh]">
-                Our Foundation <br /> A 7-Line Manifesto
-              </h2>
-            </div>
-            <div className="md:w-2/3 flex flex-col gap-6">
-              {MANIFESTO_LINES.map((line, i) => (
-                <p
-                  key={i}
-                  className="manifesto-line text-3xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-white"
-                >
-                  {line}
+        <section className="px-gutter py-32 bg-black/90 relative z-10 border-t border-white/5 manifesto-container">
+          <div className="max-w-5xl mx-auto">
+            {/* Section header — highlighted */}
+            <div className="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.5em] text-gold/50 font-bold block mb-4">
+                  Foundation
+                </span>
+                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white leading-none">
+                  Our Foundation
+                </h2>
+                <p className="text-lg md:text-xl font-serif italic text-gold/70 mt-3">
+                  A 7-Line Manifesto
                 </p>
+              </div>
+              <div className="w-24 h-px bg-gold/30 hidden md:block mb-3" />
+            </div>
+
+            {/* Manifesto cards */}
+            <div className="flex flex-col gap-4">
+              {MANIFESTO_LINES.map((line, i) => (
+                <div
+                  key={i}
+                  className="manifesto-line group relative bg-white/3 border border-white/5 rounded-sm px-8 py-7 flex items-start gap-6 hover:bg-white/5 hover:border-gold/20 transition-all duration-300 cursor-default"
+                >
+                  {/* Number */}
+                  <span className="text-gold/40 text-sm font-bold tracking-wider tabular-nums shrink-0 pt-1 group-hover:text-gold/70 transition-colors duration-300">
+                    0{i + 1}
+                  </span>
+                  {/* Statement */}
+                  <p className="text-xl md:text-2xl font-bold tracking-tight leading-snug text-white/80 group-hover:text-white transition-colors duration-300">
+                    {line}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
+        </section>
+
+        {/* ── ABSTRACT ARCHITECTURE IMAGE (FULL BLEED) ── */}
+        <section className="w-full relative z-10 bg-[#020202]">
+          <CinematicImage
+            src="/images/partnership_abstract.png"
+            alt="Gott Wald Abstract Partnership Architecture"
+            overlay
+            className="w-full h-[50vh] md:h-[70vh] object-cover filter grayscale contrast-125 rounded-none"
+          />
         </section>
 
         {/* ── PRINCIPLES & ARCHETYPES ── */}
@@ -200,8 +304,8 @@ export default function PartnershipPage() {
                   not procurement.
                 </h3>
                 <p className="text-xl text-white/50 mb-12 font-light leading-relaxed max-w-lg">
-                  We don&apos;t "source services." We select partners who can
-                  carry our foundation and protect our standard.
+                  We don&apos;t &quot;source services.&quot; We select partners
+                  who can carry our foundation and protect our standard.
                 </p>
                 <div className="flex flex-col gap-4 border-l border-white/10 pl-6">
                   <p className="text-sm font-medium tracking-widest uppercase text-white/30 mb-2">
@@ -218,7 +322,7 @@ export default function PartnershipPage() {
 
               <div className="reveal-up">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase mb-12 text-white/40 border-b border-white/10 pb-4">
-                  Who we're looking for
+                  Who we&apos;re looking for
                 </h4>
                 <p className="text-2xl text-white mb-10 font-serif italic">
                   Outstanding companies — proven in action, not in slides.
@@ -250,30 +354,66 @@ export default function PartnershipPage() {
         >
           <div className="standards-pin-container h-screen flex flex-col justify-center px-gutter md:pl-gutter md:pr-0">
             <div className="flex justify-between items-end mb-20 shrink-0 reveal-up pr-gutter">
-              <h2 className="text-[clamp(3rem,8vw,8rem)] font-black tracking-tighter leading-[0.8] uppercase max-w-4xl mix-blend-difference text-white">
-                Our Partnership <br /> Standard
+              <h2 className="text-[clamp(3.5rem,8vw,9rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mix-blend-difference">
+                OUR
+                <br />
+                PARTNERSHIP
+                <br />
+                STANDARD
               </h2>
-              <p className="text-sm tracking-[0.2em] text-white/40 uppercase hidden lg:block pb-4">
-                Non-Negotiables
-              </p>
+              <div className="hidden lg:flex flex-col items-end pb-4">
+                <span className="w-2 h-2 rounded-full bg-gold mb-4" />
+                <p className="text-[10px] tracking-[0.4em] text-white/40 uppercase font-bold">
+                  Non-Negotiables
+                </p>
+              </div>
             </div>
 
             {/* Scroll Wrapper */}
-            <div className="standards-scroll-wrapper flex flex-col md:flex-row gap-6 md:gap-10 w-full md:w-max shrink-0 reveal-up pb-20">
+            <div className="standards-scroll-wrapper flex flex-col md:flex-row gap-6 md:gap-8 w-full md:w-max shrink-0 reveal-up pb-20">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="standard-card relative bg-[#050505] p-10 md:p-14 w-full md:w-[400px] lg:w-[450px] aspect-square flex flex-col justify-between shrink-0 border border-white/5 group overflow-hidden hover:border-white/20 transition-colors duration-500"
+                  className="standard-card relative bg-[#050505] p-10 md:p-12 w-full md:w-[400px] lg:w-[460px] aspect-[4/5] md:aspect-square flex flex-col justify-between shrink-0 border border-white/5 group overflow-hidden transition-all duration-700 hover:border-gold/30 hover:shadow-[0_0_40px_rgba(212,175,55,0.05)]"
                 >
-                  <div className="card-bg absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                  <span className="text-gold font-mono text-sm relative z-10">
-                    / 0{i + 1}
-                  </span>
-                  <div className="relative z-10">
-                    <h3 className="text-3xl font-bold tracking-tight mb-4 group-hover:text-gold transition-colors duration-500">
+                  {/* Subtle Cinematic Background Image */}
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src={
+                        i % 2 === 0
+                          ? "/images/partnership_abstract.png"
+                          : "/images/about_office.png"
+                      }
+                      alt="Abstract background"
+                      fill
+                      className="object-cover opacity-[0.15] filter grayscale scale-100 group-hover:scale-105 transition-transform duration-1000 ease-out"
+                    />
+                    {/* Deep shadow gradient to protect text readability */}
+                    <div className="absolute inset-0 bg-linear-to-t from-[#020202] via-[#020202]/90 to-[#020202]/40" />
+                  </div>
+
+                  {/* Premium internal gradient */}
+                  <div className="card-bg absolute inset-0 z-0 bg-linear-to-br from-white/5 via-transparent to-transparent opacity-50 group-hover:from-gold/10 group-hover:opacity-100 transition-all duration-700 pointer-events-none" />
+
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 z-0 w-16 h-16 border-t border-r border-gold/0 group-hover:border-gold/30 transition-colors duration-700 opacity-50" />
+
+                  {/* Header / Number */}
+                  <div className="flex justify-between items-start relative z-10">
+                    <span className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase font-bold">
+                      / 0{i + 1}
+                    </span>
+                    <span className="text-white/20 group-hover:text-gold/50 transition-colors duration-500 font-serif italic text-xl">
+                      Standard
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 mt-auto">
+                    <h3 className="text-3xl md:text-3xl font-bold tracking-tight mb-5 text-white/90 group-hover:text-white transition-colors duration-500">
                       {item.title}
                     </h3>
-                    <p className="text-white/50 text-lg leading-relaxed mix-blend-screen">
+                    <p className="text-white/50 text-base md:text-lg leading-relaxed mix-blend-screen group-hover:text-white/70 transition-colors duration-500">
                       {item.desc}
                     </p>
                   </div>
@@ -324,7 +464,7 @@ export default function PartnershipPage() {
                           {domain.title}
                         </h3>
                       </div>
-                      <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0">
                         <span className="text-xl font-light text-white/50">
                           {isActive ? "-" : "+"}
                         </span>
@@ -375,7 +515,7 @@ export default function PartnershipPage() {
                     key={i}
                     className="flex gap-4 items-start text-white/60 text-lg"
                   >
-                    <span className="mt-[7px] w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
+                    <span className="mt-1.75 w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
                     {benefit}
                   </li>
                 ))}
@@ -400,7 +540,7 @@ export default function PartnershipPage() {
                     key={i}
                     className="flex gap-4 items-start text-white/60 text-lg"
                   >
-                    <span className="mt-[7px] w-1.5 h-1.5 bg-white/20 rounded-full shrink-0" />
+                    <span className="mt-1.75 w-1.5 h-1.5 bg-white/20 rounded-full shrink-0" />
                     {expectation}
                   </li>
                 ))}
@@ -598,14 +738,16 @@ export default function PartnershipPage() {
                 </label>
               </div>
 
-              <div className="mt-12 flex justify-end">
-                <button
-                  type="submit"
-                  className="px-12 py-5 bg-white text-black font-bold uppercase tracking-[0.2em] rounded-full hover:bg-gold transition-colors hover:scale-105 active:scale-95 duration-300"
-                >
+              <button
+                type="submit"
+                data-magnetic
+                className="group relative flex items-center gap-4 bg-white text-black px-12 py-6 overflow-hidden w-full md:w-max mt-8"
+              >
+                <span className="relative z-10 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors duration-300">
                   Submit Application
-                </button>
-              </div>
+                </span>
+                <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
+              </button>
             </form>
           </div>
         </section>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import MenuOverlay from "./MenuOverlay";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,33 +13,45 @@ export default function Header() {
     <>
       <header className="flex items-center justify-between w-full pt-12 pb-4">
         {/* ── Brand ── */}
-        <Link href="/" className="inline-block group">
-          <span className="text-[22px] font-bold tracking-[0.04em] uppercase text-white leading-none">
-            LUSION
+        <Link href="/" className="inline-flex items-center gap-4 group">
+          <Image
+            src={logo}
+            alt="Gott Wald"
+            width={38}
+            height={38}
+            className="rounded-full"
+            priority
+          />
+          <span className="text-lg font-bold tracking-[0.06em] uppercase text-white leading-none hidden sm:block">
+            GOTT WALD
           </span>
         </Link>
 
         {/* ── Right Controls ── */}
         <div className="flex items-center gap-3">
-          {/* Dash / Minimize button */}
-          <button
-            className="w-[46px] h-[46px] rounded-full border border-white/20 flex items-center justify-center
-                       hover:border-white/40 transition-colors"
-            aria-label="Minimize"
+          {/* Apply Now — gold accent pill */}
+          <Link
+            href="/partnership#apply"
+            className="hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
+                       tracking-[0.02em] transition-all duration-300
+                       border border-gold/40 text-gold hover:bg-gold hover:text-black"
+            style={{ padding: "0 20px 0 22px" }}
           >
-            <span className="block w-[18px] h-[2px] bg-white/70" />
-          </button>
+            <span>Apply</span>
+            <span className="text-xs">→</span>
+          </Link>
 
           {/* LET'S TALK pill */}
-          <button
+          <Link
+            href="/contact"
             className="h-[46px] rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
                        tracking-[0.02em] transition-colors
-                       bg-[#2b2e3a] text-white hover:bg-[#3a3e4e]"
+                       bg-white/8 text-white hover:bg-white/15"
             style={{ padding: "0 18px 0 22px" }}
           >
             <span>Let&apos;s Talk</span>
             <span className="w-[6px] h-[6px] rounded-full bg-green-400" />
-          </button>
+          </Link>
 
           {/* MENU pill */}
           <button

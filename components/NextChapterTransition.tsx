@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -36,8 +36,10 @@ export default function NextChapterTransition({
   nextHref,
 }: NextChapterProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const pctRef = useRef<HTMLSpanElement>(null);
   const router = useRouter();
-  const [progress, setProgress] = useState(0);
   const hasNavigatedRef = useRef(false);
 
   const navigate = useCallback(() => {
@@ -93,6 +95,7 @@ export default function NextChapterTransition({
     if (!wrapper) return;
 
     // ScrollTrigger with NO pin — just reads scroll position
+    // Updates DOM directly via refs — zero React re-renders
     const trigger = ScrollTrigger.create({
       trigger: wrapper,
       start: "top top",
@@ -100,7 +103,18 @@ export default function NextChapterTransition({
       scrub: 0,
       onUpdate: (self) => {
         const p = Math.min(1, Math.max(0, self.progress));
-        setProgress(p);
+
+        // Direct DOM updates — no setState, no React reconciliation
+        if (titleRef.current) {
+          titleRef.current.style.transform = `scale(${1 + p * 0.15})`;
+          titleRef.current.style.opacity = String(0.3 + p * 0.7);
+        }
+        if (barRef.current) {
+          barRef.current.style.transform = `scaleX(${p})`;
+        }
+        if (pctRef.current) {
+          pctRef.current.textContent = `${Math.floor(p * 100)}%`;
+        }
 
         if (p >= 0.98 && !hasNavigatedRef.current) {
           navigate();
@@ -116,62 +130,44 @@ export default function NextChapterTransition({
   return (
     <div
       ref={wrapperRef}
-      style={{ height: "250vh" }}
-      className="relative w-full"
+      className="relative w-full h-[150vh] bg-[#050505] -mt-1"
     >
-      {/* Sticky inner — CSS handles the pinning, not GSAP */}
-      <section className="sticky top-0 h-screen w-full bg-[#050505] text-white flex flex-col justify-center px-gutter overflow-hidden z-20 border-t border-white/5">
-        {/* ── Top Meta ── */}
-        <div className="absolute top-[10vh] left-gutter flex flex-col gap-2 opacity-50">
-          <span className="text-[10px] tracking-[0.3em] uppercase font-bold text-white/50">
-            Keep Scrolling
-          </span>
-          <span className="text-[10px] tracking-[0.3em] uppercase font-bold text-white/50">
-            To Learn More
-          </span>
-        </div>
-
-        <div className="absolute top-[25vh] left-gutter">
-          <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-white/40">
-            Next Chapter
-          </span>
-        </div>
-
-        {/* ── Massive Interactive Title ── */}
-        <h2
-          className="text-[12vw] sm:text-[15vw] leading-[0.8] font-black tracking-tighter uppercase origin-left will-change-transform max-w-[80vw]"
-          style={{
-            transform: `scale(${1 + progress * 0.15})`,
-            opacity: 0.3 + progress * 0.7,
-          }}
-        >
-          {nextTitle}
-        </h2>
-
-        {/* ── Decorative Dot ── */}
-        <div className="absolute top-1/2 left-2/3 -translate-y-1/2 hidden lg:flex items-center justify-center pointer-events-none">
-          <div className="w-25 h-25 rounded-full border border-white/10 flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+      <section className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-20">
+        {/* Massive Interactive Title Container */}
+        <div className="relative w-full h-full flex flex-col justify-center items-center">
+          <div className="absolute top-[20vh] text-center w-full">
+            <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-white/30">
+              Next Chapter
+            </span>
           </div>
-        </div>
 
-        {/* ── Bottom Progress UI ── */}
-        <div className="absolute bottom-[10vh] right-gutter flex flex-col items-end gap-3 w-48 sm:w-64">
-          <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.3em] font-bold text-white/40 mb-1">
-            <span>Next Page</span>
-            <span>→</span>
+          <h2
+            ref={titleRef}
+            className="text-[15vw] leading-none font-black tracking-tighter uppercase text-center will-change-transform whitespace-nowrap"
+            style={{ opacity: 0.3 }}
+          >
+            {nextTitle}
+          </h2>
+
+          {/* Bottom Progress UI */}
+          <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-48 sm:w-64">
+            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.3em] font-bold text-white/40 mb-1">
+              <span>Next Page</span>
+              <span>→</span>
+            </div>
+            {/* Progress Bar */}
+            <div className="w-full h-px bg-white/10 relative origin-left">
+              <div
+                ref={barRef}
+                className="absolute top-0 left-0 w-full h-full bg-gold origin-left will-change-transform"
+                style={{ transform: "scaleX(0)" }}
+              />
+            </div>
+            {/* Percentage */}
+            <span ref={pctRef} className="text-[10px] font-mono text-white/30">
+              0%
+            </span>
           </div>
-          {/* Progress Bar */}
-          <div className="w-full h-px bg-white/10 relative origin-left">
-            <div
-              className="absolute top-0 left-0 w-full h-full bg-gold origin-left will-change-transform"
-              style={{ transform: `scaleX(${progress})` }}
-            />
-          </div>
-          {/* Percentage */}
-          <span className="text-[10px] font-mono text-white/30">
-            {Math.floor(progress * 100)}%
-          </span>
         </div>
       </section>
     </div>

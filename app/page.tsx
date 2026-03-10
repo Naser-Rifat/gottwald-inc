@@ -5,6 +5,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import ProjectTilesSection from "@/components/ProjectTilesSection";
+import StrategicInquirySection from "@/components/StrategicInquirySection";
 import VideoPanelSection from "@/components/VideoPanelSection";
 import FooterSection from "@/components/FooterSection";
 import WebGLCanvas from "@/components/WebGLCanvas";
@@ -24,6 +25,7 @@ export default function Home() {
         <ProjectTilesSection />
         <GlobalAuthoritySection />
         <AboutSection />
+        <StrategicInquirySection />
         <FooterSection />
         <NextChapterTransition nextTitle="ABOUT US" nextHref="/about" />
       </div>
