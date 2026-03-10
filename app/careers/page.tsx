@@ -734,7 +734,10 @@ export default function CareersPage() {
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Work Model
                   </label>
-                  <select className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer">
+                  <select
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    defaultValue="remote"
+                  >
                     <option value="remote" className="text-black">
                       Remote
                     </option>
@@ -753,7 +756,10 @@ export default function CareersPage() {
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
                     Entry Path
                   </label>
-                  <select className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer">
+                  <select
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    defaultValue="employee"
+                  >
                     <option value="employee" className="text-black">
                       Employee
                     </option>

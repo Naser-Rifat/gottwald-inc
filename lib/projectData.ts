@@ -19,14 +19,14 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: "solution-finder",
-    title: "Solution Finder",
+    slug: "strategic-governance",
+    title: "Strategic Governance",
     tags: ["CONSULTING", "STRATEGY"],
     image: "/assets/projects/dream-machine.png",
     description: "Root cause. Leverage. Sequence.",
     details:
-      "A strategic dissection of your core challenges, mapping the precise sequence of operations required to unblock growth and eliminate friction within the ecosystem.",
-    services: ["Diagnostics", "Strategic Positioning", "Risk Analysis"],
+      "A structural dissection of core challenges, mapping the precise operations required to unblock growth.",
+    services: ["Diagnostics", "Positioning", "Risk"],
     theme: {
       background: "#121212",
       text: "#ffffff",
@@ -34,13 +34,13 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "consulting",
-    title: "Consulting",
-    tags: ["STRUCTURE", "OPERATIONS"],
+    slug: "operational-architecture",
+    title: "Operational Architecture",
+    tags: ["STRUCTURE", "SYSTEMS"],
     image: "/assets/projects/synthetic-human.png",
-    description: "Structure that makes decisions inevitable.",
+    description: "Decisions made inevitable.",
     details:
-      "Transforming complex, ambiguous environments into highly structured operational frameworks. We don't advise; we architect paths of least resistance.",
+      "Transforming ambiguous environments into highly structured frameworks. We architect paths of least resistance.",
     services: [
       "Process Architecture",
       "Executive Alignment",
@@ -53,13 +53,13 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "marketing-communication",
-    title: "Marketing &\nCommunication",
-    tags: ["BRAND", "MEDIA"],
+    slug: "market-framing",
+    title: "Market Framing",
+    tags: ["BRAND", "AUTHORITY"],
     image: "/assets/projects/spatial-fusion.png",
-    description: "Trust infrastructure — not campaigns.",
+    description: "Trust infrastructure.",
     details:
-      "Building a communication ecosystem grounded in irrefutable reality. We generate authority and trust through exact language and systemic narrative distribution rather than fleeting advertisements.",
+      "Building a communication ecosystem grounded in irrefutable reality. Authority through systemic distribution.",
     services: [
       "Narrative Architecture",
       "Digital Presence",
@@ -72,13 +72,13 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "it-solutions-2030",
-    title: "IT Solutions 2030",
-    tags: ["TECHNOLOGY", "SYSTEMS"],
+    slug: "digital-infrastructure",
+    title: "Digital Infrastructure",
+    tags: ["TECHNOLOGY", "SCALE"],
     image: "/assets/projects/choo-choo-world.png",
-    description: "Your website as a growth engine.",
+    description: "Engineering elite-level scale.",
     details:
-      "Engineering future-proof digital assets capable of supporting elite-level scale without technical debt. From underlying architecture to front-facing conversion mechanisms.",
+      "Future-proof digital assets capable of supporting absolute scale without technical debt.",
     services: ["Web Development", "System Integration", "Data Security"],
     theme: {
       background: "#a5d6a7",

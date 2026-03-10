@@ -24,7 +24,7 @@ export default function Home() {
         <VideoPanelSection />
         <ProjectTilesSection />
         <GlobalAuthoritySection />
-        <AboutSection />
+        {/* <AboutSection /> */}
         <StrategicInquirySection />
         <FooterSection />
         <NextChapterTransition nextTitle="ABOUT US" nextHref="/about" />

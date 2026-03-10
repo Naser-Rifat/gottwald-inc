@@ -50,7 +50,10 @@ export default function RootLayout({
       className={`${satoshi.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-black text-text-primary font-sans antialiased">
+      <body
+        className="bg-black text-text-primary font-sans antialiased"
+        suppressHydrationWarning
+      >
         <DomSafetyPatch />
         <RouteCleanup />
         <GlobalCanvas />

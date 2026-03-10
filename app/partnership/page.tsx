@@ -629,8 +629,9 @@ export default function PartnershipPage() {
                     required
                     id="type"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
+                    defaultValue=""
                   >
-                    <option value="" disabled selected className="text-black">
+                    <option value="" disabled className="text-black">
                       Select Partnership Type
                     </option>
                     <option value="strategic" className="text-black">

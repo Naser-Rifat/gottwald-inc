@@ -21,6 +21,7 @@ export default function Header() {
             height={38}
             className="rounded-full"
             priority
+            suppressHydrationWarning
           />
           <span className="text-lg font-bold tracking-[0.06em] uppercase text-white leading-none hidden sm:block">
             GOTT WALD

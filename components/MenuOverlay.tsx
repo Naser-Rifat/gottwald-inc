@@ -14,33 +14,28 @@ interface MenuOverlayProps {
 const MENU_ITEMS = [
   {
     title: "OUR WORK",
-    href: "/work",
-    motto: "SEE OUR LATEST PROJECTS.",
+    href: "/our-work",
+    motto: "Case-level execution. Systems delivered—never promised.",
   },
   {
     title: "ABOUT US",
     href: "/about",
-    motto: "LEARN ABOUT OUR VISION.",
+    motto: "The Central Node behind the system. Tbilisi HQ.",
   },
   {
-    title: "ENTITIES",
-    href: "/entities",
-    motto: "FROM FINTECH TO HEALTHCARE — EXPLORING OUR REACH.",
-  },
-  {
-    title: "CONTACT US",
-    href: "/contact",
-    motto: "LET'S BUILD SOMETHING TOGETHER.",
+    title: "PARTNERSHIPS",
+    href: "/partnership",
+    motto: "Values-first selection. Confidential by default.",
   },
   {
     title: "CAREERS",
     href: "/careers",
-    motto: "JOIN OUR AWARD-WINNING TEAM.",
+    motto: "Join the standard. Character + capability.",
   },
   {
-    title: "PARTNERSHIP",
-    href: "/partnership",
-    motto: "ALIGNMENT. NOT PROCUREMENT.",
+    title: "CONTACT US",
+    href: "/contact",
+    motto: "Strategic inquiry (confidential). Start the dialogue.",
   },
 ];
 
@@ -48,6 +43,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const menuListRef = useRef<HTMLUListElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
+  const closingRef = useRef(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -58,30 +54,33 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   }, []);
 
   const closeMenu = (onComplete?: () => void) => {
-    if (!isOpen) return;
+    if (!isOpen || closingRef.current) return;
+    closingRef.current = true;
 
-    // Instantly disable native pointer events to prevent massive GSAP spam
-    if (overlayRef.current) {
-      overlayRef.current.style.pointerEvents = "none";
-    }
+    // Kill everything instantly — no reverse animation
     document.body.classList.remove("no-scroll");
 
     if (tl.current) {
-      // Clear previous callbacks just in case
-      tl.current.eventCallback("onReverseComplete", null);
-
-      // Instantly collapse the menu timeline (4x speed) so the user doesn't feel lag
-      tl.current
-        .timeScale(4)
-        .reverse()
-        .eventCallback("onReverseComplete", () => {
-          onClose();
-          if (onComplete) onComplete();
-        });
-    } else {
-      onClose();
-      if (onComplete) onComplete();
+      tl.current.kill();
+      tl.current = null;
     }
+
+    // Kill any orphan hover tweens
+    if (menuListRef.current) {
+      const els = menuListRef.current.querySelectorAll(
+        "li.group, .menu-item-text-group, .menu-motto",
+      );
+      els.forEach((el) => gsap.killTweensOf(el));
+    }
+
+    // Instantly hide overlay
+    if (overlayRef.current) {
+      gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+    }
+
+    closingRef.current = false;
+    onClose();
+    if (onComplete) onComplete();
   };
 
   const handleLinkClick = (
@@ -101,49 +100,51 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
     });
   };
 
+  // ── Build the GSAP open-animation timeline (reusable after kill) ──
+  const buildTimeline = () => {
+    if (!overlayRef.current || !menuListRef.current) return;
+
+    tl.current = gsap.timeline({ paused: true });
+
+    tl.current.to(overlayRef.current, {
+      autoAlpha: 1,
+      duration: 0.35,
+      ease: "power3.inOut",
+    });
+
+    tl.current.fromTo(
+      ".menu-fade-in",
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      "-=0.2",
+    );
+
+    if (menuListRef.current) {
+      const items = menuListRef.current.querySelectorAll(".menu-item-text");
+      tl.current.fromTo(
+        items,
+        { yPercent: 120, rotationZ: 3, opacity: 0 },
+        {
+          yPercent: 0,
+          rotationZ: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.04,
+          ease: "expo.out",
+        },
+        "-=0.3",
+      );
+    }
+  };
+
   useEffect(() => {
-    // 0. Wait for React Portal to mount the DOM nodes before referencing them
     if (!mounted || !overlayRef.current || !menuListRef.current) return;
 
-    // 1. Initialize GSAP timeline (paused)
     const ctx = gsap.context(() => {
-      tl.current = gsap.timeline({ paused: true });
-
-      // Overlay background fades in
-      tl.current.to(overlayRef.current, {
-        autoAlpha: 1, // handles visibility and opacity
-        duration: 0.6,
-        ease: "power3.inOut",
-      });
-
-      // Header/Footer fade in
-      tl.current.fromTo(
-        ".menu-fade-in",
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-        "-=0.4",
-      );
-
-      // Staggered cinematic reveal of menu items (sliding up out of their clip-box)
-      if (menuListRef.current) {
-        const items = menuListRef.current.querySelectorAll(".menu-item-text");
-        tl.current.fromTo(
-          items,
-          { yPercent: 120, rotationZ: 3, opacity: 0 },
-          {
-            yPercent: 0,
-            rotationZ: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.05,
-            ease: "expo.out",
-          },
-          "-=0.6",
-        );
-      }
+      buildTimeline();
     }, overlayRef);
 
-    // 2. Setup Native GSAP Hover Interactions (Zero React State = Zero Lag)
+    // Setup Native GSAP Hover Interactions
     const listItems = menuListRef.current?.querySelectorAll("li.group");
     if (listItems) {
       listItems.forEach((item) => {
@@ -151,43 +152,33 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
         const motto = item.querySelector(".menu-motto");
 
         item.addEventListener("mouseenter", () => {
-          // Dim all other items
           gsap.to(
             Array.from(listItems).filter((el) => el !== item),
             { opacity: 0.2, duration: 0.3, ease: "power2.out" },
           );
-
-          // Animate hovered item
           gsap.to(textGroup, {
-            x: 20, // Slide right slightly
+            x: 20,
             color: "rgba(255, 255, 255, 0.6)",
             duration: 0.4,
             ease: "power2.out",
           });
-
-          // Reveal motto
           gsap.to(motto, {
             opacity: 1,
             x: 0,
             duration: 0.4,
             ease: "back.out(1.5)",
-            delay: 0.1, // Slight offset for fluidity
+            delay: 0.1,
           });
         });
 
         item.addEventListener("mouseleave", () => {
-          // Restore all items
           gsap.to(listItems, { opacity: 1, duration: 0.3, ease: "power2.out" });
-
-          // Reset hovered item
           gsap.to(textGroup, {
             x: 0,
-            color: "rgba(255, 255, 255, 1)", // Reset to pure white
+            color: "rgba(255, 255, 255, 1)",
             duration: 0.4,
             ease: "power2.out",
           });
-
-          // Hide motto
           gsap.to(motto, {
             opacity: 0,
             x: -20,
@@ -202,16 +193,15 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   }, [mounted]);
 
   useEffect(() => {
-    if (!mounted || !tl.current) return;
+    if (!mounted) return;
 
     if (isOpen) {
+      closingRef.current = false;
+      // Rebuild timeline if it was killed on previous close
+      if (!tl.current) buildTimeline();
       if (overlayRef.current) overlayRef.current.style.pointerEvents = "auto";
-      tl.current.timeScale(1).play();
+      tl.current?.timeScale(1).play(0);
       document.body.classList.add("no-scroll");
-    } else if (tl.current.progress() > 0) {
-      // Fallback cleanup if closed purely via external React state
-      tl.current.timeScale(2).reverse();
-      document.body.classList.remove("no-scroll");
     }
   }, [isOpen, mounted]);
 
@@ -279,7 +269,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                 <div className="menu-item-text-group will-change-transform">
                   {/* Overflow hidden mask now inside the group so hover x: 20 moves the mask too. 
                       Added generous padding and negative margins to prevent tracking-tighter and tight leading text from clipping on any edge. */}
-                  <div className="overflow-hidden pt-2 pb-6 pr-12 pl-2 -mt-2 -mb-6 -mr-12 -ml-2">
+                  <div className="overflow-hidden pt-4 pb-8 pr-12 pl-2 -mt-4 -mb-8 -mr-12 -ml-2">
                     <span className="menu-item-text block text-[clamp(2.5rem,7vw,8rem)] leading-[0.85] font-black uppercase tracking-tighter will-change-transform origin-left text-white">
                       {item.title}
                     </span>
@@ -288,9 +278,9 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
               </a>
 
               {/* Motto (Hidden by default, Revealed via GSAP hover) */}
-              <div className="menu-motto opacity-0 -translate-x-5 pointer-events-none lg:absolute lg:left-[55vw] lg:top-1/2 lg:-translate-y-1/2 mt-2 lg:mt-0 flex items-center gap-4">
+              <div className="menu-motto opacity-0 -translate-x-5 pointer-events-none lg:absolute lg:left-[55vw] lg:top-1/2 lg:-translate-y-1/2 mt-2 mb-6 lg:mb-0 lg:mt-0 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 pl-2 lg:pl-0 relative z-0">
                 <span className="w-8 h-px bg-gold hidden lg:block" />
-                <span className="text-[9px] lg:text-[10px] font-medium tracking-[0.3em] text-gold uppercase whitespace-nowrap">
+                <span className="text-[10px] sm:text-[11px] font-medium tracking-widest text-gold uppercase whitespace-normal leading-normal max-w-[85vw] lg:max-w-md mt-1 lg:mt-0 drop-shadow-md">
                   {item.motto}
                 </span>
               </div>

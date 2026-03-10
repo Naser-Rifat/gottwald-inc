@@ -39,7 +39,7 @@ export default class VideoPanelShader extends THREE.Group {
     this.position.copy(startWorldRect.position);
 
     const videoTexture = createVideoTexture(
-      "/assets/pexels-2519660-uhd_3840_2160_24fps.mp4",
+      "/assets/about-gott-wald.webm",
     );
     const startRectLocal = elementToLocalRect(PANEL_START_ID, this, camera);
     const endRectLocal = elementToLocalRect(PANEL_END_ID, this, camera);
