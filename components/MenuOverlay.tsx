@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
@@ -104,8 +104,14 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       // (horizontal scroll, hero parallax) create pin-spacers that
       // cause freeze if left alive during unmount
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      window.scrollTo(0, 0);
-      router.push(href);
+
+      // Use a timeout to escape the current React event loop and ensure
+      // the unmount phase completes before triggering Next.js routing.
+      // This fixes the bug where page content fails to render when navigating.
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        router.push(href);
+      }, 50);
     });
   };
 
