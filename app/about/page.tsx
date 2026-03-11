@@ -27,8 +27,10 @@ export default function AboutPage() {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        window.scrollTo(0, 0);
-        router.push("/contact");
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          router.push("/contact");
+        }, 50);
       },
     });
 

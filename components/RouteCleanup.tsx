@@ -12,8 +12,12 @@ if (typeof window !== "undefined") {
 /**
  * RouteCleanup
  *
- * 1. Kills ALL active GSAP ScrollTrigger instances on route change
- * 2. Forces scroll position to top so pages always show the hero first
+ * 1. Forces scroll position to top so pages always show the hero first
+ * Note: We DO NOT globally kill ScrollTriggers here anymore. Next.js 14+ 
+ * runs useEffect cleanup asynchronously, meaning a global kill here 
+ * will falsely kill the NEW page's triggers created in useLayoutEffect.
+ *
+ * Individual pages MUST handle their own cleanup via gsap.context().revert()
  */
 export default function RouteCleanup() {
   const pathname = usePathname();
@@ -22,14 +26,11 @@ export default function RouteCleanup() {
     // On route ENTRY: scroll to top immediately
     window.scrollTo(0, 0);
 
-    // On route EXIT: clear cached scroll positions so the new page
-    // starts fresh, but do NOT kill triggers — each page handles
-    // its own cleanup via gsap.context().revert()
     return () => {
-      // Kill ALL active triggers first — pinned sections (horizontal scroll,
-      // hero parallax) create pin-spacers that block layout if left alive
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      // Clear cached scroll positions so the new page starts fresh
       ScrollTrigger.clearScrollMemory();
+      // Inform ScrollTrigger that layout has dramatically changed
+      ScrollTrigger.refresh();
     };
   }, [pathname]);
 
