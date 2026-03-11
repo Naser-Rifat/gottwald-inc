@@ -64,10 +64,10 @@ export default function StrategicInquirySection() {
       {/* Cinematic Depth: Huge abstract glow in the background */}
       <div className="absolute top-0 left-0 w-[80vw] h-[80vw] bg-gold/5 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 -translate-y-1/3" />
 
-      <div className="max-w-7xl mx-auto flex flex-col xl:flex-row gap-16 xl:gap-24 relative z-10">
+      <div className="w-full flex flex-col xl:flex-row justify-between gap-16 xl:gap-[5vw] relative z-10">
         {/* Left Column: Monolithic Heading */}
-        <div className="flex-1 reveal-up pr-4 xl:max-w-3xl">
-          <h2 className="text-[clamp(4.5rem,8vw,11.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-10">
+        <div className="reveal-up xl:w-[60%] shrink-0">
+          <h2 className="text-[clamp(4.5rem,8vw,11.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-10 break-words mix-blend-screen">
             Initiate
             <br />
             Strategic
@@ -97,9 +97,9 @@ export default function StrategicInquirySection() {
         </div>
 
         {/* Right Column: Paragraphs & Pills matching reference */}
-        <div className="flex-1 xl:max-w-2xl flex flex-col justify-start gap-12 xl:mt-4">
+        <div className="xl:w-[35%] flex flex-col justify-start gap-12 xl:mt-4 shrink-0">
           <div className="flex flex-col gap-6">
-            <p className="slide-left text-white font-medium text-[clamp(1.5rem,2.5vw,2.5rem)] leading-[1.3] pr-4 tracking-tight">
+            <p className="slide-left text-white font-medium text-[clamp(1.5rem,2.5vw,2.5rem)] leading-[1.3] tracking-tight">
               We are currently
               <br className="hidden md:block" />
               selecting a limited
