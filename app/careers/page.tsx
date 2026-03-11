@@ -136,7 +136,7 @@ export default function CareersPage() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // General Reveal Animations for texts
-      const reveals = document.querySelectorAll(".reveal-text");
+      const reveals = gsap.utils.toArray(".reveal-text", pageRef.current!) as HTMLElement[];
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
@@ -156,7 +156,7 @@ export default function CareersPage() {
       });
 
       // Staggered reveal for rows/lists
-      const staggerGroups = document.querySelectorAll(".stagger-group");
+      const staggerGroups = gsap.utils.toArray(".stagger-group", pageRef.current!) as HTMLElement[];
       staggerGroups.forEach((group) => {
         const items = group.querySelectorAll(".stagger-item");
         gsap.fromTo(

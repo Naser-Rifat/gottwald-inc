@@ -65,7 +65,7 @@ export default function PartnershipPage() {
       }
 
       // 2. Global Reveal Up (below-fold sections only)
-      const reveals = document.querySelectorAll(".reveal-up");
+      const reveals = gsap.utils.toArray(".reveal-up", pageRef.current!) as HTMLElement[];
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
@@ -85,7 +85,7 @@ export default function PartnershipPage() {
       });
 
       // 3. Staggered Manifesto Lines
-      const manifestoLines = document.querySelectorAll(".manifesto-line");
+      const manifestoLines = gsap.utils.toArray(".manifesto-line", pageRef.current!) as HTMLElement[];
       gsap.fromTo(
         manifestoLines,
         { opacity: 0.1, x: -20 },
@@ -105,9 +105,7 @@ export default function PartnershipPage() {
       );
 
       // 4. Standards Horizontal Scroll interactions
-      const scrollWrapper = document.querySelector(
-        ".standards-scroll-wrapper",
-      ) as HTMLElement;
+      const scrollWrapper = (gsap.utils.toArray(".standards-scroll-wrapper", pageRef.current!)[0] as HTMLElement);
       if (scrollWrapper && window.innerWidth >= 768) {
         // Calculate the total scrollable distance based on full scrollWidth minus viewport width
         // Adding a slight buffer to the end using window.innerWidth * 0.1

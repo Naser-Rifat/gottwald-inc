@@ -22,11 +22,11 @@ export default function RouteCleanup() {
     // On route ENTRY: scroll to top immediately
     window.scrollTo(0, 0);
 
-    // On route EXIT: kill all ScrollTrigger instances
+    // On route EXIT: clear cached scroll positions so the new page
+    // starts fresh, but do NOT kill triggers — each page handles
+    // its own cleanup via gsap.context().revert()
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       ScrollTrigger.clearScrollMemory();
-      ScrollTrigger.refresh();
     };
   }, [pathname]);
 

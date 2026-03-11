@@ -110,7 +110,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
             alignItems: "center",
             gap: "8px",
             color: txt,
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 500,
             letterSpacing: "0.04em",
             opacity: 0.65,
@@ -125,7 +125,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
         <span
           style={{
             color: txt,
-            fontSize: "10px",
+            fontSize: "11px",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             opacity: 0.35,
@@ -187,10 +187,10 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
               style={{ display: "flex", gap: "32px", alignItems: "flex-start" }}
             >
               {/* Col A: Description + Button */}
-              <div style={{ flex: 1, maxWidth: "230px" }}>
+              <div style={{ flex: 1, maxWidth: "320px" }}>
                 <p
                   style={{
-                    fontSize: "11.5px",
+                    fontSize: "15px",
                     lineHeight: 1.65,
                     opacity: 0.7,
                     margin: "0 0 10px 0",
@@ -200,7 +200,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 </p>
                 <p
                   style={{
-                    fontSize: "11.5px",
+                    fontSize: "15px",
                     lineHeight: 1.65,
                     opacity: 0.7,
                     margin: "0 0 20px 0",
@@ -219,7 +219,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                     borderRadius: "100px",
                     border: "none",
                     cursor: "pointer",
-                    fontSize: "10px",
+                    fontSize: "12px",
                     fontWeight: 700,
                     letterSpacing: "0.14em",
                     textTransform: "uppercase" as const,
@@ -241,11 +241,11 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
               </div>
 
               {/* Col B: Services + Recognitions */}
-              <div style={{ width: "130px", flexShrink: 0 }}>
+              <div style={{ width: "180px", flexShrink: 0 }}>
                 <div style={{ marginBottom: "16px" }}>
                   <h3
                     style={{
-                      fontSize: "9px",
+                      fontSize: "11px",
                       letterSpacing: "0.18em",
                       fontWeight: 700,
                       textTransform: "uppercase" as const,
@@ -260,7 +260,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                       listStyle: "none",
                       padding: 0,
                       margin: 0,
-                      fontSize: "11.5px",
+                      fontSize: "14px",
                       lineHeight: 1.6,
                       opacity: 0.7,
                     }}
@@ -274,7 +274,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                   <div>
                     <h3
                       style={{
-                        fontSize: "9px",
+                        fontSize: "11px",
                         letterSpacing: "0.18em",
                         fontWeight: 700,
                         textTransform: "uppercase" as const,
@@ -289,7 +289,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                         listStyle: "none",
                         padding: 0,
                         margin: 0,
-                        fontSize: "11.5px",
+                        fontSize: "14px",
                         lineHeight: 1.6,
                         opacity: 0.7,
                       }}
@@ -400,7 +400,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
           >
             <p
               style={{
-                fontSize: "12px",
+                fontSize: "15px",
                 color: "rgba(26,26,26,0.55)",
                 lineHeight: 1.75,
                 marginBottom: "20px",
@@ -423,7 +423,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 </span>
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: "12px",
                     color: "rgba(26,26,26,0.45)",
                     marginTop: "4px",
                     letterSpacing: "0.04em",
@@ -445,7 +445,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 </span>
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: "12px",
                     color: "rgba(26,26,26,0.45)",
                     marginTop: "4px",
                     letterSpacing: "0.04em",
@@ -521,7 +521,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
             </h3>
             <p
               style={{
-                fontSize: "12px",
+                fontSize: "15px",
                 color: "rgba(26,26,26,0.55)",
                 lineHeight: 1.75,
                 marginBottom: "20px",
@@ -541,7 +541,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
               <div>
                 <span
                   style={{
-                    fontSize: "9px",
+                    fontSize: "11px",
                     letterSpacing: "0.18em",
                     color: "rgba(26,26,26,0.35)",
                     textTransform: "uppercase" as const,
@@ -551,7 +551,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 </span>
                 <p
                   style={{
-                    fontSize: "12px",
+                    fontSize: "14px",
                     fontWeight: 500,
                     marginTop: "2px",
                   }}
@@ -564,7 +564,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontWeight: 600,
                   textDecoration: "none",
                   color: "#1a1a1a",
@@ -614,7 +614,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
           <div style={{ maxWidth: "300px", color: "#fff" }}>
             <span
               style={{
-                fontSize: "9px",
+                fontSize: "11px",
                 letterSpacing: "0.25em",
                 color: "rgba(255,255,255,0.25)",
                 textTransform: "uppercase" as const,
@@ -639,7 +639,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
             <p
               style={{
                 color: "rgba(255,255,255,0.35)",
-                fontSize: "12px",
+                fontSize: "15px",
                 lineHeight: 1.75,
               }}
             >

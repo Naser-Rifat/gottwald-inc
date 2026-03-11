@@ -4,7 +4,7 @@ export default function VideoPanelSection() {
   return (
     <section
       id="video-panel-section"
-      className="flex flex-col px-[5vw] w-full min-h-screen py-[15vh]"
+      className="flex flex-col px-gutter w-full min-h-screen py-[15vh]"
     >
       {/* Animated headings */}
       <div className="about-headers pb-[8vh]">
@@ -36,11 +36,14 @@ export default function VideoPanelSection() {
         </p>
         <div className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-serif italic">
           <Link href="/about">
-            <button className="h-[46px] rounded-full bg-white text-black flex items-center gap-3 px-6 hover:bg-white/90 transition-colors mt-4">
-              <span className="w-1.5 h-1.5 bg-black rounded-full" />
-              <span className="text-sm font-bold tracking-[0.02em] uppercase">
-                About Us
-              </span>
+            <button
+              className="h-11.5 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
+                         tracking-[0.02em] transition-colors mt-4
+                         bg-white/10 text-white hover:bg-white/15 border border-white/10"
+              style={{ padding: "0 18px 0 22px" }}
+            >
+              <span>About Us</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
             </button>
           </Link>
         </div>

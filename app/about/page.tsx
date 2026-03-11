@@ -76,7 +76,7 @@ export default function AboutPage() {
       }
 
       // 3. Reveal Y up
-      const reveals = document.querySelectorAll(".reveal-up");
+      const reveals = gsap.utils.toArray(".reveal-up", pageRef.current!) as HTMLElement[];
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
@@ -105,7 +105,8 @@ export default function AboutPage() {
       });
 
       // 5. Parallax glow spheres
-      const glows = document.querySelectorAll(".float-glow");
+      // 5. Parallax glow spheres
+      const glows = gsap.utils.toArray(".float-glow", pageRef.current!) as HTMLElement[];
       glows.forEach((glow, i) => {
         gsap.to(glow, {
           y: -200 - i * 50,
@@ -127,15 +128,15 @@ export default function AboutPage() {
   return (
     <div
       ref={pageRef}
-      className="bg-[#050505] min-h-screen text-white font-sans overflow-hidden selection:bg-white selection:text-black"
+      className="bg-base min-h-screen text-white font-sans overflow-hidden selection:bg-white selection:text-black"
     >
-      <div className="fixed top-0 left-0 w-full z-50 px-[5vw] mix-blend-difference pointer-events-auto">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter mix-blend-difference pointer-events-auto">
         <Header />
       </div>
 
       <main>
         {/* ── HERO — SPLIT EDITORIAL ── */}
-        <section className="h-screen w-full flex items-end relative bg-[#020202] overflow-hidden">
+        <section className="h-screen w-full flex items-end relative bg-base overflow-hidden">
           {/* Ambient glow background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div
@@ -157,7 +158,7 @@ export default function AboutPage() {
           {/* Main bottom-anchored content */}
           <div
             ref={heroTextRef}
-            className="relative w-full px-[5vw] pb-16 will-change-transform"
+            className="relative w-full px-gutter pb-16 will-change-transform"
           >
             {/* Main Split Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-0 lg:gap-20 items-end">
@@ -225,9 +226,9 @@ export default function AboutPage() {
         </section>
 
         {/* ── THE INTRO (Typography contrast) ── */}
-        <section className="px-[5vw] py-[25vh] bg-[#050505] relative z-10 border-t border-white/5">
+        <section className="px-gutter py-[18vh] bg-base relative z-10 border-t border-white/5">
           <div className="max-w-5xl mx-auto flex flex-col gap-16 reveal-up">
-            <p className="text-3xl md:text-5xl font-light leading-[1.4] text-white/50">
+            <p className="text-3xl md:text-5xl font-light leading-[1.4] text-white/60">
               If you&apos;re a CEO, founder, executive — or you run an SME that
               must grow — you know this moment: <br />
               <br />
@@ -252,7 +253,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── THE AXIS (Split layout) ── */}
-        <section className="px-[5vw] pt-[15vh] pb-[25vh] bg-transparent">
+        <section className="px-gutter pt-[12vh] pb-[18vh] bg-transparent">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[10vw] max-w-7xl mx-auto items-center">
             <div className="reveal-up">
               <h2 className="text-[clamp(3rem,6vw,7rem)] font-bold tracking-tighter uppercase leading-[0.9]">
@@ -285,18 +286,18 @@ export default function AboutPage() {
         </section>
 
         {/* ── EDITORIAL IMAGE (BRUTALIST ARCHITECTURE) ── */}
-        <section className="px-[5vw] pt-[5vh] pb-[15vh]">
+        <section className="px-gutter pt-[5vh] pb-[12vh]">
           <div className="max-w-7xl mx-auto">
             <CinematicImage
               src="/images/about_office.png"
               alt="Gott Wald Office Architecture"
-              className="w-full aspect-21/9 md:aspect-2.5/1 rounded-sm filter grayscale contrast-125 brightness-90 border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
+              className="w-full aspect-21/9 md:aspect-2.5/1 rounded-sm contrast-110 brightness-95 border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
             />
           </div>
         </section>
 
         {/* ── DIFFERENCE / STAND FOR ── */}
-        <section className="px-[5vw] py-[30vh] bg-[#020202] border-y border-white/5 relative flex flex-col items-center text-center">
+        <section className="px-gutter py-[20vh] bg-base border-y border-white/5 relative flex flex-col items-center text-center">
           <div
             className="float-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] rounded-full pointer-events-none"
             style={{
@@ -321,7 +322,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="px-[5vw] py-[20vh] bg-[#050505]">
+        <section className="px-gutter py-[16vh] bg-base">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-24">
             <div className="flex-1 reveal-up">
               <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block mb-8">
@@ -367,7 +368,7 @@ export default function AboutPage() {
         {/* ── WHAT WE DO DIFFERENTLY (HORIZONTAL SCROLL) ── */}
         <div
           ref={horizontalRef}
-          className="bg-[#020202] h-screen w-full flex overflow-hidden border-t border-white/5 relative"
+          className="bg-base h-screen w-full flex overflow-hidden border-t border-white/5 relative"
         >
           <div className="absolute top-[10%] left-[5vw] z-10 pointer-events-none">
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block">
@@ -421,11 +422,11 @@ export default function AboutPage() {
             {/* Panel 3 */}
             <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
               <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-[#d4af37]/20 italic font-serif">
+                <span className="text-[15vw] leading-[0.7] font-black text-gold/20 italic font-serif">
                   03
                 </span>
                 <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8 text-[#d4af37]">
+                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8 text-gold">
                     Build signal, not volume
                   </h3>
                   <p className="text-2xl text-white/40 font-light leading-relaxed">
@@ -474,7 +475,7 @@ export default function AboutPage() {
         </div>
 
         {/* ── MINI CASE STORIES (STICKY STACK) ── */}
-        <section className="px-[5vw] py-[20vh] bg-[#050505]">
+        <section className="px-gutter py-[16vh] bg-base">
           <div className="reveal-up text-center mb-32">
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block mb-6">
               MINI CASE STORIES
@@ -691,7 +692,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── THE PATRON MANIFESTO (Cinematic Typography) ── */}
-        <section className="px-[5vw] py-[30vh] bg-[#000] relative overflow-hidden">
+        <section className="px-gutter py-[20vh] bg-base relative overflow-hidden">
           <div
             className="float-glow absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-[50vh] opacity-50 pointer-events-none"
             style={{
@@ -737,7 +738,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── OUR FOUNDATION (Marquee) ── */}
-        <section className="py-[10vh] bg-[#0d0a00] border-y border-[#d4af37]/10 overflow-hidden relative">
+        <section className="py-[8vh] bg-[#0d0a00] border-y border-gold/10 overflow-hidden relative">
           <div className="absolute inset-y-0 left-0 w-[15vw] bg-gradient-to-r from-[#0d0a00] to-transparent z-10" />
           <div className="absolute inset-y-0 right-0 w-[15vw] bg-gradient-to-l from-[#0d0a00] to-transparent z-10" />
 
@@ -746,7 +747,7 @@ export default function AboutPage() {
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
-                  className="flex gap-24 items-center text-[clamp(3rem,6vw,8rem)] font-serif italic text-[#d4af37]/80"
+                  className="flex gap-24 items-center text-[clamp(3rem,6vw,8rem)] font-serif italic text-gold/80"
                 >
                   <span>Love</span>
                   <span className="text-white/10 font-sans not-italic text-4xl">
@@ -779,7 +780,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── THE PATRON ROLE (Grid layout) ── */}
-        <section className="px-[5vw] py-[25vh] bg-transparent">
+        <section className="px-gutter py-[18vh] bg-transparent">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             <div className="reveal-up">
               <h4 className="text-[#d4af37] text-sm uppercase tracking-[0.3em] font-bold mb-8">
@@ -836,7 +837,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── FINAL CTA ── */}
-        <section className="px-[5vw] py-[25vh] border-t border-[#d4af37]/20 relative overflow-hidden bg-[#0a0800]">
+        <section className="px-gutter py-[18vh] border-t border-gold/20 relative overflow-hidden bg-base">
           <div
             className="float-glow absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] rounded-full pointer-events-none mix-blend-screen"
             style={{
@@ -856,11 +857,11 @@ export default function AboutPage() {
                   cleanly solved
                 </span>
               </h2>
-              <button className="h-[80px] rounded-full bg-white text-black inline-flex items-center justify-center px-16 hover:scale-[1.05] transition-transform uppercase text-sm tracking-[0.3em] font-extrabold shadow-[0_0_80px_rgba(212,175,55,0.4)] mb-12 relative overflow-hidden group">
-                <span className="relative z-10">
+              <button className="h-20 rounded-full bg-white text-black inline-flex items-center justify-center px-16 hover:scale-105 transition-all duration-500 uppercase text-sm tracking-[0.3em] font-extrabold shadow-[0_0_80px_rgba(212,175,55,0.4)] mb-12 relative overflow-hidden group">
+                <span className="relative z-10 group-hover:text-white transition-colors duration-500">
                   Request Strategic Conversation
                 </span>
-                <div className="absolute inset-0 bg-[#d4af37] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-in-out" />
+                <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out" />
               </button>
             </div>
           </div>

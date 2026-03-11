@@ -120,7 +120,7 @@ export default function ProjectTilesSection() {
             </div>
 
             {/* Tags */}
-            <div className="flex items-center gap-1 mb-2.5">
+            <div className="flex items-center gap-1 mb-2.5 mt-5">
               {project.tags.map((tag, i) => (
                 <span key={tag} className="flex items-center">
                   <span className="text-[10px] tracking-[0.15em] text-white/35 uppercase font-normal">

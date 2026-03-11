@@ -46,48 +46,41 @@ export default function NextChapterTransition({
     if (hasNavigatedRef.current) return;
     hasNavigatedRef.current = true;
 
-    // Create a smooth fade to black before navigating
-    // This hides any layout jumps and gives us time to reset scroll
+    // 1. Kill ALL current ScrollTrigger instances immediately.
+    //    This is critical: the partnership page's pinned horizontal scroll
+    //    creates a massive scroll area. If we don't kill triggers before
+    //    navigating, the browser tries to recalculate the entire pin-spacer
+    //    layout during unmount, causing severe lag/freeze.
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    // 2. Force scroll to top BEFORE navigation so the new page
+    //    initializes its GSAP triggers at y=0
+    window.scrollTo(0, 0);
+
+    // 3. Create a smooth fade-to-black overlay
     const overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
-    overlay.style.backgroundColor = "black";
-    overlay.style.zIndex = "9999";
-    overlay.style.opacity = "0";
-    overlay.style.transition = "opacity 0.4s ease-out";
-    overlay.style.pointerEvents = "none";
+    overlay.style.cssText =
+      "position:fixed;top:0;left:0;width:100vw;height:100vh;background:black;z-index:9999;opacity:0;transition:opacity 0.35s ease-out;pointer-events:none";
     document.body.appendChild(overlay);
 
-    // Trigger fade in
     requestAnimationFrame(() => {
       overlay.style.opacity = "1";
     });
 
-    // Wait for fade to finish, then prepare for next route
+    // 4. Navigate after the overlay fades in
     setTimeout(() => {
-      // Force scroll to top BEFORE React renders the new page
-      // This ensures GSAP ScrollTriggers on the new page initialize with y=0
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-
-      // Kill current triggers to prevent them from firing during unmount
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-
-      // Navigate
       router.push(nextHref);
 
-      // Clean up overlay after navigation completes
+      // 5. Remove overlay after the new page has time to render
       setTimeout(() => {
         if (overlay.parentNode) {
           overlay.style.opacity = "0";
-          setTimeout(() => document.body.removeChild(overlay), 400);
+          setTimeout(() => {
+            if (overlay.parentNode) document.body.removeChild(overlay);
+          }, 400);
         }
       }, 500);
-    }, 400);
+    }, 350);
   }, [nextHref, router]);
 
   useEffect(() => {

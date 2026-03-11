@@ -102,8 +102,15 @@ export default function PhysicsSandboxSection() {
             </h1>
           </div>
 
-          {/* Right side: Description and Scroll aligned vertically to bottom */}
+          {/* Right side: Ambient Graphic, Description and Scroll aligned vertically to bottom */}
           <div className="flex flex-col md:flex-row lg:flex-col justify-between items-start md:items-end lg:items-end w-full lg:w-auto gap-8 lg:gap-6 mb-2">
+            {/* Ambient Hero Balancer - A subtle architectural/energy core */}
+            <div className="hidden lg:flex w-32 h-32 relative items-center justify-center opacity-70 mix-blend-screen pointer-events-none mb-4">
+              <div className="absolute inset-0 border border-gold/30 rounded-full animate-[spin_20s_linear_infinite]" />
+              <div className="absolute inset-2 border border-white/10 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+              <div className="absolute inset-8 bg-gold/5 blur-xl rounded-full" />
+              <div className="w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_15px_rgba(201,168,76,0.8)]" />
+            </div>
             {/* Scroll Indicator positioned bottom-right */}
             <div
               className="hero-scroll group flex items-center gap-3 cursor-pointer mt-4 lg:mt-8"

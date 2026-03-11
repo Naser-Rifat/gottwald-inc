@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Header from "@/components/Header";
 import { projects } from "@/lib/projectData";
 import { motion } from "framer-motion";
 import gsap from "gsap";
@@ -79,8 +80,13 @@ export default function OurWorkPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-transparent pt-[20vh] pb-[15vh]">
-      <section ref={containerRef} className="flex flex-col px-gutter w-full">
+    <div className="bg-transparent min-h-screen text-white font-sans overflow-hidden selection:bg-gold selection:text-black">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter mix-blend-difference pointer-events-auto">
+        <Header />
+      </div>
+
+      <main className="min-h-screen bg-transparent pt-[20vh] pb-[15vh]">
+        <section ref={containerRef} className="flex flex-col px-gutter w-full">
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-[8vw] mb-20 lg:mb-32 max-w-[1600px] mx-auto w-full">
           {/* Massive Headline Side */}
@@ -181,5 +187,6 @@ export default function OurWorkPage() {
         </div>
       </section>
     </main>
+    </div>
   );
 }
