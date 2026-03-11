@@ -7,15 +7,11 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
-import CinematicImage from "@/components/CinematicImage";
 import {
-  MANIFESTO_LINES,
-  PARTNER_BENEFITS,
-  PARTNER_EXPECTATIONS,
-  PARTNERSHIP_ARCHETYPES,
-  PARTNERSHIP_DOMAINS,
-  PARTNERSHIP_PRINCIPLES,
   NON_NEGOTIABLES,
+  PARTNERSHIP_DOMAINS,
+  PARTNERSHIP_ARCHETYPES,
+  PARTNER_BENEFITS,
 } from "@/lib/partnershipData";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -28,18 +24,13 @@ export default function PartnershipPage() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Immediate Hero Entrance — no ScrollTrigger, fires on mount
+      // 1. Hero Entrance
       if (heroTextRef.current) {
         const heroChildren =
           heroTextRef.current.querySelectorAll(".hero-reveal");
-
-        // Set initial state instantly (no flash of unstyled content)
         gsap.set(heroChildren, { opacity: 0, y: 30 });
 
-        // Staggered entrance timeline
         const heroTl = gsap.timeline({ delay: 0.2 });
-
-        // Text reveals with stagger
         heroTl.to(heroChildren, {
           opacity: 1,
           y: 0,
@@ -48,7 +39,8 @@ export default function PartnershipPage() {
           ease: "expo.out",
         });
 
-        // Hero parallax on scroll (pin + scale down)
+        // Hero parallax on scroll (NO pin — avoids double-pin conflict
+        // with standards horizontal scroll section)
         gsap.to(heroTextRef.current, {
           scale: 0.8,
           opacity: 0,
@@ -59,13 +51,15 @@ export default function PartnershipPage() {
             start: "top top",
             end: "bottom top",
             scrub: true,
-            pin: true,
           },
         });
       }
 
-      // 2. Global Reveal Up (below-fold sections only)
-      const reveals = gsap.utils.toArray(".reveal-up", pageRef.current!) as HTMLElement[];
+      // 2. Reveal Up animations
+      const reveals = gsap.utils.toArray(
+        ".reveal-up",
+        pageRef.current!,
+      ) as HTMLElement[];
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
@@ -84,31 +78,12 @@ export default function PartnershipPage() {
         );
       });
 
-      // 3. Staggered Manifesto Lines
-      const manifestoLines = gsap.utils.toArray(".manifesto-line", pageRef.current!) as HTMLElement[];
-      gsap.fromTo(
-        manifestoLines,
-        { opacity: 0.1, x: -20 },
-        {
-          opacity: 1,
-          x: 0,
-          stagger: 0.1,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".manifesto-container",
-            start: "top 70%",
-            end: "bottom 60%",
-            scrub: true,
-          },
-        },
-      );
-
-      // 4. Standards Horizontal Scroll interactions
-      const scrollWrapper = (gsap.utils.toArray(".standards-scroll-wrapper", pageRef.current!)[0] as HTMLElement);
+      // 3. Standards Horizontal Scroll
+      const scrollWrapper = gsap.utils.toArray(
+        ".standards-scroll-wrapper",
+        pageRef.current!,
+      )[0] as HTMLElement;
       if (scrollWrapper && window.innerWidth >= 768) {
-        // Calculate the total scrollable distance based on full scrollWidth minus viewport width
-        // Adding a slight buffer to the end using window.innerWidth * 0.1
         const xOffset = -(
           scrollWrapper.scrollWidth -
           window.innerWidth +
@@ -142,14 +117,13 @@ export default function PartnershipPage() {
       ref={pageRef}
       className="bg-transparent min-h-screen text-white font-sans overflow-hidden selection:bg-gold selection:text-black"
     >
-      <div className="fixed top-0 left-0 w-full z-50 px-gutter mix-blend-difference pointer-events-auto">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
 
       <main>
-        {/* ── HERO — PARTNERSHIP MANIFESTO ── */}
+        {/* ── SECTION 1: HERO ── */}
         <section className="h-screen w-full flex items-end relative bg-transparent overflow-hidden">
-          {/* Subtle depth gradient overlay */}
           <div
             className="absolute inset-0 pointer-events-none z-1"
             style={{
@@ -157,20 +131,15 @@ export default function PartnershipPage() {
                 "linear-gradient(135deg, rgba(0,0,0,0.4) 0%, transparent 50%, rgba(0,0,0,0.2) 100%)",
             }}
           />
-
-          {/* Thin top rule — entry signal */}
           <div className="absolute top-0 left-0 w-full h-px bg-white/5 z-2" />
 
-          {/* Main hero content */}
           <div
             ref={heroTextRef}
             className="relative w-full px-gutter pb-12 will-change-transform z-5"
           >
-            {/* Main two-column grid */}
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_340px] gap-12 lg:gap-16 items-end">
-              {/* LEFT: Power-statement manifesto */}
+              {/* LEFT: Power-statement */}
               <div className="hero-reveal">
-                {/* Gold chapter number */}
                 <div className="flex items-center gap-3 mb-8">
                   <span className="text-gold text-[11px] font-bold tracking-[0.4em] uppercase">
                     02/
@@ -182,22 +151,21 @@ export default function PartnershipPage() {
                 </div>
 
                 <h1 className="text-[clamp(2.8rem,8vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white">
-                  WE DON&apos;T
+                  APPLY TO
                   <br />
-                  BUY
+                  THE
                   <br />
-                  VENDORS.
+                  ECOSYSTEM.
                 </h1>
 
-                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.6rem,3.5vw,4.5rem)] font-serif italic text-gold/60 tracking-tight leading-tight mt-12 pl-0.5">
+                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.4rem,2.5vw,3rem)] font-serif italic text-gold/60 tracking-tight leading-tight mt-12 pl-0.5">
                   <span className="w-8 md:w-12 h-0.5 bg-gold/50" />
-                  We select partners.
+                  Proven partners only.
                 </p>
               </div>
 
-              {/* RIGHT: HUD Metric Strip — elevated */}
+              {/* RIGHT: HUD Metric Strip */}
               <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-black/70 backdrop-blur-md rounded-sm p-8 -m-8 border border-white/10 shadow-2xl">
-                {/* Column header */}
                 <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gold/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold" />
                   <p className="text-[9px] uppercase tracking-[0.4em] text-gold/70 font-bold">
@@ -205,7 +173,6 @@ export default function PartnershipPage() {
                   </p>
                 </div>
 
-                {/* Metric rows */}
                 {[
                   { label: "Countries", value: "26" },
                   { label: "Partner Origins", value: "71" },
@@ -225,7 +192,6 @@ export default function PartnershipPage() {
                   </div>
                 ))}
 
-                {/* CTA link — prominent gold */}
                 <a
                   href="#apply"
                   className="group mt-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-max"
@@ -242,117 +208,14 @@ export default function PartnershipPage() {
           </div>
         </section>
 
-        {/* ── MANIFESTO ── */}
-        <section className="px-gutter py-32 bg-black/90 relative z-10 border-t border-white/5 manifesto-container">
-          <div className="max-w-5xl mx-auto">
-            {/* Section header — highlighted */}
-            <div className="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <div>
-                <span className="text-[10px] uppercase tracking-[0.5em] text-gold/50 font-bold block mb-4">
-                  Foundation
-                </span>
-                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white leading-none">
-                  Our Foundation
-                </h2>
-                <p className="text-lg md:text-xl font-serif italic text-gold/70 mt-3">
-                  A 7-Line Manifesto
-                </p>
-              </div>
-              <div className="w-24 h-px bg-gold/30 hidden md:block mb-3" />
-            </div>
-
-            {/* Manifesto cards */}
-            <div className="flex flex-col gap-4">
-              {MANIFESTO_LINES.map((line, i) => (
-                <div
-                  key={i}
-                  className="manifesto-line group relative bg-white/3 border border-white/5 rounded-sm px-8 py-7 flex items-start gap-6 hover:bg-white/5 hover:border-gold/20 transition-all duration-300 cursor-default"
-                >
-                  {/* Number */}
-                  <span className="text-gold/40 text-sm font-bold tracking-wider tabular-nums shrink-0 pt-1 group-hover:text-gold/70 transition-colors duration-300">
-                    0{i + 1}
-                  </span>
-                  {/* Statement */}
-                  <p className="text-xl md:text-2xl font-bold tracking-tight leading-snug text-white/80 group-hover:text-white transition-colors duration-300">
-                    {line}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── ABSTRACT ARCHITECTURE IMAGE (FULL BLEED) ── */}
-        <section className="w-full relative z-10 bg-[#020202]">
-          <CinematicImage
-            src="/images/partnership_abstract.png"
-            alt="Gott Wald Abstract Partnership Architecture"
-            overlay
-            className="w-full h-[50vh] md:h-[70vh] object-cover filter grayscale contrast-125 rounded-none"
-          />
-        </section>
-
-        {/* ── PRINCIPLES & ARCHETYPES ── */}
-        <section className="px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-              <div className="reveal-up">
-                <h3 className="text-[clamp(2.5rem,5vw,5rem)] font-bold tracking-tighter leading-[0.9] uppercase mb-12">
-                  Partnership is <span className="text-gold">alignment</span> —
-                  not procurement.
-                </h3>
-                <p className="text-xl text-white/50 mb-12 font-light leading-relaxed max-w-lg">
-                  We don&apos;t &quot;source services.&quot; We select partners
-                  who can carry our foundation and protect our standard.
-                </p>
-                <div className="flex flex-col gap-4 border-l border-white/10 pl-6">
-                  <p className="text-sm font-medium tracking-widest uppercase text-white/30 mb-2">
-                    We work with partners who:
-                  </p>
-                  {PARTNERSHIP_PRINCIPLES.map((principle, i) => (
-                    <div key={i} className="flex items-start gap-4">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gold mt-2 shrink-0" />
-                      <p className="text-lg text-white/80">{principle}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="reveal-up">
-                <h4 className="text-xs font-bold tracking-[0.3em] uppercase mb-12 text-white/40 border-b border-white/10 pb-4">
-                  Who we&apos;re looking for
-                </h4>
-                <p className="text-2xl text-white mb-10 font-serif italic">
-                  Outstanding companies — proven in action, not in slides.
-                </p>
-                <div className="flex flex-col gap-8">
-                  {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
-                    <div key={i} className="group cursor-default">
-                      <div className="flex gap-4 items-baseline">
-                        <span className="text-xs text-gold font-mono">
-                          0{i + 1}
-                        </span>
-                        <h5 className="text-xl font-bold tracking-tight group-hover:text-gold transition-colors">
-                          {arch.title}
-                        </h5>
-                      </div>
-                      <p className="pl-8 text-white/40 mt-1">{arch.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── NON-NEGOTIABLES GRID (HORIZONTAL SCROLL) ── */}
+        {/* ── SECTION 2: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
         <section
           id="standards-section"
           className="bg-[#020202] relative z-10 overflow-hidden"
         >
           <div className="standards-pin-container h-screen flex flex-col justify-center px-gutter md:pl-gutter md:pr-0">
             <div className="flex justify-between items-end mb-20 shrink-0 reveal-up pr-gutter">
-              <h2 className="text-[clamp(3.5rem,8vw,9rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mix-blend-difference">
+              <h2 className="text-[clamp(3.5rem,8vw,9rem)] font-black tracking-tighter leading-[0.85] uppercase text-white drop-shadow-xl">
                 OUR
                 <br />
                 PARTNERSHIP
@@ -372,9 +235,9 @@ export default function PartnershipPage() {
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="standard-card relative bg-[#050505] p-10 md:p-12 w-full md:w-[400px] lg:w-[460px] aspect-[4/5] md:aspect-square flex flex-col justify-between shrink-0 border border-white/5 group overflow-hidden transition-all duration-700 hover:border-gold/30 hover:shadow-[0_0_40px_rgba(212,175,55,0.05)]"
+                  className="standard-card relative bg-[#050505] p-10 md:p-12 w-full md:w-100 lg:w-115 aspect-4/5 md:aspect-square flex flex-col justify-between shrink-0 border border-white/5 group overflow-hidden transition-all duration-700 hover:border-gold/30 hover:shadow-[0_0_40px_rgba(212,175,55,0.05)]"
                 >
-                  {/* Subtle Cinematic Background Image */}
+                  {/* Background Image */}
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={
@@ -386,17 +249,16 @@ export default function PartnershipPage() {
                       fill
                       className="object-cover opacity-[0.15] filter grayscale scale-100 group-hover:scale-105 transition-transform duration-1000 ease-out"
                     />
-                    {/* Deep shadow gradient to protect text readability */}
                     <div className="absolute inset-0 bg-linear-to-t from-[#020202] via-[#020202]/90 to-[#020202]/40" />
                   </div>
 
-                  {/* Premium internal gradient */}
+                  {/* Gradient */}
                   <div className="card-bg absolute inset-0 z-0 bg-linear-to-br from-white/5 via-transparent to-transparent opacity-50 group-hover:from-gold/10 group-hover:opacity-100 transition-all duration-700 pointer-events-none" />
 
-                  {/* Decorative corner accent */}
+                  {/* Corner accent */}
                   <div className="absolute top-0 right-0 z-0 w-16 h-16 border-t border-r border-gold/0 group-hover:border-gold/30 transition-colors duration-700 opacity-50" />
 
-                  {/* Header / Number */}
+                  {/* Header */}
                   <div className="flex justify-between items-start relative z-10">
                     <span className="text-gold font-mono text-[10px] tracking-[0.3em] uppercase font-bold">
                       / 0{i + 1}
@@ -408,10 +270,10 @@ export default function PartnershipPage() {
 
                   {/* Content */}
                   <div className="relative z-10 mt-auto">
-                    <h3 className="text-3xl md:text-3xl font-bold tracking-tight mb-5 text-white/90 group-hover:text-white transition-colors duration-500">
+                    <h3 className="text-3xl font-bold tracking-tight mb-5 text-white/90 group-hover:text-white transition-colors duration-500">
                       {item.title}
                     </h3>
-                    <p className="text-white/50 text-base md:text-lg leading-relaxed mix-blend-screen group-hover:text-white/70 transition-colors duration-500">
+                    <p className="text-white/50 text-lg leading-relaxed mix-blend-screen group-hover:text-white/70 transition-colors duration-500">
                       {item.desc}
                     </p>
                   </div>
@@ -421,7 +283,7 @@ export default function PartnershipPage() {
           </div>
         </section>
 
-        {/* ── DOMAINS ACCORDION ── */}
+        {/* ── SECTION 3: DOMAINS ACCORDION ── */}
         <section className="px-gutter py-[20vh] bg-transparent relative z-10">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
             <div className="lg:w-1/3 reveal-up">
@@ -497,9 +359,40 @@ export default function PartnershipPage() {
           </div>
         </section>
 
-        {/* ── EXPECTATIONS & ECOSYSTEM ── */}
+        {/* ── SECTION 4: ARCHETYPES & VALUE PROPOSITION ── */}
         <section className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-20">
+            {/* Partnership Types */}
+            <div className="reveal-up">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-12">
+                Partnership Types
+              </h3>
+              <h4 className="text-4xl font-bold tracking-tighter mb-12 leading-[1.1]">
+                Five ways to work with us.
+              </h4>
+              <div className="flex flex-col gap-6">
+                {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-6 items-start py-6 border-b border-white/5 last:border-0 group"
+                  >
+                    <span className="text-gold font-mono text-xs mt-1 shrink-0">
+                      0{i + 1}
+                    </span>
+                    <div>
+                      <h5 className="text-xl font-bold text-white/90 mb-1 group-hover:text-gold transition-colors">
+                        {arch.title}
+                      </h5>
+                      <p className="text-white/40 text-sm font-light">
+                        {arch.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* What Partners Get */}
             <div className="reveal-up">
               <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-12">
                 What Partners Get
@@ -524,30 +417,10 @@ export default function PartnershipPage() {
                 You deliver excellence.
               </p>
             </div>
-
-            <div className="reveal-up">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-12">
-                What We Expect
-              </h3>
-              <h4 className="text-4xl font-bold tracking-tighter mb-8 leading-[1.1]">
-                Professionalism that doesn&apos;t require supervision.
-              </h4>
-              <ul className="flex flex-col gap-6">
-                {PARTNER_EXPECTATIONS.map((expectation, i) => (
-                  <li
-                    key={i}
-                    className="flex gap-4 items-start text-white/60 text-lg"
-                  >
-                    <span className="mt-1.75 w-1.5 h-1.5 bg-white/20 rounded-full shrink-0" />
-                    {expectation}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </section>
 
-        {/* ── APPLICATION FORM ── */}
+        {/* ── SECTION 5: APPLICATION FORM ── */}
         <section
           id="apply"
           className="px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10"
@@ -559,8 +432,7 @@ export default function PartnershipPage() {
               </h2>
               <p className="text-xl text-white/50 max-w-2xl mx-auto font-light leading-relaxed">
                 If foundation and proof are real — you&apos;re welcome. If not —
-                honesty is better. That&apos;s how we operate. Please keep it
-                clear and proof-based.
+                honesty is better. Please keep it clear and proof-based.
               </p>
             </div>
 
@@ -583,7 +455,7 @@ export default function PartnershipPage() {
                   />
                   <label
                     htmlFor="company"
-                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
+                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
                   >
                     Company Name
                   </label>
@@ -598,7 +470,7 @@ export default function PartnershipPage() {
                   />
                   <label
                     htmlFor="website"
-                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
+                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
                   >
                     Website
                   </label>
@@ -617,7 +489,7 @@ export default function PartnershipPage() {
                   />
                   <label
                     htmlFor="contact"
-                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
+                    className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
                   >
                     Main Contact (Name, Email)
                   </label>
@@ -642,7 +514,7 @@ export default function PartnershipPage() {
                       Technology PARTNERSHIP
                     </option>
                     <option value="creative" className="text-black">
-                      Creative & Media PARTNERSHIP
+                      Creative &amp; Media PARTNERSHIP
                     </option>
                     <option value="local" className="text-black">
                       Local Operations PARTNERSHIP
@@ -686,9 +558,9 @@ export default function PartnershipPage() {
                 />
                 <label
                   htmlFor="capabilities"
-                  className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
+                  className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
                 >
-                  Capabilities & Proof of Work
+                  Capabilities &amp; Proof of Work
                 </label>
               </div>
 
@@ -703,7 +575,7 @@ export default function PartnershipPage() {
                 />
                 <label
                   htmlFor="values"
-                  className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
+                  className="absolute left-0 top-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 peer-focus:text-gold peer-focus:-translate-y-4 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/30 transition-all"
                 >
                   Values Fit (Required)
                 </label>

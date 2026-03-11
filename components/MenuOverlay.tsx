@@ -3,8 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface MenuOverlayProps {
   isOpen: boolean;
@@ -96,6 +100,11 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
 
     // Pass the router.push into the GSAP completion callback
     closeMenu(() => {
+      // Kill all ScrollTriggers BEFORE navigating — pinned sections
+      // (horizontal scroll, hero parallax) create pin-spacers that
+      // cause freeze if left alive during unmount
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      window.scrollTo(0, 0);
       router.push(href);
     });
   };
@@ -218,7 +227,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           onClick={() => closeMenu()}
           className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-gold hover:text-gold transition-colors"
         >
-          <span className="text-[10px] font-bold tracking-widest mt-[1px]">
+          <span className="text-[10px] font-bold tracking-widest mt-px">
             G
           </span>
         </button>

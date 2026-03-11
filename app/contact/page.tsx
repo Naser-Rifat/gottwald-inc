@@ -101,7 +101,7 @@ export default function ContactPage() {
       className="min-h-screen bg-[#060606] text-white selection:bg-gold selection:text-black overflow-hidden flex flex-col"
     >
       {/* ── Fixed Header ── */}
-      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-none mix-blend-difference">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-none">
         <div className="pointer-events-auto">
           <Header />
         </div>
@@ -115,12 +115,12 @@ export default function ContactPage() {
             className="text-[clamp(4rem,14vw,16rem)] leading-[0.8] font-black uppercase tracking-tighter flex flex-col"
           >
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
-              <span className="hero-line block will-change-transform origin-left text-white mix-blend-difference">
+              <span className="hero-line block will-change-transform origin-left text-white drop-shadow-lg">
                 LET&apos;S
               </span>
             </span>
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
-              <span className="hero-line block will-change-transform origin-left text-white mix-blend-difference">
+              <span className="hero-line block will-change-transform origin-left text-white drop-shadow-lg">
                 TALK
               </span>
             </span>

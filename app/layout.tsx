@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
-import CustomCursor from "@/components/CustomCursor";
+// import CustomCursor from "@/components/CustomCursor";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
@@ -58,7 +58,7 @@ export default function RootLayout({
         <RouteCleanup />
         <GlobalCanvas />
         <NoiseOverlay />
-        <CustomCursor />
+        {/* <CustomCursor /> */}
         {children}
       </body>
     </html>

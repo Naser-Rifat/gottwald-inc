@@ -26,6 +26,9 @@ export default function RouteCleanup() {
     // starts fresh, but do NOT kill triggers — each page handles
     // its own cleanup via gsap.context().revert()
     return () => {
+      // Kill ALL active triggers first — pinned sections (horizontal scroll,
+      // hero parallax) create pin-spacers that block layout if left alive
+      ScrollTrigger.getAll().forEach((t) => t.kill());
       ScrollTrigger.clearScrollMemory();
     };
   }, [pathname]);

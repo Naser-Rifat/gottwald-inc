@@ -81,7 +81,7 @@ export default function OurWorkPage() {
 
   return (
     <div className="bg-transparent min-h-screen text-white font-sans overflow-hidden selection:bg-gold selection:text-black">
-      <div className="fixed top-0 left-0 w-full z-50 px-gutter mix-blend-difference pointer-events-auto">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
 

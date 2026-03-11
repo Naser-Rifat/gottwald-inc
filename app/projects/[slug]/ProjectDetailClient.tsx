@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import type { Project } from "@/lib/projectData";
+import type { Project, ContentBlock } from "@/lib/projectData";
 
 interface Props {
   project: Project;
@@ -208,36 +208,42 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 >
                   {project.details}
                 </p>
-                <button
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    backgroundColor: "#fff",
-                    color: accent || "#222",
-                    padding: "10px 24px",
-                    borderRadius: "100px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase" as const,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                    transition: "transform 0.2s",
-                  }}
-                >
-                  <span
+                {project.launchUrl && (
+                  <a
+                    href={project.launchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: "50%",
-                      backgroundColor: accent || "#c00",
-                      flexShrink: 0,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      backgroundColor: "#fff",
+                      color: accent || "#222",
+                      padding: "14px 32px",
+                      borderRadius: "100px",
+                      border: "none",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase" as const,
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+                      transition: "transform 0.2s",
                     }}
-                  />
-                  WATCH VIDEO
-                </button>
+                  >
+                    <span
+                      style={{
+                        width: 7,
+                        height: 7,
+                        borderRadius: "50%",
+                        backgroundColor: accent || "#c00",
+                        flexShrink: 0,
+                      }}
+                    />
+                    Visit Website
+                  </a>
+                )}
               </div>
 
               {/* Col B: Services + Recognitions */}
@@ -337,371 +343,25 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
           </div>
         </section>
 
-        {/* ═══════ PANEL 2 — Dark showcase ═══════ */}
-        <section
-          style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#0a0a12",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 60px",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              maxWidth: "1050px",
-              aspectRatio: "16/10",
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-            }}
-          >
-            <Image
-              src={project.image}
-              alt={`${project.title} showcase`}
-              fill
-              style={{ objectFit: "cover" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
-              }}
-            />
-          </div>
-        </section>
-
-        {/* ═══════ PANEL 3 — Light case study ═══════ */}
-        <section
-          style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#f0ece6",
-            color: "#1a1a1a",
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: "40px 40px 40px 60px",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "15px",
-                color: "rgba(26,26,26,0.55)",
-                lineHeight: 1.75,
-                marginBottom: "20px",
-                maxWidth: "380px",
-              }}
-            >
-              {project.details}
-            </p>
-            <div style={{ display: "flex", gap: "48px", marginBottom: "24px" }}>
-              <div>
-                <span
-                  style={{
-                    fontSize: "2.6rem",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}
-                >
-                  12x
-                </span>
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: "rgba(26,26,26,0.45)",
-                    marginTop: "4px",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  efficiency gain
-                </p>
-              </div>
-              <div>
-                <span
-                  style={{
-                    fontSize: "2.6rem",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}
-                >
-                  20x
-                </span>
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: "rgba(26,26,26,0.45)",
-                    marginTop: "4px",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  cost savings
-                </p>
-              </div>
-            </div>
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: "420px",
-                aspectRatio: "16/9",
-                borderRadius: "12px",
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                src={project.image}
-                alt="Video"
-                fill
-                style={{ objectFit: "cover" }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <button
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.9)",
-                    backdropFilter: "blur(4px)",
-                    padding: "8px 20px",
-                    borderRadius: "100px",
-                    fontSize: "10px",
-                    fontWeight: 600,
-                    color: "#1a1a1a",
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  Play video
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              width: "32%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: "40px 40px 40px 36px",
-              borderLeft: "1px solid rgba(26,26,26,0.08)",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "1.15rem",
-                fontWeight: 600,
-                marginBottom: "12px",
-                lineHeight: 1.3,
-              }}
-            >
-              About the project
-            </h3>
-            <p
-              style={{
-                fontSize: "15px",
-                color: "rgba(26,26,26,0.55)",
-                lineHeight: 1.75,
-                marginBottom: "20px",
-              }}
-            >
-              {project.description}
-            </p>
-            <div
-              style={{
-                borderTop: "1px solid rgba(26,26,26,0.08)",
-                paddingTop: "16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}
-            >
-              <div>
-                <span
-                  style={{
-                    fontSize: "11px",
-                    letterSpacing: "0.18em",
-                    color: "rgba(26,26,26,0.35)",
-                    textTransform: "uppercase" as const,
-                  }}
-                >
-                  Industry
-                </span>
-                <p
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginTop: "2px",
-                  }}
-                >
-                  Technology
-                </p>
-              </div>
-              <a
-                href={project.launchUrl || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  color: "#1a1a1a",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                Visit site <span style={{ fontSize: "11px" }}>↗</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════ PANEL 4 — Dark feature ═══════ */}
-        <section
-          style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#0a0a12",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "48px",
-            padding: "0 60px",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "45vw",
-              maxWidth: "560px",
-              aspectRatio: "4/3",
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
-            }}
-          >
-            <Image
-              src={project.image}
-              alt="Feature"
-              fill
-              style={{ objectFit: "cover", transform: "scale(1.08)" }}
-            />
-          </div>
-          <div style={{ maxWidth: "300px", color: "#fff" }}>
-            <span
-              style={{
-                fontSize: "11px",
-                letterSpacing: "0.25em",
-                color: "rgba(255,255,255,0.25)",
-                textTransform: "uppercase" as const,
-                display: "block",
-                marginBottom: "12px",
-              }}
-            >
-              Features
-            </span>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                lineHeight: 1.2,
-                marginBottom: "14px",
-              }}
-            >
-              Built with precision
-              <br />
-              and craft
-            </h3>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.35)",
-                fontSize: "15px",
-                lineHeight: 1.75,
-              }}
-            >
-              Every detail has been carefully considered to deliver an
-              experience that feels seamless and intuitive.
-            </p>
-          </div>
-        </section>
-
-        {/* ═══════ PANEL 5 — Full-bleed closing ═══════ */}
-        <section
-          style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#111118",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 60px",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              maxWidth: "1050px",
-              aspectRatio: "16/9",
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-            }}
-          >
-            <Image
-              src={project.image}
-              alt="Final"
-              fill
-              style={{ objectFit: "cover" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.5), transparent)",
-              }}
-            />
-            <p
-              style={{
-                position: "absolute",
-                bottom: "24px",
-                left: "32px",
-                color: "rgba(255,255,255,0.4)",
-                fontSize: "10px",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase" as const,
-              }}
-            >
-              Marketing website
-            </p>
-          </div>
-        </section>
+        {/* ═══════ DYNAMIC CMS PANELS (Panels 2+) ═══════ */}
+        {project.contentBlocks?.map((block, i) => {
+          switch (block.type) {
+            case "showcase":
+              return <ShowcaseBlock key={i} block={block} project={project} />;
+            case "case-study":
+              return <CaseStudyBlock key={i} block={block} project={project} />;
+            case "feature":
+              return <FeatureBlock key={i} block={block} project={project} />;
+            case "stats":
+              return <StatsBlock key={i} block={block} project={project} />;
+            case "fullbleed":
+              return <FullbleedBlock key={i} block={block} project={project} />;
+            case "rich-text":
+              return <RichTextBlock key={i} block={block} project={project} />;
+            default:
+              return null;
+          }
+        })}
 
         {/* ═══════ PANEL 6 — Next project ═══════ */}
         <section
@@ -794,5 +454,418 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
         </section>
       </div>
     </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// DYNAMIC CMS BLOCK COMPONENTS
+// ════════════════════════════════════════════════════════════════════
+
+interface BlockProps {
+  block: ContentBlock;
+  project: Project;
+}
+
+function ShowcaseBlock({ block, project }: BlockProps) {
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 60px",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "1050px",
+          aspectRatio: "16/10",
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+        }}
+      >
+        <Image
+          src={block.image || project.image}
+          alt={`${project.title} showcase`}
+          fill
+          style={{ objectFit: "cover" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
+          }}
+        />
+      </div>
+    </section>
+  );
+}
+
+function CaseStudyBlock({ block, project }: BlockProps) {
+  const isLight = block.theme !== "dark";
+  const bg = isLight ? "#f0ece6" : "#0a0a12";
+  const txt = isLight ? "#1a1a1a" : "#f5f5f5";
+  const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
+  const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
+
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: bg,
+        color: txt,
+        display: "flex",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "40px 40px 40px 60px",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "2.6rem",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            marginBottom: "20px",
+          }}
+        >
+          {block.heading || "Case Study"}
+        </h3>
+        <p
+          style={{
+            fontSize: "15px",
+            color: muted,
+            lineHeight: 1.75,
+            maxWidth: "480px",
+            marginBottom: "40px",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {block.body}
+        </p>
+      </div>
+      <div
+        style={{
+          width: "38%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "40px 40px 40px 36px",
+          borderLeft: `1px solid ${border}`,
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: "4/5",
+            borderRadius: "12px",
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            src={block.image || project.image}
+            alt="Case Study"
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StatsBlock({ block, project }: BlockProps) {
+  const isLight = block.theme !== "dark";
+  const bg = isLight ? "#f0ece6" : "#0a0a12";
+  const txt = isLight ? "#1a1a1a" : "#f5f5f5";
+  const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
+  const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
+
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: bg,
+        color: txt,
+        display: "flex",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "40px 40px 40px 60px",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "15px",
+            color: muted,
+            lineHeight: 1.75,
+            marginBottom: "40px",
+            maxWidth: "380px",
+          }}
+        >
+          {block.body}
+        </p>
+        <div style={{ display: "flex", gap: "48px" }}>
+          {block.stats?.map((stat, idx) => (
+            <div key={idx}>
+              <span
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1,
+                }}
+              >
+                {stat.value}
+              </span>
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: muted,
+                  marginTop: "8px",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div
+        style={{
+          width: "32%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "40px 40px 40px 36px",
+          borderLeft: `1px solid ${border}`,
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: "1/1",
+            borderRadius: "12px",
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            src={block.image || project.image}
+            alt="Stats"
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeatureBlock({ block, project }: BlockProps) {
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "48px",
+        padding: "0 60px",
+        color: block.theme === "light" ? "#1a1a1a" : "#fff",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "45vw",
+          maxWidth: "560px",
+          aspectRatio: "4/3",
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
+        }}
+      >
+        <Image
+          src={block.image || project.image}
+          alt="Feature"
+          fill
+          style={{ objectFit: "cover", transform: "scale(1.08)" }}
+        />
+      </div>
+      <div style={{ maxWidth: "300px" }}>
+        <span
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.25em",
+            color: "currentColor",
+            opacity: 0.4,
+            textTransform: "uppercase",
+            display: "block",
+            marginBottom: "12px",
+          }}
+        >
+          Feature Focus
+        </span>
+        <h3
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            lineHeight: 1.2,
+            marginBottom: "14px",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {block.heading}
+        </h3>
+        <p
+          style={{
+            color: "currentColor",
+            opacity: 0.6,
+            fontSize: "15px",
+            lineHeight: 1.75,
+          }}
+        >
+          {block.body}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FullbleedBlock({ block, project }: BlockProps) {
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "#111118",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 60px",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "1050px",
+          aspectRatio: "16/9",
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+        }}
+      >
+        <Image
+          src={block.image || project.image}
+          alt="Final"
+          fill
+          style={{ objectFit: "cover" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)",
+          }}
+        />
+        <p
+          style={{
+            position: "absolute",
+            bottom: "24px",
+            left: "32px",
+            color: "rgba(255,255,255,0.4)",
+            fontSize: "10px",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+          }}
+        >
+          {block.body || "Project Highlight"}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function RichTextBlock({ block, project }: BlockProps) {
+  const isLight = block.theme === "light";
+  return (
+    <section
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: isLight ? "#f0ece6" : "#0d0d12",
+        color: isLight ? "#1a1a1a" : "#f5f5f5",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        padding: "0 120px",
+      }}
+    >
+      <h3
+        style={{
+          fontSize: "2.4rem",
+          fontWeight: 700,
+          marginBottom: "48px",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {block.heading}
+      </h3>
+      <div style={{ display: "flex", gap: "64px" }}>
+        {block.richText?.map((node, i) => (
+          <div key={i} style={{ flex: 1, maxWidth: "400px" }}>
+            {node.heading && (
+              <h4
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  marginBottom: "16px",
+                  color: project?.theme?.accent || (isLight ? "#111" : "#fff"),
+                }}
+              >
+                {node.heading}
+              </h4>
+            )}
+            <div
+              style={{ fontSize: "15px", lineHeight: 1.8, opacity: 0.7 }}
+              dangerouslySetInnerHTML={{ __html: node.body || "" }}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

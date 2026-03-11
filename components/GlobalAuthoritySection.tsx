@@ -208,7 +208,7 @@ export default function GlobalAuthoritySection() {
         {/* Top Left: Title Copy */}
         <div
           ref={textRef}
-          className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto mix-blend-difference relative z-30"
+          className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto drop-shadow-lg relative z-30"
         >
           <div>
             <div className="flex items-center gap-4 mb-6">

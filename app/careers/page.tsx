@@ -5,138 +5,121 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
-import CinematicImage from "@/components/CinematicImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const PILLARS = [
   {
     letter: "A",
-    title: "GOTT WALD Holding / Corporate Services",
-    roles: [
-      "CFO Office / Finance Manager / Controller / FP&A Analyst",
-      "Accounting & Operations Accounting (interfaces with tax/legal)",
-      "Legal & Contracts Manager (corporate, IP, contracts, compliance)",
-      "Tax Coordination / Structuring Support (operational, clean, reliable)",
-      "PMO / Operations / Quality Management (SOPs, governance, standards)",
-      "Executive Assistant / Office Management (high-trust, high-precision)",
-    ],
-    impact: "precise, discreet, process-driven, “no drama”",
-  },
-  {
-    letter: "B",
-    title: "SOLUTIONFINDER / SOLUTION MANAGEMENT",
-    roles: [
-      "Solution Manager / Delivery Lead",
-      "Senior Project Manager / Program Manager / PMO Lead",
-      "Business Analyst / Requirements Engineer",
-      "Process Designer / Operating Model Specialist",
-      "Change & Adoption Lead / Enablement",
-      "Technical Writer / Documentation Excellence (SSOT, handbooks, playbooks)",
-    ],
-    impact:
-      "systems thinker, stakeholder-strong, structured, excellent handovers",
-  },
-  {
-    letter: "C",
-    title: "CONSULTING",
+    title: "Strategy & Consulting",
     roles: [
       "Strategy Consultant / Senior Consultant",
-      "Org & Performance Consultant (KPIs, execution frameworks)",
+      "Executive Advisor / C-level Sparring",
       "Growth / Go-to-Market Consultant",
-      "Complexity / Turnaround (prioritization, decision architecture)",
-      "Executive Advisor / C-level sparring (retained/interim)",
+      "Organizational Performance Consultant",
     ],
     impact: "clear, analytical, decisive, premium communication",
   },
   {
-    letter: "D",
-    title: "COACHING & MENTORING",
+    letter: "B",
+    title: "Solution Management & Delivery",
     roles: [
-      "Executive Coach (leadership, responsibility, decision-making)",
-      "Facilitator (workshops, offsites, retreat formats)",
-      "Performance Coach (serious, stable, evidence-near)",
-      "Program Designer (curricula, learning paths, practice design)",
-      "Client Experience / Program Operations (flow, quality, care)",
+      "Solution Manager / Delivery Lead",
+      "Senior Project Manager / PMO Lead",
+      "Business Analyst / Requirements Engineer",
+      "Change Enablement Lead",
     ],
-    impact: "present, calm, discreet — effectiveness over show",
+    impact: "systems thinker, stakeholder-strong, structured, excellent handovers",
+  },
+  {
+    letter: "C",
+    title: "Coaching & Mentoring",
+    roles: [
+      "Executive Coach (ICF-level / equivalent)",
+      "Leadership Mentor",
+      "Burnout / Self-regulation Coach",
+      "Personal Development Facilitator",
+    ],
+    impact: "high emotional intelligence, real-world leadership XP, no performance theatre",
+  },
+  {
+    letter: "D",
+    title: "Marketing & Communication",
+    roles: [
+      "Brand Strategist / Creative Director",
+      "Content Producer (Video, Motion, YouTube)",
+      "Performance Marketer (Funnels, CRO, Paid)",
+      "Copywriter / Messaging Architect",
+    ],
+    impact: "quietly powerful, measurably effective, no empty hype",
   },
   {
     letter: "E",
-    title: "RELOCATION / STRUCTURE DEPLOYMENT (Georgia Hub)",
+    title: "Corporate Services",
     roles: [
-      "Relocation Manager / Client Onboarding Lead",
-      "Operations Coordinator (logistics, settling-in, vendor network)",
-      "Legal/Immigration Coordinator (process-strong, detail-precise)",
-      "Tax Coordination Associate (compliance-first, clean execution)",
-      "Client Concierge (premium care, high-trust communication)",
+      "Accountant / Tax Advisor (international)",
+      "Legal Counsel (corporate / contract)",
+      "Financial Controller / CFO Services",
+      "Compliance Officer",
     ],
-    impact: "reliable, structured, service-excellent, solution-driven",
+    impact: "precise, bankable, audit-ready, cross-border awareness",
   },
   {
     letter: "F",
-    title: "IT SOLUTIONS 2030 (Web / Apps / AI / Automation)",
+    title: "Technology & Engineering",
     roles: [
-      "Tech Lead / Full-Stack Engineer (web)",
-      "Frontend Engineer (Next.js/SSR, performance, SEO/geo)",
-      "Backend Engineer (APIs, DB design, integrations)",
-      "DevOps / Cloud Engineer (CI/CD, monitoring, hardening)",
-      "Security Specialist (pen-testing, risk, policies)",
-      "AI / Automation Engineer (agents, workflows, pipelines)",
-      "UX/UI Designer / Product Designer (design systems, prototyping)",
-      "QA / Release Manager (testing, releases, quality)",
+      "Tech Lead / Full-Stack Engineer",
+      "AI / Automation Engineer",
+      "Frontend Engineer (Next.js, Performance, SEO)",
+      "DevOps / Cloud Engineer",
     ],
     impact: "performance-obsessed, clean, security-aware, documentation-strong",
   },
   {
     letter: "G",
-    title: "MARKETING & COMMUNICATION",
+    title: "YIG.CARE (Animals & Nature)",
     roles: [
-      "Brand Strategist / Creative Director (systems thinking, premium)",
-      "Copywriter / Editor (precision, tone, conversion)",
-      "Content Producer (video, reels, YouTube, motion)",
-      "Performance Marketer (funnels, CRO, paid, retargeting)",
-      "PR / Partnerships (positioning, media, collaborations)",
-      "Social Media Ops (publishing, calendars, processes, reporting)",
+      "Operations Lead (Shelter / Rescue)",
+      "Veterinary Coordinator",
+      "Fundraising & Grant Writer",
+      "Community Manager (Animal Welfare)",
     ],
-    impact: "quietly powerful, measurably effective, no empty hype",
+    impact: "compassion as discipline, execution under pressure, zero ego",
   },
   {
     letter: "H",
-    title: "YIG.CARE (Platform / Ecosystem)",
+    title: "PLHH Foundation",
     roles: [
-      "Product Manager / Platform Lead",
-      "Partner Onboarding & Quality Manager",
-      "Customer Success / Partner Success",
-      "Compliance & Privacy (GDPR, consent, data governance)",
-      "Content & Education Lead (programs, experts, knowledge base)",
-      "Operations Manager (flow, quality, scaling)",
+      "Program Manager (Social Impact)",
+      "Field Coordinator (Humanitarian)",
+      "Partnerships & Donor Relations",
+      "Communication & Storytelling (Foundation)",
     ],
-    impact: "service-excellent, quality-driven, process-clean, human-clear",
+    impact: "grounded, trust-building, culturally sensitive, documentation-strong",
   },
   {
     letter: "I",
-    title: "PLHH (Coin / Community / Real-World Impact)",
+    title: "Relocation & Integration",
     roles: [
-      "Community Lead / Community Care",
-      "Partnerships & Ecosystem Builder",
-      "Governance / DAO Operations (processes, transparency)",
-      "Blockchain Engineer (Sui) / Smart Contract Engineer",
-      "Security & Trust (risk controls, scam prevention, comms)",
-      "Impact Operations (projects, verification, reporting)",
+      "Relocation Coordinator (Georgia)",
+      "Cross-Cultural Integration Advisor",
+      "Real Estate & Logistics Support",
+      "Government / Visa Liaison",
     ],
-    impact: "responsible, transparent, security-conscious, people-first",
+    impact: "welcoming, organized, locally connected, empathy + structure",
   },
 ];
 
 export default function CareersPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+  const [openPillar, setOpenPillar] = useState<number | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // General Reveal Animations for texts
-      const reveals = gsap.utils.toArray(".reveal-text", pageRef.current!) as HTMLElement[];
+      const reveals = gsap.utils.toArray(
+        ".reveal-text",
+        pageRef.current!,
+      ) as HTMLElement[];
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
@@ -155,8 +138,10 @@ export default function CareersPage() {
         );
       });
 
-      // Staggered reveal for rows/lists
-      const staggerGroups = gsap.utils.toArray(".stagger-group", pageRef.current!) as HTMLElement[];
+      const staggerGroups = gsap.utils.toArray(
+        ".stagger-group",
+        pageRef.current!,
+      ) as HTMLElement[];
       staggerGroups.forEach((group) => {
         const items = group.querySelectorAll(".stagger-item");
         gsap.fromTo(
@@ -181,25 +166,20 @@ export default function CareersPage() {
     return () => ctx.revert();
   }, []);
 
-  const toggleAccordion = (index: number) => {
-    setOpenAccordion(openAccordion === index ? null : index);
-  };
-
   return (
     <div
       ref={pageRef}
       className="bg-[#0a0a0a] min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black"
     >
-      {/* ── HEADER ── */}
-      <div className="fixed top-0 left-0 w-full z-50 px-[5vw] mix-blend-difference pointer-events-auto">
+      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
 
       <main className="pt-[25vh]">
-        {/* ── HERO SECTION ── */}
-        <section className="px-[5vw] pb-[20vh] flex flex-col gap-16 relative">
+        {/* ── HERO ── */}
+        <section className="px-gutter pb-[20vh] flex flex-col gap-16 relative">
           <div
-            className="absolute right-[5vw] top-[-5vh] w-[40vw] h-[40vw] rounded-full pointer-events-none"
+            className="absolute right-gutter top-[-5vh] w-[40vw] h-[40vw] rounded-full pointer-events-none"
             style={{
               background:
                 "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
@@ -218,10 +198,9 @@ export default function CareersPage() {
                   We don&apos;t hire &quot;staff&quot;. We select people with
                   foundation.
                 </p>
-                <p className="text-base text-white/50 max-w-md">
-                  GOTT WALD is a global ecosystem built on standards,
-                  responsibility, and real execution. Remote by default.
-                  Discreet by design.
+                <p className="text-white/50 max-w-md">
+                  Remote by default. Discreet by design. Standards, not
+                  supervision.
                 </p>
               </div>
 
@@ -229,26 +208,26 @@ export default function CareersPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="#apply"
-                    className="h-[50px] rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 transition-colors uppercase text-xs tracking-widest font-bold"
+                    className="h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 transition-colors uppercase text-xs tracking-widest font-bold"
                   >
                     Apply Now
                   </a>
                   <a
                     href="#apply"
-                    className="h-[50px] rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-white/40 transition-colors uppercase text-xs tracking-widest font-bold"
+                    className="h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-white/40 transition-colors uppercase text-xs tracking-widest font-bold"
                   >
                     Specialist Pool
                   </a>
                 </div>
 
                 <div className="flex gap-4 items-center pl-2">
-                  <div className="w-[1px] h-12 bg-white/20" />
+                  <div className="w-px h-12 bg-white/20" />
                   <div className="flex flex-col gap-1">
                     <span className="text-white/50 text-[10px] tracking-widest uppercase font-medium">
-                      Global-first. Remote-friendly. Confidential by default.
+                      Global-first. Remote-friendly. Confidential.
                     </span>
-                    <span className="text-[#d4af37] text-[10px] tracking-widest uppercase font-medium">
-                      Headquarter: Georgia.
+                    <span className="text-gold text-[10px] tracking-widest uppercase font-medium">
+                      HQ: Georgia.
                     </span>
                   </div>
                 </div>
@@ -257,120 +236,26 @@ export default function CareersPage() {
           </div>
         </section>
 
-        {/* ── ATMOSPHERIC WORKSPACE IMAGE ── */}
-        <section className="px-[5vw] pb-[15vh] bg-transparent">
-          <div className="max-w-7xl mx-auto">
-            <CinematicImage
-              src="/images/careers_workspace.png"
-              alt="Gott Wald Atmospheric Workspace"
-              priority
-              overlay
-              className="w-full aspect-[16/9] md:aspect-[21/9] rounded-none filter contrast-125 brightness-90 border border-white/5 shadow-[0_30px_80px_rgba(0,0,0,0.9)]"
-            />
-          </div>
-        </section>
-
-        {/* ── 7-LINE MANIFESTO ── */}
-        <section className="px-[5vw] py-[15vh] border-t border-white/10 bg-white/[0.01]">
-          <div className="flex flex-col lg:flex-row gap-16 justify-between items-start max-w-7xl mx-auto">
-            <div className="lg:w-1/3 reveal-text">
-              <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-medium mb-4 block">
-                01 — THE FOUNDATION
-              </span>
-              <h2 className="text-3xl lg:text-5xl font-bold tracking-tight mb-6">
-                A 7-LINE <br /> MANIFESTO
-              </h2>
-            </div>
-
-            <div className="lg:w-2/3 stagger-group flex flex-col gap-6 text-xl md:text-3xl font-light tracking-tight text-white/80">
-              <p className="stagger-item">
-                We act in truth —{" "}
-                <span className="text-white/40">clear, without fog.</span>
-              </p>
-              <p className="stagger-item">
-                We serve what is good —{" "}
-                <span className="text-white/40">not the ego.</span>
-              </p>
-              <p className="stagger-item">
-                We carry responsibility —{" "}
-                <span className="text-white/40">even when it costs.</span>
-              </p>
-              <p className="stagger-item">
-                We practice justice —{" "}
-                <span className="text-white/40">fair, reliable, clean.</span>
-              </p>
-              <p className="stagger-item">
-                We live compassion —{" "}
-                <span className="text-white/40">
-                  without performing weakness.
-                </span>
-              </p>
-              <p className="stagger-item text-[#d4af37]">
-                We protect dignity and life — NATURE — ANIMALS — HUMANS.
-              </p>
-              <p className="stagger-item">
-                We keep our word —{" "}
-                <span className="text-white/40">and we stand behind it.</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── GLOBAL PEOPLE-FAMILY ── */}
-        <section className="px-[5vw] py-[20vh]">
-          <div className="max-w-4xl mx-auto text-center flex flex-col items-center gap-12 reveal-text">
-            <span className="text-[10px] tracking-[0.5em] uppercase text-[#d4af37] font-medium block">
-              02 — OUR CULTURE
-            </span>
-            <h2 className="text-[clamp(2.5rem,5vw,5rem)] font-bold tracking-tighter leading-[1.1]">
-              GLOBAL <br /> PEOPLE-FAMILY
-            </h2>
-            <div className="text-lg md:text-xl text-white/50 font-light leading-[1.8] flex flex-col gap-6">
-              <p>
-                We recruit intentionally worldwide — and we mean it. GOTT WALD
-                is a human family: different cultures, traditions, languages,
-                life paths — wanted. Not as marketing. Because diversity
-                increases our intelligence.
-              </p>
-              <p className="text-white">
-                Our goal is simple: We want to be equally present across all
-                continents.
-              </p>
-              <p>
-                What connects us is not origin — it’s foundation: truth,
-                responsibility, justice, compassion, discretion, excellence.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* ── 3 WAYS TO JOIN ── */}
-        <section className="px-[5vw] py-[15vh] bg-white/[0.02] border-y border-white/5">
+        <section className="px-gutter py-[15vh] bg-white/2 border-y border-white/5">
           <div className="max-w-7xl mx-auto">
             <div className="mb-16 reveal-text">
               <h2 className="text-3xl lg:text-5xl font-bold tracking-tight">
                 3 WAYS TO JOIN
               </h2>
-              <p className="text-white/40 mt-4 tracking-widest text-[10px] uppercase">
-                We don’t decide by titles — we decide by proof, foundation, and
-                execution quality.
-              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
-              {/* 1 */}
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 01
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  For people who want to build long-term and carry
-                  responsibility.
+                  Long-term. Responsibility. Growth within the ecosystem.
                 </p>
               </div>
 
-              {/* 2 */}
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 02
@@ -379,26 +264,24 @@ export default function CareersPage() {
                   Freelancer / Interim
                 </h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  For professionals who deliver at a high level for defined
-                  scopes — clean standards, clear ownership.
+                  Defined scopes. Clean standards. Clear ownership.
                 </p>
               </div>
 
-              {/* 3 */}
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
                 <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  For selected experts we activate on demand (project-based,
-                  NDA-ready).
+                  On-demand activation. Project-based. NDA-ready.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
+        {/* ── WHO WE'RE LOOKING FOR ── */}
         <section className="px-gutter py-[15vh]">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div className="flex-1 reveal-text">
@@ -411,31 +294,31 @@ export default function CareersPage() {
               </p>
             </div>
 
-            <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/[0.01] stagger-group">
+            <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/2 stagger-group">
               <ul className="flex flex-col gap-6 text-lg md:text-xl font-light text-white/80 tracking-wide">
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />{" "}
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
                   think in outcomes (not tasks)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />{" "}
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
                   communicate cleanly (no fog, no ego)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />{" "}
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
                   document properly (transferable, auditable)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" /> keep
-                  quality under pressure
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  keep quality under pressure
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" /> live
-                  discretion as a reflex
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  live discretion as a reflex
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" /> can
-                  be different — without losing foundation
+                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  can be different — without losing foundation
                 </li>
               </ul>
             </div>
@@ -443,11 +326,11 @@ export default function CareersPage() {
         </section>
 
         {/* ── ROLES BY PILLAR (ACCORDION) ── */}
-        <section className="px-[5vw] py-[15vh]">
-          <div className="max-w-5xl mx-auto min-h-screen">
+        <section className="px-gutter py-[15vh]">
+          <div className="max-w-5xl mx-auto">
             <div className="mb-20 reveal-text text-center">
               <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-medium block mb-4">
-                03 — ARCHITECTURE
+                ARCHITECTURE
               </span>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
                 ROLES BY PILLAR
@@ -461,11 +344,13 @@ export default function CareersPage() {
                   className="stagger-item border-b border-white/10 group"
                 >
                   <button
-                    onClick={() => toggleAccordion(i)}
+                    onClick={() =>
+                      setOpenPillar(openPillar === i ? null : i)
+                    }
                     className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none"
                   >
                     <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
-                      <span className="text-2xl md:text-4xl font-light text-white/20 group-hover:text-[#d4af37] transition-colors w-12 md:w-20 shrink-0">
+                      <span className="text-2xl md:text-4xl font-light text-white/20 group-hover:text-gold transition-colors w-12 md:w-20 shrink-0">
                         {pillar.letter}
                       </span>
                       <h3 className="text-xl md:text-3xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500 leading-tight">
@@ -474,7 +359,7 @@ export default function CareersPage() {
                     </div>
                     <div
                       className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
-                       ${openAccordion === i ? "border-white bg-white text-black -rotate-180" : "border-white/20 text-white/50 group-hover:border-white/60"}
+                       ${openPillar === i ? "border-white bg-white text-black -rotate-180" : "border-white/20 text-white/50 group-hover:border-white/60"}
                      `}
                     >
                       <svg
@@ -487,19 +372,20 @@ export default function CareersPage() {
                         strokeLinecap="round"
                       >
                         <path
-                          d={openAccordion === i ? "M1 7h12" : "M7 1v12M1 7h12"}
+                          d={
+                            openPillar === i ? "M1 7h12" : "M7 1v12M1 7h12"
+                          }
                         />
                       </svg>
                     </div>
                   </button>
 
-                  {/* Accordion Content */}
                   <div
-                    className={`overflow-hidden transition-all duration-700 ease-in-out ${openAccordion === i ? "max-h-[1000px] opacity-100 mb-12" : "max-h-0 opacity-0"}`}
+                    className={`overflow-hidden transition-all duration-700 ease-in-out ${openPillar === i ? "max-h-250 opacity-100 mb-12" : "max-h-0 opacity-0"}`}
                   >
                     <div className="pl-0 md:pl-20 flex flex-col md:flex-row gap-12 pt-4">
                       <div className="flex-1">
-                        <h4 className="text-[10px] tracking-[0.2em] text-[#d4af37] uppercase mb-6 font-bold">
+                        <h4 className="text-[10px] tracking-[0.2em] text-gold uppercase mb-6 font-bold">
                           Role Profiles
                         </h4>
                         <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
@@ -528,7 +414,7 @@ export default function CareersPage() {
         </section>
 
         {/* ── PROCESS & WHAT YOU'LL FIND ── */}
-        <section className="px-[5vw] py-[15vh]">
+        <section className="px-gutter py-[15vh]">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             {/* What you'll find */}
             <div className="reveal-text">
@@ -560,14 +446,8 @@ export default function CareersPage() {
                     instead of knowledge islands
                   </span>
                 </li>
-                <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>discretion</span>
-                  <span className="text-white/30 italic text-sm">
-                    as culture
-                  </span>
-                </li>
                 <li className="flex justify-between pt-2">
-                  <span className="text-[#d4af37]">a global human family</span>
+                  <span className="text-gold">a global human family</span>
                   <span className="text-white/30 italic text-sm text-right">
                     diversity is wanted
                     <br />
@@ -584,7 +464,7 @@ export default function CareersPage() {
               </h2>
 
               <div className="flex flex-col gap-10 relative">
-                <div className="absolute left-[15px] top-6 bottom-4 w-[2px] bg-black/10" />
+                <div className="absolute left-3.75 top-6 bottom-4 w-0.5 bg-black/10" />
 
                 {[
                   { n: "1", t: "Submit", d: "Role interest + proof" },
@@ -608,71 +488,23 @@ export default function CareersPage() {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-12 bg-black/5 p-6 text-xs font-bold uppercase tracking-widest text-black/40">
-                Note: Global means time zones are manageable — the standard
-                stays the same.
-              </div>
             </div>
           </div>
         </section>
 
-        {/* ── CTA / PRE-FORM ── */}
-        <section className="px-[5vw] py-[20vh] text-center border-t border-white/10 relative overflow-hidden">
-          <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%)",
-            }}
-          />
-
-          <div className="max-w-4xl mx-auto flex flex-col items-center gap-12 relative z-10 reveal-text">
-            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-tighter leading-[1] uppercase">
-              If you love standards and can carry responsibility, apply.
-            </h2>
-            <p className="text-xl md:text-2xl text-white/50 tracking-wide font-light">
-              If you value diversity and can hold the foundation — even more so.
-            </p>
-
-            <div className="flex flex-col items-center gap-8 mt-4">
-              <a
-                href="#apply"
-                className="h-[60px] rounded-full bg-white text-black flex items-center justify-center px-12 hover:scale-105 transition-transform uppercase text-sm tracking-[0.2em] font-bold"
-              >
-                Apply Now
-              </a>
-              <div className="flex gap-8">
-                <a
-                  href="#apply"
-                  className="text-[10px] uppercase tracking-[0.2em] font-medium text-white/50 hover:text-white transition-colors border-b border-transparent hover:border-white"
-                >
-                  Freelancer / Specialist Pool
-                </a>
-                <a
-                  href="#apply"
-                  className="text-[10px] uppercase tracking-[0.2em] font-medium text-white/50 hover:text-white transition-colors border-b border-transparent hover:border-white"
-                >
-                  Send Portfolio / LinkedIn
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── APPLICATION FORM (Static) ── */}
-        <section id="apply" className="px-[5vw] py-[15vh] bg-[#050505]">
+        {/* ── APPLICATION FORM ── */}
+        <section id="apply" className="px-gutter py-[15vh] bg-[#050505]">
           <div className="max-w-3xl mx-auto reveal-text">
             <div className="mb-16">
-              <span className="text-[10px] tracking-[0.5em] uppercase text-[#d4af37] font-medium block mb-4">
-                04 — INITIATE
+              <span className="text-[10px] tracking-[0.5em] uppercase text-gold font-medium block mb-4">
+                INITIATE
               </span>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6">
                 APPLICATION
               </h2>
               <p className="text-white/50 font-light text-lg">
-                Keep it clear and proof-based. If there’s a fit, we’ll reach
-                out.
+                Keep it clear and proof-based. If there&apos;s a fit, we&apos;ll
+                reach out.
               </p>
             </div>
 
@@ -680,11 +512,10 @@ export default function CareersPage() {
               className="flex flex-col gap-10"
               onSubmit={(e) => e.preventDefault()}
             >
-              {/* Personal Info Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                    First & Last Name *
+                    First &amp; Last Name *
                   </label>
                   <input
                     type="text"
@@ -704,7 +535,6 @@ export default function CareersPage() {
                 </div>
               </div>
 
-              {/* Location Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
@@ -715,42 +545,6 @@ export default function CareersPage() {
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                     placeholder="Location"
                   />
-                </div>
-                <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                    Languages Spoken
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="Languages"
-                  />
-                </div>
-              </div>
-
-              {/* Selection Grids */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                    Work Model
-                  </label>
-                  <select
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
-                    defaultValue="remote"
-                  >
-                    <option value="remote" className="text-black">
-                      Remote
-                    </option>
-                    <option value="hybrid" className="text-black">
-                      Hybrid
-                    </option>
-                    <option value="onsite" className="text-black">
-                      On-site
-                    </option>
-                    <option value="travel" className="text-black">
-                      Travel-ready
-                    </option>
-                  </select>
                 </div>
                 <div className="flex flex-col gap-3">
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
@@ -773,19 +567,17 @@ export default function CareersPage() {
                 </div>
               </div>
 
-              {/* Roles */}
               <div className="flex flex-col gap-3">
                 <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                  Desired Role(s) & Pillars of Interest
+                  Desired Role(s) &amp; Area of Interest
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Pillar F - Frontend Engineer"
+                  placeholder="e.g. Technology — Frontend Engineer"
                   className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/30 focus:border-gold transition-colors"
                 />
               </div>
 
-              {/* Proof */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
@@ -809,9 +601,8 @@ export default function CareersPage() {
                 </div>
               </div>
 
-              {/* Text Areas */}
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">
+                <label className="text-[10px] uppercase tracking-widest text-gold font-bold">
                   Foundation Fit (Required) *
                 </label>
                 <p className="text-[10px] text-white/30 mb-2">
@@ -820,17 +611,7 @@ export default function CareersPage() {
                 </p>
                 <textarea
                   rows={4}
-                  className="w-full bg-transparent border-b border-[#d4af37]/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-[#d4af37] transition-colors resize-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                  Short Message (Optional)
-                </label>
-                <textarea
-                  rows={3}
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-white transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-gold/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
                 />
               </div>
 
@@ -846,7 +627,7 @@ export default function CareersPage() {
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
                 </button>
                 <span className="text-[10px] text-white/30 tracking-widest uppercase">
-                  Your submisson is confidential.
+                  Your submission is confidential.
                 </span>
               </div>
             </form>
@@ -854,7 +635,6 @@ export default function CareersPage() {
         </section>
       </main>
 
-      {/* ── FOOTER ── */}
       <FooterSection />
     </div>
   );

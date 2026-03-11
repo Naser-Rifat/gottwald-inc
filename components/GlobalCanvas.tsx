@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import { useMemo, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 
@@ -73,14 +73,12 @@ float snoise(vec2 v) {
   return 130.0 * dot(m, g);
 }
 
-// Fractal Brownian Motion
+// Fractal Brownian Motion — 3 octaves (was 6, saves ~50% GPU per pixel)
 float fbm(vec2 p) {
     float value = 0.0;
     float amplitude = 0.5;
-    float frequency = 0.0;
     
-    // Loop of octaves
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 3; i++) {
         value += amplitude * snoise(p);
         p *= 2.0;
         amplitude *= 0.5;
@@ -121,7 +119,7 @@ void main() {
     color = mix(color, uColorTurquoise, clamp(length(q), 0.0, 1.0) * clamp(length(r), 0.0, 1.0) * 0.5);
     
     // Add delicate Gold dust/highlights where the ink folds
-    float fold = fbm(st * 4.0 + r * 2.0);
+    float fold = fbm(st * 3.0 + r * 2.0);
     float highlight = smoothstep(0.4, 0.5, fold) * smoothstep(0.6, 0.5, fold);
     color += uColorGold * highlight * 0.3;
 
@@ -135,8 +133,9 @@ void main() {
 
 const FluidPlane = () => {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const { size, viewport } = useThree();
-  const [mousePos, setMousePos] = useState(new THREE.Vector2(0.5, 0.5));
+  const { size } = useThree();
+  // Store raw mouse in a ref — avoids triggering React re-renders on every mousemove
+  const mousePosRef = useRef(new THREE.Vector2(0.5, 0.5));
 
   const uniforms = useMemo(
     () => ({
@@ -151,26 +150,25 @@ const FluidPlane = () => {
     [size],
   );
 
-  // Update mouse position (normalized 0 to 1, flipped Y for WebGL)
+  // Update ref on mousemove — zero React re-renders, zero GC pressure
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos(
-        new THREE.Vector2(
-          e.clientX / window.innerWidth,
-          1.0 - e.clientY / window.innerHeight,
-        ),
+      mousePosRef.current.set(
+        e.clientX / window.innerWidth,
+        1.0 - e.clientY / window.innerHeight,
       );
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      // Smoothly interpolate mouse uniform
-      materialRef.current.uniforms.uMouse.value.lerp(mousePos, 0.05);
-    }
+    if (!materialRef.current) return;
+    materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    // Lerp directly from ref into the GPU uniform — no React state, no re-renders
+    materialRef.current.uniforms.uMouse.value.lerp(mousePosRef.current, 0.05);
+    // Request next frame (demand mode)
+    invalidate();
   });
 
   return (
@@ -190,16 +188,36 @@ const FluidPlane = () => {
 };
 
 export default function GlobalCanvas() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Pause the entire R3F loop when the canvas is fully covered by opaque sections
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.01 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="fixed inset-0 w-screen h-screen pointer-events-none -z-20 bg-black">
+    <div
+      ref={containerRef}
+      className="fixed inset-0 w-screen h-screen pointer-events-none -z-20 bg-black"
+    >
       <Canvas
         camera={{ position: [0, 0, 1] }}
+        frameloop={isVisible ? "always" : "never"}
         gl={{
           powerPreference: "high-performance",
           alpha: false,
           antialias: false,
         }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
       >
         <FluidPlane />
       </Canvas>

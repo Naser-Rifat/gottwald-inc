@@ -2,13 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { usePathname } from "next/navigation";
+
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
+
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -41,6 +41,7 @@ export default function CustomCursor() {
     window.addEventListener("mousemove", onMouseMove);
 
     // Smooth render loop for outer ring
+    let rAF: number;
     const render = () => {
       // Lerp custom cursor to mouse position
       cursorX += (mouseX - cursorX) * 0.15;
@@ -52,119 +53,109 @@ export default function CustomCursor() {
         cursorYSet(cursorY);
       }
 
-      requestAnimationFrame(render);
+      rAF = requestAnimationFrame(render);
     };
 
-    requestAnimationFrame(render);
+    rAF = requestAnimationFrame(render);
 
     // Hide native cursor
     document.body.style.cursor = "none";
 
-    // Set up hover states
-    const setupHoverEvents = () => {
-      // Find all interactive elements
-      const links = document.querySelectorAll(
-        "a, button, [data-magnetic], input, textarea",
-      );
+    // Global event delegation for hover states (replaces heavy MutationObserver)
+    let activeTarget: HTMLElement | null = null;
+    
+    const onMouseOver = (e: MouseEvent) => {
+      const target = (e.target as Element).closest(
+        "a, button, [data-magnetic], input, textarea"
+      ) as HTMLElement;
+      
+      if (!target) return;
+      if (activeTarget === target) return;
+      activeTarget = target;
 
-      links.forEach((link) => {
-        // Prevent multiple bindings
-        if (link.getAttribute("data-cursor-bound") === "true") return;
-        link.setAttribute("data-cursor-bound", "true");
+      const isMagnetic = target.hasAttribute("data-magnetic");
+      const isVideo = target.hasAttribute("data-video");
 
-        link.addEventListener("mouseenter", (e) => {
-          const target = e.currentTarget as HTMLElement;
-          const isMagnetic = target.hasAttribute("data-magnetic");
-          const isVideo = target.hasAttribute("data-video");
+      if (isVideo) {
+        gsap.to(cursor, {
+          width: 100,
+          height: 100,
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          duration: 0.3,
+        });
+        gsap.to(dot, { opacity: 0, duration: 0.2 });
+        if (textRef.current) {
+          textRef.current.innerHTML = "PLAY";
+          gsap.to(textRef.current, { opacity: 1, scale: 1, duration: 0.3 });
+        }
+      } else if (isMagnetic) {
+        const rect = target.getBoundingClientRect();
+        cursor.classList.add("is-magnetic");
 
-          if (isVideo) {
-            // Morph into a large "PLAY" button
-            gsap.to(cursor, {
-              width: 100,
-              height: 100,
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              duration: 0.3,
-            });
-            gsap.to(dot, { opacity: 0, duration: 0.2 });
-            if (textRef.current) {
-              textRef.current.innerHTML = "PLAY";
-              gsap.to(textRef.current, { opacity: 1, scale: 1, duration: 0.3 });
-            }
-          } else if (isMagnetic) {
-            // Magnetic snap to element box
-            const rect = target.getBoundingClientRect();
-            cursor.classList.add("is-magnetic");
-
-            gsap.to(cursor, {
-              x: rect.left + rect.width / 2,
-              y: rect.top + rect.height / 2,
-              width: rect.width + 20,
-              height: rect.height + 20,
-              borderRadius:
-                window.getComputedStyle(target).borderRadius || "8px",
-              borderColor: "rgba(212, 175, 55, 0.5)", // Gold border on hover
-              backgroundColor: "rgba(212, 175, 55, 0.05)",
-              duration: 0.3,
-              ease: "power2.out",
-            });
-
-            gsap.to(dot, { opacity: 0, duration: 0.2 });
-          } else {
-            // Standard link hover - just enlarge ring slightly
-            gsap.to(cursor, {
-              scale: 1.5,
-              borderColor: "rgba(10, 147, 150, 0.8)", // Turquoise
-              backgroundColor: "rgba(10, 147, 150, 0.1)",
-              duration: 0.3,
-            });
-          }
+        gsap.to(cursor, {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          width: rect.width + 20,
+          height: rect.height + 20,
+          borderRadius: window.getComputedStyle(target).borderRadius || "8px",
+          borderColor: "rgba(212, 175, 55, 0.5)",
+          backgroundColor: "rgba(212, 175, 55, 0.05)",
+          duration: 0.3,
+          ease: "power2.out",
         });
 
-        link.addEventListener("mouseleave", () => {
-          cursor.classList.remove("is-magnetic");
-
-          // Restore default cursor state
-          gsap.to(cursor, {
-            width: 40,
-            height: 40,
-            scale: 1,
-            borderRadius: "50%",
-            borderColor: "rgba(255, 255, 255, 0.3)",
-            backgroundColor: "transparent",
-            backdropFilter: "none",
-            duration: 0.3,
-            ease: "power2.out",
-          });
-
-          gsap.to(dot, { opacity: 1, duration: 0.3 });
-
-          if (textRef.current) {
-            gsap.to(textRef.current, { opacity: 0, scale: 0.5, duration: 0.2 });
-          }
+        gsap.to(dot, { opacity: 0, duration: 0.2 });
+      } else {
+        gsap.to(cursor, {
+          scale: 1.5,
+          borderColor: "rgba(10, 147, 150, 0.8)",
+          backgroundColor: "rgba(10, 147, 150, 0.1)",
+          duration: 0.3,
         });
-      });
+      }
     };
 
-    // Run setup and setup mutation observer in case elements are added dynamically
-    setupHoverEvents();
+    const onMouseOut = (e: MouseEvent) => {
+      if (!activeTarget) return;
 
-    // We observe the body for newly added elements — debounced to avoid CPU spikes
-    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-    const observer = new MutationObserver(() => {
-      if (debounceTimer) clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => setupHoverEvents(), 500);
-    });
+      const related = e.relatedTarget as Element | null;
+      if (related && activeTarget.contains(related)) return;
 
-    observer.observe(document.body, { childList: true, subtree: true });
+      activeTarget = null;
+      cursor.classList.remove("is-magnetic");
+
+      gsap.to(cursor, {
+        width: 40,
+        height: 40,
+        scale: 1,
+        borderRadius: "50%",
+        borderColor: "rgba(255, 255, 255, 0.3)",
+        backgroundColor: "transparent",
+        backdropFilter: "none",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+
+      gsap.to(dot, { opacity: 1, duration: 0.3 });
+
+      if (textRef.current) {
+        gsap.to(textRef.current, { opacity: 0, scale: 0.5, duration: 0.2 });
+      }
+    };
+
+    document.addEventListener("mouseover", onMouseOver);
+    document.addEventListener("mouseout", onMouseOut);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      observer.disconnect();
+      document.removeEventListener("mouseover", onMouseOver);
+      document.removeEventListener("mouseout", onMouseOut);
+      cancelAnimationFrame(rAF);
       document.body.style.cursor = "auto";
     };
-  }, [pathname]);
+  }, []);
 
   return (
     <>
@@ -179,7 +170,7 @@ export default function CustomCursor() {
       </div>
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-turquoise rounded-full pointer-events-none z-10000 mix-blend-difference -translate-x-1/2 -translate-y-1/2"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-10000 shadow-[0_0_10px_rgba(255,255,255,0.5)] -translate-x-1/2 -translate-y-1/2"
       />
     </>
   );
