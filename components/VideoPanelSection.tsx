@@ -50,15 +50,20 @@ export default function VideoPanelSection() {
       </div>
 
       {/* Video panel anchors */}
-      <div id="video-panel-start" className="w-1/2 aspect-video" />
+      <div id="video-panel-start" className="w-1/2 aspect-video mt-[5vh]" />
+      
+      {/* 
+        Removed the aggressive "-top-[70%]" absolute offset to prevent this anchor from 
+        colliding into the PhysicsSandboxSection above it. The GSAP HomeScene shader handles
+        the follow speed automatically, so this end anchor can sit natively inside flow. 
+      */}
       <div
         id="video-panel-end-parent"
-        className="relative w-full my-[20vh_auto_10vh_auto] aspect-video
-                           3xl:h-[70vh] 3xl:aspect-auto"
+        className="relative w-full mt-[10vh] mb-[15vh] aspect-video 3xl:h-[70vh] 3xl:aspect-auto"
       >
         <div
           id="video-panel-end"
-          className="absolute -top-[70%] w-full h-full"
+          className="absolute inset-0 w-full h-full"
         />
       </div>
     </section>
