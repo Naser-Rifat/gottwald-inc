@@ -132,29 +132,6 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "marketing-communication",
-    title: "Marketing & Communication",
-    tags: ["VISIBILITY", "DEMAND"],
-    image: "/assets/projects/marketing-communication.png",
-    launchUrl: "https://google.com/",
-    description: "Executive Visibility. Engineered Trust. Predictable Demand.",
-    details:
-      "We are a Visibility & Demand Infrastructure company. When your signal is unclear, you do not lose attention — you lose the right decisions. We build communication systems, engineer trust, and create automation-ready infrastructure that lasts.",
-    services: [
-      "Positioning & Messaging",
-      "Authority Architecture",
-      "SEO & AI Indexing",
-      "Content Engine",
-    ],
-    contentBlocks: [],
-
-    theme: {
-      background: "#040D0F",
-      text: "#F5F5F5",
-      accent: "#00C8D4",
-    },
-  },
-  {
     slug: "coaching-mentoring",
     title: "Coaching & Mentoring",
     tags: ["PERFORMANCE", "HOLISTIC"],
@@ -176,66 +153,26 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "yig-care",
-    title: "YIG.CARE",
-    tags: ["FREQUENCY", "WELLNESS"],
-    image: "/assets/projects/yig-care.png",
+    slug: "marketing-communication",
+    title: "Marketing & Communication",
+    tags: ["VISIBILITY", "DEMAND"],
+    image: "/assets/projects/marketing-communication.png",
     launchUrl: "https://google.com/",
-    description: "Your Inner Glow. And we care about it.",
+    description: "Executive Visibility. Engineered Trust. Predictable Demand.",
     details:
-      "YIG.CARE was born from genuine curiosity — frequencies, sound, vibration, voice, light. Technologies that do not entertain — they restore order. Built as a website and app ecosystem where frequency work becomes visible, understandable, and usable. Launch: 2026.",
+      "We are a Visibility & Demand Infrastructure company. When your signal is unclear, you do not lose attention — you lose the right decisions. We build communication systems, engineer trust, and create automation-ready infrastructure that lasts.",
     services: [
-      "Frequency Platform",
-      "Practitioner Marketplace",
-      "Daily Level-Ups",
-      "Provider Tools",
+      "Positioning & Messaging",
+      "Authority Architecture",
+      "SEO & AI Indexing",
+      "Content Engine",
     ],
-    theme: {
-      background: "#030A0D",
-      text: "#F5F5F5",
-      accent: "#00C8D4",
-    },
-  },
-  {
-    slug: "plhh-coin",
-    title: "PLHH Coin",
-    tags: ["BLOCKCHAIN", "RWA"],
-    image: "/assets/projects/plhh-coin.png",
-    launchUrl: "https://google.com/",
-    description: "Peace, Love & Harmony for more Humanity.",
-    details:
-      "PLHH_Coin is a Real-World-Assets (RWA) Governance DAO token on the Sui Network — built to restore the living triangle of Nature, Animals, and Humans. We rebuild nature-agriculture so Nature, Animals, and Humans can live. 967 farms disappear every day. We refuse that reality.",
-    services: [
-      "RWA Governance Token",
-      "Farm Preservation",
-      "Nature Regeneration",
-      "Community DAO",
-    ],
-    theme: {
-      background: "#08060A",
-      text: "#F5F5F5",
-      accent: "#C9A84C",
-    },
-  },
-  {
-    slug: "digital-it-architect",
-    title: "Digital IT Architect",
-    tags: ["AI ADVISORY", "CONSULTATION"],
-    image: "/assets/projects/digital-it-architect.png",
-    launchUrl: "https://google.com/",
-    description: "AI-guided consultation. Your digital intention, structured.",
-    details:
-      "An AI-guided consultation interface — the entry point for IT Solutions 2030. Captures business goals, digital challenges, target audiences, and growth plans. Produces a Digital Intention Profile describing what your company actually needs from its digital presence.",
-    services: [
-      "AI Consultation Interface",
-      "Digital Intention Profile",
-      "Needs Discovery",
-      "Transformation Blueprint",
-    ],
+    contentBlocks: [],
+
     theme: {
       background: "#040D0F",
       text: "#F5F5F5",
-      accent: "#1B4F5A",
+      accent: "#00C8D4",
     },
   },
   {
@@ -282,6 +219,69 @@ export const projects: Project[] = [
         body: "<ul><li><strong>Defensibility > Hype</strong></li><li><strong>Reality > Promises</strong></li><li><strong>Bankability > Theory</strong></li><li><strong>Substance > Paperwork</strong></li></ul><p>Delivered with a network that's already aligned: best-of-the-best, licensed, and delivery-proven.</p>",
         image: "/assets/projects/relocation.png",
       },
+    ],
+    theme: {
+      background: "#08060A",
+      text: "#F5F5F5",
+      accent: "#C9A84C",
+    },
+  },
+  {
+    slug: "digital-it-architect",
+    title: "Digital IT Architect",
+    tags: ["AI ADVISORY", "CONSULTATION"],
+    image: "/assets/projects/digital-it-architect.png",
+    launchUrl: "https://google.com/",
+    description: "AI-guided consultation. Your digital intention, structured.",
+    details:
+      "An AI-guided consultation interface — the entry point for IT Solutions 2030. Captures business goals, digital challenges, target audiences, and growth plans. Produces a Digital Intention Profile describing what your company actually needs from its digital presence.",
+    services: [
+      "AI Consultation Interface",
+      "Digital Intention Profile",
+      "Needs Discovery",
+      "Transformation Blueprint",
+    ],
+    theme: {
+      background: "#040D0F",
+      text: "#F5F5F5",
+      accent: "#1B4F5A",
+    },
+  },
+  {
+    slug: "yig-care",
+    title: "YIG.CARE",
+    tags: ["FREQUENCY", "WELLNESS"],
+    image: "/assets/projects/yig-care.png",
+    launchUrl: "https://google.com/",
+    description: "Your Inner Glow. And we care about it.",
+    details:
+      "YIG.CARE was born from genuine curiosity — frequencies, sound, vibration, voice, light. Technologies that do not entertain — they restore order. Built as a website and app ecosystem where frequency work becomes visible, understandable, and usable. Launch: 2026.",
+    services: [
+      "Frequency Platform",
+      "Practitioner Marketplace",
+      "Daily Level-Ups",
+      "Provider Tools",
+    ],
+    theme: {
+      background: "#030A0D",
+      text: "#F5F5F5",
+      accent: "#00C8D4",
+    },
+  },
+  {
+    slug: "plhh-coin",
+    title: "PLHH Coin",
+    tags: ["BLOCKCHAIN", "RWA"],
+    image: "/assets/projects/plhh-coin.png",
+    launchUrl: "https://google.com/",
+    description: "Peace, Love & Harmony for more Humanity.",
+    details:
+      "PLHH_Coin is a Real-World-Assets (RWA) Governance DAO token on the Sui Network — built to restore the living triangle of Nature, Animals, and Humans. We rebuild nature-agriculture so Nature, Animals, and Humans can live. 967 farms disappear every day. We refuse that reality.",
+    services: [
+      "RWA Governance Token",
+      "Farm Preservation",
+      "Nature Regeneration",
+      "Community DAO",
     ],
     theme: {
       background: "#08060A",

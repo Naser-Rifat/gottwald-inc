@@ -7,6 +7,7 @@ import GlobalCanvas from "@/components/GlobalCanvas";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
+import PageLoader from "@/components/PageLoader";
 
 const satoshi = localFont({
   src: [
@@ -56,6 +57,7 @@ export default function RootLayout({
       >
         <DomSafetyPatch />
         <RouteCleanup />
+        <PageLoader />
         <GlobalCanvas />
         <NoiseOverlay />
         {/* <CustomCursor /> */}
