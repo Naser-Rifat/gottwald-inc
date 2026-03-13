@@ -194,7 +194,7 @@ export default function FooterSection() {
             <h4 className=" uppercase tracking-[0.3em] font-light text-white/40 mb-2">
               Registration Code
             </h4>
-            <span className="text-white/50 tracking-[0.1em] tabular-nums font-mono">
+            <span className="text-white/80 tracking-[0.1em] tabular-nums font-mono">
               4OO415421
             </span>
           </div>
@@ -204,7 +204,7 @@ export default function FooterSection() {
             <h4 className=" uppercase tracking-[0.3em] font-light text-white/40 mb-2">
               Build Version
             </h4>
-            <span className="text-white/50 tracking-[0.1em] font-mono">
+            <span className="text-white/80 tracking-[0.1em] font-mono">
               GOTTWALD_INFRA_1.0
             </span>
           </div>
@@ -218,6 +218,23 @@ export default function FooterSection() {
               888±
             </span>
           </div>
+
+          {/* Address */}
+          <div>
+            <h4 className=" uppercase tracking-[0.3em] font-light text-white/40 mb-4">
+              Address
+            </h4>
+            <address className="text-white/80 tracking-[0.1em] font-medium text-[13px] uppercase not-italic leading-[1.7]">
+        
+              Georgia, Tbilisi,<br />
+              Gldani district<br />
+              Maseli Street N2a<br />
+              Entrance N2,<br />
+              Office N201<br />
+              Reference 35.64,<br />
+              Block G
+            </address>
+          </div>
         </div>
       </div>
 
@@ -225,24 +242,38 @@ export default function FooterSection() {
            BOTTOM BAR: Copyright + Legal
          ═══════════════════════════════════════════════════════════ */}
       <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-white/5">
-        <p className=" text-white/50 tracking-wide font-light">
+        <p className=" text-white/70 tracking-wide font-light">
           © {new Date().getFullYear()} GOTTWALD HOLDING LLC. Security-led
           operations · Confidential by default.
         </p>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-6 mt-4 md:mt-0">
           <Link
             href="#"
-            className="text-white/50 hover:text-white transition-colors tracking-wide font-light"
+            className="text-white/70 hover:text-white transition-colors tracking-wider font-light text-[13px]"
           >
-            Privacy
+            Imprint / Legal Notice
           </Link>
-          <span className="text-white/10 ">·</span>
+          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
           <Link
             href="#"
-            className="text-white/50 hover:text-white transition-colors tracking-wide font-light"
+            className="text-white/70 hover:text-white transition-colors tracking-wider font-light text-[13px]"
           >
-            Governance & Standards
+            Privacy Policy
+          </Link>
+          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
+          <Link
+            href="#"
+            className="text-white/70 hover:text-white transition-colors tracking-wider font-light text-[13px]"
+          >
+            Cookie Settings
+          </Link>
+          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
+          <Link
+            href="#"
+            className="text-white/70 hover:text-white transition-colors tracking-wider font-light text-[13px]"
+          >
+            Terms of Use
           </Link>
         </div>
       </div>

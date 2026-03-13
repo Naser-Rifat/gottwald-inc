@@ -36,7 +36,7 @@ export const projects: Project[] = [
     slug: "it-solutions-2030",
     title: "IT Solutions 2030",
     tags: ["TECHNOLOGY", "SME TRANSFORMATION"],
-    image: "/assets/projects/it-solutions-2030.png",
+    image: "/assets/projects/it-solutions-2030-clean.png",
     launchUrl: "https://google.com/",
     description:
       "Transforming Websites into Future-Ready Digital Infrastructure.",
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     slug: "solution-finder",
     title: "SolutionFinder & Management",
     tags: ["STRATEGY", "CLARITY"],
-    image: "/assets/projects/solution-finder.png",
+    image: "/assets/projects/solution-finder-scifi.png",
     launchUrl: "https://google.com/",
     description: "Every Complex Situation Has a Structure.",
     details:
@@ -75,7 +75,7 @@ export const projects: Project[] = [
         theme: "light",
         heading: "Deconstructing Complexity",
         body: "<p>When people, processes, technology and decisions interact, complexity becomes inevitable. SolutionFinder creates clarity through structured analysis.</p>",
-        image: "/assets/projects/solution-finder.png",
+        image: "/assets/projects/solution-finder-scifi.png",
       },
       {
         type: "rich-text",
@@ -86,7 +86,7 @@ export const projects: Project[] = [
       {
         type: "rich-text",
         theme: "dark",
-        image: "/assets/projects/solution-finder.png",
+        image: "/assets/projects/solution-finder-scifi.png",
       }
     ],
     theme: {
@@ -116,7 +116,7 @@ export const projects: Project[] = [
         theme: "dark",
         heading: "Scalable Execution",
         body: "<p>Consulting focuses on future development — strengthening strategy, optimizing structures, and building scalable systems.</p>",
-        image: "/assets/projects/consulting.png",
+        image: "/assets/projects/consulting-management-hero.png",
       },
       {
         type: "rich-text",
@@ -236,6 +236,57 @@ export const projects: Project[] = [
       background: "#040D0F",
       text: "#F5F5F5",
       accent: "#1B4F5A",
+    },
+  },
+  {
+    slug: "relocation",
+    title: "Relocation & Strategic Deployment",
+    tags: ["STRATEGY", "POSITIONING", "GEORGIA"],
+    image: "/assets/projects/relocation.png",
+    launchUrl: "https://google.com/",
+    description: "Deploy your company structure. Upgrade your operational reality.",
+    details:
+      "Georgia is the strategic midpoint between East & West — globally connected, execution-friendly, and capable of combining the best of two worlds: international accessibility with pragmatic speed. We engineer a defensible structure for companies, holding setups, and high-responsibility profiles. Delivered under one standard, through one accountable system.",
+    services: [
+      "Corporate / Holding Setup",
+      "Executive Residency",
+      "Tax Coordination",
+      "Banking Readiness",
+      "Operational Continuity",
+      "Compliance Hygiene",
+    ],
+    contentBlocks: [
+      {
+        type: "rich-text",
+        theme: "light",
+        heading: "Strategic Deployment",
+        body: "<p>Relocation becomes expensive when it's treated like logistics. For companies and executives, this is Strategic Deployment: </p><ul><li>Positioning > Leaving</li><li>Substance > Registering</li><li>Defensibility > Optimization</li><li>Banking Readiness > Opening an account</li></ul><p>Outcome: A structure you can explain, defend, operate — and scale.</p>",
+        image: "/assets/projects/relocation.png",
+      },
+      {
+        type: "rich-text",
+        theme: "dark",
+        heading: "The Midpoint Advantage",
+        body: "<h3>Why Georgia?</h3><p>Georgia is a true strategic junction: markets, cultures, and operational realities converge here. This creates true optionality — not just a new address.</p><ul><li><strong>Speed + Pragmatism:</strong> Execution is faster when sequencing is correct.</li><li><strong>Connectivity:</strong> Modern mindset and growling infrastructure.</li><li><strong>Tax Efficiency:</strong> Defensible architecture, not just a rate.</li></ul>",
+      },
+      {
+        type: "rich-text",
+        theme: "light",
+        heading: "How It Works",
+        body: "<h3>1. Structure Deployment Assessment</h3><p>We map current state & target state. You gain clarity on country fit, sequencing, and banking feasibility.</p><h3>2. Blueprint</h3><p>We define the exact execution order: what first, what next, and what never happens out of order.</p><h3>3. Execution + Maintenance</h3><p>Local delivery through licensed partners, orchestrated by us. Clean, consistent, and defensible.</p>",
+      },
+      {
+        type: "rich-text",
+        theme: "dark",
+        heading: "Built for Outcomes",
+        body: "<ul><li><strong>Defensibility > Hype</strong></li><li><strong>Reality > Promises</strong></li><li><strong>Bankability > Theory</strong></li><li><strong>Substance > Paperwork</strong></li></ul><p>Delivered with a network that's already aligned: best-of-the-best, licensed, and delivery-proven.</p>",
+        image: "/assets/projects/relocation.png",
+      },
+    ],
+    theme: {
+      background: "#08060A",
+      text: "#F5F5F5",
+      accent: "#C9A84C",
     },
   },
 ];

@@ -28,18 +28,18 @@ export default function VideoPanelSection() {
 
       {/* About paragraphs */}
       <div className="flex flex-col items-end pb-[10vh]">
-        <p className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-serif italic">
+        <p className="w-[40%] mb-8 text-md md:text-lg lg:text-xl xl:text-2xl leading-relaxed text-white/70 font-sans">
           GOTT WALD is not a collection of services. It is a unified
           architecture: modular components, one standard, one language of
           delivery—built to turn complexity into clarity, clarity into
           decisions, and decisions into measurable impact.
         </p>
-        <div className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-serif italic">
+        <div className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-sans">
           <Link href="/about">
             <button
               className="h-11.5 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
                          tracking-[0.02em] transition-colors mt-4
-                         bg-white/10 text-white hover:bg-white/15 border border-white/10"
+                         bg-white/20 text-white hover:bg-white/15 border border-white/10"
               style={{ padding: "0 18px 0 22px" }}
             >
               <span>About Us</span>

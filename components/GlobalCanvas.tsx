@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 
@@ -162,13 +162,18 @@ const FluidPlane = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!materialRef.current) return;
-    materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-    // Lerp directly from ref into the GPU uniform — no React state, no re-renders
-    materialRef.current.uniforms.uMouse.value.lerp(mousePosRef.current, 0.05);
-    // Request next frame (demand mode)
-    invalidate();
+    
+    // ======================================================================
+    // ANIMATION STOPPED PER USER REQUEST
+    // The background is currently frozen. To re-enable the fluid movement 
+    // and mouse-hover interactions, uncomment the three lines below:
+    // ======================================================================
+    
+    // materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    // materialRef.current.uniforms.uMouse.value.lerp(mousePosRef.current, 0.05);
+    // invalidate();
   });
 
   return (

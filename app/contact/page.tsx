@@ -130,54 +130,67 @@ export default function ContactPage() {
         {/* ── CONTENT GRID ── */}
         <section className="content-grid px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8">
           {/* Left Column: Direct Inquiries */}
-          <div className="lg:col-span-4 flex flex-col gap-16">
-            <div className="fade-up-element space-y-4">
+          <div className="lg:col-span-4 flex flex-col gap-10">
+            <div className="fade-up-element space-y-2">
               <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
-                Direct Inquiries
+                Head Office
               </h3>
               <div className="flex flex-col gap-2 text-xl font-medium tracking-tight">
                 <a
-                  href="mailto:hello@gottwald.com"
+                  href="mailto:office@gottwald.world"
                   data-magnetic
                   className="hover:text-gold transition-colors w-max inline-block px-4 py-2 -mx-4"
                 >
-                  hello@gottwald.com
+                  office@gottwald.world
                 </a>
                 <a
-                  href="tel:+18001234567"
+                  href="tel:+995800800800"
                   data-magnetic
                   className="hover:text-gold transition-colors w-max inline-block px-4 py-2 -mx-4"
                 >
-                  +1 (800) 123-4567
+                  +995 800 800 800
                 </a>
               </div>
             </div>
 
-            <div className="fade-up-element space-y-4">
+            <div className="fade-up-element space-y-2">
               <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
-                Press & Media
+                Website
               </h3>
               <div className="flex flex-col gap-2 text-xl font-medium tracking-tight">
                 <a
-                  href="mailto:press@gottwald.com"
+                  href="https://www.gottwald.world"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   data-magnetic
                   className="hover:text-gold transition-colors w-max inline-block px-4 py-2 -mx-4"
                 >
-                  press@gottwald.com
+                  www.gottwald.world
                 </a>
               </div>
             </div>
 
-            <div className="fade-up-element space-y-4">
+            <div className="fade-up-element space-y-2">
               <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
-                Global Headquarters
+                GOTT WALD HOLDING
               </h3>
               <address className="text-xl font-medium tracking-tight not-italic text-white/80 leading-relaxed">
-                123 Brutalist Structure
+                Company ID: 400415421
                 <br />
-                Concrete Avenue, Floor 42
                 <br />
-                Tbilisi, Georgia 0105
+                Georgia, Tbilisi,
+                <br />
+                Gldani district
+                <br />
+                Maseli Street N2a
+                <br />
+                Entrance N2,
+                <br />
+                Office N201
+                <br />
+                reference 35.64,
+                <br />
+                block G
               </address>
               <a
                 href="#"

@@ -91,11 +91,11 @@ export default function GlobalAuthoritySection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[100vh] lg:min-h-[110vh] bg-transparent overflow-hidden flex flex-col justify-between py-[12vh] px-gutter"
+      className="relative w-full min-h-[100vh] lg:min-h-[110vh] bg-transparent overflow-hidden flex flex-col justify-between pt-[6vh] pb-8 lg:pb-0 px-gutter"
     >
       {/* Background Map Container */}
       <div
-        className="absolute inset-x-0 w-full h-[120%] top-[10%] lg:top-[15%] z-0 pointer-events-none flex items-center justify-center opacity-90"
+        className="absolute inset-x-0 w-full h-[120%] top-[20%] lg:top-[25%] z-0 pointer-events-none flex items-center justify-center opacity-90"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
@@ -108,7 +108,7 @@ export default function GlobalAuthoritySection() {
             src="/assets/world-map-dark.svg"
             alt="Global Network Map"
             fill
-            className="object-contain opacity-20"
+            className="object-contain opacity-50"
             priority
           />
 
@@ -123,7 +123,7 @@ export default function GlobalAuthoritySection() {
             className="absolute inset-0 w-full h-full pointer-events-auto"
           >
             {/* 1. Tbilisi Control Node */}
-            <div className="absolute top-[32%] left-[58%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+            <div className="absolute top-[28%] left-[58%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
               {/* Precision Dot */}
               <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10" />
               {/* Radar Rings */}
@@ -139,26 +139,19 @@ export default function GlobalAuthoritySection() {
               {/* Tech Line Connector & HUD */}
               <div className="hidden md:flex absolute top-1/2 left-4 items-center -translate-y-1/2">
                 <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-[#d4af37]/60 to-[#d4af37]/10" />
-                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-[#d4af37]/30 pl-4 w-max backdrop-blur-sm bg-base/30 rounded-r-lg pr-4">
+                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-[#d4af37]/30 pl-4 w-max backdrop-blur-sm bg-base/80 rounded-r-lg pr-4">
                   <h4 className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[10px]">
                     01 — HEAD OFFICE
                   </h4>
-                  <p className="text-white font-serif italic text-2xl lg:text-3xl my-1">
+                  <p className="text-white font-sans text-2xl lg:text-3xl my-1">
                     Tbilisi, Georgia
                   </p>
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-[9px] uppercase tracking-widest text-white/50">
-                    <span className="text-white/80">Governance</span>
-                    <span>/</span>
-                    <span className="text-white/80">Engineering</span>
-                    <span>/</span>
-                    <span className="text-white/80">Quality</span>
-                  </div>
                 </div>
               </div>
             </div>
 
             {/* 2. DACH Hubs (Munich Anchored) */}
-            <div className="absolute top-[28%] left-[55%] md:left-[60%] lg:left-[55%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+            <div className="absolute top-[26%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
               {/* Precision Dot */}
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10" />
               {/* Radar Rings */}
@@ -169,19 +162,19 @@ export default function GlobalAuthoritySection() {
 
               {/* Tech Line Connector & HUD - Pointing Up */}
               <div className="hidden md:flex absolute bottom-4 left-1/2 -translate-x-1/2 flex-col items-center">
-                <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-white/20 px-6 backdrop-blur-sm bg-base/20 rounded-t-lg w-max">
-                  <h4 className="text-white/80 font-bold tracking-[0.3em] uppercase text-[9px]">
+                <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-white/20 px-6 py-2 backdrop-blur-sm bg-base/80 rounded-t-lg w-max">
+                  <h4 className="text-white/90 font-bold tracking-[0.3em] uppercase text-[9px]">
                     02 — STRATEGIC HUBS
                   </h4>
-                  <p className="text-white font-light tracking-wide text-xl my-1">
+                  <p className="text-white font-medium tracking-wide text-xl my-1">
                     DACH Region
                   </p>
-                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[8px] uppercase tracking-[0.2em] text-white/40">
-                    <span className="text-white/70">Germany</span>
+                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[8px] uppercase tracking-[0.2em] text-white/70">
+                    <span className="text-white/80 font-medium">Germany</span>
                     <span>/</span>
-                    <span className="text-white/70">Austria</span>
+                    <span className="text-white/80 font-medium">Austria</span>
                     <span>/</span>
-                    <span className="text-white/70">Switzerland</span>
+                    <span className="text-white/80 font-medium">Switzerland</span>
                   </div>
                 </div>
                 <div className="h-10 lg:h-16 w-px bg-gradient-to-t from-white/60 to-white/10" />
@@ -217,7 +210,7 @@ export default function GlobalAuthoritySection() {
                 Node 001. Worldwide Execution.
               </span>
             </div>
-            <h2 className="text-[clamp(2.5rem,11vw,8rem)] font-bold text-white tracking-[-0.04em] leading-[0.8] uppercase">
+            <h2 className="text-[clamp(2.5rem,7.5vw,10rem)] font-bold text-white tracking-[-0.04em] leading-[0.85] uppercase">
               GLOBAL
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
@@ -225,22 +218,22 @@ export default function GlobalAuthoritySection() {
               </span>
             </h2>
           </div>
-          <div className="flex flex-col gap-2 border-l-2 border-[#d4af37] pl-6 ml-2">
-            <p className="text-2xl md:text-4xl text-white leading-tight font-light tracking-tight">
+          <div className="flex flex-col gap-2 border-l-2 border-[#d4af37] pl-6 ml-2 max-w-[80vw]">
+            <p className="text-[clamp(1.2rem,2.2vw,3rem)] text-white leading-tight font-light tracking-tight">
               One system. One standard.
             </p>
-            <p className="text-xl md:text-3xl text-[#d4af37] italic font-serif opacity-90">
+            <p className="text-[clamp(1.1rem,1.8vw,2.5rem)] text-[#d4af37] italic font-serif opacity-90">
               Outcomes that hold.
             </p>
           </div>
         </div>
 
         {/* Bottom Bar: Metrics & Caption */}
-        <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-16 pointer-events-auto mt-[15vh] lg:mt-auto">
+        <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-12 pointer-events-auto mt-[10vh] lg:mt-auto relative z-30">
           {/* Caption */}
-          <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-2">
-            <span className="w-8 h-px bg-white/50 block" />
-            <p className="text-white/70 text-[10px] font-serif italic tracking-wide drop-shadow-sm">
+          <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-[4vh] pt-8 lg:pt-0 w-full lg:w-max">
+            <span className="w-10 h-[1px] bg-white/50 block" />
+            <p className="text-white/70 text-[11px] lg:text-[13px] font-sans tracking-wide drop-shadow-md font-light">
               Data architecture actively plotting. Centralized in Tbilisi.
             </p>
           </div>
@@ -248,7 +241,7 @@ export default function GlobalAuthoritySection() {
           {/* 03 Global Presence Metrics */}
           <div
             ref={metricsRef}
-            className="order-1 lg:order-2 flex flex-col gap-10 w-full lg:max-w-4xl bg-black/40 backdrop-blur-xl p-8 rounded-none border-t border-white/10 lg:p-10"
+            className="order-1 lg:order-2 flex flex-col gap-8 w-full lg:max-w-[900px] xl:max-w-[1050px] bg-gradient-to-t from-black/90 to-black/40 backdrop-blur-xl p-8 rounded-none border-t border-white/5 lg:py-12 lg:px-14 shadow-2xl"
           >
             {/* Mobile Fallback Nodes */}
             <div className="md:hidden flex flex-col gap-8 pb-8 border-b border-white/10">
@@ -270,56 +263,64 @@ export default function GlobalAuthoritySection() {
               </div>
             </div>
 
-            {/* Data Grid */}
-            <div className="flex items-center gap-4 mb-2 ">
-              <div className="w-1.5 h-1.5 bg-white/50 rounded-full" />
-              <h4 className="text-white/60 font-bold tracking-[0.4em] uppercase text-[10px] hidden lg:block">
+            {/* Data Grid Title */}
+            <div className="flex items-center gap-3 mb-4 hidden md:flex">
+              <div className="w-1 h-1 bg-white/70 rounded-full" />
+              <h4 className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[9px] lg:text-[10px]">
                 03 — GLOBAL PRESENCE
               </h4>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 text-sm w-full">
-              <div className="flex flex-col gap-2">
-                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
-                  <span className="w-3 h-px bg-white/30 block" /> Coverage
+            {/* Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 text-sm w-full">
+              {/* Column 1 */}
+              <div className="flex flex-col gap-3">
+                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                  — COVERAGE
                 </span>
-                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   26
-                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
-                    Countries
+                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                    COUNTRIES
                   </span>
                 </span>
               </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
-                  <span className="w-3 h-px bg-white/30 block" /> Partners
+              
+              {/* Column 2 */}
+              <div className="flex flex-col gap-3">
+                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                  — PARTNERS
                 </span>
-                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   71
-                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
-                    Origins
+                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                    ORIGINS
                   </span>
                 </span>
               </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-[#d4af37]/70 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
-                  <span className="w-3 h-px bg-[#d4af37]/50 block" /> Network
+              
+              {/* Column 3 */}
+              <div className="flex flex-col gap-3">
+                <span className="text-[#d4af37]/80 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                  — NETWORK
                 </span>
-                <span className="text-[#d4af37] text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
-                  888<span className="text-2xl -ml-1">±</span>
-                  <span className="text-[#d4af37]/50 text-sm tracking-widest uppercase font-semibold">
-                    Signature
+                <span className="text-[#d4af37] text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-1.5">
+                  888<span className="text-2xl lg:text-3xl -ml-2 -mt-2">±</span>
+                  <span className="text-[#d4af37]/60 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1">
+                    SIGNATURE
                   </span>
                 </span>
               </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-white/50 uppercase text-[10px] tracking-[0.3em] font-semibold flex items-center gap-2">
-                  <span className="w-3 h-px bg-white/30 block" /> Language
+              
+              {/* Column 4 */}
+              <div className="flex flex-col gap-3">
+                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                  — LANGUAGE
                 </span>
-                <span className="text-white text-4xl lg:text-5xl font-light tracking-tight flex items-baseline gap-2">
+                <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   17
-                  <span className="text-white/40 text-sm tracking-widest uppercase font-semibold">
-                    Spoken
+                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                    SPOKEN
                   </span>
                 </span>
               </div>
