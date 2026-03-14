@@ -10,6 +10,10 @@ import {
   getElementPageCoords,
   pagePixelsToWorldUnit,
 } from "./utils/utils";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PANEL_START_ID = "video-panel-start";
 const PANEL_END_ID = "video-panel-end";
@@ -28,7 +32,7 @@ export default class VideoPanelShader extends THREE.Group {
   scrollPositionAnimEnd = 0;
   scrollPositionAnimFollowEnd = 0;
   followDistanceWorld = 0;
-  private scrollHandler: (e?: Event) => void;
+  scrollTriggerContext!: gsap.Context;
 
   constructor(camera: THREE.OrthographicCamera) {
     super();
@@ -65,12 +69,47 @@ export default class VideoPanelShader extends THREE.Group {
     this.add(this.mesh);
 
     this.calculateElementValues();
-
-    this.scrollHandler = () => this.onScroll();
-    window.addEventListener("scroll", this.scrollHandler);
+    this.initScrollTrigger();
 
     this.initDebug();
   }
+
+  initScrollTrigger = () => {
+    // We clean up any existing GSAP instances on this class when resizing
+    if (this.scrollTriggerContext) {
+      this.scrollTriggerContext.revert();
+    }
+
+    this.scrollTriggerContext = gsap.context(() => {
+      const startEl = document.getElementById(PANEL_START_ID);
+      const endEl = document.getElementById(PANEL_END_PARENT_ID);
+      const innerEndEl = document.getElementById(PANEL_END_ID);
+
+      if (!startEl || !endEl || !innerEndEl) return;
+
+      // The core animation mask mapping
+      ScrollTrigger.create({
+        trigger: startEl,
+        start: "top center",
+        endTrigger: innerEndEl,
+        end: "top center",
+        onUpdate: (self) => {
+          this.animateProgress.value = self.progress;
+        },
+      });
+
+      // The positional follow distance 
+      ScrollTrigger.create({
+        trigger: innerEndEl,
+        start: "top center",
+        endTrigger: endEl,
+        end: "top center",
+        onUpdate: (self) => {
+          this.mesh.position.y = -self.progress * this.followDistanceWorld;
+        },
+      });
+    });
+  };
 
   calculateElementValues() {
     this.scrollPositionAnimStart =
@@ -92,29 +131,7 @@ export default class VideoPanelShader extends THREE.Group {
   }
 
   onScroll = () => {
-    this.animateProgress.value = THREE.MathUtils.inverseLerp(
-      this.scrollPositionAnimStart,
-      this.scrollPositionAnimEnd,
-      window.scrollY,
-    );
-    this.animateProgress.value = THREE.MathUtils.clamp(
-      this.animateProgress.value,
-      0,
-      1,
-    );
-
-    const distanceWorld = pagePixelsToWorldUnit(
-      this.scrollPositionAnimFollowEnd - this.scrollPositionAnimEnd,
-      this.camera,
-    );
-    let positionFollowAmount = THREE.MathUtils.inverseLerp(
-      this.scrollPositionAnimEnd,
-      this.scrollPositionAnimFollowEnd,
-      window.scrollY,
-    );
-    positionFollowAmount = THREE.MathUtils.clamp(positionFollowAmount, 0, 1);
-
-    this.mesh.position.y = -positionFollowAmount * distanceWorld;
+    // Handled purely by GSAP scroll triggers now
   };
 
   initDebug = () => {
@@ -142,6 +159,11 @@ export default class VideoPanelShader extends THREE.Group {
   resize = () => {
     this.calculateElementValues();
 
+    const startWorldRect = elementToWorldRect(PANEL_START_ID, this.camera);
+    if (startWorldRect.width > 0) {
+      this.position.copy(startWorldRect.position);
+    }
+
     const startRectLocal = elementToLocalRect(
       PANEL_START_ID,
       this,
@@ -154,12 +176,14 @@ export default class VideoPanelShader extends THREE.Group {
     this.material.uniforms.endRect.value =
       VideoPanelShader.rectToVec4(endRectLocal);
 
-    this.onScroll();
+    this.initScrollTrigger();
   };
 
   update = () => {};
 
   dispose() {
-    window.removeEventListener("scroll", this.scrollHandler);
+    if (this.scrollTriggerContext) {
+      this.scrollTriggerContext.revert();
+    }
   }
 }

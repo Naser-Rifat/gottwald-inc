@@ -37,6 +37,7 @@ export default function PartnershipPage() {
           duration: 1,
           stagger: 0.12,
           ease: "expo.out",
+          force3D: true,
         });
 
         // Hero parallax on scroll (NO pin — avoids double-pin conflict
@@ -46,6 +47,7 @@ export default function PartnershipPage() {
           opacity: 0,
           y: 50,
           ease: "none",
+          force3D: true,
           scrollTrigger: {
             trigger: heroTextRef.current.parentElement,
             start: "top top",
@@ -69,6 +71,7 @@ export default function PartnershipPage() {
             y: 0,
             duration: 1.2,
             ease: "expo.out",
+            force3D: true,
             scrollTrigger: {
               trigger: el,
               start: "top 85%",
@@ -84,22 +87,20 @@ export default function PartnershipPage() {
         pageRef.current!,
       )[0] as HTMLElement;
       if (scrollWrapper && window.innerWidth >= 768) {
-        const xOffset = -(
-          scrollWrapper.scrollWidth -
-          window.innerWidth +
-          window.innerWidth * 0.1
-        );
+        const xOffset = -(scrollWrapper.scrollWidth - window.innerWidth);
 
         gsap.to(scrollWrapper, {
           x: xOffset,
+          force3D: true, // Force GPU acceleration for smooth horizontal panning
           ease: "none",
           scrollTrigger: {
             trigger: "#standards-section",
             start: "top top",
-            end: () => `+=${scrollWrapper.scrollWidth}`,
+            end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
             scrub: 1,
             pin: true,
             anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
         });
       }
@@ -115,8 +116,9 @@ export default function PartnershipPage() {
   return (
     <div
       ref={pageRef}
-      className="bg-transparent min-h-screen text-white font-sans overflow-hidden selection:bg-gold selection:text-black"
+      className="bg-transparent min-h-screen text-white font-sans overflow-x-hidden selection:bg-gold selection:text-black"
     >
+      {/* Fixed header — same pattern as all other pages */}
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
@@ -211,7 +213,7 @@ export default function PartnershipPage() {
         {/* ── SECTION 2: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
         <section
           id="standards-section"
-          className="bg-[#020202] relative z-10"
+          className="bg-[#020202] relative z-10 isolate"
         >
           <div className="standards-pin-container">
             {/* Section Title Row */}
@@ -232,51 +234,52 @@ export default function PartnershipPage() {
             </div>
 
             {/* Scroll Wrapper — full-width monolithic columns */}
-            <div className="standards-scroll-wrapper flex flex-row w-max reveal-up overflow-hidden border-t border-white/10">
+            <div className="standards-scroll-wrapper flex flex-row w-max reveal-up border-t border-white/10 will-change-transform">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-8 lg:p-14 overflow-hidden bg-black transition-colors duration-1000 cursor-pointer shrink-0"
+                  className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-10 lg:p-16 overflow-hidden transition-all duration-1000 cursor-pointer shrink-0"
                 >
+                  {/* Base Glassmorphic Background */}
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-md z-0" />
+
                   {/* Image Background */}
                   <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
-                      src={
-                        i % 2 === 0
-                          ? "/images/partnership_abstract.png"
-                          : "/images/about_office.png"
-                      }
+                      src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
                       alt={item.title}
                       fill
-                      className="object-cover filter grayscale opacity-40 mix-blend-screen scale-110 group-hover:scale-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 38vw"
+                      quality={60}
+                      className="object-cover filter grayscale opacity-30 mix-blend-screen scale-110 group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/60 to-black/30" />
                   </div>
 
-                  {/* Gold light sweep on hover */}
-                  <div className="absolute inset-0 z-0 bg-linear-to-tr from-gold/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                  {/* Ambient Hover Glow */}
+                  <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
                   {/* Top — index & label */}
                   <div className="relative z-10 flex justify-between items-start">
-                    <span className="font-mono text-white/30 group-hover:text-gold text-xs lg:text-sm tracking-[0.4em] uppercase font-bold transition-colors duration-700">
+                    <span className="font-mono text-white/20 group-hover:text-gold text-sm lg:text-base tracking-[0.5em] uppercase font-bold transition-colors duration-700">
                       / 0{i + 1}
                     </span>
-                    <span className="font-serif italic text-xl text-white/20 group-hover:text-gold/70 transition-colors duration-700">
+                    <span className="font-serif italic text-2xl text-white/10 group-hover:text-white/40 transition-colors duration-700">
                       Standard
                     </span>
                   </div>
 
                   {/* Bottom — title + divider + desc */}
                   <div className="relative z-10">
-                    <h3 className="text-3xl lg:text-5xl font-bold tracking-tighter mb-6 text-white/60 group-hover:text-white leading-none transform translate-y-4 group-hover:translate-y-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                    <h3 className="text-4xl lg:text-6xl font-black tracking-tighter mb-8 text-white/50 group-hover:text-white leading-[0.9] transform translate-y-6 group-hover:translate-y-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] drop-shadow-2xl">
                       {item.title}
                     </h3>
 
-                    <div className="w-full h-px bg-white/10 mb-6 relative overflow-hidden">
+                    <div className="w-full h-px bg-white/5 mb-8 relative overflow-hidden">
                       <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
                     </div>
 
-                    <p className="text-lg lg:text-xl text-white/40 font-light leading-relaxed translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-hover:text-white/75 transition-all duration-700 delay-75 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                    <p className="text-xl lg:text-2xl text-white/30 font-light leading-relaxed tracking-wide transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-hover:text-white/80 transition-all duration-700 delay-100 ease-[cubic-bezier(0.19,1,0.22,1)] pr-8">
                       {item.desc}
                     </p>
                   </div>

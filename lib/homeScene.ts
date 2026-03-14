@@ -38,7 +38,6 @@ export default class HomeScene {
       }
     }, 1);
 
-    window.addEventListener("scroll", this.scrollHandler);
     window.addEventListener("resize", this.resizeHandler);
 
     if (process.env.NODE_ENV === "development") {
@@ -99,6 +98,7 @@ export default class HomeScene {
     // this.scene.add(this.animatedTube);
 
     this.videoPanel = new VideoPanelShader(this.camera);
+    this.videoPanel.onScroll();
     this.scene.add(this.videoPanel);
 
     this.projectTiles = new ProjectTiles(this);
@@ -121,6 +121,10 @@ export default class HomeScene {
     if (!this.renderer) return;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     updateCameraIntrisics(this.camera, this.frustumSize);
+    
+    // Crucial: Update the camera's Y position to match the new innerHeight
+    // before computing any unproject() math in the children's resize() hooks.
+    this.onScroll();
 
     // this.cosmicDust?.resize();
     // this.physicsSandbox?.resize();
@@ -131,6 +135,11 @@ export default class HomeScene {
 
   animate = () => {
     if (this.isDisposed) return;
+    
+    // Poll scroll layout synchronously before strictly drawing UI
+    this.onScroll();
+    this.videoPanel?.onScroll();
+
     const dt = this.clock.getDelta();
 
     this.loadingGroup?.update(dt);
@@ -161,7 +170,6 @@ export default class HomeScene {
     this.renderer?.setAnimationLoop(null);
 
     // 2. Remove all event listeners
-    window.removeEventListener("scroll", this.scrollHandler);
     window.removeEventListener("resize", this.resizeHandler);
 
     // 3. Dispose scene children

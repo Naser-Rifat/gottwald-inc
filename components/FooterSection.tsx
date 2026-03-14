@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import logo from "@/public/logo.png";
 
 const directoryLinks = [
@@ -23,54 +23,7 @@ const protocolItems = [
 ];
 
 export default function FooterSection() {
-  const [time, setTime] = useState("");
   const footerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const footerEl = footerRef.current;
-    if (!footerEl) return;
-
-    let interval: ReturnType<typeof setInterval> | null = null;
-
-    const updateTime = () => {
-      try {
-        const formatter = new Intl.DateTimeFormat("en-US", {
-          timeZone: "Asia/Tbilisi",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        });
-        setTime(formatter.format(new Date()) + " GET");
-      } catch (e: unknown) {
-        const errorMessage = e instanceof Error ? e.message : "Unknown error";
-        console.error("Time formatting error:", errorMessage);
-        setTime(
-          new Date().toLocaleTimeString("en-US", { hour12: false }) + " LOCAL",
-        );
-      }
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          updateTime();
-          interval = setInterval(updateTime, 1000);
-        } else if (interval) {
-          clearInterval(interval);
-          interval = null;
-        }
-      },
-      { threshold: 0 },
-    );
-
-    observer.observe(footerEl);
-
-    return () => {
-      observer.disconnect();
-      if (interval) clearInterval(interval);
-    };
-  }, []);
 
   return (
     <footer

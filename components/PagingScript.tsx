@@ -1,6 +1,10 @@
 "use client";
 
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function PagingScript() {
   useEffect(() => {
@@ -11,55 +15,10 @@ export default function PagingScript() {
 
     if (!scrollbar || !scrollbarHandle || !h1Topline || !h1Tagline) return;
 
-    function isElementOnScreen(element: HTMLElement): Promise<boolean> {
-      const observerOptions: IntersectionObserverInit = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0,
-      };
-
-      return new Promise((resolve) => {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              resolve(true);
-              observer.disconnect();
-            } else {
-              resolve(false);
-            }
-          });
-        }, observerOptions);
-
-        observer.observe(element);
-      });
-    }
-
-    function onScroll() {
-      function isElementOnScreenCallback(
-        element: HTMLElement,
-        isOnScreen: boolean,
-      ) {
-        if (isOnScreen) {
-          element.classList.add("animate");
-        } else {
-          element.classList.remove("animate");
-        }
-      }
-      if (h1Topline) {
-        isElementOnScreen(h1Topline).then((isOnScreen) =>
-          isElementOnScreenCallback(h1Topline!, isOnScreen),
-        );
-      }
-      if (h1Tagline) {
-        isElementOnScreen(h1Tagline).then((isOnScreen) =>
-          isElementOnScreenCallback(h1Tagline!, isOnScreen),
-        );
-      }
-    }
-
+    // 1. Setup Scrollbar logic
     function update() {
       updateScrollbar();
-      window.requestAnimationFrame(update);
+      rafId = window.requestAnimationFrame(update);
     }
 
     function updateScrollbar() {
@@ -71,12 +30,30 @@ export default function PagingScript() {
       scrollbarHandle.style.top = `${scrollProgress * 100}%`;
     }
 
-    window.addEventListener("scroll", onScroll);
-    const rafId = window.requestAnimationFrame(update);
+    let rafId = window.requestAnimationFrame(update);
+
+    // 2. Setup GSAP ScrollTriggers for Text Animation
+    const ctx = gsap.context(() => {
+      if (h1Topline) {
+        ScrollTrigger.create({
+          trigger: h1Topline,
+          start: "top 95%", // trigger when element is 95% down the screen
+          onEnter: () => h1Topline.classList.add("animate"),
+        });
+      }
+
+      if (h1Tagline) {
+        ScrollTrigger.create({
+          trigger: h1Tagline,
+          start: "top 95%",
+          onEnter: () => h1Tagline.classList.add("animate"),
+        });
+      }
+    });
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
       window.cancelAnimationFrame(rafId);
+      ctx.revert();
     };
   }, []);
 

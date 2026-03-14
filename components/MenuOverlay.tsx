@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
@@ -51,10 +51,21 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
+  // SSR-safe mount flag — avoids calling setState synchronously inside an effect
+  // useSyncExternalStore is the React-recommended approach to detect client-side hydration
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
+  // Safety unmount cleanup:
+  // If Next.js unmounts this component mid-navigation (before closeMenu finishes),
+  // ensure the body scroll lock is always removed so scroll isn't frozen on destination page.
   useEffect(() => {
-    setMounted(true);
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
   }, []);
 
   const closeMenu = (onComplete?: () => void) => {

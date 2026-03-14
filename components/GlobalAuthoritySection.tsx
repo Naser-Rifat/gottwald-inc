@@ -27,7 +27,7 @@ export default function GlobalAuthoritySection() {
         },
       );
 
-      // Stagger text elements (Left Column)
+      // Stagger text elements
       if (textRef.current) {
         gsap.fromTo(
           textRef.current.children,
@@ -46,7 +46,7 @@ export default function GlobalAuthoritySection() {
         );
       }
 
-      // Stagger HUD elements (Right Column)
+      // Stagger HUD elements
       if (hudRef.current) {
         gsap.fromTo(
           hudRef.current.children,
@@ -55,10 +55,10 @@ export default function GlobalAuthoritySection() {
             x: 0,
             opacity: 1,
             duration: 1,
-            stagger: 0.2, // slightly slower stagger for the HUD to sequence after the left text
+            stagger: 0.2, // slightly slower stagger for the HUD
             ease: "power3.out",
             scrollTrigger: {
-              trigger: textRef.current, // trigger based on left column so they start together
+              trigger: textRef.current, 
               start: "top 80%",
             },
           },
@@ -91,11 +91,43 @@ export default function GlobalAuthoritySection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[100vh] lg:min-h-[110vh] bg-transparent overflow-hidden flex flex-col justify-between pt-[6vh] pb-8 lg:pb-0 px-gutter"
+      className="relative w-full bg-transparent overflow-hidden flex flex-col pt-[6vh] pb-8 lg:pb-12 px-gutter min-h-screen"
     >
-      {/* Background Map Container */}
+      {/* 1. Foreground Title (At the top of the flow) */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-4 lg:mt-8">
+        <div
+          ref={textRef}
+          className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto drop-shadow-lg relative z-30"
+        >
+          <div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse" />
+              <span className="text-[10px] sm:text-xs tracking-[0.4em] text-[#d4af37] uppercase font-bold">
+                Node 001. Worldwide Execution.
+              </span>
+            </div>
+            <h2 className="text-[clamp(2.5rem,7.5vw,10rem)] font-bold text-white tracking-[-0.04em] leading-[0.85] uppercase">
+              GLOBAL
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
+                AUTHORITY.
+              </span>
+            </h2>
+          </div>
+          <div className="flex flex-col gap-2 border-l-2 border-[#d4af37] pl-6 ml-2 max-w-[80vw]">
+            <p className="text-[clamp(1.2rem,2.2vw,3rem)] text-white leading-tight font-light tracking-tight">
+              One system. One standard.
+            </p>
+            <p className="text-[clamp(1.1rem,1.8vw,2.5rem)] text-[#d4af37] italic font-serif opacity-90">
+              Outcomes that hold.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Map Container (In-flow, relative, pushes bottom bar down based on ratio) */}
       <div
-        className="absolute inset-x-0 w-full h-[120%] top-[20%] lg:top-[25%] z-0 pointer-events-none flex items-center justify-center opacity-90"
+        className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center opacity-90 my-[-10%] lg:my-[-5%]"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
@@ -123,7 +155,7 @@ export default function GlobalAuthoritySection() {
             className="absolute inset-0 w-full h-full pointer-events-auto"
           >
             {/* 1. Tbilisi Control Node */}
-            <div className="absolute top-[28%] left-[58%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+            <div className="absolute top-[29.3%] left-[58.8%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
               {/* Precision Dot */}
               <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10" />
               {/* Radar Rings */}
@@ -151,7 +183,7 @@ export default function GlobalAuthoritySection() {
             </div>
 
             {/* 2. DACH Hubs (Munich Anchored) */}
-            <div className="absolute top-[26%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
+            <div className="absolute top-[25.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
               {/* Precision Dot */}
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10" />
               {/* Radar Rings */}
@@ -182,8 +214,8 @@ export default function GlobalAuthoritySection() {
             </div>
 
             {/* Vienna & Zurich Micro Nodes */}
-            <div className="absolute top-[28.5%] left-[51%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
-            <div className="absolute top-[29%] left-[49%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
+            <div className="absolute top-[26.3%] left-[51.1%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
+            <div className="absolute top-[26.8%] left-[49%] -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/70 z-10" />
 
             {/* Footprints */}
             <div className="absolute top-[38%] left-[23%] w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block" />
@@ -196,40 +228,9 @@ export default function GlobalAuthoritySection() {
         </div>
       </div>
 
-      {/* Foreground Content Stack */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between flex-grow pointer-events-none max-w-[1400px] mx-auto">
-        {/* Top Left: Title Copy */}
-        <div
-          ref={textRef}
-          className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto drop-shadow-lg relative z-30"
-        >
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse" />
-              <span className="text-[10px] sm:text-xs tracking-[0.4em] text-[#d4af37] uppercase font-bold">
-                Node 001. Worldwide Execution.
-              </span>
-            </div>
-            <h2 className="text-[clamp(2.5rem,7.5vw,10rem)] font-bold text-white tracking-[-0.04em] leading-[0.85] uppercase">
-              GLOBAL
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
-                AUTHORITY.
-              </span>
-            </h2>
-          </div>
-          <div className="flex flex-col gap-2 border-l-2 border-[#d4af37] pl-6 ml-2 max-w-[80vw]">
-            <p className="text-[clamp(1.2rem,2.2vw,3rem)] text-white leading-tight font-light tracking-tight">
-              One system. One standard.
-            </p>
-            <p className="text-[clamp(1.1rem,1.8vw,2.5rem)] text-[#d4af37] italic font-serif opacity-90">
-              Outcomes that hold.
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Bar: Metrics & Caption */}
-        <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-12 pointer-events-auto mt-[10vh] lg:mt-auto relative z-30">
+      {/* 3. Bottom Bar: Metrics & Caption */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-[-5%] lg:mt-[-8%]">
+        <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-12 pointer-events-auto relative z-30">
           {/* Caption */}
           <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-[4vh] pt-8 lg:pt-0 w-full lg:w-max">
             <span className="w-10 h-[1px] bg-white/50 block" />

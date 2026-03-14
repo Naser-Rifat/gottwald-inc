@@ -59,7 +59,7 @@ export default function VideoPanelSection() {
       */}
       <div
         id="video-panel-end-parent"
-        className="relative w-full mt-[10vh] mb-[15vh] aspect-video 3xl:h-[70vh] 3xl:aspect-auto"
+        className="relative w-full mt-[10vh] mb-[5vh] aspect-video 3xl:h-[70vh] 3xl:aspect-auto"
       >
         <div
           id="video-panel-end"

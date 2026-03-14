@@ -129,6 +129,7 @@ export default function CareersPage() {
             opacity: 1,
             duration: 1.2,
             ease: "power3.out",
+            force3D: true,
             scrollTrigger: {
               trigger: el,
               start: "top 85%",
@@ -153,6 +154,7 @@ export default function CareersPage() {
             duration: 0.8,
             stagger: 0.1,
             ease: "power2.out",
+            force3D: true,
             scrollTrigger: {
               trigger: group,
               start: "top 80%",

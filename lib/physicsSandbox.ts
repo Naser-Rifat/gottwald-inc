@@ -168,7 +168,7 @@ export default class PhysicsSandbox extends THREE.Group {
     this.initViewMask();
   };
 
-  update(_dt: number) {
+  update() {
     if (this.world) {
       this.world.step();
     }

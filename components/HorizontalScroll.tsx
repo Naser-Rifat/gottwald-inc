@@ -19,8 +19,6 @@ export default function HorizontalScroll({ children }: HorizontalScrollProps) {
     const wrapper = wrapperRef.current;
     if (!container || !wrapper) return;
 
-    // Calculate total scroll distance
-    const panels = wrapper.children;
     const totalWidth = wrapper.scrollWidth - window.innerWidth;
 
     const ctx = gsap.context(() => {

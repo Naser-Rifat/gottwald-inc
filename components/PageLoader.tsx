@@ -1,7 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import React, { useLayoutEffect, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 
 // Page labels for each route
@@ -18,187 +18,208 @@ const HOME_PATH = "/";
 
 export default function GlobalPageLoader() {
   const pathname = usePathname();
+  const router = useRouter();
+
   const overlayRef = useRef<HTMLDivElement>(null);
   const curtainRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const labelTextRef = useRef<HTMLHeadingElement>(null);
   const lineProgressRef = useRef<HTMLDivElement>(null);
-  const isAnimating = useRef(false);
-  const prevPathname = useRef<string | null>(null);
+
+  // Rigid State Tracking (Senior Engineering Pattern)
+  const isTransitioning = useRef(false);
+  const progressObj = useRef({ val: 0 });
+  const activeTimeline = useRef<gsap.core.Timeline | null>(null);
+  const hasInitiallyLoaded = useRef(false);
 
   // ── Initial page load reveal ──────────────────────────────────────────
   useLayoutEffect(() => {
-    const overlay = overlayRef.current;
-    const curtain = curtainRef.current;
-    const counter = counterRef.current;
-    const labelEl = labelRef.current;
-    const lineProgress = lineProgressRef.current;
-    const labelText = labelTextRef.current;
-    if (!overlay || !curtain || !counter || !labelEl || !lineProgress || !labelText) return;
+    // Only run this exact entrance sequence once per hard-reload
+    if (hasInitiallyLoaded.current) return;
+    hasInitiallyLoaded.current = true;
 
-    // Home page keeps its existing experience — hide loader immediately
+    // Home page keeps its custom intro overlay — skip entirely without unmounting
     if (pathname === HOME_PATH) {
-      gsap.set(overlay, { display: "none", pointerEvents: "none" });
-      prevPathname.current = pathname;
+      gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
       return;
     }
 
-    // Set the label for this route
     const label = ROUTE_LABELS[pathname] ?? "LOADING";
-    labelText.textContent = label;
+    if (labelTextRef.current) labelTextRef.current.textContent = label;
 
-    // Lock scroll
     document.body.style.overflow = "hidden";
-    isAnimating.current = true;
+    isTransitioning.current = true;
 
-    // Reset curtain to covering position
-    gsap.set(curtain, { yPercent: 0 });
-    gsap.set([counter, labelEl], { opacity: 1, y: 0 });
-    gsap.set(lineProgress, { scaleX: 0, transformOrigin: "left center" });
+    // Force starting positions explicitly so there's NO guess work CSS
+    gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
+    gsap.set(curtainRef.current, { yPercent: 0 });
+    gsap.set([counterRef.current, labelRef.current], { opacity: 1, y: 0 });
+    gsap.set(lineProgressRef.current, { scaleX: 0, transformOrigin: "left center" });
 
-    const obj = { val: 0 };
+    if (activeTimeline.current) activeTimeline.current.kill();
+
     const tl = gsap.timeline({
       onComplete: () => {
         document.body.style.overflow = "";
-        isAnimating.current = false;
-        prevPathname.current = pathname;
+        isTransitioning.current = false;
+        gsap.set(overlayRef.current, { pointerEvents: "none" });
       },
     });
+    activeTimeline.current = tl;
 
-    // Count 0 → 100 with progress bar
-    tl.to(obj, {
+    // Zero explicitly
+    progressObj.current.val = 0;
+
+    tl.to(progressObj.current, {
       val: 100,
       duration: 1.4,
       ease: "power2.inOut",
       onUpdate: () => {
-        if (counter) counter.textContent = String(Math.round(obj.val)).padStart(3, "0");
-        if (lineProgress) gsap.set(lineProgress, { scaleX: obj.val / 100 });
+        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
+        if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
       },
     });
 
-    // Fade out content
-    tl.to([counter, labelEl], {
-      opacity: 0,
-      y: -24,
-      duration: 0.45,
-      ease: "power3.in",
-      stagger: 0.04,
-    }, "-=0.1");
-
-    // Curtain sweeps up
-    tl.to(curtain, {
-      yPercent: -100,
-      duration: 1.2,
-      ease: "power4.inOut",
-    }, "-=0.15");
-
-    tl.set(overlay, { pointerEvents: "none" });
+    tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -24, duration: 0.45, ease: "power3.in", stagger: 0.04 }, "-=0.1");
+    tl.to(curtainRef.current, { yPercent: -100, duration: 1.2, ease: "power4.inOut" }, "-=0.15");
 
     return () => { tl.kill(); document.body.style.overflow = ""; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Route change reveal (subsequent navigations) ──────────────────────
+  // ── 2. Eagerly Intercept Link Clicks ────────────────────────────────────
   useEffect(() => {
-    if (prevPathname.current === null) {
-      prevPathname.current = pathname;
-      return;
-    }
-    if (prevPathname.current === pathname) return;
+    const handleLinkClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest("a");
+      if (!link) return;
 
-    // Never show the loader when landing on OR navigating TO the home page
+      const href = link.getAttribute("href");
+      
+      // Edge-Case Handling: Ignore external, tabs, hash, mailto, etc.
+      // Eager Loader MUST NOT intercept CMD+Click / CTRL+Click
+      // ALSO: Do NOT intercept navigations TO the Home page, let Next.js do it cleanly.
+      if (
+        !href ||
+        href === HOME_PATH ||
+        href.startsWith("http") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        href.startsWith("#") ||
+        link.target === "_blank" ||
+        e.ctrlKey || e.metaKey || e.shiftKey || e.altKey
+      ) {
+        return;
+      }
+
+      // Ignore if clicking the exact same URL we are already on
+      if (href === pathname) return;
+      
+      // If we are currently mid-animation, bypass to avoid glitching
+      if (isTransitioning.current) return;
+
+      // ── BEGIN EAGER MASK ──
+      // Completely shut off Next.js's immediate <Link> chunk-loading reaction
+      e.preventDefault();
+      e.stopPropagation(); 
+      isTransitioning.current = true;
+
+      const label = ROUTE_LABELS[href] ?? "LOADING";
+      if (labelTextRef.current) labelTextRef.current.textContent = label;
+
+      // Guarantee any previous timeline is eradicated to prevent object overwrites 
+      // (This fixes the 000% stuck bug).
+      if (activeTimeline.current) activeTimeline.current.kill();
+
+      document.body.style.overflow = "hidden";
+      gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
+      gsap.set(curtainRef.current, { yPercent: -100 });
+      gsap.set([counterRef.current, labelRef.current], { opacity: 0, y: 20 });
+      gsap.set(lineProgressRef.current, { scaleX: 0, transformOrigin: "left center" });
+
+      progressObj.current.val = 0;
+      
+      const tl = gsap.timeline();
+      activeTimeline.current = tl;
+
+      tl.to(curtainRef.current, { yPercent: 0, duration: 0.7, ease: "power4.inOut" });
+      tl.to([labelRef.current, counterRef.current], { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.05 }, "-=0.3");
+      
+      // Emulate network progress to 90%. Holds securely until Next.js is done.
+      tl.to(progressObj.current, {
+        val: 90,
+        duration: 1.0,
+        ease: "power2.out",
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
+          if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+        },
+        onComplete: () => {
+          // Offload the heavy router.push to a React transition so it doesn't block the main thread and freeze GSAP.
+          React.startTransition(() => {
+            router.push(href);
+          });
+        }
+      }, "-=0.2");
+    };
+
+    // Capture phase intercepts before React SyntheticEvents
+    document.addEventListener("click", handleLinkClick, { capture: true });
+    return () => document.removeEventListener("click", handleLinkClick, { capture: true });
+  }, [pathname, router]);
+
+  // ── 3. Completion handler (Fires when Next.js finishes routing) ─────────────
+  useEffect(() => {
+    // If the page legitimately navigates back to Home (e.g. via back button)
+    // we ensure the global mask goes away gracefully.
     if (pathname === HOME_PATH) {
-      prevPathname.current = pathname;
+      gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+      isTransitioning.current = false;
       return;
     }
 
-    const overlay = overlayRef.current;
-    const curtain = curtainRef.current;
-    const counter = counterRef.current;
-    const labelEl = labelRef.current;
-    const lineProgress = lineProgressRef.current;
-    const labelText = labelTextRef.current;
-    if (!overlay || !curtain || !counter || !labelEl || !lineProgress || !labelText) return;
+    // If a route change happened and we WERE tracking an Eager transition
+    if (isTransitioning.current) {
+      if (activeTimeline.current) activeTimeline.current.kill();
+      
+      const tl = gsap.timeline({
+        onComplete: () => {
+          document.body.style.overflow = "";
+          isTransitioning.current = false;
+          gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+        },
+      });
+      activeTimeline.current = tl;
 
-    const label = ROUTE_LABELS[pathname] ?? "LOADING";
-    labelText.textContent = label;
+      // Extract the current value explicitly so no object references are shared incorrectly
+      const startVal = Number(counterRef.current?.textContent) || 90;
+      progressObj.current.val = startVal;
+      
+      tl.to(progressObj.current, {
+        val: 100,
+        duration: 0.4,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
+          if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+        },
+      });
 
-    // Reset overlay & re-enable its pointer events
-    gsap.set(overlay, { pointerEvents: "auto" });
-    document.body.style.overflow = "hidden";
-    isAnimating.current = true;
-
-    // Drop curtain in from top
-    gsap.set(curtain, { yPercent: -100 });
-    gsap.set([counter, labelEl], { opacity: 0, y: 20 });
-    gsap.set(lineProgress, { scaleX: 0, transformOrigin: "left center" });
-
-    const obj = { val: 0 };
-    const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = "";
-        isAnimating.current = false;
-        prevPathname.current = pathname;
-      },
-    });
-
-    // Curtain drops in
-    tl.to(curtain, {
-      yPercent: 0,
-      duration: 0.7,
-      ease: "power4.inOut",
-    });
-
-    // Fade in label & counter
-    tl.to([labelEl, counter], {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: "power3.out",
-      stagger: 0.05,
-    }, "-=0.3");
-
-    // Count up
-    tl.to(obj, {
-      val: 100,
-      duration: 1.2,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        if (counter) counter.textContent = String(Math.round(obj.val)).padStart(3, "0");
-        if (lineProgress) gsap.set(lineProgress, { scaleX: obj.val / 100 });
-      },
-    }, "-=0.2");
-
-    // Fade out content
-    tl.to([counter, labelEl], {
-      opacity: 0,
-      y: -20,
-      duration: 0.4,
-      ease: "power3.in",
-    }, "-=0.05");
-
-    // Curtain exits upward
-    tl.to(curtain, {
-      yPercent: -100,
-      duration: 1.1,
-      ease: "power4.inOut",
-    }, "-=0.1");
-
-    tl.set(overlay, { pointerEvents: "none" });
-
-    return () => { tl.kill(); document.body.style.overflow = ""; };
+      tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -20, duration: 0.4, ease: "power3.in" }, "-=0.05");
+      tl.to(curtainRef.current, { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "-=0.1");
+    }
   }, [pathname]);
 
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-9999 pointer-events-auto"
+      // Start in a hidden state via invisible/opacity-0 to prevent unstyled flashes!
+      className="fixed inset-0 z-9999 pointer-events-none invisible"
       aria-hidden="true"
     >
       <div
         ref={curtainRef}
-        className="absolute inset-0 bg-[#040404] flex flex-col pointer-events-auto"
+        className="absolute inset-0 bg-[#040404] flex flex-col pointer-events-auto will-change-transform"
       >
         {/* Noise grain */}
         <div
@@ -214,7 +235,9 @@ export default function GlobalPageLoader() {
 
         {/* Top brand mark */}
         <div className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-4 opacity-50">
-          <span className="font-mono text-gold text-xs tracking-[0.5em] uppercase font-bold">GH</span>
+          <span className="font-mono text-gold text-xs tracking-[0.5em] uppercase font-bold">
+            GH
+          </span>
           <span className="w-10 h-px bg-gold/40" />
         </div>
 
@@ -251,7 +274,9 @@ export default function GlobalPageLoader() {
           >
             000
           </span>
-          <span className="font-mono text-white/25 text-2xl pb-3 select-none">%</span>
+          <span className="font-mono text-white/25 text-2xl pb-3 select-none">
+            %
+          </span>
         </div>
 
         {/* Bottom right — pathname */}

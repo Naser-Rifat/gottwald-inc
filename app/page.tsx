@@ -1,4 +1,3 @@
-import AboutSection from "@/components/AboutSection";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import GlobalAuthoritySection from "@/components/GlobalAuthoritySection";
 import LoadingOverlay from "@/components/LoadingOverlay";

@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProjectBySlug, getNextProject } from "@/lib/projectData";
 import ProjectDetailClient from "./ProjectDetailClient";
