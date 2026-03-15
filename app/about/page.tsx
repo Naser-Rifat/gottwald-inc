@@ -13,16 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
 export default function AboutPage() {
   const router = useRouter();
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroTextRef = useRef<HTMLHeadingElement>(null);
-  const horizontalRef = useRef<HTMLDivElement>(null);
 
   const handleStrategicClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const btn = e.currentTarget;
-    const textSpan = btn.querySelector("span");
-    const goldBg = btn.querySelector("div.bg-gold");
-
-    // 1. Kill all ScrollTriggers immediately to free up layouts
     ScrollTrigger.getAll().forEach((t) => t.kill());
 
     const tl = gsap.timeline({
@@ -34,754 +28,600 @@ export default function AboutPage() {
       },
     });
 
-    // Morph the button into a circle
-    tl.to(btn, {
-      width: btn.offsetHeight,
-      px: 0,
-      duration: 0.3,
-      ease: "power2.inOut",
-    });
-
-    // Fade out text
-    if (textSpan) {
-      tl.to(
-        textSpan,
-        {
-          opacity: 0,
-          scale: 0.5,
-          duration: 0.2,
-        },
-        "<"
-      );
-    }
-
-    // Force gold background to fill the circle
-    if (goldBg) {
-      tl.to(
-        goldBg,
-        {
-          y: 0,
-          yPercent: 0,
-          duration: 0.3,
-          ease: "power2.inOut",
-        },
-        "<"
-      );
-    }
-
-    // Create the "Curtain" overlay programmatically
     const overlay = document.createElement("div");
     overlay.style.cssText =
-      "position:fixed;top:100vh;left:0;width:100vw;height:100vh;background:#050505;z-index:99999;pointer-events:none;";
+      "position:fixed;top:100vh;left:0;width:100vw;height:100vh;background:#030303;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;";
     
-    // Add gold radial glow to the overlay to match the theme
     const glow = document.createElement("div");
     glow.style.cssText =
-      "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90vw;height:90vw;background:radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);mix-blend-mode:screen;";
+      "position:absolute;width:100vw;height:100vw;background:radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 60%);mix-blend-mode:screen;filter:blur(40px);";
     overlay.appendChild(glow);
     document.body.appendChild(overlay);
 
-    // Sweep overlay up
-    tl.to(overlay, {
-      top: 0,
-      duration: 0.6,
-      ease: "expo.inOut",
-    });
+    tl.to(btn, { opacity: 0, duration: 0.4, ease: "power2.out" })
+      .to(overlay, { top: 0, duration: 0.8, ease: "expo.inOut" }, "-=0.2");
 
-    // Cleanup overlay right after navigation gives way
     setTimeout(() => {
       gsap.to(overlay, {
-        top: "-100vh",
+        opacity: 0,
         duration: 0.6,
-        ease: "expo.inOut",
         onComplete: () => {
           if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
         },
       });
     }, 1200);
   };
-  const horizontalWrapperRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Hero entrance animation
-      if (heroTextRef.current) {
-        const heroChildren =
-          heroTextRef.current.querySelectorAll(".hero-reveal");
-        gsap.set(heroChildren, { opacity: 0, y: 40 });
-        const heroRule = document.getElementById("about-hero-rule");
+      // 1. Initial Hero Fade In — opacity+y only, NO blur (blur forces GPU repaint)
+      gsap.fromTo(
+        ".hero-manifest-text",
+        { opacity: 0, y: 24 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 2, 
+          ease: "power2.out", 
+          stagger: 0.5, 
+          delay: 0.4, 
+          clearProps: "transform",
+          onComplete: () => {
+            // Re-apply parallax logic if needed, or it works automatically if scrub is tied to trigger
+          }
+        }
+      );
 
-        const tl = gsap.timeline({ delay: 0.2 });
-        tl.to(heroChildren, {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.15,
-          ease: "expo.out",
-        });
-        if (heroRule)
-          tl.to(
-            heroRule,
-            { width: "100%", duration: 0.8, ease: "expo.out" },
-            "-=0.4",
-          );
+      // Hero Text Parallax (Awwwards effect)
+      gsap.to(".parallax-fast", {
+        y: -120,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        }
+      });
+      gsap.to(".parallax-slow", {
+        y: -40,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        }
+      });
 
-        // Scroll-out parallax
-        gsap.to(heroTextRef.current, {
-          scale: 0.85,
-          opacity: 0,
-          y: 80,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroTextRef.current.parentElement,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-            pin: true,
-          },
-        });
-      }
+      // Scroll Indicator Intro & Loop
+      gsap.to(".scroll-indicator", { opacity: 1, duration: 1.5, delay: 2, ease: "power2.out" });
+      gsap.to(".scroll-indicator-line", {
+        yPercent: 200,
+        duration: 2,
+        repeat: -1,
+        ease: "power1.inOut",
+      });
 
-      // 2. Horizontal Scroll Section
-      if (horizontalRef.current && horizontalWrapperRef.current) {
-        const sections = gsap.utils.toArray(".hz-panel");
-        gsap.to(sections, {
-          xPercent: -100 * (sections.length - 1),
-          ease: "none",
-          scrollTrigger: {
-            trigger: horizontalRef.current,
-            pin: true,
-            scrub: 1,
-            end: () => `+=${horizontalWrapperRef.current?.offsetWidth || 0}`,
-          },
-        });
-      }
+      // 1.5 Hero Image Breathing — opacity shift only, NO scale (scale creates new compositor layer)
+      gsap.to(".hero-bg-texture", {
+        opacity: 0.45,
+        duration: 10,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
 
-      // 3. Reveal Y up
-      const reveals = gsap.utils.toArray(
-        ".reveal-up",
-        pageRef.current!,
-      ) as HTMLElement[];
-      reveals.forEach((el) => {
+      // 2. Ambient Light Breathing — opacity only, reduced frequency
+      gsap.to(".ambient-light", {
+        opacity: 0.35,
+        duration: 12,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: { each: 3, from: "random" }
+      });
+
+      // 3. Reveal Elements on Scroll — opacity+y only, NO blur
+      const revealElements = gsap.utils.toArray(".reveal-text") as HTMLElement[];
+      revealElements.forEach((el) => {
         gsap.fromTo(
           el,
-          { opacity: 0, y: 60, rotationX: 10, transformOrigin: "0% 50%" },
+          { opacity: 0, y: 40 },
           {
             opacity: 1,
             y: 0,
-            rotationX: 0,
-            duration: 1.5,
-            ease: "expo.out",
+            duration: 1.2,
+            ease: "power2.out",
+            clearProps: "transform",
             scrollTrigger: {
               trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
+              start: "top 88%",
+              end: "top 65%",
+              scrub: false, // fire once, not scrub — scrub on every frame is expensive
+              toggleActions: "play none none none",
             },
-          },
+          }
         );
       });
 
-      // 4. Parallax glow spheres
-      const glows = gsap.utils.toArray(
-        ".float-glow",
-        pageRef.current!,
-      ) as HTMLElement[];
-      glows.forEach((glow, i) => {
-        gsap.to(glow, {
-          y: -200 - i * 50,
-          rotate: 45,
+      // 4. Axis Background Image Reveal — opacity only, NO blur filter animation
+      gsap.to(".axis-bg", {
+        opacity: 0.55,
+        ease: "power1.inOut",
+        scrollTrigger: {
+          trigger: ".axis-trigger",
+          start: "top 90%",
+          end: "top 40%",
+          scrub: 1,
+        }
+      });
+
+      // 5. Case Studies Horizontal Scroll Wrapper (Sticky)
+      const horizontalContainer = document.querySelector(".cases-container") as HTMLElement;
+      if (horizontalContainer) {
+        gsap.to(horizontalContainer, {
+          xPercent: -100 + (100 / 5), // Scroll through 5 cards
           ease: "none",
           scrollTrigger: {
-            trigger: glow.parentElement,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
+            trigger: ".cases-wrapper",
+            start: "top top",
+            end: "+=3000",
+            pin: true,
+            scrub: 1,
+          }
         });
+      }
+
+      // 5. Hover Effects for Ecosystem
+      const ecoItems = gsap.utils.toArray(".eco-item") as HTMLElement[];
+      ecoItems.forEach(item => {
+        const line = item.querySelector(".eco-line");
+        item.addEventListener("mouseenter", () => gsap.to(line, { width: "100%", duration: 0.5, ease: "power2.out" }));
+        item.addEventListener("mouseleave", () => gsap.to(line, { width: "0%", duration: 0.5, ease: "power2.out" }));
       });
+      
     }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div
-      ref={pageRef}
-      className="bg-base min-h-screen text-white font-sans overflow-hidden selection:bg-white selection:text-black"
-    >
-      <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
+    <div ref={pageRef} className="bg-[#030303] min-h-screen text-white/80 font-sans overflow-hidden selection:bg-gold/20 selection:text-white">
+      <div className="fixed top-0 left-0 w-full z-[100] px-gutter pointer-events-auto">
         <Header />
       </div>
 
       <main>
-        {/* ── 1. HERO — SPLIT EDITORIAL ── */}
-        <section className="h-screen w-full flex items-end relative bg-base overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div
-              className="float-glow absolute top-[10%] left-[-10%] w-[60vw] h-[60vw] rounded-full opacity-40"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 60%)",
-              }}
-            />
-            <div
-              className="float-glow absolute bottom-[-20%] right-[-5%] w-[50vw] h-[50vw] rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%)",
-              }}
-            />
+        {/* HERO SECTION */}
+        <section className="hero-section min-h-[100vh] w-full flex flex-col justify-center relative bg-[#030303] overflow-hidden px-gutter pt-32 pb-[15vh]">
+          {/* Cinematic Background Texture — JPG for smaller GPU texture, no mix-blend-mode */}
+          <div className="hero-bg-texture absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ willChange: 'opacity' }}>
+            <div className="absolute inset-0 bg-[url('/images/about_hero_abstract.jpg')] bg-cover bg-center bg-no-repeat" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/30 via-[#030303]/70 to-[#030303]" />
           </div>
 
-          <div
-            ref={heroTextRef}
-            className="relative w-full px-gutter pb-16 will-change-transform"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-0 lg:gap-20 items-end">
-              <div className="hero-reveal">
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="text-gold text-[11px] font-bold tracking-[0.4em] uppercase">
-                    03/
-                  </span>
-                  <span className="w-12 h-px bg-white/15" />
-                  <span className="text-[10px] tracking-[0.35em] text-white/30 uppercase font-bold">
-                    About Us
-                  </span>
-                </div>
+          {/* Ambient Generative Light — contained layer, no mix-blend-mode to avoid compositing */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="ambient-light absolute top-[10%] left-[10%] w-[45vw] h-[45vw] rounded-full opacity-15 blur-[100px]" style={{ background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)", willChange: 'opacity' }} />
+            <div className="ambient-light absolute bottom-[20%] right-[10%] w-[50vw] h-[50vw] rounded-full opacity-8 blur-[80px]" style={{ background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)", willChange: 'opacity' }} />
+          </div>
 
-                <h1 className="text-[clamp(2.8rem,8vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white">
-                  WE TURN
-                  <br />
-                  COM
-                  <span className="text-gold/80 italic font-serif font-normal px-2">
-                    PLEXI
-                  </span>
-                  TY
-                  <br />
-                  <span className="text-[clamp(2rem,5vw,6rem)] text-gold/60 italic font-serif font-normal tracking-tight block mt-4">
-                    into inevitability.
-                  </span>
-                </h1>
-              </div>
+          <div className="max-w-6xl mx-auto w-full relative z-10 space-y-12 lg:space-y-16 mt-[-10vh]">
+            <div>
+              <p className="hero-manifest-text text-gold/40 text-[10px] md:text-xs tracking-[0.4em] uppercase font-bold mb-6 lg:mb-8">
+                ABOUT US — GOTT WALD HOLDING
+              </p>
+              <h1 className="hero-manifest-text text-[clamp(2.5rem,6vw,6.5rem)] leading-[1.03] font-light tracking-tighter text-white/90">
+                <span className="inline-block parallax-fast">WE TURN COMPLEXITY</span> <br />
+                <span className="font-serif italic text-gold/80 px-1 lg:px-4 inline-block parallax-slow">into inevitability.</span>
+              </h1>
+            </div>
 
-              <div className="hero-reveal hidden lg:flex flex-col gap-6 self-end bg-black/40 backdrop-blur-sm rounded-sm p-8 -m-8 border border-white/5">
-                <div className="flex items-center gap-3 pb-4 border-b border-gold/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold" />
-                  <p className="text-[9px] uppercase tracking-[0.4em] text-gold/70 font-bold">
-                    The Mandate
-                  </p>
-                </div>
+            <div className="hero-manifest-text max-w-2xl text-lg md:text-2xl font-light text-white/60 leading-[1.6]">
+              <p>
+                If you&apos;re a CEO, founder, executive — or you run an SME that must grow — you know this moment.
+              </p>
+            </div>
+          </div>
 
-                <p className="text-white/70 text-base font-light leading-[1.75]">
-                  We don&apos;t manage complexity. We architect around it. One
-                  system. One standard. Built for outcomes that remain.
-                </p>
-
-                <div
-                  id="about-hero-rule"
-                  className="w-0 h-px bg-gold origin-left mt-2 mb-2"
-                />
-
-                <a
-                  href="#intro"
-                  className="group inline-flex items-center gap-3 text-white/40 hover:text-gold transition-colors duration-300 w-max"
-                >
-                  <span className="w-6 h-px bg-white/30 group-hover:bg-gold group-hover:w-10 transition-all duration-300" />
-                  <span className="text-[10px] tracking-[0.3em] uppercase font-bold">
-                    Scroll to read
-                  </span>
-                </a>
-              </div>
+          {/* Premium Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-0 scroll-indicator hidden sm:flex">
+            <span className="text-[9px] tracking-[0.4em] uppercase text-gold/50 font-bold">Scroll to tune in</span>
+            <div className="w-[1px] h-16 bg-white/10 relative overflow-hidden">
+              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-full bg-gold -translate-y-[101%]" />
             </div>
           </div>
         </section>
 
-        {/* ── 2. THE INTRO ── */}
-        <section
-          id="intro"
-          className="px-gutter py-[18vh] bg-base relative z-10 border-t border-white/5"
-        >
-          <div className="max-w-5xl mx-auto flex flex-col gap-16 reveal-up">
-            <p className="text-3xl md:text-5xl font-light leading-[1.4] text-white/60">
-              If you&apos;re a CEO, founder, executive — or you run an SME that
-              must grow — you know this moment: <br />
-              <br />
-              <span className="text-white">
-                You can feel there&apos;s more possible&hellip; yet something in
-                the system keeps draining energy.
-              </span>
+        {/* NARRATIVE SCROLL SEQUENCE */}
+        <section className="bg-[#030303] relative z-10 -mt-[15vh]">
+          <div className="max-w-4xl mx-auto px-gutter space-y-[35vh] pb-[25vh]">
+            <p className="reveal-text text-[clamp(1.5rem,3.5vw,3rem)] font-light text-white/60 leading-[1.5] parallax-slow">
+              You can feel there&apos;s more possible... yet something in the system keeps draining energy. Too many topics, not enough sequence. Too much noise, not enough truth.
             </p>
-            <div className="flex flex-col md:flex-row gap-12 pt-16 border-t border-white/10">
-              <div className="flex-1 text-xl text-white/40 font-light leading-[1.8]">
-                Too many topics, not enough sequence. Too much noise, not enough
-                truth.
-                <br />
-                And even though everyone is smart, it doesn&apos;t get lighter —
-                it just gets fuller.
-              </div>
-              <div className="flex-1 text-4xl text-gold font-serif italic">
+            
+            <p className="reveal-text text-[clamp(1.5rem,3.5vw,3rem)] font-light text-white/60 leading-[1.5] parallax-fast">
+              And even though everyone is smart, it doesn&apos;t get lighter — <span className="text-white font-normal">it just gets fuller.</span>
+            </p>
+            
+            <div className="reveal-text space-y-6">
+              <div className="w-12 h-px bg-gold/50" />
+              <p className="text-[clamp(2rem,4.5vw,4rem)] font-serif italic text-gold/90 leading-[1.3]">
                 That&apos;s where our work begins.
-              </div>
+              </p>
             </div>
           </div>
         </section>
 
-        {/* ── 3. THE AXIS ── */}
-        <section className="px-gutter pt-[12vh] pb-[18vh] bg-transparent">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[10vw] max-w-7xl mx-auto items-center">
-            <div className="reveal-up">
-              <h2 className="text-[clamp(3rem,6vw,7rem)] font-bold tracking-tighter uppercase leading-[0.9]">
-                NOT A TRADITIONAL <br />
-                <span className="text-white/20">SERVICE PROVIDER.</span>
+        {/* THE DIFFERENCE */}
+        <section className="py-[25vh] px-gutter relative bg-[#030303] overflow-hidden">
+          {/* Cinematic Axis Background — JPG, opacity-only reveal, no blur filter, no mix-blend-mode */}
+          <div className="axis-bg absolute inset-0 z-0 opacity-0 pointer-events-none" style={{ willChange: 'opacity' }}>
+            <div className="absolute inset-0 bg-[url('/images/about_axis_nature.jpg')] bg-cover bg-center bg-no-repeat opacity-50" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030303] via-[#030303]/50 to-[#030303]" />
+          </div>
+
+          <div className="max-w-4xl mx-auto text-center space-y-32 relative z-10">
+            <div className="reveal-text space-y-12">
+              <h2 className="text-3xl md:text-5xl font-light text-white leading-tight">
+                GOT WALD HOLDING is not a traditional service provider.
               </h2>
-            </div>
-            <div className="reveal-up text-xl md:text-2xl text-white/50 font-light leading-[1.6]">
-              <p className="mb-12">
-                We are an execution standard: strategy, structure, technology,
-                communication, and human performance — built as one integrated
-                system that reduces complexity and makes outcomes inevitable.
+              <p className="text-xl md:text-2xl text-white/50 leading-relaxed font-light">
+                We are an execution standard: strategy, structure, technology, communication, and human performance — built as one integrated system that reduces complexity and makes outcomes inevitable.
               </p>
-              <div className="p-12 border border-gold/20 rounded-3xl bg-gold/2">
-                <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold block mb-6">
-                  The Axis you feel
-                </span>
-                <p className="text-4xl text-white font-serif italic mb-4">
-                  Nature
+            </div>
+            
+            <div className="axis-trigger reveal-text">
+              <p className="text-lg md:text-xl text-white/40 mb-6">And we carry an axis you don&apos;t debate — you feel it:</p>
+              <p className="text-3xl md:text-5xl font-black tracking-widest text-gold opacity-90 drop-shadow-2xl">
+                NATURE<span className="text-white/20 mx-4">–</span>ANIMALS<span className="text-white/20 mx-4">–</span>HUMANS
+              </p>
+            </div>
+
+            <div className="reveal-text space-y-8 max-w-3xl mx-auto pt-16 border-t border-white/5">
+              <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-4">The difference</p>
+              <h3 className="text-4xl md:text-6xl font-light text-white">We don&apos;t optimize parts.</h3>
+              <p className="text-2xl md:text-4xl font-serif italic text-white/60">
+                We redesign the system — until &quot;solved&quot; is felt in real life.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* WHAT WE STAND FOR */}
+        <section className="py-[25vh] px-gutter relative bg-[#050505]">
+          <div className="max-w-5xl mx-auto">
+            <p className="reveal-text text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-16">What we stand for</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+              <div className="reveal-text space-y-8">
+                <h3 className="text-4xl md:text-5xl font-light leading-tight">
+                  We believe in something radical — <span className="font-serif italic text-gold/80 hover:text-gold transition-colors duration-500">and practical:</span>
+                </h3>
+                <p className="text-2xl text-white/70 leading-relaxed font-light">
+                  When structure becomes visible, the right solution becomes inevitable. Not &quot;someday.&quot; Not &quot;when there&apos;s time.&quot;
                 </p>
-                <p className="text-4xl text-white/60 font-serif italic mb-4 pl-8">
-                  Animals
-                </p>
-                <p className="text-4xl text-white/30 font-serif italic pl-16">
-                  Humans
+                <div className="space-y-4 pt-8">
+                  <p className="text-xl text-white/40">✓ But in a way that lets a CEO breathe again.</p>
+                  <p className="text-xl text-white/40">✓ In a way that helps founders know what comes first.</p>
+                  <p className="text-xl text-white/40">✓ In a way that lets teams deliver with focus — and systems carry instead of pull.</p>
+                </div>
+              </div>
+              <div className="reveal-text bg-[#080808] p-12 rounded-3xl border border-white/5 flex flex-col justify-center relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                <h4 className="text-5xl font-black text-white mb-6">Solved means solved.</h4>
+                <p className="text-2xl font-serif italic text-gold/80 mb-8">&quot;Solved&quot; means you feel it on Monday morning, not in a pitch.</p>
+                <p className="text-xl text-white/60 font-light leading-relaxed">
+                  Less friction. Clearer decisions. Higher speed. More calm in the system.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── 4. WHAT WE DO DIFFERENTLY (HORIZONTAL SCROLL) ── */}
-        <div
-          ref={horizontalRef}
-          className="bg-base h-screen w-full flex overflow-hidden border-t border-white/5 relative"
-        >
-          <div className="absolute top-[10%] left-[5vw] z-10 pointer-events-none">
-            <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block">
-              WHAT WE DO DIFFERENTLY
-            </span>
-            <p className="text-xl font-serif italic text-white/50 mt-4">
-              We build architecture — for clarity.
-            </p>
-          </div>
+        {/* 5 PILLARS (WHAT WE DO DIFFERENTLY) */}
+        <section className="py-[20vh] px-gutter relative bg-[#030303]">
+          <div className="max-w-5xl mx-auto">
+            <div className="reveal-text mb-32 max-w-5xl">
+              <div className="flex items-center gap-4 mb-10">
+                <span className="w-8 md:w-16 h-px bg-gold/40" />
+                <p className="text-[10px] md:text-xs tracking-[0.4em] uppercase text-gold/60 font-bold">What we do differently</p>
+              </div>
 
-          <div
-            ref={horizontalWrapperRef}
-            className="flex h-full w-[max-content] will-change-transform"
-          >
-            <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
-              <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-white/5">
-                  01
-                </span>
-                <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8">
-                    Remove noise until only truth remains
-                  </h3>
-                  <p className="text-2xl text-white/40 font-light leading-relaxed">
-                    Most problems aren&apos;t complex — they&apos;re just
-                    hidden. We reveal what truly drives the system: root cause,
-                    leverage, sequence.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
-              <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-white/5">
-                  02
-                </span>
-                <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8">
-                    Make decisions light again
-                  </h3>
-                  <p className="text-2xl text-white/40 font-light leading-relaxed">
-                    When a system becomes clear, decisions almost make
-                    themselves. Not because it&apos;s &ldquo;easy,&rdquo; but
-                    because it is finally ordered.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
-              <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-gold/20 italic font-serif">
-                  03
-                </span>
-                <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8 text-gold">
-                    Build signal, not volume
-                  </h3>
-                  <p className="text-2xl text-white/40 font-light leading-relaxed">
-                    Marketing is Trust &amp; Demand Infrastructure: positioning,
-                    proof architecture, messaging, conversion — built so premium
-                    clients take you seriously instantly.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
-              <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-white/5">
-                  04
-                </span>
-                <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8">
-                    Technology as infrastructure
-                  </h3>
-                  <p className="text-2xl text-white/40 font-light leading-relaxed">
-                    Websites are not business cards. They are discovery, trust,
-                    conversion, scale — including SEO and AI indexing.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="hz-panel w-screen h-full flex items-center justify-center px-[10vw]">
-              <div className="flex gap-16 items-start max-w-5xl">
-                <span className="text-[15vw] leading-[0.7] font-black text-white/5">
-                  05
-                </span>
-                <div className="w-[50vw]">
-                  <h3 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter mb-8">
-                    Strengthen the human behind the system
-                  </h3>
-                  <p className="text-2xl text-white/40 font-light leading-relaxed">
-                    Because the best strategy fails when the human is burning
-                    out. Coaching &amp; Mentoring means regulation, focus,
-                    identity.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── 5. WHAT WE STAND FOR ── */}
-        <section className="px-gutter py-[16vh] bg-base">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-24">
-            <div className="flex-1 reveal-up">
-              <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block mb-8">
-                WHAT WE STAND FOR
-              </span>
-              <p className="text-4xl md:text-6xl text-white font-light leading-[1.2]">
-                We believe in something{" "}
-                <span className="italic font-serif text-gold">radical</span> —
-                and practical.
-              </p>
-            </div>
-            <div className="flex-1 flex flex-col gap-12 reveal-up text-xl md:text-2xl text-white/50 font-light pt-4 border-t border-white/10 md:border-none md:pt-0">
-              <p className="text-white/90 font-medium text-3xl">
-                When structure becomes visible, the right solution becomes
-                inevitable.
-              </p>
-              <p>
-                Not &ldquo;someday.&rdquo; Not &ldquo;when there&apos;s
-                time.&rdquo;
+              <h3 className="text-[clamp(2.5rem,5vw,5.5rem)] font-light leading-[1.1] tracking-tight text-white/80">
+                The world is full of <span className="text-white">“optimizations.”</span>
                 <br />
-                But in a way that lets a CEO breathe again.
+                <span className="pl-4 md:pl-16 text-white/60">
+                  We build <span className="font-serif italic text-gold font-normal">architecture</span> —
+                </span>
                 <br />
-                In a way that helps founders know what comes first.
+                <span className="pl-12 md:pl-32 text-white/40 text-[clamp(2rem,4vw,4.5rem)]">
+                  so growth doesn&apos;t mean “more pressure,”
+                </span>
                 <br />
-                In a way that lets teams deliver with focus.
-              </p>
-              <div className="p-8 bg-white/5 rounded-2xl">
-                <strong className="text-white text-sm uppercase tracking-[0.3em] block mb-4">
-                  Solved means solved.
-                </strong>
-                <p className="text-lg">
-                  &ldquo;Solved&rdquo; means you feel it on Monday morning, not
-                  in a pitch: Less friction. Clearer decisions. Higher speed.
-                  More calm.
-                </p>
-              </div>
+                <span className="text-white font-normal drop-shadow-2xl">
+                  but more clarity.
+                </span>
+              </h3>
+            </div>
+
+            <div className="space-y-32">
+              {[
+                {
+                  num: "01",
+                  title: "We remove noise until only truth remains",
+                  desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence."
+                },
+                {
+                  num: "02",
+                  title: "We make decisions light again",
+                  desc: "When a system becomes clear, decisions almost make themselves. Not because it's \"easy,\" but because it is finally ordered."
+                },
+                {
+                  num: "03",
+                  title: "We build signal, not volume",
+                  desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately."
+                },
+                {
+                  num: "04",
+                  title: "We treat technology as infrastructure",
+                  desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure."
+                },
+                {
+                  num: "05",
+                  title: "We strengthen the human behind the system",
+                  desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable."
+                }
+              ].map((pillar, i) => (
+                <div key={i} className="reveal-text flex flex-col md:flex-row gap-8 md:gap-16 border-t border-white/5 pt-16">
+                  <div className="md:w-1/4">
+                    <span className="text-5xl font-black text-white/10">{pillar.num}</span>
+                  </div>
+                  <div className="md:w-3/4 space-y-6">
+                    <h4 className="text-3xl md:text-4xl font-light text-white">{pillar.title}</h4>
+                    <p className="text-xl md:text-2xl text-white/50 font-light leading-relaxed">{pillar.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ── 6. MINI CASE STORIES (STICKY STACK — 3 cards) ── */}
-        <section className="px-gutter py-[16vh] bg-base">
-          <div className="reveal-up text-center mb-32">
-            <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-bold block mb-6">
-              MINI CASE STORIES
-            </span>
-            <p className="text-5xl font-serif italic text-white/80">
-              You&apos;ll recognize yourself.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto relative space-y-32">
-            {/* Card 1 — CEO */}
-            <div className="sticky top-[15vh] pb-12 transition-transform shadow-[0_-30px_50px_rgba(0,0,0,0.8)]">
-              <div className="bg-[#111] p-12 rounded-3xl border border-white/10 w-full min-h-[50vh] flex flex-col justify-between">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-white/40 mb-4 block">
-                    (CEO / Founder / Entrepreneur)
-                  </span>
-                  <h3 className="text-4xl font-bold text-white mb-12">
-                    Case 1 — &ldquo;Too many moving parts&rdquo;
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm md:text-base border-t border-white/10 pt-8">
-                  <div>
-                    <strong className="block text-white/50 mb-2 uppercase tracking-widest text-xs">
-                      Before
-                    </strong>
-                    <span className="text-white/60">
-                      Everything matters, nothing is ordered. Decisions are
-                      heavy.
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-gold mb-2 uppercase tracking-widest text-xs">
-                      Intervention
-                    </strong>
-                    <span className="text-gold/80">
-                      SolutionFinder → root cause visible → sequence + SSOT.
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-white mb-2 uppercase tracking-widest text-xs">
-                      After
-                    </strong>
-                    <span className="text-white">
-                      fewer open loops, a clear line, noticeably more calm.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 — SME */}
-            <div className="sticky top-[18vh] pb-12 transition-transform shadow-[0_-30px_50px_rgba(0,0,0,0.8)]">
-              <div className="bg-[#141414] p-12 rounded-3xl border border-white/10 w-full min-h-[50vh] flex flex-col justify-between">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-white/40 mb-4 block">
-                    (SME / Premium Offer)
-                  </span>
-                  <h3 className="text-4xl font-bold text-white mb-12">
-                    Case 2 — &ldquo;We&apos;re great — but invisible&rdquo;
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm md:text-base border-t border-white/10 pt-8">
-                  <div>
-                    <strong className="block text-white/50 mb-2 uppercase tracking-widest text-xs">
-                      Before
-                    </strong>
-                    <span className="text-white/60">
-                      High quality, unclear external signal. Inconsistent leads.
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-gold mb-2 uppercase tracking-widest text-xs">
-                      Intervention
-                    </strong>
-                    <span className="text-gold/80">
-                      messaging architecture + proof structure + trust system.
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-white mb-2 uppercase tracking-widest text-xs">
-                      After
-                    </strong>
-                    <span className="text-white">
-                      the market understands you immediately. Trust forms faster.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 — Entrepreneur (Georgia) */}
-            <div className="sticky top-[21vh] transition-transform shadow-[0_-30px_50px_rgba(0,0,0,0.8)]">
-              <div className="bg-[#1a1a1a] p-12 rounded-3xl border border-gold/20 w-full min-h-[50vh] flex flex-col justify-between">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-white/40 mb-4 block">
-                    (Entrepreneur / Holding)
-                  </span>
-                  <h3 className="text-4xl font-bold text-gold mb-12">
-                    Case 3 — &ldquo;Structure Deployment (Georgia)&rdquo;
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm md:text-base border-t border-gold/20 pt-8">
-                  <div>
-                    <strong className="block text-white/50 mb-2 uppercase tracking-widest text-xs">
-                      Before
-                    </strong>
-                    <span className="text-white/60">
-                      You want structure, but risk chaos, wrong sequence.
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-gold mb-2 uppercase tracking-widest text-xs">
-                      Intervention
-                    </strong>
-                    <span className="text-gold/80">
-                      defensible setup → clean coordination (compliant,
-                      bankable).
-                    </span>
-                  </div>
-                  <div>
-                    <strong className="block text-white mb-2 uppercase tracking-widest text-xs">
-                      After
-                    </strong>
-                    <span className="text-white">
-                      structure stands. operations are clear. less stress.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 7. THE PATRON ── */}
-        <section className="px-gutter py-[20vh] bg-base relative overflow-hidden">
-          <div
-            className="float-glow absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-[50vh] opacity-50 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse, rgba(15,10,0,1) 0%, transparent 70%)",
-            }}
-          />
-
-          {/* Huge background text */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none">
-            <h2 className="text-[clamp(10rem,25vw,30rem)] font-black tracking-tighter text-white/3 uppercase whitespace-nowrap">
-              THE PATRON
-            </h2>
-          </div>
-
-          <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
-            <h2 className="reveal-up text-[clamp(4rem,7vw,8rem)] font-extrabold tracking-tighter leading-[0.8] uppercase mb-16 mix-blend-screen text-white/90">
-              THE PATRON <br />
-              <span className="text-gold italic font-serif lowercase text-[clamp(3rem,5vw,6rem)] font-light">
-                of gott wald
-              </span>
-            </h2>
-
-            <div className="text-3xl md:text-5xl text-white font-light leading-[1.6] max-w-4xl space-y-12 reveal-up">
-              <p>
-                In the fabric of GOTT WALD, the PATRON is not the
-                &ldquo;single maker&rdquo; — and not the lone specialist.
-              </p>
-              <p className="font-serif italic text-white/50 text-2xl md:text-4xl">
-                The PATRON is a philosophical anchor.
-              </p>
-              <p className="text-xl md:text-2xl text-white/40 border-l border-gold/20 pl-8 text-left">
-                Ensuring the human core remains present in every system — and
-                enabling a diverse, global network of handpicked specialists to
-                move as one aligned force.
-              </p>
-              <p className="font-serif italic text-gold pt-8 text-4xl md:text-6xl">
-                The PATRON is not the face — <br />
-                the PATRON is the conscience.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── THE PATRON ROLE (Grid layout) ── */}
-        <section className="px-gutter py-[18vh] bg-transparent">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
-            <div className="reveal-up">
-              <h4 className="text-gold text-sm uppercase tracking-[0.3em] font-bold mb-8">
-                What the PATRON is truly exceptional at
-              </h4>
-              <p className="text-3xl text-white font-light leading-relaxed mb-8">
-                A reader of people. A feeler. A gatherer — in the best sense.
-              </p>
-              <div className="text-white/50 text-xl font-light space-y-6">
-                <p>
-                  The PATRON sees you before you&apos;ve fully organized
-                  yourself. Hears between your sentences. Feels what you mean.
-                </p>
-                <p>
-                  The PATRON is the communicator. The living word. The one who
-                  touches — without touching.
-                </p>
-                <div className="p-8 border border-white/10 rounded-2xl mt-8">
-                  <p className="text-white font-bold mb-4 uppercase tracking-widest text-xs">
-                    Proof without show
-                  </p>
-                  <p>
-                    People open up. Conflict becomes clear. Disorder becomes
-                    direction. Pressure becomes purpose.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-16 reveal-up">
+        {/* OUTCOMES & TIME TO VALUE */}
+        <section className="py-[20vh] px-gutter relative bg-[#050505]">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+            <div className="reveal-text space-y-12">
               <div>
-                <h4 className="text-gold text-sm uppercase tracking-[0.3em] font-bold mb-8">
-                  The role of the PATRON
-                </h4>
-                <p className="text-xl text-white/50 font-light mb-8">
-                  The PATRON doesn&apos;t protect &ldquo;a company.&rdquo; The
-                  PATRON protects what makes GOTT WALD possible:
-                </p>
-                <p className="text-3xl font-serif italic text-white/80 border-l border-gold/30 pl-8">
-                  Values. Alignment. Integrity. Humanity.
-                </p>
+                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-6">Proof (without bragging)</p>
+                <h3 className="text-4xl font-light leading-tight mb-4">We work discreetly and systematically.</h3>
+                <p className="text-2xl font-serif italic text-white/60">Our proof is not loudness — it&apos;s outcomes.</p>
               </div>
-              <div className="bg-[#111] p-12 rounded-3xl mt-auto">
-                <p className="uppercase tracking-[0.2em] font-bold text-white/40 text-sm mb-6">
-                  So GOTT WALD remains:
+              <div className="space-y-2 pt-8">
+                <p className="text-sm tracking-[0.2em] uppercase text-white/30 font-bold mb-8">Typical outcomes felt quickly:</p>
+                <div className="flex flex-col border-t border-white/5">
+                  {[
+                    { strong: "Decision gridlock dissolves:", text: "clear priorities, clear ownership, fewer open loops." },
+                    { strong: "Execution becomes predictable:", text: "projects are not \"felt,\" they are led — with SSOT, sequence, and standards." },
+                    { strong: "Visibility becomes plan-able:", text: "messaging locks in, proof is structured, conversion rises — because trust forms faster." },
+                    { strong: "Digital presence becomes powerful:", text: "performance, indexability, structure — website as operating system, not brochure." },
+                    { strong: "Leadership state stabilizes:", text: "more calm, more focus, better decisions — without self-loss." }
+                  ].map((item, idx) => (
+                    <div key={idx} className="group flex items-start gap-6 py-6 border-b border-white/5 cursor-default transition-colors duration-500 hover:bg-white/[0.02]">
+                      <span className="text-gold/50 font-mono text-sm group-hover:text-gold transition-colors duration-500 pt-1 tracking-widest">{(idx + 1).toString().padStart(2, '0')}</span>
+                      <p className="text-lg text-white/60 font-light transition-transform duration-500 group-hover:translate-x-2">
+                        <strong className="text-white block mb-1 group-hover:text-gold transition-colors duration-500">{item.strong}</strong> 
+                        {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Glass Monolith Box */}
+            <div className="reveal-text relative p-10 lg:p-16 rounded-3xl border border-white/5 overflow-hidden group/card text-white">
+              {/* Inner Glow / Monolithic effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#111111]/80 to-[#040404]/80 z-0 backdrop-blur-3xl" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.08),transparent_70%)] z-0 transition-opacity duration-1000 group-hover/card:opacity-100 opacity-60" />
+              
+              <div className="relative z-10 h-full flex flex-col justify-between">
+                <div>
+                   <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-6">Time-to-value</p>
+                   <h3 className="text-3xl font-light mb-16 text-white/80">(Realistic Orientation)</h3>
+                </div>
+
+                <div className="space-y-16">
+                  {[
+                    { days: "7–14", title: "DAYS", desc: "Root cause + leverage + sequence become crystal clear (not just opinions)." },
+                    { days: "30", title: "DAYS", desc: "Less friction, more line, visible relief across the system." },
+                    { days: "60–90", title: "DAYS", desc: "Standards hold, signal stands, infrastructure carries — execution becomes stable." }
+                  ].map((phase, idx) => (
+                    <div key={idx} className="relative group/item cursor-default flex flex-col">
+                      {/* Watermark Number */}
+                      <div className="absolute -left-6 -top-10 text-[6rem] lg:text-[8rem] font-black pointer-events-none select-none tracking-tighter overflow-hidden whitespace-nowrap hidden sm:block z-0 opacity-0 group-hover/item:opacity-100 transition-opacity duration-1000" style={{ 
+                        color: "transparent", 
+                        WebkitTextStroke: "1px rgba(212, 175, 55, 0.08)" 
+                      }}>
+                        {phase.days}
+                      </div>
+                      
+                      <div className="relative z-10 pl-0 sm:pl-8 border-l border-white/5 sm:border-gold/0 group-hover/item:border-gold/30 transition-colors duration-700">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h4 className="text-3xl md:text-4xl text-white group-hover/item:text-gold font-light tracking-tight transition-colors duration-500">{phase.days}</h4>
+                          <span className="text-xs font-mono tracking-widest text-gold/60 mt-2">{phase.title}</span>
+                        </div>
+                        <p className="text-xl text-white/50 font-light leading-[1.6] group-hover/item:text-white/80 transition-colors duration-500">{phase.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <p className="text-sm text-white/30 italic mt-16 pt-8 border-t border-white/5">
+                  Wherever metrics belong (conversion, lead quality, meeting time), we use numbers only when they are measurable and defensible.
                 </p>
-                <ul className="text-4xl md:text-5xl font-serif italic text-gold space-y-4">
-                  <li>A framework that carries.</li>
-                  <li>A system that protects.</li>
-                  <li>A force that unites.</li>
-                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── FINAL CTA ── */}
-        <section className="px-gutter py-[18vh] border-t border-gold/20 relative overflow-hidden bg-base">
-          <div
-            className="float-glow absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] rounded-full pointer-events-none mix-blend-screen"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%)",
-            }}
-          />
+        {/* MINI CASES - HORIZONTAL SCROLL */}
+        <section className="cases-wrapper h-screen bg-[#030303] overflow-hidden flex flex-col justify-center relative">
+           <div className="absolute top-12 left-gutter z-20">
+             <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">Mini Case Stories</p>
+             <p className="text-xl font-serif italic text-white/40">(you&apos;ll recognize yourself)</p>
+           </div>
+           
+           <div className="cases-container flex h-[60vh] w-[500vw] items-center">
+              {[
+                { tag: "CEO / Founder / Entrepreneur", title: "Case 1 — Too many moving parts", before: "Everything matters, nothing is ordered. Decisions are heavy. Team pressure rises.", intervention: "SolutionFinder → root cause visible → sequence + SSOT → execution standard.", after: "Fewer open loops, a clear line, noticeably more calm. Decision-making becomes light again." },
+                { tag: "SME / Premium Offer", title: "Case 2 — We're great — but invisible", before: "High quality, unclear external signal. Inconsistent leads.", intervention: "Messaging architecture + proof structure + trust system + conversion flow.", after: "The market understands you immediately. Trust forms faster. Demand becomes more predictable." },
+                { tag: "SME", title: "Case 3 — Old website, slow growth", before: "Website as a brochure. Performance and structure hold you back. Indexing potential is wasted.", intervention: "IT Solutions 2030 → infrastructure upgrade (performance, SEO/AI readability, structure, scalability).", after: "More discoverable, faster, clearer — website becomes a growth engine." },
+                { tag: "Executive", title: "Case 4 — High responsibility, inner drift", before: "You function outwardly, but feel restless inside. Focus breaks. Energy drops.", intervention: "Mentoring as a Human Operating System (regulation, focus, identity, daily systems).", after: "Stable state, clearer decisions, stronger impact — without drama." },
+                { tag: "Entrepreneur / Holding", title: "Case 5 — Structure Deployment (Georgia)", before: "You want structure, but risk chaos, half-knowledge, wrong sequence.", intervention: "Assessment → defensible setup → clean coordination (compliant, bankable, operational).", after: "Structure stands. Operations are clear. Less stress. More safety." }
+              ].map((c, i) => (
+                <div key={i} className="w-screen px-gutter flex justify-center shrink-0">
+                  <div className="w-full max-w-4xl bg-[#080808] border border-white/5 p-12 md:p-20 rounded-3xl relative overflow-hidden group">
+                    <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold/5 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[2s]" />
+                    <p className="text-sm font-mono text-gold/60 mb-8">{c.tag}</p>
+                    <h3 className="text-4xl md:text-5xl font-light text-white mb-16">{c.title}</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                      <div className="space-y-4">
+                        <p className="text-xs tracking-widest uppercase text-white/30 font-bold">Before</p>
+                        <p className="text-lg text-white/60 font-light">{c.before}</p>
+                      </div>
+                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
+                        <p className="text-xs tracking-widest uppercase text-gold/50 font-bold">Intervention</p>
+                        <p className="text-lg text-white/80 font-light">{c.intervention}</p>
+                      </div>
+                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
+                        <p className="text-xs tracking-widest uppercase text-white/90 font-bold">After</p>
+                        <p className="text-lg text-white font-light">{c.after}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+           </div>
+        </section>
 
-          <div className="max-w-4xl mx-auto flex flex-col gap-24 relative z-10">
-            <div className="text-center reveal-up">
-              <span className="text-xs tracking-[0.5em] uppercase text-gold font-bold block mb-8">
-                HOW TO START (NO GAMES)
-              </span>
-              <h2 className="text-[clamp(4rem,8vw,7rem)] font-black tracking-tighter leading-[0.9] uppercase mb-8 text-white">
-                IF YOU WANT IT <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-white italic font-serif font-light tracking-normal lowercase">
-                  cleanly solved
-                </span>
+        {/* ECOSYSTEM */}
+        <section className="pt-[10vh] pb-[20vh] px-gutter relative bg-[#050505]">
+          <div className="max-w-5xl mx-auto space-y-16">
+            <div className="reveal-text">
+              <h2 className="text-4xl md:text-5xl font-light">Our Ecosystem</h2>
+              <p className="text-2xl font-serif italic text-white/50 mt-4">(everything reinforces everything)</p>
+            </div>
+            <div className="space-y-4">
+              {[
+                { name: "SolutionFinder / Solution Management", desc: "find the cause, lead the solution, lock stability." },
+                { name: "Consulting", desc: "executive-grade structure, strategy, decision systems, growth." },
+                { name: "Marketing & Communication", desc: "signal, trust, demand infrastructure." },
+                { name: "IT Solutions 2030", desc: "website as high-performance, indexable infrastructure." },
+                { name: "Coaching & Mentoring", desc: "human operating system for high responsibility." },
+                { name: "Structure Deployment (Georgia)", desc: "defensible setup for entrepreneurs/holdings." },
+                { name: "YIG.CARE", desc: "platform & movement. Launch 2026." },
+                { name: "PLHH_Coin", desc: "RWA + Governance DAO for real-world regeneration: NATURE – ANIMALS – HUMANS." }
+              ].map((eco, i) => (
+                <div key={i} className="eco-item reveal-text group py-8 border-t border-white/5 cursor-default relative overflow-hidden">
+                  <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
+                    <h3 className="text-2xl md:text-3xl text-white font-light group-hover:text-gold transition-colors duration-500">{eco.name}</h3>
+                    <p className="text-lg text-white/40 font-light md:w-1/2 md:text-right">{eco.desc}</p>
+                  </div>
+                  <div className="eco-line absolute bottom-0 left-0 h-px w-0 bg-gold" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* THE PATRON OF GOTT WALD */}
+        <section className="py-[30vh] px-gutter relative flex items-center justify-center bg-[#030303]">
+          {/* Breathing Orb */}
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
+            <div className="ambient-light w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-20 blur-[150px]"
+                 style={{ background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)" }} />
+          </div>
+
+          <div className="max-w-4xl mx-auto text-center relative z-10 space-y-24">
+            <div className="reveal-text space-y-8">
+              <h2 className="text-[clamp(3rem,6vw,6rem)] font-light leading-[1.1] uppercase tracking-tighter">
+                THE PATRON <br />
+                <span className="font-serif italic text-gold/80 block text-[clamp(2rem,4vw,4rem)] lowercase mt-4">of gott wald</span>
               </h2>
-              <button 
-                onClick={handleStrategicClick}
-                className="h-20 rounded-full bg-white text-black inline-flex items-center justify-center px-16 hover:scale-105 transition-all duration-500 uppercase text-sm tracking-[0.3em] font-extrabold shadow-[0_0_80px_rgba(212,175,55,0.4)] mb-12 relative overflow-hidden group"
-              >
-                <span className="relative z-10 group-hover:text-white transition-colors duration-500 will-change-transform">
-                  Request Strategic Conversation
+              <p className="text-xl md:text-3xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
+                In the fabric of GOTT WALD, the PATRON is not the &quot;single maker&quot; — and not the lone specialist. The PATRON is the protective framework.
+              </p>
+            </div>
+
+            <div className="reveal-text grid grid-cols-1 md:grid-cols-2 gap-16 text-left border-t border-b border-white/5 py-16">
+              <div className="space-y-8">
+                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">The Decision Code</p>
+                <p className="text-lg text-white/60 font-light">GOTT WALD is not built on trends. It is built on principles. Timeless. Durable. Non-negotiable.</p>
+                <ul className="space-y-4 font-serif italic text-2xl text-white/80">
+                   <li>Love <span className="text-white/30 text-lg font-sans not-italic">as the measure</span></li>
+                   <li>Peace <span className="text-white/30 text-lg font-sans not-italic">as the direction</span></li>
+                   <li>Harmony <span className="text-white/30 text-lg font-sans not-italic">as the outcome</span></li>
+                   <li>Compassion <span className="text-white/30 text-lg font-sans not-italic">as the posture</span></li>
+                   <li>Empathy <span className="text-white/30 text-lg font-sans not-italic">as the capability</span></li>
+                   <li>Service <span className="text-white/30 text-lg font-sans not-italic">as lived responsibility</span></li>
+                </ul>
+                <p className="text-lg font-bold text-white">This is not a slogan. This is lived reality.</p>
+              </div>
+              <div className="space-y-8 md:pl-16 md:border-l md:border-white/5">
+                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">A rare gift</p>
+                <p className="text-lg text-white/80 font-light">The PATRON carries a rare gift: a reader of people. a feeler. a gatherer. The PATRON sees you before you&apos;ve fully organized yourself.</p>
+                <div className="bg-[#080808] p-8 rounded-2xl border border-white/5 space-y-4">
+                  <p className="text-white/60 italic font-serif text-lg">&quot;nothing here is performed. everything here is held.&quot;</p>
+                  <ul className="space-y-2 text-white/50 text-base">
+                     <li>Conflict becomes clear.</li>
+                     <li>Disorder becomes direction.</li>
+                     <li>Pressure becomes purpose.</li>
+                  </ul>
+                </div>
+                <p className="text-lg text-white/80 font-light">So specialists can build without systems turning cold. So growth never consumes the soul. A framework that carries. A system that protects. A force that unites.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DECISION / CTA */}
+        <section className="h-screen px-gutter relative flex items-center justify-center bg-[#010101] overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div className="reveal-text w-[60vw] h-[60vw] rounded-full mix-blend-screen opacity-10 blur-[100px]"
+                 style={{ background: "radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 50%)" }} />
+          </div>
+
+          <div className="reveal-text relative z-10 text-center flex flex-col items-center max-w-3xl space-y-16">
+            <div>
+              <p className="text-sm tracking-[0.3em] uppercase text-white/30 font-bold mb-6">Who this is for</p>
+              <h3 className="text-3xl md:text-5xl font-light leading-[1.3] text-white/90">
+                For CEOs, founders, executives, and SMEs who don&apos;t want to &quot;do more&quot; — but to do the right thing, the right way.
+              </h3>
+            </div>
+            
+            <p className="text-2xl font-serif italic text-white/50">
+              If you want it cleanly solved — we are.
+            </p>
+
+            <div className="pt-16">
+              <button onClick={handleStrategicClick} className="group relative cursor-pointer px-12 py-6">
+                <div className="absolute inset-0 border border-white/10 rounded-full group-hover:border-gold/30 transition-colors duration-500" />
+                <span className="text-sm tracking-[0.4em] uppercase font-bold text-white/80 group-hover:text-gold transition-colors duration-700">
+                  Request a Strategic Conversation
                 </span>
-                <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out will-change-transform" />
               </button>
             </div>
+            
+            <p className="text-base text-white/40 font-light mt-8">
+              We don&apos;t create noise. We create structure.<br/>And structure creates inevitability.
+            </p>
           </div>
         </section>
       </main>
 
-      <FooterSection />
       <NextChapterTransition nextTitle="PARTNERSHIP" nextHref="/partnership" />
+      <FooterSection />
     </div>
   );
 }

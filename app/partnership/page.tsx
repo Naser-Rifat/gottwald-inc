@@ -12,6 +12,10 @@ import {
   PARTNERSHIP_DOMAINS,
   PARTNERSHIP_ARCHETYPES,
   PARTNER_BENEFITS,
+  PARTNER_EXPECTATIONS,
+  MANIFESTO_LINES,
+  PARTNERSHIP_PRINCIPLES,
+  PARTNERSHIP_SELECTION_STEPS,
 } from "@/lib/partnershipData";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -40,8 +44,36 @@ export default function PartnershipPage() {
           force3D: true,
         });
 
-        // Hero parallax on scroll (NO pin — avoids double-pin conflict
-        // with standards horizontal scroll section)
+        // Hero decoupled parallax typography
+        gsap.to(".parallax-fast", {
+          y: -150,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroTextRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+        gsap.to(".parallax-slow", {
+          y: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroTextRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+
+        // Setup Scroll Indicator Loop
+        gsap.fromTo(
+          ".scroll-indicator-line",
+          { yPercent: -100 },
+          { yPercent: 400, duration: 2, repeat: -1, ease: "none" }
+        );
+
+        // Complete Hero section container fade/scale
         gsap.to(heroTextRef.current, {
           scale: 0.8,
           opacity: 0,
@@ -49,7 +81,7 @@ export default function PartnershipPage() {
           ease: "none",
           force3D: true,
           scrollTrigger: {
-            trigger: heroTextRef.current.parentElement,
+            trigger: heroTextRef.current?.parentElement,
             start: "top top",
             end: "bottom top",
             scrub: true,
@@ -97,7 +129,7 @@ export default function PartnershipPage() {
             trigger: "#standards-section",
             start: "top top",
             end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
-            scrub: 0.5, // Snappier than 1, less input lag
+            scrub: 0.5,
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -118,7 +150,7 @@ export default function PartnershipPage() {
       ref={pageRef}
       className="bg-transparent min-h-screen text-white font-sans overflow-x-hidden selection:bg-gold selection:text-black"
     >
-      {/* Fixed header — same pattern as all other pages */}
+      {/* Fixed header */}
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
@@ -152,21 +184,23 @@ export default function PartnershipPage() {
                   </span>
                 </div>
 
-                <h1 className="text-[clamp(3.5rem,8vw,10rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white">
-                  APPLY TO
-                  <br />
-                  THE
-                  <br />
-                  ECOSYSTEM.
+                <h1 className="text-[clamp(3rem,7.5vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
+                  <span className="parallax-fast inline-block">PARTNERSHIPS</span>
+                  <span className="parallax-slow inline-block text-white/90">AT GOTT WALD</span>
                 </h1>
 
-                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.8rem,3vw,3.5rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-14 pl-0.5">
+                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.5rem,2.5vw,3rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-10 pl-0.5">
                   <span className="w-8 md:w-16 h-0.5 bg-gold/50" />
-                  Proven partners only.
+                  We don&apos;t buy vendors. We select PARTNERS.
+                </p>
+
+                {/* Trust line */}
+                <p className="hero-reveal mt-6 text-sm uppercase tracking-[0.3em] text-white/30 font-medium pl-0.5">
+                  Confidential by default. NDA-ready on request.
                 </p>
               </div>
 
-              {/* RIGHT: HUD Metric Strip — solid bg, no blur (perf) */}
+              {/* RIGHT: HUD Metric Strip */}
               <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-[#0a0a0a]/95 rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
                 <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gold/20">
                   <span className="w-2 h-2 rounded-full bg-gold" />
@@ -194,23 +228,190 @@ export default function PartnershipPage() {
                   </div>
                 ))}
 
-                <a
-                  href="#apply"
-                  className="group mt-10 inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
+                <div className="mt-8 flex flex-col gap-3">
+                  <a
+                    href="#apply"
+                    data-magnetic
+                    className="group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
+                  >
+                    <span className="text-xs lg:text-sm tracking-[0.3em] uppercase font-bold">
+                      Apply for Partnership
+                    </span>
+                    <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
+                      →
+                    </span>
+                  </a>
+                  <a
+                    href="#apply"
+                    data-magnetic
+                    className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-white/40 hover:text-white transition-colors duration-300 w-full"
+                  >
+                    <span className="text-[11px] tracking-[0.3em] uppercase font-medium">
+                      Request an Intro Call
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Awwwards Scroll Indicator */}
+          <div className="scroll-indicator absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-20 pb-8 pointer-events-none">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium rotate-90 mb-12">
+              Scroll
+            </span>
+            <div className="w-px h-24 bg-white/10 relative overflow-hidden">
+              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-[30%] bg-gold" />
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 2: GOTT WALD STANDARD (3 statements) ── */}
+        <section className="px-gutter py-[18vh] bg-[#0a0a0a] relative z-10 border-t border-white/5">
+          <div className="max-w-4xl mx-auto text-center space-y-12 reveal-up">
+            <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold">
+              What we are
+            </p>
+            <div className="space-y-6">
+              <p className="text-3xl md:text-4xl lg:text-5xl font-light text-white/90 leading-[1.3]">
+                GOTT WALD is not a marketplace.
+              </p>
+              <p className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.3] tracking-tight">
+                GOTT WALD is a standard.
+              </p>
+              <p className="text-2xl md:text-3xl font-serif italic text-white/55 leading-relaxed max-w-2xl mx-auto">
+                We only work with companies that have principle — and can deliver.
+                When both are true, partnership becomes inevitable.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 3: 7-LINE MANIFESTO ── */}
+        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto">
+            <div className="reveal-up mb-20">
+              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-4">
+                Our Foundation
+              </p>
+              <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
+                A 7-LINE
+                <br />
+                <span className="text-white/30">MANIFESTO</span>
+              </h2>
+            </div>
+            <div className="flex flex-col border-t border-white/10">
+              {MANIFESTO_LINES.map((line, i) => (
+                <div
+                  key={i}
+                  className="reveal-up group flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/2 transition-colors duration-500 px-4 -mx-4"
                 >
-                  <span className="text-xs lg:text-sm tracking-[0.3em] uppercase font-bold">
-                    Apply Now
+                  <span className="text-gold font-mono text-xs shrink-0 w-8 text-right opacity-50 group-hover:opacity-100 transition-opacity">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
-                    →
-                  </span>
-                </a>
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/70 group-hover:text-white transition-colors duration-500 leading-tight">
+                    {i === 5 ? (
+                      <>
+                        We build for{" "}
+                        <span className="font-black text-gold">
+                          NATURE — ANIMALS — HUMANS
+                        </span>
+                        .
+                      </>
+                    ) : (
+                      line
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 4: PARTNERSHIP PRINCIPLE ── */}
+        <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+            <div className="reveal-up space-y-10">
+              <div>
+                <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+                  The Principle
+                </p>
+                <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
+                  PARTNERSHIP
+                  <br />
+                  IS ALIGNMENT —<br />
+                  <span className="text-white/30">NOT PROCUREMENT.</span>
+                </h2>
+              </div>
+              <p className="text-2xl text-white/60 leading-relaxed font-light">
+                We don&apos;t &quot;source services.&quot; We select partners who can
+                carry our foundation and protect our standard.
+              </p>
+            </div>
+
+            <div className="reveal-up">
+              <p className="text-sm uppercase tracking-[0.3em] text-white/40 mb-10 font-semibold">
+                We work with partners who:
+              </p>
+              <div className="flex flex-col gap-0 border-t border-white/10">
+                {PARTNERSHIP_PRINCIPLES.map((principle, i) => (
+                  <div
+                    key={i}
+                    className="group flex items-center gap-8 py-7 border-b border-white/5 hover:pl-4 transition-all duration-500"
+                  >
+                    <span className="w-1.5 h-1.5 bg-gold rounded-full shrink-0 group-hover:scale-150 transition-transform" />
+                    <p className="text-xl lg:text-2xl font-light text-white/70 group-hover:text-white transition-colors duration-500">
+                      {principle}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── SECTION 2: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
+        {/* ── SECTION 5: WHO WE'RE LOOKING FOR ── */}
+        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto">
+            <div className="reveal-up mb-20">
+              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+                Who We&apos;re Looking For
+              </p>
+              <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
+                OUTSTANDING COMPANIES —<br />
+                <span className="font-serif italic text-white/40 normal-case tracking-normal text-[clamp(1.8rem,3.5vw,4rem)]">
+                  proven in action, not in slides.
+                </span>
+              </h2>
+              <p className="text-xl text-white/50 font-light max-w-2xl">
+                We select five partnership archetypes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+              {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
+                <div
+                  key={i}
+                  className="reveal-up group bg-[#060606] p-10 lg:p-12 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
+                >
+                  <span className="text-gold font-mono text-xs tracking-[0.4em]">
+                    0{i + 1}
+                  </span>
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 leading-tight">
+                    {arch.title}
+                  </h3>
+                  <p className="text-white/40 text-lg font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
+                    {arch.desc}
+                  </p>
+                </div>
+              ))}
+              {/* Filler cell to keep the last row even */}
+              <div className="hidden lg:block bg-[#060606] p-10 lg:p-12" />
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 6: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
         <section
           id="standards-section"
           className="bg-[#020202] relative z-10 isolate"
@@ -233,17 +434,17 @@ export default function PartnershipPage() {
               </div>
             </div>
 
-            {/* Scroll Wrapper — full-width monolithic columns */}
+            {/* Scroll Wrapper */}
             <div className="standards-scroll-wrapper flex flex-row w-max reveal-up border-t border-white/10 will-change-transform">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
                   className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-10 lg:p-16 overflow-hidden cursor-pointer shrink-0"
                 >
-                  {/* Solid dark background — no backdrop-blur (GPU killer on mobile) */}
+                  {/* Solid dark background */}
                   <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
 
-                  {/* Image Background — no mix-blend or filter (GPU-expensive) */}
+                  {/* Image Background */}
                   <div className="absolute inset-0 z-[1] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
                       src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
@@ -257,7 +458,7 @@ export default function PartnershipPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30" />
                   </div>
 
-                  {/* Ambient Hover Glow — lightweight radial gradient */}
+                  {/* Ambient Hover Glow */}
                   <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
                   {/* Top — index & label */}
@@ -293,12 +494,68 @@ export default function PartnershipPage() {
           </div>
         </section>
 
-        {/* ── SECTION 3: DOMAINS ACCORDION ── */}
-        <section className="px-gutter py-[20vh] bg-transparent relative z-10">
+        {/* ── SECTION 7: WHAT PARTNERS GET + WHAT WE EXPECT ── */}
+        <section className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-24">
+            {/* What Partners Get */}
+            <div className="reveal-up">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-10">
+                What Partners Get
+              </h3>
+              <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
+                A premium ecosystem.
+                <br />
+                <span className="text-white/40">Clean projects.</span>
+              </h4>
+              <ul className="flex flex-col gap-6 mb-16">
+                {PARTNER_BENEFITS.map((benefit, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-5 items-start text-white/70 text-xl"
+                  >
+                    <span className="mt-2.5 w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
+                    {benefit}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-2xl font-serif italic text-white/80 border-l-2 border-gold pl-8 leading-tight">
+                We keep the frame stable.
+                <br />
+                You deliver excellence.
+              </p>
+            </div>
+
+            {/* What We Expect */}
+            <div className="reveal-up">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-10">
+                What We Expect
+              </h3>
+              <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
+                Professionalism that
+                <br />
+                <span className="text-white/40">doesn&apos;t require supervision.</span>
+              </h4>
+              <ul className="flex flex-col gap-6">
+                {PARTNER_EXPECTATIONS.map((expectation, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-5 items-start text-white/70 text-xl"
+                  >
+                    <span className="mt-2.5 w-1.5 h-1.5 bg-white/30 rounded-full shrink-0" />
+                    {expectation}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 8: DOMAINS ACCORDION ── */}
+        <section className="px-gutter py-[20vh] bg-transparent relative z-10 border-t border-white/5">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
             <div className="lg:w-1/3 reveal-up">
               <h2 className="text-5xl lg:text-6xl font-bold tracking-tighter uppercase mb-8 sticky top-[20vh]">
-                Partnership <br />{" "}
+                Partnership{" "}
                 <span className="text-white/40">Domains</span>
               </h2>
               <p className="text-white/70 text-xl lg:text-2xl leading-relaxed font-light mb-8 max-w-md sticky top-[30vh]">
@@ -329,7 +586,7 @@ export default function PartnershipPage() {
                           {domain.id}
                         </span>
                         <h3
-                          className={`text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight transition-colors ${isActive ? "text-white" : "text-white/70 group-hover:text-white"}`}
+                          className={`text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight transition-colors ${isActive ? "text-white" : "text-white/70 group-hover:text-white"}`}
                         >
                           {domain.title}
                         </h3>
@@ -369,80 +626,65 @@ export default function PartnershipPage() {
           </div>
         </section>
 
-        {/* ── SECTION 4: ARCHETYPES & VALUE PROPOSITION ── */}
-        <section className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-20">
-            {/* Partnership Types */}
-            <div className="reveal-up">
-              <h3 className="text-sm uppercase tracking-[0.3em] text-white/40 mb-14">
-                Partnership Types
-              </h3>
-              <h4 className="text-5xl lg:text-6xl font-bold tracking-tighter mb-14 leading-[1.1]">
-                Five ways to work with us.
-              </h4>
-              <div className="flex flex-col gap-8">
-                {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-6 lg:gap-8 items-start py-6 border-b border-white/5 last:border-0 group"
-                  >
-                    <span className="text-gold font-mono text-sm mt-1.5 shrink-0">
-                      0{i + 1}
-                    </span>
-                    <div>
-                      <h5 className="text-2xl font-bold text-white/90 mb-2 group-hover:text-gold transition-colors">
-                        {arch.title}
-                      </h5>
-                      <p className="text-white/70 text-lg lg:text-xl font-light leading-relaxed">
-                        {arch.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        {/* ── SECTION 9: SELECTION PROCESS ── */}
+        <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto">
+            <div className="reveal-up mb-20">
+              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+                How It Works
+              </p>
+              <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
+                SHORT. CLEAR.
+                <br />
+                <span className="text-white/30">NO THEATRE.</span>
+              </h2>
             </div>
 
-            {/* What Partners Get */}
-            <div className="reveal-up">
-              <h3 className="text-sm uppercase tracking-[0.3em] text-white/40 mb-14">
-                What Partners Get
-              </h3>
-              <h4 className="text-5xl lg:text-6xl font-bold tracking-tighter mb-12 leading-[1.1]">
-                A premium ecosystem. Clear decisions. Clean projects.
-              </h4>
-              <ul className="flex flex-col gap-8">
-                {PARTNER_BENEFITS.map((benefit, i) => (
-                  <li
-                    key={i}
-                    className="flex gap-5 items-start text-white/70 text-xl"
-                  >
-                    <span className="mt-2.5 w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-16 text-3xl font-serif italic text-white/80 border-l-2 border-gold pl-8 leading-tight">
-                We keep the frame stable.
-                <br />
-                You deliver excellence.
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-white/5">
+              {PARTNERSHIP_SELECTION_STEPS.map((step, i) => (
+                <div
+                  key={i}
+                  className="reveal-up group bg-[#060606] p-8 lg:p-10 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
+                >
+                  <span className="text-gold font-mono text-3xl font-light tracking-tighter group-hover:text-white transition-colors duration-500">
+                    {step.step}
+                  </span>
+                  <div>
+                    <h3 className="text-xl lg:text-2xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-white/40 font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ── SECTION 5: APPLICATION FORM ── */}
+        {/* ── SECTION 10: APPLICATION FORM ── */}
         <section
           id="apply"
           className="px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10"
         >
           <div className="max-w-4xl mx-auto reveal-up">
-            <div className="mb-24 text-center">
-              <h2 className="text-[clamp(3.5rem,7vw,7rem)] font-black tracking-tighter uppercase mb-8 leading-[0.9]">
-                Partnership <br /> Application
+            <div className="mb-20">
+              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+                Partnership Application
+              </p>
+              <h2 className="text-[clamp(3rem,6.5vw,7rem)] font-black tracking-tighter uppercase mb-8 leading-[0.9]">
+                GOTT WALD
+                <br />
+                <span className="text-white/30">APPLICATION</span>
               </h2>
-              <p className="text-2xl text-white/80 max-w-3xl mx-auto font-light leading-relaxed">
-                If foundation and proof are real — you&apos;re welcome. If not —
-                honesty is better. Please keep it clear and proof-based.
+              <p className="text-xl lg:text-2xl text-white/60 font-light leading-relaxed max-w-2xl">
+                If foundation and proof are real — you&apos;re welcome.
+                If not — honesty is better.{" "}
+                <em className="text-white/80 font-serif">That&apos;s how we operate.</em>
+              </p>
+              <p className="mt-4 text-white/40 text-lg font-light">
+                Please keep it clear and proof-based. We review every serious application.
               </p>
             </div>
 
@@ -450,10 +692,10 @@ export default function PartnershipPage() {
               className="flex flex-col gap-12"
               onSubmit={(e) => {
                 e.preventDefault();
-                alert("Application captured. We will review and connect.");
+                alert("Application submitted. If there's a fit, we'll reach out with next steps.");
               }}
             >
-              {/* Group 1 */}
+              {/* Group 1: Company + Website */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
                   <input
@@ -487,27 +729,46 @@ export default function PartnershipPage() {
                 </div>
               </div>
 
-              {/* Group 2 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-2">
+              {/* Group 2: Country + Contact */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="relative">
+                  <input
+                    required
+                    type="text"
+                    id="country"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    placeholder="Country / Region"
+                  />
+                  <label
+                    htmlFor="country"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Country / Region
+                  </label>
+                </div>
                 <div className="relative">
                   <input
                     required
                     type="text"
                     id="contact"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
-                    placeholder="Main Contact (Name, Email)"
+                    placeholder="Main Contact (Name, Email, Phone)"
                   />
                   <label
                     htmlFor="contact"
                     className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
-                    Main Contact (Name, Email)
+                    Main Contact
                   </label>
                 </div>
-                <div className="relative mt-2 md:mt-0">
+              </div>
+
+              {/* Group 3: Type + Pillars */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="relative mt-2">
                   <label
                     htmlFor="type"
-                    className="absolute left-0 -top-4 md:-top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50"
+                    className="absolute left-0 -top-4 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50"
                   >
                     Partnership Type
                   </label>
@@ -536,35 +797,53 @@ export default function PartnershipPage() {
                       Local Operations PARTNERSHIP
                     </option>
                   </select>
-                  <div className="absolute right-0 bottom-6 pointer-events-none transition-transform peer-focus:rotate-180">
-                    <svg
-                      width="14"
-                      height="8"
-                      viewBox="0 0 14 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 1L7 7L13 1"
-                        stroke="white"
-                        strokeOpacity="0.5"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                  <div className="absolute right-0 bottom-6 pointer-events-none">
+                    <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
+                      <path d="M1 1L7 7L13 1" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="pillars"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    placeholder="Relevant Pillars (A, B, C...)"
+                  />
+                  <label
+                    htmlFor="pillars"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Relevant Pillars
+                  </label>
+                </div>
               </div>
 
-              {/* Group 3 */}
-              <div className="relative mt-2">
+              {/* Group 4: What you do */}
+              <div className="relative">
+                <textarea
+                  required
+                  id="description"
+                  rows={2}
+                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                  placeholder="What you do (1–3 sentences)"
+                />
+                <label
+                  htmlFor="description"
+                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                >
+                  What you do
+                </label>
+              </div>
+
+              {/* Group 5: Capabilities + Proof */}
+              <div className="relative">
                 <textarea
                   required
                   id="capabilities"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
-                  placeholder="Top 3 capabilities (bullet points) & Proof of work (links)"
+                  placeholder="Top 3 capabilities & Proof of work (links / portfolio / cases)"
                 />
                 <label
                   htmlFor="capabilities"
@@ -574,14 +853,14 @@ export default function PartnershipPage() {
                 </label>
               </div>
 
-              {/* Group 4 */}
-              <div className="relative mt-2">
+              {/* Group 6: Values Fit */}
+              <div className="relative">
                 <textarea
                   required
                   id="values"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
-                  placeholder="Values Fit: 2-3 sentences describing your stance on responsibility, integrity..."
+                  placeholder="Values Fit (required): 2–3 sentences on responsibility, integrity, excellence, discretion"
                 />
                 <label
                   htmlFor="values"
@@ -591,8 +870,24 @@ export default function PartnershipPage() {
                 </label>
               </div>
 
-              {/* Checkbox */}
-              <div className="flex items-center gap-4 mt-8">
+              {/* Group 7: Why GOTT WALD */}
+              <div className="relative">
+                <textarea
+                  id="why"
+                  rows={2}
+                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                  placeholder="Why GOTT WALD? (short)"
+                />
+                <label
+                  htmlFor="why"
+                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                >
+                  Why GOTT WALD?
+                </label>
+              </div>
+
+              {/* NDA Checkbox */}
+              <div className="flex items-center gap-4 mt-4">
                 <div className="relative flex items-center shrink-0">
                   <input
                     type="checkbox"
@@ -629,17 +924,21 @@ export default function PartnershipPage() {
                 </span>
                 <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[40] transition-transform duration-500 ease-out origin-center pointer-events-none" />
               </button>
+
+              <p className="text-white/30 text-sm font-light mt-2">
+                After submission: Thank you. If there&apos;s a fit, we&apos;ll reach out with next steps.
+              </p>
             </form>
           </div>
         </section>
+
+        {/* ── NEXT CHAPTER ── */}
+        <NextChapterTransition nextTitle="CAREERS" nextHref="/careers" />
 
         {/* ── FOOTER ── */}
         <section className="relative z-10 bg-[#0a0a0a]">
           <FooterSection />
         </section>
-
-        {/* ── NEXT CHAPTER ── */}
-        <NextChapterTransition nextTitle="CAREERS" nextHref="/careers" />
       </main>
     </div>
   );
