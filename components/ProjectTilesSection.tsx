@@ -81,7 +81,7 @@ export default function ProjectTilesSection() {
             </p>
 
             <div
-              className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]`}
+              className={`overflow-hidden transition-[max-height,opacity,margin] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]`}
               style={{
                 maxHeight: isExpanded ? "1500px" : "0px",
                 opacity: isExpanded ? 1 : 0,

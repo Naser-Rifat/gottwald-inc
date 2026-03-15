@@ -91,13 +91,13 @@ export default function PartnershipPage() {
 
         gsap.to(scrollWrapper, {
           x: xOffset,
-          force3D: true, // Force GPU acceleration for smooth horizontal panning
+          force3D: true,
           ease: "none",
           scrollTrigger: {
             trigger: "#standards-section",
             start: "top top",
             end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
-            scrub: 1,
+            scrub: 0.5, // Snappier than 1, less input lag
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -166,8 +166,8 @@ export default function PartnershipPage() {
                 </p>
               </div>
 
-              {/* RIGHT: HUD Metric Strip */}
-              <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-black/70 backdrop-blur-md rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
+              {/* RIGHT: HUD Metric Strip — solid bg, no blur (perf) */}
+              <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-[#0a0a0a]/95 rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
                 <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gold/20">
                   <span className="w-2 h-2 rounded-full bg-gold" />
                   <p className="text-[10px] lg:text-xs uppercase tracking-[0.5em] text-gold/80 font-bold">
@@ -238,26 +238,27 @@ export default function PartnershipPage() {
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-10 lg:p-16 overflow-hidden transition-all duration-1000 cursor-pointer shrink-0"
+                  className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-10 lg:p-16 overflow-hidden cursor-pointer shrink-0"
                 >
-                  {/* Base Glassmorphic Background */}
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-md z-0" />
+                  {/* Solid dark background — no backdrop-blur (GPU killer on mobile) */}
+                  <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
 
-                  {/* Image Background */}
-                  <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                  {/* Image Background — no mix-blend or filter (GPU-expensive) */}
+                  <div className="absolute inset-0 z-[1] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
                       src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
                       alt={item.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 38vw"
-                      quality={60}
-                      className="object-cover filter grayscale opacity-30 mix-blend-screen scale-110 group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
+                      quality={50}
+                      loading="eager"
+                      className="object-cover opacity-25 scale-110 group-hover:scale-105 transition-transform duration-[2000ms] ease-out will-change-transform"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/60 to-black/30" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30" />
                   </div>
 
-                  {/* Ambient Hover Glow */}
-                  <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                  {/* Ambient Hover Glow — lightweight radial gradient */}
+                  <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
                   {/* Top — index & label */}
                   <div className="relative z-10 flex justify-between items-start">
@@ -271,7 +272,7 @@ export default function PartnershipPage() {
 
                   {/* Bottom — title + divider + desc */}
                   <div className="relative z-10">
-                    <h3 className="text-4xl lg:text-6xl font-black tracking-tighter mb-8 text-white/50 group-hover:text-white leading-[0.9] transform translate-y-6 group-hover:translate-y-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] drop-shadow-2xl">
+                    <h3 className="text-4xl lg:text-6xl font-black tracking-tighter mb-8 text-white/50 group-hover:text-white leading-[0.9] translate-y-6 group-hover:translate-y-0 transition-[color,transform] duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]">
                       {item.title}
                     </h3>
 
@@ -279,7 +280,7 @@ export default function PartnershipPage() {
                       <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
                     </div>
 
-                    <p className="text-xl lg:text-2xl text-white/30 font-light leading-relaxed tracking-wide transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-hover:text-white/80 transition-all duration-700 delay-100 ease-[cubic-bezier(0.19,1,0.22,1)] pr-8">
+                    <p className="text-xl lg:text-2xl text-white/30 font-light leading-relaxed tracking-wide translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-hover:text-white/80 transition-[color,opacity,transform] duration-700 delay-100 ease-[cubic-bezier(0.19,1,0.22,1)] pr-8">
                       {item.desc}
                     </p>
                   </div>
@@ -341,7 +342,7 @@ export default function PartnershipPage() {
                     </button>
 
                     <div
-                      className="overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]"
+                      className="overflow-hidden transition-[max-height,opacity] duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]"
                       style={{
                         maxHeight: isActive ? "800px" : "0px",
                         opacity: isActive ? 1 : 0,

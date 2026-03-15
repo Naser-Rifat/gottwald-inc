@@ -24,6 +24,7 @@ export default function StrategicInquirySection() {
             y: 0,
             duration: 1.2,
             ease: "expo.out",
+            force3D: true,
             scrollTrigger: {
               trigger: el,
               start: "top 85%",
@@ -73,7 +74,7 @@ export default function StrategicInquirySection() {
             </p>
 
             <div
-              className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] text-left md:text-center w-full`}
+              className={`overflow-hidden transition-[max-height,opacity,margin] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] text-left md:text-center w-full`}
               style={{
                 maxHeight: isExpanded ? "1500px" : "0px",
                 opacity: isExpanded ? 1 : 0,
@@ -116,7 +117,7 @@ export default function StrategicInquirySection() {
               onClick={() => setIsExpanded(!isExpanded)}
               className="group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-8 mb-16 w-max"
             >
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-full border border-white/50 group-hover:border-white group-hover:bg-white/5 transition-all">
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-full border border-white/50 group-hover:border-white group-hover:bg-white/5 transition-[border-color,background-color]">
                 <span className="text-xl font-light leading-none mb-0.5">
                   {isExpanded ? "−" : "+"}
                 </span>
