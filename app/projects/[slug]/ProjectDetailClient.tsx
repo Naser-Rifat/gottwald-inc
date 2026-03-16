@@ -818,7 +818,7 @@ function FullbleedBlock({ block, project }: BlockProps) {
   );
 }
 
-function RichTextBlock({ block, project }: BlockProps) {
+function RichTextBlock({ block }: BlockProps) {
   const isLight = block.theme === "light";
   return (
     <section
@@ -829,43 +829,51 @@ function RichTextBlock({ block, project }: BlockProps) {
         backgroundColor: isLight ? "#f0ece6" : "#0d0d12",
         color: isLight ? "#1a1a1a" : "#f5f5f5",
         display: "flex",
-        flexDirection: "column",
+        alignItems: "center",
         justifyContent: "center",
         padding: "0 120px",
+        gap: "64px",
       }}
     >
-      <h3
-        style={{
-          fontSize: "2.4rem",
-          fontWeight: 700,
-          marginBottom: "48px",
-          letterSpacing: "-0.01em",
-        }}
-      >
-        {block.heading}
-      </h3>
-      <div style={{ display: "flex", gap: "64px" }}>
-        {block.richText?.map((node, i) => (
-          <div key={i} style={{ flex: 1, maxWidth: "400px" }}>
-            {node.heading && (
-              <h4
-                style={{
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
-                  marginBottom: "16px",
-                  color: project?.theme?.accent || (isLight ? "#111" : "#fff"),
-                }}
-              >
-                {node.heading}
-              </h4>
-            )}
-            <div
-              style={{ fontSize: "15px", lineHeight: 1.8, opacity: 0.7 }}
-              dangerouslySetInnerHTML={{ __html: node.body || "" }}
-            />
-          </div>
-        ))}
+      <div style={{ flex: 1, maxWidth: "600px" }}>
+        <h3
+          style={{
+            fontSize: "2.4rem",
+            fontWeight: 700,
+            marginBottom: "32px",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          {block.heading}
+        </h3>
+        
+        {block.body && (
+          <div
+            className={`prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-semibold prose-a:text-[var(--color-gold)]`}
+            dangerouslySetInnerHTML={{ __html: block.body }}
+          />
+        )}
       </div>
+
+      {block.image && (
+        <div
+          style={{
+            width: "40%",
+            aspectRatio: "4/5",
+            position: "relative",
+            borderRadius: "16px",
+            overflow: "hidden",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          }}
+        >
+          <Image
+            src={block.image}
+            alt={block.heading || "Rich Text Image"}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      )}
     </section>
   );
 }

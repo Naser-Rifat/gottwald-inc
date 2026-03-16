@@ -1,5 +1,6 @@
 import type { ContentBlock } from "../lib/types/project";
 import { Trash2, ChevronUp, ChevronDown, Plus, Sun, Moon } from "lucide-react";
+import RichTextEditor from "./RichTextEditor";
 
 interface ContentBlockBuilderProps {
   blocks: ContentBlock[];
@@ -128,14 +129,11 @@ export default function ContentBlockBuilder({ blocks, onChange }: ContentBlockBu
             </div>
             <div>
               <label className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider mb-1 block">
-                Body (HTML)
+                Body
               </label>
-              <textarea
-                value={block.body || ""}
-                onChange={(e) => updateBlock(index, { body: e.target.value })}
-                placeholder="<p>Your content here...</p>"
-                rows={4}
-                className="w-full px-3 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors font-mono text-xs resize-y"
+              <RichTextEditor 
+                value={block.body || ""} 
+                onChange={(html) => updateBlock(index, { body: html })} 
               />
             </div>
             <div>

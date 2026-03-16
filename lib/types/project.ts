@@ -2,11 +2,12 @@ export type ContentBlockTheme = "light" | "dark";
 
 export interface ContentBlock {
   id: string;
-  type: "rich-text";
-  theme: ContentBlockTheme;
+  type: "rich-text" | "image" | "video";
+  theme?: "light" | "dark";
   heading?: string;
-  body?: string;       // HTML string
-  image?: string;      // image URL or path
+  body?: string; // For rich-text, this will contain HTML
+  image?: string;
+  videoUrl?: string;
 }
 
 export interface ProjectTheme {
