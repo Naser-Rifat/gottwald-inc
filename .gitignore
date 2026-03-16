@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/gottwald-admin
 
 # next.js
 /.next/

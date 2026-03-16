@@ -131,7 +131,7 @@ export default function StrategicInquirySection() {
         <div className="flex flex-col items-center mt-8 w-full">
           <div className="flex flex-col items-center gap-4">
             <Link
-              href="/partnerships#apply"
+              href="/partnership#apply"
               className="group relative flex items-center justify-center bg-transparent border-[1.5px] border-gold rounded-full px-10 py-5 overflow-hidden w-full sm:w-max transition-colors hover:bg-gold/10"
             >
               <div className="relative z-10 flex items-center gap-4">

@@ -620,7 +620,7 @@ export default function AboutPage() {
         </section>
       </main>
 
-      <NextChapterTransition nextTitle="PARTNERSHIP" nextHref="/partnerships" />
+      <NextChapterTransition nextTitle="PARTNERSHIP" nextHref="/partnership" />
       <FooterSection />
     </div>
   );

@@ -32,7 +32,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           {/* Apply Now — gold accent pill */}
           <Link
-            href="/partnerships#apply"
+            href="/partnership#apply"
             className="hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
                        tracking-[0.02em] transition-all duration-300
                        border border-gold/40 text-gold hover:bg-gold hover:text-black"
