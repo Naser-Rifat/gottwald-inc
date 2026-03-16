@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { LogOut, Loader2 } from "lucide-react";
 
 export default function AdminLayout() {
