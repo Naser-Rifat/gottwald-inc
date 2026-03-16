@@ -11,102 +11,119 @@ gsap.registerPlugin(ScrollTrigger);
 const PILLARS = [
   {
     letter: "A",
-    title: "Strategy & Consulting",
+    title: "GOTT WALD Holding / Corporate Services",
     roles: [
-      "Strategy Consultant / Senior Consultant",
-      "Executive Advisor / C-level Sparring",
-      "Growth / Go-to-Market Consultant",
-      "Organizational Performance Consultant",
+      "CFO Office / Finance Manager / Controller / FP&A Analyst",
+      "Accounting & Operations Accounting",
+      "Legal & Contracts Manager",
+      "Tax Coordination / Structuring Support",
+      "PMO / Operations / Quality Management",
+      "Executive Assistant / Office Management",
     ],
-    impact: "clear, analytical, decisive, premium communication",
+    impact: "precise, discreet, process-driven, “no drama”",
   },
   {
     letter: "B",
-    title: "Solution Management & Delivery",
+    title: "SOLUTIONFINDER / SOLUTION MANAGEMENT",
     roles: [
       "Solution Manager / Delivery Lead",
-      "Senior Project Manager / PMO Lead",
+      "Senior Project Manager / Program Manager / PMO Lead",
       "Business Analyst / Requirements Engineer",
-      "Change Enablement Lead",
+      "Process Designer / Operating Model Specialist",
+      "Change & Adoption Lead / Enablement",
+      "Technical Writer / Documentation Excellence",
     ],
     impact: "systems thinker, stakeholder-strong, structured, excellent handovers",
   },
   {
     letter: "C",
-    title: "Coaching & Mentoring",
+    title: "CONSULTING",
     roles: [
-      "Executive Coach (ICF-level / equivalent)",
-      "Leadership Mentor",
-      "Burnout / Self-regulation Coach",
-      "Personal Development Facilitator",
+      "Strategy Consultant / Senior Consultant",
+      "Org & Performance Consultant",
+      "Growth / Go-to-Market Consultant",
+      "Complexity / Turnaround",
+      "Executive Advisor / C-level sparring",
     ],
-    impact: "high emotional intelligence, real-world leadership XP, no performance theatre",
+    impact: "clear, analytical, decisive, premium communication",
   },
   {
     letter: "D",
-    title: "Marketing & Communication",
+    title: "COACHING & MENTORING",
     roles: [
-      "Brand Strategist / Creative Director",
-      "Content Producer (Video, Motion, YouTube)",
-      "Performance Marketer (Funnels, CRO, Paid)",
-      "Copywriter / Messaging Architect",
+      "Executive Coach",
+      "Facilitator",
+      "Performance Coach",
+      "Program Designer",
+      "Client Experience / Program Operations",
     ],
-    impact: "quietly powerful, measurably effective, no empty hype",
+    impact: "present, calm, discreet — effectiveness over show",
   },
   {
     letter: "E",
-    title: "Corporate Services",
+    title: "RELOCATION / STRUCTURE DEPLOYMENT (Georgia Hub)",
     roles: [
-      "Accountant / Tax Advisor (international)",
-      "Legal Counsel (corporate / contract)",
-      "Financial Controller / CFO Services",
-      "Compliance Officer",
+      "Relocation Manager / Client Onboarding Lead",
+      "Operations Coordinator",
+      "Legal/Immigration Coordinator",
+      "Tax Coordination Associate",
+      "Client Concierge",
     ],
-    impact: "precise, bankable, audit-ready, cross-border awareness",
+    impact: "reliable, structured, service-excellent, solution-driven",
   },
   {
     letter: "F",
-    title: "Technology & Engineering",
+    title: "IT SOLUTIONS 2030 (Web / Apps / AI / Automation)",
     roles: [
-      "Tech Lead / Full-Stack Engineer",
-      "AI / Automation Engineer",
-      "Frontend Engineer (Next.js, Performance, SEO)",
-      "DevOps / Cloud Engineer",
+      "Tech Lead / Full-Stack Engineer (web)",
+      "Frontend Engineer (Next.js/SSR, performance, SEO/geo)",
+      "Backend Engineer (APIs, DB design, integrations)",
+      "DevOps / Cloud Engineer (CI/CD, monitoring, hardening)",
+      "Security Specialist (pen-testing, risk, policies)",
+      "AI / Automation Engineer (agents, workflows, pipelines)",
+      "UX/UI Designer / Product Designer",
+      "QA / Release Manager",
     ],
     impact: "performance-obsessed, clean, security-aware, documentation-strong",
   },
   {
     letter: "G",
-    title: "YIG.CARE (Animals & Nature)",
+    title: "MARKETING & COMMUNICATION",
     roles: [
-      "Operations Lead (Shelter / Rescue)",
-      "Veterinary Coordinator",
-      "Fundraising & Grant Writer",
-      "Community Manager (Animal Welfare)",
+      "Brand Strategist / Creative Director",
+      "Copywriter / Editor",
+      "Content Producer (video, reels, YouTube, motion)",
+      "Performance Marketer (funnels, CRO, paid, retargeting)",
+      "PR / Partnerships",
+      "Social Media Ops",
     ],
-    impact: "compassion as discipline, execution under pressure, zero ego",
+    impact: "quietly powerful, measurably effective, no empty hype",
   },
   {
     letter: "H",
-    title: "PLHH Foundation",
+    title: "YIG.CARE (Platform / Ecosystem)",
     roles: [
-      "Program Manager (Social Impact)",
-      "Field Coordinator (Humanitarian)",
-      "Partnerships & Donor Relations",
-      "Communication & Storytelling (Foundation)",
+      "Product Manager / Platform Lead",
+      "Partner Onboarding & Quality Manager",
+      "Customer Success / Partner Success",
+      "Compliance & Privacy",
+      "Content & Education Lead",
+      "Operations Manager",
     ],
-    impact: "grounded, trust-building, culturally sensitive, documentation-strong",
+    impact: "service-excellent, quality-driven, process-clean, human-clear",
   },
   {
     letter: "I",
-    title: "Relocation & Integration",
+    title: "PLHH (Coin / Community / Real-World Impact)",
     roles: [
-      "Relocation Coordinator (Georgia)",
-      "Cross-Cultural Integration Advisor",
-      "Real Estate & Logistics Support",
-      "Government / Visa Liaison",
+      "Community Lead / Community Care",
+      "Partnerships & Ecosystem Builder",
+      "Governance / DAO Operations",
+      "Blockchain Engineer (Sui) / Smart Contract Engineer",
+      "Security & Trust",
+      "Impact Operations",
     ],
-    impact: "welcoming, organized, locally connected, empathy + structure",
+    impact: "responsible, transparent, security-conscious, people-first",
   },
 ];
 
@@ -197,12 +214,12 @@ export default function CareersPage() {
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
               <div className="flex-1 flex flex-col gap-6 text-white/80 font-light leading-relaxed tracking-wide reveal-text">
                 <p className="text-2xl md:text-3xl font-medium tracking-tight">
-                  We don&apos;t hire &quot;staff&quot;. We select people with
-                  foundation.
+                  We recruit intentionally worldwide — and we mean it.
                 </p>
                 <p className="text-white/50 max-w-md">
-                  Remote by default. Discreet by design. Standards, not
-                  supervision.
+                  GOTT WALD is a human family: different cultures, traditions, languages, life paths — wanted. Because diversity increases our intelligence. 
+                  <br /><br />
+                  Our axis of impact: NATURE — ANIMALS — HUMANS.
                 </p>
               </div>
 
@@ -254,7 +271,7 @@ export default function CareersPage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  Long-term. Responsibility. Growth within the ecosystem.
+                  For people who want to build long-term and carry responsibility.
                 </p>
               </div>
 
@@ -266,7 +283,7 @@ export default function CareersPage() {
                   Freelancer / Interim
                 </h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  Defined scopes. Clean standards. Clear ownership.
+                  For professionals who deliver at a high level for defined scopes — clean standards, clear ownership.
                 </p>
               </div>
 
@@ -276,7 +293,7 @@ export default function CareersPage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
                 <p className="text-white/50 font-light leading-relaxed">
-                  On-demand activation. Project-based. NDA-ready.
+                  For selected experts we activate on demand (project-based, NDA-ready).
                 </p>
               </div>
             </div>
@@ -448,6 +465,12 @@ export default function CareersPage() {
                     instead of knowledge islands
                   </span>
                 </li>
+                <li className="flex justify-between border-b border-white/10 pb-4">
+                  <span>discretion</span>
+                  <span className="text-white/30 italic text-sm">
+                    as culture
+                  </span>
+                </li>
                 <li className="flex justify-between pt-2">
                   <span className="text-gold">a global human family</span>
                   <span className="text-white/30 italic text-sm text-right">
@@ -522,7 +545,6 @@ export default function CareersPage() {
                   <input
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="Your Name"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
@@ -532,7 +554,6 @@ export default function CareersPage() {
                   <input
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="Contact Info"
                   />
                 </div>
               </div>
@@ -545,8 +566,57 @@ export default function CareersPage() {
                   <input
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="Location"
                   />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Continent / Region
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  Languages (Select / Free text)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. English (Native), German (Fluent)"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="flex flex-col gap-3">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Work Model
+                  </label>
+                  <select
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    defaultValue="remote"
+                  >
+                    <option value="remote" className="text-black">Remote</option>
+                    <option value="hybrid" className="text-black">Hybrid</option>
+                    <option value="onsite" className="text-black">On-site</option>
+                    <option value="travel" className="text-black">Travel-ready</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Travel Readiness
+                  </label>
+                  <select
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    defaultValue="project"
+                  >
+                    <option value="yes" className="text-black">Yes</option>
+                    <option value="no" className="text-black">No</option>
+                    <option value="project" className="text-black">Project-dependent</option>
+                  </select>
                 </div>
                 <div className="flex flex-col gap-3">
                   <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
@@ -571,12 +641,12 @@ export default function CareersPage() {
 
               <div className="flex flex-col gap-3">
                 <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                  Desired Role(s) &amp; Area of Interest
+                  Pillars of Interest (Multi-select) &amp; Desired Role(s)
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Technology — Frontend Engineer"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/30 focus:border-gold transition-colors"
+                  placeholder="e.g. Pillar G - Copywriter"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
                 />
               </div>
 
@@ -588,7 +658,6 @@ export default function CareersPage() {
                   <input
                     type="url"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="URL"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
@@ -598,7 +667,38 @@ export default function CareersPage() {
                   <input
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                    placeholder="URLs"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  CV Upload or Profile Link
+                </label>
+                <input
+                  type="text"
+                  placeholder="URL or Upload Link"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex flex-col gap-3">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Availability (Start date / Hrs per week)
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Salary range or Day rate (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
                 </div>
               </div>
@@ -617,18 +717,30 @@ export default function CareersPage() {
                 />
               </div>
 
+              <div className="flex flex-col gap-3">
+                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  Short Message (Optional)
+                </label>
+                <textarea
+                  rows={2}
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
+                />
+              </div>
+
               <div className="pt-8 border-t border-white/10 flex flex-col items-center sm:items-start gap-6">
                 <button
                   type="button"
                   data-magnetic
                   className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 overflow-hidden w-max mt-8"
+                  onClick={() => alert("Thank you. If there’s a fit, we’ll reach out with next steps.")}
                 >
                   <span className="relative z-10 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors duration-300">
                     Submit Application
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
                 </button>
-                <span className="text-[10px] text-white/30 tracking-widest uppercase">
+                <span className="text-[10px] text-white/30 tracking-widest uppercase text-center sm:text-left">
+                  Thank you. If there’s a fit, we’ll reach out with next steps. <br />
                   Your submission is confidential.
                 </span>
               </div>

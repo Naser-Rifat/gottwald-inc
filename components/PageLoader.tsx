@@ -8,7 +8,7 @@ import gsap from "gsap";
 const ROUTE_LABELS: Record<string, string> = {
   "/about": "ABOUT",
   "/our-work": "OUR WORK",
-  "/partnership": "PARTNERSHIP",
+  "/partnerships": "PARTNERSHIPS",
   "/careers": "CAREERS",
   "/contact": "CONTACT",
 };

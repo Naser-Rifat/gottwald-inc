@@ -49,8 +49,8 @@ export default function PartnershipPage() {
           y: -150,
           ease: "none",
           scrollTrigger: {
-            trigger: heroTextRef.current,
-            start: "top bottom",
+            trigger: heroTextRef.current?.parentElement,
+            start: "top top",
             end: "bottom top",
             scrub: true,
           },
@@ -59,8 +59,8 @@ export default function PartnershipPage() {
           y: -50,
           ease: "none",
           scrollTrigger: {
-            trigger: heroTextRef.current,
-            start: "top bottom",
+            trigger: heroTextRef.current?.parentElement,
+            start: "top top",
             end: "bottom top",
             scrub: true,
           },
@@ -156,8 +156,7 @@ export default function PartnershipPage() {
       </div>
 
       <main>
-        {/* ── SECTION 1: HERO ── */}
-        <section className="h-screen w-full flex items-end relative bg-transparent overflow-hidden">
+        <section className="min-h-[100vh] lg:h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-0">
           <div
             className="absolute inset-0 pointer-events-none z-1"
             style={{
@@ -169,7 +168,7 @@ export default function PartnershipPage() {
 
           <div
             ref={heroTextRef}
-            className="relative w-full px-gutter pb-12 will-change-transform z-5"
+            className="relative w-full px-gutter pb-32 md:pb-40 lg:pb-48 will-change-transform z-5 mt-auto"
           >
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_340px] gap-12 lg:gap-16 items-end">
               {/* LEFT: Power-statement */}
@@ -184,8 +183,8 @@ export default function PartnershipPage() {
                   </span>
                 </div>
 
-                <h1 className="text-[clamp(3rem,7.5vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
-                  <span className="parallax-fast inline-block">PARTNERSHIPS</span>
+                <h1 className="text-[clamp(1.8rem,9vw,9rem)] sm:text-[clamp(2.5rem,11vw,9rem)] md:text-[clamp(3rem,7.5vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
+                  <span className="parallax-fast inline-block whitespace-nowrap">PARTNERSHIPS</span>
                   <span className="parallax-slow inline-block text-white/90">AT GOTT WALD</span>
                 </h1>
 
@@ -256,11 +255,11 @@ export default function PartnershipPage() {
           </div>
 
           {/* Awwwards Scroll Indicator */}
-          <div className="scroll-indicator absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-20 pb-8 pointer-events-none">
-            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium rotate-90 mb-12">
+          <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-4 z-20 pointer-events-none">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium">
               Scroll
             </span>
-            <div className="w-px h-24 bg-white/10 relative overflow-hidden">
+            <div className="w-px h-16 bg-white/10 relative overflow-hidden">
               <div className="scroll-indicator-line absolute top-0 left-0 w-full h-[30%] bg-gold" />
             </div>
           </div>
@@ -837,20 +836,85 @@ export default function PartnershipPage() {
               </div>
 
               {/* Group 5: Capabilities + Proof */}
-              <div className="relative">
-                <textarea
-                  required
-                  id="capabilities"
-                  rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
-                  placeholder="Top 3 capabilities & Proof of work (links / portfolio / cases)"
-                />
-                <label
-                  htmlFor="capabilities"
-                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
-                >
-                  Capabilities &amp; Proof of Work
-                </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="relative">
+                  <textarea
+                    required
+                    id="capabilities"
+                    rows={2}
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    placeholder="Top 3 capabilities (bullet points)"
+                  />
+                  <label
+                    htmlFor="capabilities"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Top 3 capabilities
+                  </label>
+                </div>
+                <div className="relative">
+                  <textarea
+                    required
+                    id="proof"
+                    rows={2}
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    placeholder="Proof of work (links / portfolio / cases)"
+                  />
+                  <label
+                    htmlFor="proof"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Proof of work
+                  </label>
+                </div>
+              </div>
+
+              {/* Group 5.1: References, Capacity, Budget */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="references"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    placeholder="References (optional)"
+                  />
+                  <label
+                    htmlFor="references"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    References (optional)
+                  </label>
+                </div>
+                <div className="relative">
+                  <input
+                    required
+                    type="text"
+                    id="capacity"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    placeholder="Capacity (project slots / hours)"
+                  />
+                  <label
+                    htmlFor="capacity"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Capacity
+                  </label>
+                </div>
+                <div className="relative">
+                  <input
+                    required
+                    type="text"
+                    id="budget"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    placeholder="Typical project range (budget/scope)"
+                  />
+                  <label
+                    htmlFor="budget"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Typical project range
+                  </label>
+                </div>
               </div>
 
               {/* Group 6: Values Fit */}
@@ -871,19 +935,35 @@ export default function PartnershipPage() {
               </div>
 
               {/* Group 7: Why GOTT WALD */}
-              <div className="relative">
-                <textarea
-                  id="why"
-                  rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
-                  placeholder="Why GOTT WALD? (short)"
-                />
-                <label
-                  htmlFor="why"
-                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
-                >
-                  Why GOTT WALD?
-                </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="relative">
+                  <textarea
+                    id="why"
+                    rows={2}
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    placeholder="Why GOTT WALD? (short)"
+                  />
+                  <label
+                    htmlFor="why"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Why GOTT WALD?
+                  </label>
+                </div>
+                <div className="relative">
+                  <textarea
+                    id="constraints"
+                    rows={2}
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    placeholder="Anything we must know? (timing, constraints, risks)"
+                  />
+                  <label
+                    htmlFor="constraints"
+                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  >
+                    Anything we must know?
+                  </label>
+                </div>
               </div>
 
               {/* NDA Checkbox */}
