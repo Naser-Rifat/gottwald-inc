@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
 import logo from "@/public/logo.png";
 
 const directoryLinks = [
@@ -23,11 +20,8 @@ const protocolItems = [
 ];
 
 export default function FooterSection() {
-  const footerRef = useRef<HTMLElement>(null);
-
   return (
     <footer
-      ref={footerRef}
       className="relative w-full bg-black text-white pt-16 lg:pt-24 pb-8 px-gutter z-10 overflow-hidden"
     >
       {/* ═══════════════════════════════════════════════════════════

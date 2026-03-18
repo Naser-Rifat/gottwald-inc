@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { projects } from "@/lib/projectData";
+import type { Project } from "@/lib/types/project";
 import { motion, Variants } from "framer-motion";
 
 const MotionLink = motion.create(Link);
@@ -48,7 +48,11 @@ const overlayVariants: Variants = {
   hover: { opacity: 0.1, transition: { duration: 0.5 } },
 };
 
-export default function ProjectTilesSection() {
+interface ProjectTilesSectionProps {
+  projects: Project[];
+}
+
+export default function ProjectTilesSection({ projects }: ProjectTilesSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -180,6 +184,7 @@ export default function ProjectTilesSection() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  loading="lazy"
                 />
                 {/* Subtle overlay on hover */}
                 <motion.div

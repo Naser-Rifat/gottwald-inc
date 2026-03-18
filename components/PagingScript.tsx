@@ -15,29 +15,33 @@ export default function PagingScript() {
 
     if (!scrollbar || !scrollbarHandle || !h1Topline || !h1Tagline) return;
 
-    // 1. Setup Scrollbar logic
-    function update() {
-      updateScrollbar();
-      rafId = window.requestAnimationFrame(update);
-    }
+    let ticking = false;
 
     function updateScrollbar() {
       if (!scrollbar || !scrollbarHandle) return;
       const heightPerViewport = document.body.clientHeight / window.innerHeight;
       scrollbarHandle.style.height = `${scrollbar.clientHeight / heightPerViewport}px`;
-
       const scrollProgress = window.scrollY / document.body.clientHeight;
       scrollbarHandle.style.top = `${scrollProgress * 100}%`;
+      ticking = false;
     }
 
-    let rafId = window.requestAnimationFrame(update);
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScrollbar);
+      }
+    }
 
-    // 2. Setup GSAP ScrollTriggers for Text Animation
+    updateScrollbar();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateScrollbar, { passive: true });
+
     const ctx = gsap.context(() => {
       if (h1Topline) {
         ScrollTrigger.create({
           trigger: h1Topline,
-          start: "top 95%", // trigger when element is 95% down the screen
+          start: "top 95%",
           onEnter: () => h1Topline.classList.add("animate"),
         });
       }
@@ -52,7 +56,8 @@ export default function PagingScript() {
     });
 
     return () => {
-      window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateScrollbar);
       ctx.revert();
     };
   }, []);
