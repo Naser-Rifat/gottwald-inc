@@ -26,7 +26,7 @@ export default function VideoPanelSection() {
           .split("")
           .map(
             (char) =>
-              `<span class="inline-block overflow-hidden"><span class="char-mask inline-block translate-y-full opacity-0">${char === " " ? "&nbsp;" : char}</span></span>`
+              `<span class="inline-block overflow-hidden"><span class="char-mask inline-block translate-y-full opacity-0">${char === " " ? "&nbsp;" : char}</span></span>`,
           )
           .join("");
 
@@ -49,7 +49,7 @@ export default function VideoPanelSection() {
         taglineRef.current.innerHTML = words
           .map(
             (word) =>
-              `<span class="inline-block overflow-hidden mr-[0.3em]" style="perspective:600px"><span class="tag-word inline-block" style="transform:translateY(120%) rotateX(-60deg);transform-origin:bottom center;opacity:0">${word}</span></span>`
+              `<span class="inline-block overflow-hidden mr-[0.3em]" style="perspective:600px"><span class="tag-word inline-block" style="transform:translateY(120%) rotateX(-60deg);transform-origin:bottom center;opacity:0">${word}</span></span>`,
           )
           .join("");
 
@@ -81,7 +81,7 @@ export default function VideoPanelSection() {
               trigger: descRef.current,
               start: "top 88%",
             },
-          }
+          },
         );
       }
 
@@ -100,7 +100,7 @@ export default function VideoPanelSection() {
               trigger: ctaRef.current,
               start: "top 90%",
             },
-          }
+          },
         );
       }
 
@@ -173,7 +173,10 @@ export default function VideoPanelSection() {
           delivery—built to turn complexity into clarity, clarity into
           decisions, and decisions into measurable impact.
         </p>
-        <div ref={ctaRef} className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-sans opacity-0">
+        <div
+          ref={ctaRef}
+          className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-sans opacity-0"
+        >
           <Link href="/about">
             <button
               className="h-11.5 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
@@ -195,10 +198,7 @@ export default function VideoPanelSection() {
         id="video-panel-end-parent"
         className="relative w-full mt-[10vh] mb-[5vh] aspect-video 3xl:h-[70vh] 3xl:aspect-auto"
       >
-        <div
-          id="video-panel-end"
-          className="absolute inset-0 w-full h-full"
-        />
+        <div id="video-panel-end" className="absolute inset-0 w-full h-full" />
       </div>
     </section>
   );
