@@ -234,7 +234,7 @@ export default function GlobalAuthoritySection() {
           {/* Caption */}
           <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-[4vh] pt-8 lg:pt-0 w-full lg:w-max">
             <span className="w-10 h-[1px] bg-white/50 block" />
-            <p className="text-white/70 text-[11px] lg:text-[13px] font-sans tracking-wide drop-shadow-md font-light">
+            <p className="text-white/70 text-[14px] lg:text-[18px] font-sans tracking-wide drop-shadow-md font-light">
               Data architecture actively plotting. Centralized in Tbilisi.
             </p>
           </div>
@@ -267,7 +267,7 @@ export default function GlobalAuthoritySection() {
             {/* Data Grid Title */}
             <div className="flex items-center gap-3 mb-4 hidden md:flex">
               <div className="w-1 h-1 bg-white/70 rounded-full" />
-              <h4 className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[9px] lg:text-[10px]">
+              <h4 className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[12px] lg:text-[14px]">
                 03 — GLOBAL PRESENCE
               </h4>
             </div>
@@ -276,12 +276,12 @@ export default function GlobalAuthoritySection() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 text-sm w-full">
               {/* Column 1 */}
               <div className="flex flex-col gap-3">
-                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                <span className="text-white/50 uppercase text-[12px] tracking-[0.2em] font-semibold">
                   — COVERAGE
                 </span>
                 <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   26
-                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                  <span className="text-white/50 text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1">
                     COUNTRIES
                   </span>
                 </span>
@@ -289,12 +289,12 @@ export default function GlobalAuthoritySection() {
               
               {/* Column 2 */}
               <div className="flex flex-col gap-3">
-                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                <span className="text-white/50 uppercase text-[12px] tracking-[0.2em] font-semibold">
                   — PARTNERS
                 </span>
                 <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   71
-                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                  <span className="text-white/50 text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1">
                     ORIGINS
                   </span>
                 </span>
@@ -302,12 +302,12 @@ export default function GlobalAuthoritySection() {
               
               {/* Column 3 */}
               <div className="flex flex-col gap-3">
-                <span className="text-[#d4af37]/80 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                <span className="text-[#d4af37]/80 uppercase text-[12px] tracking-[0.2em] font-semibold">
                   — NETWORK
                 </span>
                 <span className="text-[#d4af37] text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-1.5">
                   888<span className="text-2xl lg:text-3xl -ml-2 -mt-2">±</span>
-                  <span className="text-[#d4af37]/60 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1">
+                  <span className="text-[#d4af37]/60 text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1">
                     SIGNATURE
                   </span>
                 </span>
@@ -315,12 +315,12 @@ export default function GlobalAuthoritySection() {
               
               {/* Column 4 */}
               <div className="flex flex-col gap-3">
-                <span className="text-white/50 uppercase text-[9px] tracking-[0.2em] font-semibold">
+                <span className="text-white/50 uppercase text-[12px] tracking-[0.2em] font-semibold">
                   — LANGUAGE
                 </span>
                 <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
                   17
-                  <span className="text-white/50 text-[9px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                  <span className="text-white/50 text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1">
                     SPOKEN
                   </span>
                 </span>

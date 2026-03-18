@@ -126,49 +126,6 @@ a.button:hover {
   }
 }
 
-/* ===== Animated Headings ===== */
-
-#h1-topline.animate {
-  visibility: visible !important;
-  animation: animate-topline 0.8s forwards;
-}
-
-#h1-tagline.animate {
-  visibility: visible !important;
-  animation: animate-tagline 0.8s forwards;
-}
-
-@keyframes animate-topline {
-  0% {
-    transform: translateY(var(--h1-font-size));
-  }
-
-  40% {
-    transform: translateY(0);
-    transform: translateX(0);
-    margin-left: 0;
-  }
-
-  100% {
-    transform: translateX(-50%);
-    margin-left: 50%;
-  }
-}
-
-@keyframes animate-tagline {
-  0% {
-    transform: translateY(calc(-1 * var(--h1-font-size)));
-  }
-
-  20% {
-    transform: translateY(calc(-1 * var(--h1-font-size)));
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
 /* ===== Next Page Transition Flash ===== */
 
 @keyframes flash-out {

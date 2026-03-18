@@ -216,7 +216,7 @@ export default function CareersPage() {
                 <p className="text-2xl md:text-3xl font-medium tracking-tight">
                   We recruit intentionally worldwide — and we mean it.
                 </p>
-                <p className="text-white/50 max-w-md">
+                <p className="text-white/60 max-w-md text-lg">
                   GOTT WALD is a human family: different cultures, traditions, languages, life paths — wanted. Because diversity increases our intelligence. 
                   <br /><br />
                   Our axis of impact: NATURE — ANIMALS — HUMANS.
@@ -242,10 +242,10 @@ export default function CareersPage() {
                 <div className="flex gap-4 items-center pl-2">
                   <div className="w-px h-12 bg-white/20" />
                   <div className="flex flex-col gap-1">
-                    <span className="text-white/50 text-[10px] tracking-widest uppercase font-medium">
+                    <span className="text-white/50 text-md tracking-widest uppercase font-medium">
                       Global-first. Remote-friendly. Confidential.
                     </span>
-                    <span className="text-gold text-[10px] tracking-widest uppercase font-medium">
+                    <span className="text-gold text-md tracking-widest uppercase font-medium">
                       HQ: Georgia.
                     </span>
                   </div>
@@ -266,33 +266,33 @@ export default function CareersPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 01
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
-                <p className="text-white/50 font-light leading-relaxed">
+                <p className="text-white/60 font-light leading-relaxed text-lg">
                   For people who want to build long-term and carry responsibility.
                 </p>
               </div>
 
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 02
                 </div>
                 <h3 className="text-2xl font-bold mb-4">
                   Freelancer / Interim
                 </h3>
-                <p className="text-white/50 font-light leading-relaxed">
+                <p className="text-white/60 font-light leading-relaxed text-lg">
                   For professionals who deliver at a high level for defined scopes — clean standards, clear ownership.
                 </p>
               </div>
 
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
-                <p className="text-white/50 font-light leading-relaxed">
+                <p className="text-white/60 font-light leading-relaxed text-lg">
                   For selected experts we activate on demand (project-based, NDA-ready).
                 </p>
               </div>
@@ -348,7 +348,7 @@ export default function CareersPage() {
         <section className="px-gutter py-[15vh]">
           <div className="max-w-5xl mx-auto">
             <div className="mb-20 reveal-text text-center">
-              <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 font-medium block mb-4">
+              <span className="text-md tracking-[0.5em] uppercase text-white/30 font-medium block mb-4">
                 ARCHITECTURE
               </span>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
@@ -404,7 +404,7 @@ export default function CareersPage() {
                   >
                     <div className="pl-0 md:pl-20 flex flex-col md:flex-row gap-12 pt-4">
                       <div className="flex-1">
-                        <h4 className="text-[10px] tracking-[0.2em] text-gold uppercase mb-6 font-bold">
+                        <h4 className="text-md tracking-[0.2em] text-gold uppercase mb-6 font-bold">
                           Role Profiles
                         </h4>
                         <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
@@ -417,7 +417,7 @@ export default function CareersPage() {
                         </ul>
                       </div>
                       <div className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit">
-                        <h4 className="text-[10px] tracking-[0.2em] text-white/40 uppercase mb-4 font-bold">
+                        <h4 className="text-md tracking-[0.2em] text-white/40 uppercase mb-4 font-bold">
                           Impact Profile
                         </h4>
                         <p className="text-white font-medium tracking-wide">
@@ -437,43 +437,43 @@ export default function CareersPage() {
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             {/* What you'll find */}
             <div className="reveal-text">
-              <h2 className="text-3xl font-bold mb-10 tracking-tight">
+              <h2 className="text-4xl font-bold mb-10 tracking-tight">
                 WHAT YOU&apos;LL FIND HERE
               </h2>
-              <ul className="flex flex-col gap-6 font-light text-xl text-white/70">
+              <ul className="flex flex-col gap-6 font-light text-2xl text-white/70">
                 <li className="flex justify-between border-b border-white/10 pb-4">
                   <span>standards</span>
-                  <span className="text-white/30 italic text-sm">
+                  <span className="text-white/30 italic text-md">
                     instead of chaos
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
                   <span>responsibility</span>
-                  <span className="text-white/30 italic text-sm">
+                  <span className="text-white/30 italic text-md">
                     instead of excuses
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
                   <span>strong people</span>
-                  <span className="text-white/30 italic text-sm">
+                  <span className="text-white/30 italic text-md">
                     instead of political noise
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
                   <span>clean documentation</span>
-                  <span className="text-white/30 italic text-sm">
+                  <span className="text-white/30 italic text-md">
                     instead of knowledge islands
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
                   <span>discretion</span>
-                  <span className="text-white/30 italic text-sm">
+                  <span className="text-white/30 italic text-md">
                     as culture
                   </span>
                 </li>
                 <li className="flex justify-between pt-2">
                   <span className="text-gold">a global human family</span>
-                  <span className="text-white/30 italic text-sm text-right">
+                  <span className="text-white/30 italic text-md text-right">
                     diversity is wanted
                     <br />
                     foundation is required
@@ -521,13 +521,13 @@ export default function CareersPage() {
         <section id="apply" className="px-gutter py-[15vh] bg-[#050505]">
           <div className="max-w-3xl mx-auto reveal-text">
             <div className="mb-16">
-              <span className="text-[10px] tracking-[0.5em] uppercase text-gold font-medium block mb-4">
+              <span className="text-md tracking-[0.5em] uppercase text-gold font-medium block mb-4">
                 INITIATE
               </span>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6">
                 APPLICATION
               </h2>
-              <p className="text-white/50 font-light text-lg">
+              <p className="text-white/60 font-light text-lg">
                 Keep it clear and proof-based. If there&apos;s a fit, we&apos;ll
                 reach out.
               </p>
@@ -539,7 +539,7 @@ export default function CareersPage() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     First &amp; Last Name *
                   </label>
                   <input
@@ -548,7 +548,7 @@ export default function CareersPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Email / Phone *
                   </label>
                   <input
@@ -560,7 +560,7 @@ export default function CareersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Country / City / Time Zone
                   </label>
                   <input
@@ -569,7 +569,7 @@ export default function CareersPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Continent / Region
                   </label>
                   <input
@@ -580,7 +580,7 @@ export default function CareersPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Languages (Select / Free text)
                 </label>
                 <input
@@ -592,7 +592,7 @@ export default function CareersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Work Model
                   </label>
                   <select
@@ -606,7 +606,7 @@ export default function CareersPage() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Travel Readiness
                   </label>
                   <select
@@ -619,7 +619,7 @@ export default function CareersPage() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Entry Path
                   </label>
                   <select
@@ -640,7 +640,7 @@ export default function CareersPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Pillars of Interest (Multi-select) &amp; Desired Role(s)
                 </label>
                 <input
@@ -652,7 +652,7 @@ export default function CareersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     LinkedIn / Website
                   </label>
                   <input
@@ -661,7 +661,7 @@ export default function CareersPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Portfolio / Proof Links (Max 3)
                   </label>
                   <input
@@ -672,7 +672,7 @@ export default function CareersPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                   CV Upload or Profile Link
                 </label>
                 <input
@@ -684,7 +684,7 @@ export default function CareersPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Availability (Start date / Hrs per week)
                   </label>
                   <input
@@ -693,7 +693,7 @@ export default function CareersPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Salary range or Day rate (Optional)
                   </label>
                   <input
@@ -704,10 +704,10 @@ export default function CareersPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-gold font-bold">
+                <label className="text-md uppercase tracking-widest text-gold font-bold">
                   Foundation Fit (Required) *
                 </label>
-                <p className="text-[10px] text-white/30 mb-2">
+                <p className="text-md text-white/30 mb-2">
                   2–3 sentences on truth, responsibility, justice, compassion,
                   discretion, and excellence.
                 </p>
@@ -718,7 +718,7 @@ export default function CareersPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Short Message (Optional)
                 </label>
                 <textarea
@@ -734,12 +734,12 @@ export default function CareersPage() {
                   className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 overflow-hidden w-max mt-8"
                   onClick={() => alert("Thank you. If there’s a fit, we’ll reach out with next steps.")}
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors duration-300">
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-md group-hover:text-white transition-colors duration-300">
                     Submit Application
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
                 </button>
-                <span className="text-[10px] text-white/30 tracking-widest uppercase text-center sm:text-left">
+                <span className="text-md text-white/30 tracking-widest uppercase text-center sm:text-left">
                   Thank you. If there’s a fit, we’ll reach out with next steps. <br />
                   Your submission is confidential.
                 </span>

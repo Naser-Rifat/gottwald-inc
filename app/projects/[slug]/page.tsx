@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation";
-import { projects, getProjectBySlug, getNextProject } from "@/lib/projectData";
+import { getProject, getNextProject, getAllProjectSlugs } from "@/lib/api/projects";
 import ProjectDetailClient from "./ProjectDetailClient";
 
-// Generate static paths for all projects
-export function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+export async function generateStaticParams() {
+  const slugs = await getAllProjectSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 interface Props {
@@ -15,13 +13,13 @@ interface Props {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProject(slug);
 
   if (!project) {
     notFound();
   }
 
-  const nextProject = getNextProject(slug);
+  const nextProject = await getNextProject(slug);
 
   return <ProjectDetailClient project={project} nextProject={nextProject} />;
 }

@@ -298,13 +298,13 @@ export default function AboutPage() {
                 <h3 className="text-4xl md:text-5xl font-light leading-tight">
                   We believe in something radical — <span className="font-serif italic text-gold/80 hover:text-gold transition-colors duration-500">and practical:</span>
                 </h3>
-                <p className="text-2xl text-white/70 leading-relaxed font-light">
+                <p className="text-2xl text-white/80 leading-relaxed font-light">
                   When structure becomes visible, the right solution becomes inevitable. Not &quot;someday.&quot; Not &quot;when there&apos;s time.&quot;
                 </p>
                 <div className="space-y-4 pt-8">
-                  <p className="text-xl text-white/40">✓ But in a way that lets a CEO breathe again.</p>
-                  <p className="text-xl text-white/40">✓ In a way that helps founders know what comes first.</p>
-                  <p className="text-xl text-white/40">✓ In a way that lets teams deliver with focus — and systems carry instead of pull.</p>
+                  <p className="text-xl text-white/60">✓ But in a way that lets a CEO breathe again.</p>
+                  <p className="text-xl text-white/60">✓ In a way that helps founders know what comes first.</p>
+                  <p className="text-xl text-white/60">✓ In a way that lets teams deliver with focus — and systems carry instead of pull.</p>
                 </div>
               </div>
               <div className="reveal-text bg-[#080808] p-12 rounded-3xl border border-white/5 flex flex-col justify-center relative overflow-hidden group">
@@ -325,7 +325,7 @@ export default function AboutPage() {
             <div className="reveal-text mb-32 max-w-5xl">
               <div className="flex items-center gap-4 mb-10">
                 <span className="w-8 md:w-16 h-px bg-gold/40" />
-                <p className="text-[10px] md:text-xs tracking-[0.4em] uppercase text-gold/60 font-bold">What we do differently</p>
+                <p className="text-[12px] md:text-xs tracking-[0.4em] uppercase text-gold/60 font-bold">What we do differently</p>
               </div>
 
               <h3 className="text-[clamp(2.5rem,5vw,5.5rem)] font-light leading-[1.1] tracking-tight text-white/80">
@@ -335,7 +335,7 @@ export default function AboutPage() {
                   We build <span className="font-serif italic text-gold font-normal">architecture</span> —
                 </span>
                 <br />
-                <span className="pl-12 md:pl-32 text-white/40 text-[clamp(2rem,4vw,4.5rem)]">
+                <span className="pl-12 md:pl-32 text-white/60 text-[clamp(2rem,4vw,4.5rem)]">
                   so growth doesn&apos;t mean “more pressure,”
                 </span>
                 <br />
@@ -375,7 +375,7 @@ export default function AboutPage() {
               ].map((pillar, i) => (
                 <div key={i} className="reveal-text flex flex-col md:flex-row gap-8 md:gap-16 border-t border-white/5 pt-16">
                   <div className="md:w-1/4">
-                    <span className="text-5xl font-black text-white/10">{pillar.num}</span>
+                    <span className="text-5xl font-black text-white/30">{pillar.num}</span>
                   </div>
                   <div className="md:w-3/4 space-y-6">
                     <h4 className="text-3xl md:text-4xl font-light text-white">{pillar.title}</h4>
@@ -397,7 +397,7 @@ export default function AboutPage() {
                 <p className="text-2xl font-serif italic text-white/60">Our proof is not loudness — it&apos;s outcomes.</p>
               </div>
               <div className="space-y-2 pt-8">
-                <p className="text-sm tracking-[0.2em] uppercase text-white/30 font-bold mb-8">Typical outcomes felt quickly:</p>
+                <p className="text-sm tracking-[0.2em] uppercase text-white/50 font-bold mb-8">Typical outcomes felt quickly:</p>
                 <div className="flex flex-col border-t border-white/5">
                   {[
                     { strong: "Decision gridlock dissolves:", text: "clear priorities, clear ownership, fewer open loops." },
@@ -407,8 +407,8 @@ export default function AboutPage() {
                     { strong: "Leadership state stabilizes:", text: "more calm, more focus, better decisions — without self-loss." }
                   ].map((item, idx) => (
                     <div key={idx} className="group flex items-start gap-6 py-6 border-b border-white/5 cursor-default transition-colors duration-500 hover:bg-white/[0.02]">
-                      <span className="text-gold/50 font-mono text-sm group-hover:text-gold transition-colors duration-500 pt-1 tracking-widest">{(idx + 1).toString().padStart(2, '0')}</span>
-                      <p className="text-lg text-white/60 font-light transition-transform duration-500 group-hover:translate-x-2">
+                      <span className="text-gold/50 font-mono text-md group-hover:text-gold transition-colors duration-500 pt-1 tracking-widest">{(idx + 1).toString().padStart(2, '0')}</span>
+                      <p className="text-xl text-white/60 font-light transition-transform duration-500 group-hover:translate-x-2">
                         <strong className="text-white block mb-1 group-hover:text-gold transition-colors duration-500">{item.strong}</strong> 
                         {item.text}
                       </p>
@@ -427,7 +427,7 @@ export default function AboutPage() {
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div>
                    <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-6">Time-to-value</p>
-                   <h3 className="text-3xl font-light mb-16 text-white/80">(Realistic Orientation)</h3>
+                   {/* <h3 className="text-3xl font-light mb-16 text-white/80">(Realistic Orientation)</h3> */}
                 </div>
 
                 <div className="space-y-16">
@@ -456,7 +456,7 @@ export default function AboutPage() {
                   ))}
                 </div>
                 
-                <p className="text-sm text-white/30 italic mt-16 pt-8 border-t border-white/5">
+                <p className="text-lg text-white/50 italic mt-16 pt-8 border-t border-white/5">
                   Wherever metrics belong (conversion, lead quality, meeting time), we use numbers only when they are measurable and defensible.
                 </p>
               </div>
@@ -467,8 +467,8 @@ export default function AboutPage() {
         {/* MINI CASES - HORIZONTAL SCROLL */}
         <section className="cases-wrapper h-screen bg-[#030303] overflow-hidden flex flex-col justify-center relative">
            <div className="absolute top-12 left-gutter z-20">
-             <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">Mini Case Stories</p>
-             <p className="text-xl font-serif italic text-white/40">(you&apos;ll recognize yourself)</p>
+             <p className="text-xl tracking-[0.3em] uppercase text-gold/80 font-bold">Mini Case Stories</p>
+             <p className="text-xl font-serif italic text-white/60">(you&apos;ll recognize yourself)</p>
            </div>
            
            <div className="cases-container flex h-[60vh] w-[500vw] items-center">
@@ -487,16 +487,16 @@ export default function AboutPage() {
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                       <div className="space-y-4">
-                        <p className="text-xs tracking-widest uppercase text-white/30 font-bold">Before</p>
-                        <p className="text-lg text-white/60 font-light">{c.before}</p>
+                        <p className="text-lg tracking-widest uppercase text-white/30 font-bold">Before</p>
+                        <p className="text-xl text-white/60 font-light">{c.before}</p>
                       </div>
                       <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
-                        <p className="text-xs tracking-widest uppercase text-gold/50 font-bold">Intervention</p>
-                        <p className="text-lg text-white/80 font-light">{c.intervention}</p>
+                        <p className="text-lg tracking-widest uppercase text-gold/50 font-bold">Intervention</p>
+                        <p className="text-xl text-white/80 font-light">{c.intervention}</p>
                       </div>
                       <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
-                        <p className="text-xs tracking-widest uppercase text-white/90 font-bold">After</p>
-                        <p className="text-lg text-white font-light">{c.after}</p>
+                        <p className="text-lg tracking-widest uppercase text-white/90 font-bold">After</p>
+                        <p className="text-xl text-white font-light">{c.after}</p>
                       </div>
                     </div>
                   </div>
@@ -523,10 +523,10 @@ export default function AboutPage() {
                 { name: "YIG.CARE", desc: "platform & movement. Launch 2026." },
                 { name: "PLHH_Coin", desc: "RWA + Governance DAO for real-world regeneration: NATURE – ANIMALS – HUMANS." }
               ].map((eco, i) => (
-                <div key={i} className="eco-item reveal-text group py-8 border-t border-white/5 cursor-default relative overflow-hidden">
+                <div key={i} className="eco-item  reveal-text group py-8 border-t border-white/5 cursor-default relative overflow-hidden">
                   <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
                     <h3 className="text-2xl md:text-3xl text-white font-light group-hover:text-gold transition-colors duration-500">{eco.name}</h3>
-                    <p className="text-lg text-white/40 font-light md:w-1/2 md:text-right">{eco.desc}</p>
+                    <p className="text-xl text-white/40 font-light md:w-1/2 md:text-right">{eco.desc}</p>
                   </div>
                   <div className="eco-line absolute bottom-0 left-0 h-px w-0 bg-gold" />
                 </div>
