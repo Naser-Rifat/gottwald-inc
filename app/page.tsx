@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import LoadingOverlay from "@/components/LoadingOverlay";
@@ -6,6 +7,13 @@ import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import VideoPanelSection from "@/components/VideoPanelSection";
 import WebGLCanvas from "@/components/WebGLCanvas";
 import { getProjects } from "@/lib/api/projects";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "GOTT WALD Holding LLC — Standards-led holding company. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.",
+  alternates: { canonical: "/" },
+};
 
 const ProjectTilesSection = dynamic(
   () => import("@/components/ProjectTilesSection"),

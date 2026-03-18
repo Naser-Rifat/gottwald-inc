@@ -1,13 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
-// import CustomCursor from "@/components/CustomCursor";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
 import PageLoader from "@/components/PageLoader";
+import {
+  SITE_URL,
+  SITE_NAME,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  organizationJsonLd,
+  webSiteJsonLd,
+} from "@/lib/seo";
 
 const satoshi = localFont({
   src: [
@@ -35,9 +42,74 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: "Gottwald Holding LLC",
-  description: "A consciously created frequency space.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Standards-Led Holding & Operations`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  keywords: [
+    "Gottwald Holding",
+    "holding company",
+    "Georgia",
+    "Tbilisi",
+    "business operations",
+    "strategic consulting",
+    "IT solutions",
+    "standards-led governance",
+    "digital infrastructure",
+  ],
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Standards-Led Holding & Operations`,
+    description: DEFAULT_DESCRIPTION,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — Turning complexity into clarity`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Standards-Led Holding & Operations`,
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
 };
 
 export default function RootLayout({
@@ -51,6 +123,20 @@ export default function RootLayout({
       className={`${satoshi.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd()),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteJsonLd()),
+          }}
+        />
+      </head>
       <body
         className="bg-black text-text-primary font-sans antialiased"
         suppressHydrationWarning
@@ -60,7 +146,6 @@ export default function RootLayout({
         <PageLoader />
         <GlobalCanvas />
         <NoiseOverlay />
-        {/* <CustomCursor /> */}
         {children}
       </body>
     </html>
