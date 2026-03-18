@@ -412,6 +412,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 src={project.image}
                 alt={project.title}
                 fill
+                sizes="54vw"
                 style={{ objectFit: "cover" }}
                 priority
               />
@@ -692,6 +693,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
             src={block.image || project.image}
             alt={`${project.title} showcase`}
             fill
+            sizes="100vw"
             style={{ objectFit: "cover" }}
           />
           <div
@@ -794,6 +796,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
               src={block.image || project.image}
               alt="Case Study"
               fill
+              sizes="38vw"
               style={{ objectFit: "cover" }}
             />
           </div>
@@ -903,6 +906,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(
               src={block.image || project.image}
               alt="Stats"
               fill
+              sizes="32vw"
               style={{ objectFit: "cover" }}
             />
           </div>
@@ -947,6 +951,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(
             src={block.image || project.image}
             alt="Feature"
             fill
+            sizes="45vw"
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -1026,6 +1031,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
             src={block.image || project.image}
             alt="Final"
             fill
+            sizes="100vw"
             style={{ objectFit: "cover" }}
           />
           <div
@@ -1112,6 +1118,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
               src={block.image}
               alt={block.heading || "Rich Text Image"}
               fill
+              sizes="40vw"
               style={{ objectFit: "cover" }}
             />
           </div>
