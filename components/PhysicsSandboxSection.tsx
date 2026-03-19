@@ -189,6 +189,7 @@ export default function PhysicsSandboxSection() {
   return (
     <section
       ref={heroRef}
+      aria-label="GOTT WALD Hero — Turning Complexity Into Clarity"
       className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[10vh] px-gutter"
       style={{ perspective: "1000px" }}
     >

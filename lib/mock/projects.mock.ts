@@ -1,11 +1,11 @@
-import { Project } from "../types/pillars";
+import { Pillar } from "../types/pillars";
 
 /**
- * Mock project data for development.
+ * Mock pillar data for development.
  * When the backend is ready, switch NEXT_PUBLIC_DATA_SOURCE to "api"
  * and this file will no longer be used.
  */
-export const MOCK_PROJECTS: Project[] = [
+export const MOCK_PROJECTS: Pillar[] = [
   {
     slug: "it-solutions-2030",
     title: "IT Solutions 2030",

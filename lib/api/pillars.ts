@@ -18,19 +18,19 @@ export async function getPillars(): Promise<Pillar[]> {
   return apiFetch<Pillar[]>("/api/pillars");
 }
 
-export async function getProject(slug: string): Promise<Pillar | undefined> {
+export async function getPillar(slug: string): Promise<Pillar | undefined> {
   if (USE_MOCK) return MOCK_PROJECTS.find((p) => p.slug === slug);
   return apiFetch<Pillar>(`/api/pillars/${slug}`);
 }
 
-export async function getNextProject(slug: string): Promise<Pillar> {
+export async function getNextPillar(slug: string): Promise<Pillar> {
   const pillars = await getPillars();
   const index = pillars.findIndex((p) => p.slug === slug);
   const nextIndex = (index + 1) % pillars.length;
   return pillars[nextIndex];
 }
 
-export async function getAllProjectSlugs(): Promise<string[]> {
+export async function getAllPillarSlugs(): Promise<string[]> {
   if (USE_MOCK) return MOCK_PROJECTS.map((p) => p.slug);
   const pillars = await apiFetch<Pillar[]>("/api/pillars");
   return pillars.map((p) => p.slug);

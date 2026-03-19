@@ -184,6 +184,7 @@ export default function StrategicInquirySection() {
   return (
     <section
       ref={sectionRef}
+      aria-label="Strategic Partnership Inquiry"
       className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5 overflow-hidden font-sans flex flex-col items-center justify-center min-h-screen"
     >
       {/* Background glow — animated on scroll */}

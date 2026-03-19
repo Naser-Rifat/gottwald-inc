@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getAllProjectSlugs } from "@/lib/api/pillars";
+import { getAllPillarSlugs } from "@/lib/api/pillars";
 import { SITE_URL } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const slugs = await getAllProjectSlugs();
+  const slugs = await getAllPillarSlugs();
 
-  const projectPages = slugs.map((slug) => ({
-    url: `${SITE_URL}/projects/${slug}`,
+  const pillarPages = slugs.map((slug) => ({
+    url: `${SITE_URL}/pillars/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
@@ -49,6 +49,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    ...projectPages,
+    ...pillarPages,
   ];
 }

@@ -138,27 +138,27 @@ export default function VideoPanelSection() {
     <section
       ref={sectionRef}
       id="video-panel-section"
+      aria-label="Company Mission"
       className="flex flex-col px-gutter w-full min-h-screen py-[15vh]"
     >
-      {/* Animated headings */}
       <div className="about-headers pb-[8vh]">
         <div className="overflow-hidden w-full">
-          <h1
+          <h2
             ref={toplineRef}
             id="h1-topline"
             className="text-[5vw] lg:text-[6vw] mb-0 text-white uppercase tracking-tight"
           >
             Peace. Love. Harmony
-          </h1>
+          </h2>
         </div>
         <div className="overflow-hidden w-full">
-          <h1
+          <h2
             ref={taglineRef}
             id="h1-tagline"
             className="text-[5vw] lg:text-[6vw] mb-0 text-white tracking-tight uppercase"
           >
             for more Humanity.
-          </h1>
+          </h2>
         </div>
       </div>
 

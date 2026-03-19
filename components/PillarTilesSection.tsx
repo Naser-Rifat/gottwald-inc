@@ -71,6 +71,7 @@ export default function PillarTilesSection({
     <section
       ref={sectionRef}
       id="project-tiles-section"
+      aria-label="GOTT WALD Business Standards and Service Pillars"
       className="flex flex-col px-gutter w-full py-[15vh]"
     >
       <div className="flex flex-col items-center text-center gap-10 mb-20 lg:mb-32 w-full">

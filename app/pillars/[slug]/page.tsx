@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  getProject,
-  getNextProject,
-  getAllProjectSlugs,
+  getPillar,
+  getNextPillar,
+  getAllPillarSlugs,
 } from "@/lib/api/pillars";
 import PillarsDetailClient from "./PillarDetailClient";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, pillarServiceJsonLd } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,34 +15,48 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getProject(slug);
-  if (!project) return { title: "Project Not Found" };
+  const pillar = await getPillar(slug);
+  if (!pillar) return { title: "Pillar Not Found" };
   return {
-    title: project.title,
-    description: project.description,
-    alternates: { canonical: `/projects/${slug}` },
+    title: pillar.title,
+    description: `${pillar.description} ${pillar.details}`.slice(0, 160),
+    alternates: { canonical: `/pillars/${slug}` },
     openGraph: {
-      title: project.title,
-      description: project.description,
-      images: [{ url: project.image, alt: project.title }],
+      title: `${pillar.title} — GOTT WALD`,
+      description: pillar.description,
+      images: [{ url: pillar.image, alt: pillar.title }],
     },
   };
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllProjectSlugs();
+  const slugs = await getAllPillarSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-export default async function ProjectPage({ params }: Props) {
+export default async function PillarPage({ params }: Props) {
   const { slug } = await params;
-  const project = await getProject(slug);
+  const pillar = await getPillar(slug);
 
-  if (!project) {
+  if (!pillar) {
     notFound();
   }
 
-  const nextProject = await getNextProject(slug);
+  const nextPillar = await getNextPillar(slug);
 
-  return <PillarsDetailClient project={project} nextProject={nextProject} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", url: "/" },
+            { name: "All Pillars", url: "/our-work" },
+            { name: pillar.title, url: `/pillars/${slug}` },
+          ]),
+          pillarServiceJsonLd(pillar),
+        ]}
+      />
+      <PillarsDetailClient project={pillar} nextProject={nextPillar} />
+    </>
+  );
 }

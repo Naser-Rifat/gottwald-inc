@@ -14,6 +14,7 @@ import {
   DEFAULT_OG_IMAGE,
   organizationJsonLd,
   webSiteJsonLd,
+  speakableJsonLd,
 } from "@/lib/seo";
 
 const satoshi = localFont({
@@ -56,19 +57,32 @@ export const metadata: Metadata = {
   },
   description: DEFAULT_DESCRIPTION,
   keywords: [
-    "Gottwald Holding",
-    "holding company",
-    "Georgia",
-    "Tbilisi",
-    "business operations",
-    "strategic consulting",
-    "IT solutions",
+    "GOTT WALD Holding",
+    "Gottwald Holding LLC",
+    "holding company Georgia",
+    "Tbilisi holding company",
     "standards-led governance",
-    "digital infrastructure",
+    "strategic consulting Georgia",
+    "IT solutions SME",
+    "business relocation Georgia",
+    "executive coaching Tbilisi",
+    "digital infrastructure transformation",
+    "SolutionFinder structured analysis",
+    "marketing demand infrastructure",
+    "operating-grade systems",
+    "complexity to clarity",
   ],
-  authors: [{ name: SITE_NAME }],
+  category: "Business Services",
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
+  other: {
+    "entity:type": "HoldingCompany",
+    "entity:name": SITE_NAME,
+    "entity:location": "Tbilisi, Georgia",
+    "entity:industry": "Business Operations, Strategic Consulting, IT Solutions, Executive Coaching",
+    "entity:founded": "2024",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -134,6 +148,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteJsonLd()),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(
+              speakableJsonLd("/", ["h1", "h2", ".hero-desc", ".body-line"]),
+            ),
           }}
         />
       </head>
