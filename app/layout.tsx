@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "GOTT WALD Holding",
-    "Gottwald Holding LLC",
+    "Gott Wald Holding LLC",
     "holding company Georgia",
     "Tbilisi holding company",
     "standards-led governance",
