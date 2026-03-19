@@ -16,9 +16,11 @@ export default function PillarEdit() {
       setLoading(false);
       return;
     }
-    getPillarById(id).then((data) => {
-      setPillar(data);
-    }).finally(() => setLoading(false));
+    getPillarById(id)
+      .then((data) => {
+        setPillar(data);
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) {
