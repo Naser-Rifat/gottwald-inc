@@ -1,4 +1,4 @@
-import { Project } from "../types/project";
+import { Pillar } from "../types/pillars";
 import { MOCK_PROJECTS } from "../mock/projects.mock";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_DATA_SOURCE === "mock";
@@ -13,25 +13,25 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
   return res.json();
 }
 
-export async function getProjects(): Promise<Project[]> {
+export async function getPillars(): Promise<Pillar[]> {
   if (USE_MOCK) return MOCK_PROJECTS;
-  return apiFetch<Project[]>("/api/projects");
+  return apiFetch<Pillar[]>("/api/pillars");
 }
 
-export async function getProject(slug: string): Promise<Project | undefined> {
+export async function getProject(slug: string): Promise<Pillar | undefined> {
   if (USE_MOCK) return MOCK_PROJECTS.find((p) => p.slug === slug);
-  return apiFetch<Project>(`/api/projects/${slug}`);
+  return apiFetch<Pillar>(`/api/pillars/${slug}`);
 }
 
-export async function getNextProject(slug: string): Promise<Project> {
-  const projects = await getProjects();
-  const index = projects.findIndex((p) => p.slug === slug);
-  const nextIndex = (index + 1) % projects.length;
-  return projects[nextIndex];
+export async function getNextProject(slug: string): Promise<Pillar> {
+  const pillars = await getPillars();
+  const index = pillars.findIndex((p) => p.slug === slug);
+  const nextIndex = (index + 1) % pillars.length;
+  return pillars[nextIndex];
 }
 
 export async function getAllProjectSlugs(): Promise<string[]> {
   if (USE_MOCK) return MOCK_PROJECTS.map((p) => p.slug);
-  const projects = await apiFetch<Project[]>("/api/projects");
-  return projects.map((p) => p.slug);
+  const pillars = await apiFetch<Pillar[]>("/api/pillars");
+  return pillars.map((p) => p.slug);
 }

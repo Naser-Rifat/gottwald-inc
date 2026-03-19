@@ -4,25 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
-import type { Project, ContentBlock } from "@/lib/types/project";
+import type { Pillar, ContentBlock } from "@/lib/types/pillars";
 
 interface Props {
-  project: Project;
-  nextProject: Project;
+  project: Pillar;
+  nextProject: Pillar;
 }
 
-export default function ProjectDetailClient({ project, nextProject }: Props) {
+export default function PillarDetailClient({ project, nextProject }: Props) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<HTMLElement[]>([]);
   const progressRef = useRef<HTMLDivElement>(null);
 
-  const registerPanel = useCallback(
-    (el: HTMLElement | null, idx: number) => {
-      if (el) panelRefs.current[idx] = el;
-    },
-    []
-  );
+  const registerPanel = useCallback((el: HTMLElement | null, idx: number) => {
+    if (el) panelRefs.current[idx] = el;
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -89,17 +86,17 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
       gsap.fromTo(
         heroPanel.querySelector(".hero-title"),
         { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.3 }
+        { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.3 },
       );
       gsap.fromTo(
         heroPanel.querySelector(".hero-desc"),
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.5 }
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.5 },
       );
       gsap.fromTo(
         heroPanel.querySelector(".hero-services"),
         { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.6 }
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.6 },
       );
       gsap.fromTo(
         heroPanel.querySelector(".hero-image"),
@@ -110,12 +107,12 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
           duration: 1.4,
           ease: "power4.inOut",
           delay: 0.15,
-        }
+        },
       );
       gsap.fromTo(
         heroPanel.querySelector(".hero-cta"),
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.8 }
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.8 },
       );
       if (heroPanel) heroPanel.dataset.revealed = "1";
     }
@@ -123,7 +120,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
     gsap.fromTo(
       track,
       { opacity: 0 },
-      { opacity: 1, duration: 0.5, ease: "power2.out" }
+      { opacity: 1, duration: 0.5, ease: "power2.out" },
     );
 
     outer.addEventListener("wheel", onWheel, { passive: false });
@@ -141,8 +138,7 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
   const txt = project.theme.text;
   const accent = project.theme.accent;
 
-  const totalPanels =
-    2 + (project.contentBlocks?.length || 0);
+  const totalPanels = 2 + (project.contentBlocks?.length || 0);
 
   return (
     <div
@@ -206,7 +202,8 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
         className="fixed bottom-6 right-8 z-50 text-[11px] tracking-[0.2em] uppercase font-medium"
         style={{ color: `${txt}40` }}
       >
-        <span style={{ color: accent }}>01</span> / {String(totalPanels).padStart(2, "0")}
+        <span style={{ color: accent }}>01</span> /{" "}
+        {String(totalPanels).padStart(2, "0")}
       </div>
 
       <div
@@ -261,7 +258,10 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
             <div
               style={{ display: "flex", gap: "32px", alignItems: "flex-start" }}
             >
-              <div className="hero-desc" style={{ flex: 1, maxWidth: "320px", opacity: 0 }}>
+              <div
+                className="hero-desc"
+                style={{ flex: 1, maxWidth: "320px", opacity: 0 }}
+              >
                 <p
                   style={{
                     fontSize: "15px",
@@ -322,7 +322,10 @@ export default function ProjectDetailClient({ project, nextProject }: Props) {
                 )}
               </div>
 
-              <div className="hero-services" style={{ width: "180px", flexShrink: 0, opacity: 0 }}>
+              <div
+                className="hero-services"
+                style={{ width: "180px", flexShrink: 0, opacity: 0 }}
+              >
                 <div style={{ marginBottom: "16px" }}>
                   <h3
                     style={{
@@ -602,7 +605,7 @@ function revealPanel(panel: HTMLElement) {
         duration: 1.2,
         ease: "power4.inOut",
       },
-      0
+      0,
     );
   }
 
@@ -611,7 +614,7 @@ function revealPanel(panel: HTMLElement) {
       heading,
       { y: 50, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-      0.3
+      0.3,
     );
   }
 
@@ -620,7 +623,7 @@ function revealPanel(panel: HTMLElement) {
       body,
       { y: 30, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-      0.45
+      0.45,
     );
   }
 
@@ -629,7 +632,7 @@ function revealPanel(panel: HTMLElement) {
       content,
       { opacity: 0 },
       { opacity: 1, duration: 0.6, ease: "power2.out" },
-      0.1
+      0.1,
     );
   }
 
@@ -644,7 +647,7 @@ function revealPanel(panel: HTMLElement) {
         stagger: 0.1,
         ease: "power3.out",
       },
-      0.5
+      0.5,
     );
   }
 }
@@ -657,7 +660,7 @@ import { forwardRef } from "react";
 
 interface BlockProps {
   block: ContentBlock;
-  project: Project;
+  project: Pillar;
 }
 
 const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
@@ -707,7 +710,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
@@ -715,12 +718,8 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
     const isLight = block.theme !== "dark";
     const bgColor = isLight ? "#f0ece6" : "#0a0a12";
     const txtColor = isLight ? "#1a1a1a" : "#f5f5f5";
-    const muted = isLight
-      ? "rgba(26,26,26,0.55)"
-      : "rgba(255,255,255,0.55)";
-    const border = isLight
-      ? "rgba(26,26,26,0.08)"
-      : "rgba(255,255,255,0.08)";
+    const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
+    const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
 
     return (
       <section
@@ -803,200 +802,198 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
-const StatsBlock = forwardRef<HTMLElement, BlockProps>(
-  function StatsBlock({ block, project }, ref) {
-    const isLight = block.theme !== "dark";
-    const bgColor = isLight ? "#f0ece6" : "#0a0a12";
-    const txtColor = isLight ? "#1a1a1a" : "#f5f5f5";
-    const muted = isLight
-      ? "rgba(26,26,26,0.55)"
-      : "rgba(255,255,255,0.55)";
-    const border = isLight
-      ? "rgba(26,26,26,0.08)"
-      : "rgba(255,255,255,0.08)";
+const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
+  { block, project },
+  ref,
+) {
+  const isLight = block.theme !== "dark";
+  const bgColor = isLight ? "#f0ece6" : "#0a0a12";
+  const txtColor = isLight ? "#1a1a1a" : "#f5f5f5";
+  const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
+  const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
 
-    return (
-      <section
-        ref={ref}
+  return (
+    <section
+      ref={ref}
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: bgColor,
+        color: txtColor,
+        display: "flex",
+      }}
+    >
+      <div
+        className="panel-content"
         style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: bgColor,
-          color: txtColor,
+          flex: 1,
           display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "40px 40px 40px 60px",
+          opacity: 0,
         }}
       >
-        <div
-          className="panel-content"
+        <p
+          className="panel-body"
           style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "40px 40px 40px 60px",
-            opacity: 0,
+            fontSize: "15px",
+            color: muted,
+            lineHeight: 1.75,
+            marginBottom: "40px",
+            maxWidth: "380px",
           }}
         >
-          <p
-            className="panel-body"
-            style={{
-              fontSize: "15px",
-              color: muted,
-              lineHeight: 1.75,
-              marginBottom: "40px",
-              maxWidth: "380px",
-            }}
-          >
-            {block.body}
-          </p>
-          <div style={{ display: "flex", gap: "48px" }}>
-            {block.stats?.map((stat, idx) => (
-              <div key={idx} className="panel-stat">
-                <span
-                  style={{
-                    fontSize: "3rem",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}
-                >
-                  {stat.value}
-                </span>
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: muted,
-                    marginTop: "8px",
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
+          {block.body}
+        </p>
+        <div style={{ display: "flex", gap: "48px" }}>
+          {block.stats?.map((stat, idx) => (
+            <div key={idx} className="panel-stat">
+              <span
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1,
+                }}
+              >
+                {stat.value}
+              </span>
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: muted,
+                  marginTop: "8px",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {stat.label}
+              </p>
+            </div>
+          ))}
         </div>
-        <div
-          style={{
-            width: "32%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "40px 40px 40px 36px",
-            borderLeft: `1px solid ${border}`,
-          }}
-        >
-          <div
-            className="panel-image"
-            style={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "1/1",
-              borderRadius: "12px",
-              overflow: "hidden",
-              clipPath: "inset(0 100% 0 0)",
-            }}
-          >
-            <Image
-              src={block.image || project.image}
-              alt="Stats"
-              fill
-              sizes="32vw"
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-        </div>
-      </section>
-    );
-  }
-);
-
-const FeatureBlock = forwardRef<HTMLElement, BlockProps>(
-  function FeatureBlock({ block, project }, ref) {
-    return (
-      <section
-        ref={ref}
+      </div>
+      <div
         style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
+          width: "32%",
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
-          gap: "48px",
-          padding: "0 60px",
-          color: block.theme === "light" ? "#1a1a1a" : "#fff",
+          padding: "40px 40px 40px 36px",
+          borderLeft: `1px solid ${border}`,
         }}
       >
         <div
           className="panel-image"
           style={{
             position: "relative",
-            width: "45vw",
-            maxWidth: "560px",
-            aspectRatio: "4/3",
-            borderRadius: "16px",
+            width: "100%",
+            aspectRatio: "1/1",
+            borderRadius: "12px",
             overflow: "hidden",
-            boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
             clipPath: "inset(0 100% 0 0)",
           }}
         >
           <Image
             src={block.image || project.image}
-            alt="Feature"
+            alt="Stats"
             fill
-            sizes="45vw"
+            sizes="32vw"
             style={{ objectFit: "cover" }}
           />
         </div>
-        <div className="panel-content" style={{ maxWidth: "300px", opacity: 0 }}>
-          <span
-            style={{
-              fontSize: "11px",
-              letterSpacing: "0.25em",
-              color: "currentColor",
-              opacity: 0.4,
-              textTransform: "uppercase",
-              display: "block",
-              marginBottom: "12px",
-            }}
-          >
-            Feature Focus
-          </span>
-          <h3
-            className="panel-heading"
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              lineHeight: 1.2,
-              marginBottom: "14px",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {block.heading}
-          </h3>
-          <p
-            className="panel-body"
-            style={{
-              color: "currentColor",
-              opacity: 0.6,
-              fontSize: "15px",
-              lineHeight: 1.75,
-            }}
-          >
-            {block.body}
-          </p>
-        </div>
-      </section>
-    );
-  }
-);
+      </div>
+    </section>
+  );
+});
+
+const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
+  { block, project },
+  ref,
+) {
+  return (
+    <section
+      ref={ref}
+      style={{
+        flexShrink: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "48px",
+        padding: "0 60px",
+        color: block.theme === "light" ? "#1a1a1a" : "#fff",
+      }}
+    >
+      <div
+        className="panel-image"
+        style={{
+          position: "relative",
+          width: "45vw",
+          maxWidth: "560px",
+          aspectRatio: "4/3",
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
+          clipPath: "inset(0 100% 0 0)",
+        }}
+      >
+        <Image
+          src={block.image || project.image}
+          alt="Feature"
+          fill
+          sizes="45vw"
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+      <div className="panel-content" style={{ maxWidth: "300px", opacity: 0 }}>
+        <span
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.25em",
+            color: "currentColor",
+            opacity: 0.4,
+            textTransform: "uppercase",
+            display: "block",
+            marginBottom: "12px",
+          }}
+        >
+          Feature Focus
+        </span>
+        <h3
+          className="panel-heading"
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            lineHeight: 1.2,
+            marginBottom: "14px",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {block.heading}
+        </h3>
+        <p
+          className="panel-body"
+          style={{
+            color: "currentColor",
+            opacity: 0.6,
+            fontSize: "15px",
+            lineHeight: 1.75,
+          }}
+        >
+          {block.body}
+        </p>
+      </div>
+    </section>
+  );
+});
 
 const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
   function FullbleedBlock({ block, project }, ref) {
@@ -1053,12 +1050,12 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
               textTransform: "uppercase",
             }}
           >
-            {block.body || "Project Highlight"}
+            {block.body || "Pillar Highlight"}
           </p>
         </div>
       </section>
     );
-  }
+  },
 );
 
 const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
@@ -1080,7 +1077,10 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
           gap: "64px",
         }}
       >
-        <div className="panel-content" style={{ flex: 1, maxWidth: "600px", opacity: 0 }}>
+        <div
+          className="panel-content"
+          style={{ flex: 1, maxWidth: "600px", opacity: 0 }}
+        >
           <h3
             className="panel-heading"
             style={{
@@ -1125,5 +1125,5 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         )}
       </section>
     );
-  }
+  },
 );

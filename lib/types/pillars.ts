@@ -13,13 +13,13 @@ export interface ContentBlock {
   richText?: ContentBlock[];
 }
 
-export interface ProjectTheme {
+export interface PillarTheme {
   background: string;
   text: string;
   accent: string;
 }
 
-export interface Project {
+export interface Pillar {
   slug: string;
   title: string;
   tags: string[];
@@ -29,6 +29,6 @@ export interface Project {
   services: string[];
   recognitions?: string[];
   launchUrl?: string;
-  theme: ProjectTheme;
+  theme: PillarTheme;
   contentBlocks?: ContentBlock[];
 }

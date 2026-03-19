@@ -6,7 +6,7 @@ import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import VideoPanelSection from "@/components/VideoPanelSection";
 import WebGLCanvas from "@/components/WebGLCanvas";
-import { getProjects } from "@/lib/api/projects";
+import { getPillars } from "@/lib/api/pillars";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -15,29 +15,28 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const ProjectTilesSection = dynamic(
-  () => import("@/components/ProjectTilesSection"),
-  { ssr: true }
+const PillarsTilesSection = dynamic(
+  () => import("@/components/PillarTilesSection"),
+  { ssr: true },
 );
 const GlobalAuthoritySection = dynamic(
   () => import("@/components/GlobalAuthoritySection"),
-  { ssr: true }
+  { ssr: true },
 );
 const StrategicInquirySection = dynamic(
   () => import("@/components/StrategicInquirySection"),
-  { ssr: true }
+  { ssr: true },
 );
-const FooterSection = dynamic(
-  () => import("@/components/FooterSection"),
-  { ssr: true }
-);
+const FooterSection = dynamic(() => import("@/components/FooterSection"), {
+  ssr: true,
+});
 const NextChapterTransition = dynamic(
   () => import("@/components/NextChapterTransition"),
-  { ssr: true }
+  { ssr: true },
 );
 
 export default async function Home() {
-  const projects = await getProjects();
+  const pillars = await getPillars();
   return (
     <>
       <WebGLCanvas />
@@ -46,7 +45,7 @@ export default async function Home() {
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
         <VideoPanelSection />
-        <ProjectTilesSection projects={projects} />
+        <PillarsTilesSection pillars={pillars} />
         <GlobalAuthoritySection />
         <StrategicInquirySection />
         <FooterSection />

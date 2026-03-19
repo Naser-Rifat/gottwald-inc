@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllProjectSlugs } from "@/lib/api/projects";
+import { getAllProjectSlugs } from "@/lib/api/pillars";
 import { SITE_URL } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

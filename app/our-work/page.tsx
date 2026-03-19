@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProjects } from "@/lib/api/projects";
+import { getPillars } from "@/lib/api/pillars";
 import OurWorkClient from "./OurWorkClient";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function OurWorkPage() {
-  const projects = await getProjects();
+  const pillars = await getPillars();
 
-  return <OurWorkClient projects={projects} />;
+  return <OurWorkClient pillars={pillars} />;
 }

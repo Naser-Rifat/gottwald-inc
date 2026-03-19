@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProject, getNextProject, getAllProjectSlugs } from "@/lib/api/projects";
-import ProjectDetailClient from "./ProjectDetailClient";
+import {
+  getProject,
+  getNextProject,
+  getAllProjectSlugs,
+} from "@/lib/api/pillars";
+import PillarsDetailClient from "./PillarDetailClient";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -38,5 +42,5 @@ export default async function ProjectPage({ params }: Props) {
 
   const nextProject = await getNextProject(slug);
 
-  return <ProjectDetailClient project={project} nextProject={nextProject} />;
+  return <PillarsDetailClient project={project} nextProject={nextProject} />;
 }

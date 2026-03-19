@@ -2,20 +2,20 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import type { Project } from "@/lib/types/project";
+import type { Pillar } from "@/lib/types/pillars";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PillarCard from "./PillarCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface ProjectTilesSectionProps {
-  projects: Project[];
+interface PillarTilesSectionProps {
+  pillars: Pillar[];
 }
 
-export default function ProjectTilesSection({
-  projects,
-}: ProjectTilesSectionProps) {
+export default function PillarTilesSection({
+  pillars,
+}: PillarTilesSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -30,23 +30,20 @@ export default function ProjectTilesSection({
           .split("")
           .map(
             (char) =>
-              `<span class="inline-block overflow-hidden"><span class="split-char inline-block translate-y-full">${char === " " ? "&nbsp;" : char}</span></span>`
+              `<span class="inline-block overflow-hidden"><span class="split-char inline-block translate-y-full">${char === " " ? "&nbsp;" : char}</span></span>`,
           )
           .join("");
 
-        gsap.to(
-          headlineRef.current.querySelectorAll(".split-char"),
-          {
-            y: 0,
-            duration: 1,
-            stagger: 0.03,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: headlineRef.current,
-              start: "top 85%",
-            },
-          }
-        );
+        gsap.to(headlineRef.current.querySelectorAll(".split-char"), {
+          y: 0,
+          duration: 1,
+          stagger: 0.03,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: headlineRef.current,
+            start: "top 85%",
+          },
+        });
       }
 
       if (subtitleRef.current) {
@@ -62,7 +59,7 @@ export default function ProjectTilesSection({
               trigger: subtitleRef.current,
               start: "top 88%",
             },
-          }
+          },
         );
       }
     }, sectionRef);
@@ -114,9 +111,9 @@ export default function ProjectTilesSection({
               <div className="flex flex-col items-center gap-8 pt-10 border-t border-white/10 w-full max-w-3xl mx-auto text-[clamp(1rem,1.3vw,1.5rem)] text-white/90">
                 <p>
                   GOTT WALD is not a collective of services. It is a unified
-                  architecture: modular components, one standard, one language of
-                  delivery—built to turn complexity into clarity, clarity into
-                  decisions, and decisions into measurable impact.
+                  architecture: modular components, one standard, one language
+                  of delivery—built to turn complexity into clarity, clarity
+                  into decisions, and decisions into measurable impact.
                 </p>
                 <p className="text-white/90 text-4xl">
                   We don&apos;t market partnerships.
@@ -177,9 +174,12 @@ export default function ProjectTilesSection({
         </div>
       </div>
 
-      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-x-[2.5vw] gap-y-[8vh]">
-        {projects.slice(0, 4).map((project, index) => (
-          <PillarCard key={project.slug} project={project} index={index} />
+      <div
+        ref={gridRef}
+        className="grid grid-cols-1 md:grid-cols-2 gap-x-[2.5vw] gap-y-[8vh]"
+      >
+        {pillars.slice(0, 4).map((pillar, index) => (
+          <PillarCard key={pillar.slug} pillar={pillar} index={index} />
         ))}
       </div>
 

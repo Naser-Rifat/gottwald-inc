@@ -3,17 +3,17 @@
 import { useEffect, useRef } from "react";
 import Header from "@/components/Header";
 import PillarCard from "@/components/PillarCard";
-import type { Project } from "@/lib/types/project";
+import type { Pillar } from "@/lib/types/pillars";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface OurWorkClientProps {
-  projects: Project[];
+  pillars: Pillar[];
 }
 
-export default function OurWorkClient({ projects }: OurWorkClientProps) {
+export default function OurWorkClient({ pillars }: OurWorkClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
@@ -32,7 +32,7 @@ export default function OurWorkClient({ projects }: OurWorkClientProps) {
             stagger: 0.08,
             ease: "power4.out",
             delay: 0.2,
-          }
+          },
         );
       }
 
@@ -46,7 +46,7 @@ export default function OurWorkClient({ projects }: OurWorkClientProps) {
             duration: 0.8,
             ease: "power3.out",
             delay: 0.6,
-          }
+          },
         );
       }
     }, containerRef);
@@ -87,7 +87,7 @@ export default function OurWorkClient({ projects }: OurWorkClientProps) {
                   ref={counterRef}
                   className="text-white/30 text-[clamp(1rem,1.2vw,1.4rem)] font-light opacity-0"
                 >
-                  {projects.length}
+                  {pillars.length}
                 </span>
               </div>
             </div>
@@ -113,10 +113,10 @@ export default function OurWorkClient({ projects }: OurWorkClientProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[3.5vw] gap-y-[10vh] max-w-[1600px] mx-auto w-full">
-            {projects.map((project, index) => (
+            {pillars.map((pillar, index) => (
               <PillarCard
-                key={project.slug}
-                project={project}
+                key={pillar.slug}
+                pillar={pillar}
                 index={index}
                 imageClassName="aspect-3/2 mb-6"
                 titleClassName="text-white text-[clamp(1.5rem,2.5vw,2.5rem)] font-semibold tracking-tight leading-[1.1] whitespace-pre-line group-hover:text-gold transition-colors duration-500"

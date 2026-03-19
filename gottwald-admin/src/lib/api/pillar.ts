@@ -42,14 +42,14 @@ async function apiFetch<T>(
 
 export async function getPillars(): Promise<Pillar[]> {
   if (USE_MOCK) return MOCK_PROJECTS;
-  return apiFetch<Pillar[]>("/api/projects");
+  return apiFetch<Pillar[]>("/api/pillars");
 }
 
 // ─── GET SINGLE PILLAR ───────────────────────────────────────────────────────
 
 export async function getPillar(slug: string): Promise<Pillar | undefined> {
   if (USE_MOCK) return MOCK_PROJECTS.find((p) => p.slug === slug);
-  return apiFetch<Pillar>(`/api/projects/${slug}`);
+  return apiFetch<Pillar>(`/api/pillars/${slug}`);
 }
 
 // ─── CREATE PILLAR ───────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ export async function createPillar(
     console.log("[MOCK] CREATE:", data);
     return data;
   }
-  return apiFetch<Pillar>("/api/projects", {
+  return apiFetch<Pillar>("/api/pillars", {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -78,7 +78,7 @@ export async function updatePillar(
     const existing = MOCK_PROJECTS.find((p) => p.slug === slug)!;
     return { ...existing, ...data };
   }
-  return apiFetch<Pillar>(`/api/projects/${slug}`, {
+  return apiFetch<Pillar>(`/api/pillars/${slug}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
@@ -91,20 +91,19 @@ export async function deletePillar(slug: string): Promise<void> {
     console.log("[MOCK] DELETE:", slug);
     return;
   }
-  await apiFetch<void>(`/api/projects/${slug}`, { method: "DELETE" });
+  await apiFetch<void>(`/api/pillars/${slug}`, { method: "DELETE" });
 }
 
 // ─── UPLOAD IMAGE ─────────────────────────────────────────────────────────────
 
 export async function uploadPillarImage(file: File): Promise<string> {
   if (USE_MOCK) {
-    console.log("[MOCK] UPLOAD IMAGE:", file.name);
-    return `/assets/projects/${file.name}`;
+    return `/assets/pillar/${file.name}`;
   }
   const token = getToken();
   const formData = new FormData();
   formData.append("image", file);
-  const res = await fetch(`${BASE_URL}/api/projects/upload-image`, {
+  const res = await fetch(`${BASE_URL}/api/pillars/upload-image`, {
     method: "POST",
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

@@ -1,4 +1,4 @@
-import { Project } from "../types/project";
+import { Project } from "../types/pillars";
 
 /**
  * Mock project data for development.
@@ -154,7 +154,8 @@ export const MOCK_PROJECTS: Project[] = [
     tags: ["STRATEGY", "POSITIONING", "GEORGIA"],
     image: "/assets/projects/relocation.png",
     launchUrl: "https://google.com/",
-    description: "Deploy your company structure. Upgrade your operational reality.",
+    description:
+      "Deploy your company structure. Upgrade your operational reality.",
     details:
       "Georgia is the strategic midpoint between East & West — globally connected, execution-friendly, and capable of combining the best of two worlds: international accessibility with pragmatic speed. We engineer a defensible structure for companies, holding setups, and high-responsibility profiles. Delivered under one standard, through one accountable system.",
     services: [
@@ -177,7 +178,7 @@ export const MOCK_PROJECTS: Project[] = [
         type: "rich-text",
         theme: "dark",
         heading: "The Midpoint Advantage",
-        body: '<h3>Why Georgia?</h3><p>Georgia is a true strategic junction: markets, cultures, and operational realities converge here. This creates true optionality — not just a new address.</p><ul><li><strong>Speed + Pragmatism:</strong> Execution is faster when sequencing is correct.</li><li><strong>Connectivity:</strong> Modern mindset and growling infrastructure.</li><li><strong>Tax Efficiency:</strong> Defensible architecture, not just a rate.</li></ul>',
+        body: "<h3>Why Georgia?</h3><p>Georgia is a true strategic junction: markets, cultures, and operational realities converge here. This creates true optionality — not just a new address.</p><ul><li><strong>Speed + Pragmatism:</strong> Execution is faster when sequencing is correct.</li><li><strong>Connectivity:</strong> Modern mindset and growling infrastructure.</li><li><strong>Tax Efficiency:</strong> Defensible architecture, not just a rate.</li></ul>",
       },
       {
         type: "rich-text",
