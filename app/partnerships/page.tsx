@@ -1,13 +1,38 @@
 import type { Metadata } from "next";
 import PartnershipsClient from "./PartnershipsClient";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, faqJsonLd, howToJsonLd } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  faqJsonLd,
+  howToJsonLd,
+  DEFAULT_OG_IMAGE,
+} from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Partnerships",
   description:
     "Apply to become a values-aligned partner in the GOTT WALD 2030 infrastructure cycle. Confidential by default, standards-led by design. Limited selection for principals and operators.",
   alternates: { canonical: "/partnerships" },
+  openGraph: {
+    title: "Partnerships",
+    description:
+      "Apply to become a values-aligned partner in the GOTT WALD 2030 infrastructure cycle. Confidential by default, standards-led by design. Limited selection for principals and operators.",
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Partnerships — GOTT WALD",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Partnerships",
+    description:
+      "Apply to become a values-aligned partner in the GOTT WALD 2030 infrastructure cycle. Confidential by default, standards-led by design. Limited selection for principals and operators.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 const partnershipFaqs = [

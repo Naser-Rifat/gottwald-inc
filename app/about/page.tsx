@@ -5,6 +5,7 @@ import {
   breadcrumbJsonLd,
   aboutPageJsonLd,
   faqJsonLd,
+  DEFAULT_OG_IMAGE,
 } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -12,6 +13,26 @@ export const metadata: Metadata = {
   description:
     "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
   alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About Us",
+    description:
+      "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "About Us — GOTT WALD",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us",
+    description:
+      "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 const aboutFaqs = [

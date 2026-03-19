@@ -4,7 +4,9 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gottwald.world";
 const SITE_NAME = "GOTT WALD Holding LLC";
 const DEFAULT_DESCRIPTION =
   "Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets — turning complexity into clarity, and decisions into measurable impact.";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+// Must exist in `public/` for reliable social previews.
+// Choose a wide banner image already present in the repo.
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/about_horizontal_2.png`;
 
 export { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE };
 
@@ -107,6 +109,12 @@ export function breadcrumbJsonLd(
 // Service — per-pillar rich schema for AI citation
 // ---------------------------------------------------------------------------
 export function pillarServiceJsonLd(pillar: Pillar) {
+  const imageUrl = pillar.image
+    ? pillar.image.startsWith("http")
+      ? pillar.image
+      : `${SITE_URL}${pillar.image}`
+    : "";
+
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -127,7 +135,7 @@ export function pillarServiceJsonLd(pillar: Pillar) {
           })),
         }
       : undefined,
-    image: pillar.image.startsWith("http") ? pillar.image : `${SITE_URL}${pillar.image}`,
+    ...(imageUrl ? { image: imageUrl } : {}),
   };
 }
 

@@ -7,7 +7,7 @@ import {
 } from "@/lib/api/pillars";
 import PillarsDetailClient from "./PillarDetailClient";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, pillarServiceJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, pillarServiceJsonLd, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -17,6 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pillar = await getPillar(slug);
   if (!pillar) return { title: "Pillar Not Found" };
+
+  const socialImage = pillar.image || DEFAULT_OG_IMAGE;
   return {
     title: pillar.title,
     description: `${pillar.description} ${pillar.details}`.slice(0, 160),
@@ -24,7 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${pillar.title} — GOTT WALD`,
       description: pillar.description,
-      images: [{ url: pillar.image, alt: pillar.title }],
+      images: [{ url: socialImage, alt: pillar.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${pillar.title} — GOTT WALD`,
+      description: pillar.description,
+      images: [socialImage],
     },
   };
 }

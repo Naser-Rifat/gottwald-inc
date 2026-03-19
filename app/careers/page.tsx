@@ -1,13 +1,38 @@
 import type { Metadata } from "next";
 import CareersClient from "./CareersClient";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, faqJsonLd, jobPostingJsonLd } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  faqJsonLd,
+  jobPostingJsonLd,
+  DEFAULT_OG_IMAGE,
+} from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Careers",
   description:
     "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
   alternates: { canonical: "/careers" },
+  openGraph: {
+    title: "Careers",
+    description:
+      "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Careers — GOTT WALD",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Careers",
+    description:
+      "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 const careersFaqs = [
