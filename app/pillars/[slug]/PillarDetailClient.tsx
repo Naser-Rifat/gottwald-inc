@@ -411,14 +411,19 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 clipPath: "inset(0 0 100% 0)",
               }}
             >
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                sizes="54vw"
-                style={{ objectFit: "cover" }}
-                priority
-              />
+              {project.image ? (
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  sizes="54vw"
+                  style={{ objectFit: "cover" }}
+                  priority
+                  unoptimized={project.image.includes("localhost")}
+                />
+              ) : (
+                <div className="absolute inset-0 bg-white/5" />
+              )}
             </div>
           </div>
         </section>
@@ -514,7 +519,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             }}
           >
             <Link
-              href={`/projects/${nextProject.slug}`}
+              href={`/pillars/${nextProject.slug}`}
               style={{ textDecoration: "none" }}
             >
               <h2
@@ -539,7 +544,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               </h2>
             </Link>
             <Link
-              href={`/projects/${nextProject.slug}`}
+              href={`/pillars/${nextProject.slug}`}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -692,13 +697,18 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
             clipPath: "inset(0 100% 0 0)",
           }}
         >
-          <Image
-            src={block.image || project.image}
-            alt={`${project.title} showcase`}
-            fill
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-          />
+          {(block.image || project.image) ? (
+            <Image
+              src={block.image || project.image}
+              alt={`${project.title} showcase`}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover" }}
+              unoptimized={(block.image || project.image).includes("localhost")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
+          )}
           <div
             style={{
               position: "absolute",
@@ -791,13 +801,18 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
               clipPath: "inset(0 100% 0 0)",
             }}
           >
-            <Image
-              src={block.image || project.image}
-              alt="Case Study"
-              fill
-              sizes="38vw"
-              style={{ objectFit: "cover" }}
-            />
+            {(block.image || project.image) ? (
+              <Image
+                src={block.image || project.image}
+                alt="Case Study"
+                fill
+                sizes="38vw"
+                style={{ objectFit: "cover" }}
+                unoptimized={(block.image || project.image).includes("localhost")}
+              />
+            ) : (
+              <div className="absolute inset-0 bg-white/5" />
+            )}
           </div>
         </div>
       </section>
@@ -899,13 +914,18 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
             clipPath: "inset(0 100% 0 0)",
           }}
         >
-          <Image
-            src={block.image || project.image}
-            alt="Stats"
-            fill
-            sizes="32vw"
-            style={{ objectFit: "cover" }}
-          />
+          {(block.image || project.image) ? (
+            <Image
+              src={block.image || project.image}
+              alt="Stats"
+              fill
+              sizes="32vw"
+              style={{ objectFit: "cover" }}
+              unoptimized={(block.image || project.image).includes("localhost")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
+          )}
         </div>
       </div>
     </section>
@@ -945,13 +965,18 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           clipPath: "inset(0 100% 0 0)",
         }}
       >
-        <Image
-          src={block.image || project.image}
-          alt="Feature"
-          fill
-          sizes="45vw"
-          style={{ objectFit: "cover" }}
-        />
+        {(block.image || project.image) ? (
+            <Image
+              src={block.image || project.image}
+              alt="Feature"
+              fill
+              sizes="45vw"
+              style={{ objectFit: "cover" }}
+              unoptimized={(block.image || project.image).includes("localhost")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
+          )}
       </div>
       <div className="panel-content" style={{ maxWidth: "300px", opacity: 0 }}>
         <span
@@ -1024,13 +1049,18 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
             clipPath: "inset(0 100% 0 0)",
           }}
         >
-          <Image
-            src={block.image || project.image}
-            alt="Final"
-            fill
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-          />
+          {(block.image || project.image) ? (
+            <Image
+              src={block.image || project.image}
+              alt="Final"
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover" }}
+              unoptimized={(block.image || project.image).includes("localhost")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
+          )}
           <div
             style={{
               position: "absolute",
@@ -1101,7 +1131,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
           )}
         </div>
 
-        {block.image && (
+        {block.image ? (
           <div
             className="panel-image"
             style={{
@@ -1120,9 +1150,10 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
               fill
               sizes="40vw"
               style={{ objectFit: "cover" }}
+              unoptimized={block.image.includes("localhost")}
             />
           </div>
-        )}
+        ) : null}
       </section>
     );
   },

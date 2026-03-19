@@ -36,16 +36,10 @@ export async function login(payload: LoginPayload): Promise<AuthResponse> {
   const data = (raw.data as Record<string, unknown>) ?? raw;
   const tokens = data.tokens as Record<string, unknown> | undefined;
   const token =
-    (tokens?.access as string) ??
-    (tokens?.accessToken as string) ??
-    (data.token as string) ??
-    (data.access as string) ??
-    (data.access_token as string);
+    (tokens?.access as string) ?? (data.access as string) ?? (data.token as string);
   if (!token) throw new Error("Invalid response: no token received");
   const refreshToken =
-    (tokens?.refresh as string) ??
-    (tokens?.refreshToken as string) ??
-    (data.refresh_token as string);
+    (tokens?.refresh as string) ?? (data.refresh as string) ?? (data.refresh_token as string);
   const rawUser = data.user ?? data;
   const user = {
     id: String((rawUser as { id?: string }).id ?? "1"),
@@ -89,16 +83,9 @@ export async function refreshAccessToken(
     const data = (raw.data as Record<string, unknown>) ?? raw;
     const tokens = data.tokens as Record<string, unknown> | undefined;
     const accessToken =
-      (tokens?.access as string) ??
-      (tokens?.accessToken as string) ??
-      (data.access as string) ??
-      (data.access_token as string) ??
-      (data.token as string);
+      (tokens?.access as string) ?? (data.access as string) ?? (data.token as string);
     const newRefresh =
-      (tokens?.refresh as string) ??
-      (tokens?.refreshToken as string) ??
-      (data.refresh as string) ??
-      (data.refresh_token as string);
+      (tokens?.refresh as string) ?? (data.refresh as string) ?? (data.refresh_token as string);
 
     if (!accessToken) throw new Error("Invalid refresh response: no access token");
     return { accessToken, refreshToken: newRefresh };

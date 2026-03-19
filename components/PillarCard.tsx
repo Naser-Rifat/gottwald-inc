@@ -179,14 +179,19 @@ export default function PillarCard({
             transformStyle: "preserve-3d",
           }}
         >
-          <Image
-            src={pillar.image}
-            alt={pillar.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            loading="lazy"
-          />
+          {pillar.image ? (
+            <Image
+              src={pillar.image}
+              alt={pillar.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              loading="lazy"
+              unoptimized={pillar.image.includes("localhost")}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
+          )}
           <div
             ref={overlayRef}
             className="absolute inset-0 pointer-events-none opacity-0"
