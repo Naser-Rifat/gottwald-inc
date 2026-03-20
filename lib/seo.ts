@@ -41,6 +41,8 @@ export function organizationJsonLd() {
     },
     areaServed: [
       { "@type": "Country", name: "Georgia" },
+      // Broad coverage: Europe (keeps claims accurate without listing every country)
+      { "@type": "Continent", name: "Europe" },
       { "@type": "GeoCircle", geoMidpoint: { "@type": "GeoCoordinates", latitude: 41.7151, longitude: 44.8271 }, geoRadius: "5000 km" },
     ],
     knowsAbout: [
@@ -123,7 +125,10 @@ export function pillarServiceJsonLd(pillar: Pillar) {
     description: pillar.description,
     url: `${SITE_URL}/pillars/${pillar.slug}`,
     provider: { "@id": `${SITE_URL}/#organization` },
-    areaServed: { "@type": "Country", name: "Georgia" },
+    areaServed: [
+      { "@type": "Country", name: "Georgia" },
+      { "@type": "Continent", name: "Europe" },
+    ],
     serviceType: pillar.tags.join(", "),
     hasOfferCatalog: pillar.services.length > 0
       ? {

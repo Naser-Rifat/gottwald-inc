@@ -14,7 +14,7 @@
 
   --spacing-gutter: 5vw;
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-serif: "Playfair Display", ui-serif, Georgia, "Times New Roman", Times, serif;
 }
 
 /* ===== Base Reset & Global Styles ===== */

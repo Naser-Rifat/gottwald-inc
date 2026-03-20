@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
 import NoiseOverlay from "@/components/NoiseOverlay";
@@ -33,14 +32,6 @@ const satoshi = localFont({
   variable: "--font-sans",
   display: "swap",
   preload: true,
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
 });
 
 export const viewport: Viewport = {
@@ -134,10 +125,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${satoshi.variable} ${playfair.variable}`}
+      className={satoshi.variable}
       suppressHydrationWarning
     >
       <head>
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
