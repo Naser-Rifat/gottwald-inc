@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import PillarCard from "@/components/PillarCard";
 import type { Pillar } from "@/lib/types/pillars";
@@ -14,6 +14,7 @@ interface OurWorkClientProps {
 }
 
 export default function OurWorkClient({ pillars }: OurWorkClientProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
@@ -93,22 +94,96 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
             </div>
 
             <div className="lg:w-[55%] flex flex-col gap-8 text-white/90 text-[clamp(1.1rem,1.4vw,1.6rem)] font-light leading-relaxed max-w-2xl lg:mt-2">
-              <p>
-                We build{" "}
-                <span className="text-white font-medium">
-                  operating-grade systems
-                </span>{" "}
-                for people and strategic assets—when outcomes must be clear,
-                execution must be clean, and performance must be repeatable.
+              <p className="text-white/90">
+                We build operating-grade systems for people and strategic assets—when
+                outcomes must be clear, execution must be clean, and performance must
+                be repeatable.
               </p>
 
               <div className="pt-6 mt-2 border-t border-white/20">
                 <p className="text-white/70 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed">
-                  Explore our full registry of structural pillars below. Each
-                  one is a complete component—designed to stand alone, and
-                  engineered to connect into one integrated operating system.
+                  GOTT WALD is not a collection of services. It is a unified
+                  architecture: modular components, one standard, one language of
+                  delivery—built to turn complexity into clarity, clarity into
+                  decisions, and decisions into measurable impact.
                 </p>
               </div>
+
+              <div
+                id="our-work-more"
+                className="overflow-hidden transition-[max-height,opacity,margin] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+                style={{
+                  maxHeight: isExpanded ? "1500px" : "0px",
+                  opacity: isExpanded ? 1 : 0,
+                  marginTop: isExpanded ? "1rem" : "0",
+                }}
+              >
+                <div className="flex flex-col gap-5 text-white/70 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed max-w-2xl">
+                  <p>
+                    We don&apos;t market partnerships. <br />
+                    <span className="text-white/90">
+                      We operate them.
+                    </span>
+                  </p>
+
+                  <p>
+                    Discreet. Stable. Security-first.
+                    <br />
+                    Confidentiality is not a promise—it is engineered into the
+                    framework.
+                  </p>
+
+                  <p>
+                    We don&apos;t talk about partners or projects, not out of
+                    distance, but out of principle: trust compounds when it is
+                    protected.
+                  </p>
+
+                  <p>
+                    Our matrix scales without losing integrity: components evolve,
+                    new layers can be added, markets can shift—yet the standard
+                    remains.
+                  </p>
+
+                  <p>
+                    At the core is a non-negotiable filter:
+                    <br />
+                    <span className="text-gold font-medium tracking-[0.05em]">
+                      Peace. Love. Harmony — for more Humanity.
+                    </span>
+                  </p>
+
+                  <p>
+                    Skill matters. Character decides.
+                    <br />
+                    Money is not the driver. Money is the result of alignment,
+                    responsibility, and clean execution.
+                  </p>
+
+                  <p>
+                    Explore our pillars below. Each one is a complete component—designed
+                    to stand alone, and engineered to connect into one integrated
+                    operating system.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
+                aria-controls="our-work-more"
+                className="group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-4 w-max"
+              >
+                <span className="relative overflow-hidden w-8 h-8 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white/50 group-hover:bg-white/5 transition-all">
+                  <span className="block w-3 h-px bg-current transition-transform duration-500 absolute" />
+                  <span
+                    className={`block w-px h-3 bg-current transition-transform duration-500 absolute ${
+                      isExpanded ? "rotate-90 scale-0" : "rotate-0 scale-100"
+                    }`}
+                  />
+                </span>
+                <span>{isExpanded ? "Show less" : "Show more"}</span>
+              </button>
             </div>
           </div>
 

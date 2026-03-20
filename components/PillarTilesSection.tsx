@@ -78,7 +78,7 @@ export default function PillarTilesSection({
         <div className="flex flex-col items-center w-full max-w-[95vw] px-4">
           <h2
             ref={headlineRef}
-            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-tighter uppercase mb-6 whitespace-normal md:whitespace-nowrap"
+            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-wide uppercase mb-6 whitespace-normal md:whitespace-nowrap"
           >
             BUSINESS STANDARDS.
           </h2>
@@ -102,6 +102,7 @@ export default function PillarTilesSection({
             </p>
 
             <div
+              id="pillar-details-more"
               className="overflow-hidden transition-[max-height,opacity,margin] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
               style={{
                 maxHeight: isExpanded ? "1500px" : "0px",
@@ -111,7 +112,7 @@ export default function PillarTilesSection({
             >
               <div className="flex flex-col items-center gap-8 pt-10 border-t border-white/10 w-full max-w-3xl mx-auto text-[clamp(1rem,1.3vw,1.5rem)] text-white/90">
                 <p>
-                  GOTT WALD is not a collective of services. It is a unified
+                  GOTT WALD is not a collection of services. It is a unified
                   architecture: modular components, one standard, one language
                   of delivery—built to turn complexity into clarity, clarity
                   into decisions, and decisions into measurable impact.
@@ -135,9 +136,10 @@ export default function PillarTilesSection({
                   protected.
                 </p>
                 <p>
-                  Our matrix scales without losing integrity: components evolve,
-                  new layers can be added, markets can shift—yet the standard
-                  remains.
+                  Our matrix scales without losing integrity:
+                  <br />
+                  components evolve, new layers can be added, markets can
+                  shift—yet the standard remains.
                 </p>
                 <p>
                   At the core is a non-negotiable filter:
@@ -156,9 +158,20 @@ export default function PillarTilesSection({
             </div>
 
             <div className="pt-2 mt-2 border-t border-white/20 w-full max-w-3xl mx-auto"></div>
-
+            <p
+              className="text-white/90"
+              id="pillar-details-more-text"
+              aria-hidden={!isExpanded}
+              style={{ display: isExpanded ? "none" : "block" }}
+            >
+              Explore our pillars below. Each one is a complete
+              component—designed to stand alone, and engineered to connect into
+              one integrated operating system.
+            </p>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
+              aria-expanded={isExpanded}
+              aria-controls="pillar-details-more"
               className="group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-6 w-max"
             >
               <span className="relative overflow-hidden w-8 h-8 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white/50 group-hover:bg-white/5 transition-all">
@@ -169,7 +182,7 @@ export default function PillarTilesSection({
                   }`}
                 />
               </span>
-              <span>{isExpanded ? "Read Less" : "Discover more"}</span>
+              <span>{isExpanded ? "Show less" : "Show more"}</span>
             </button>
           </div>
         </div>
