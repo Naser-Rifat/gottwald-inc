@@ -1,7 +1,9 @@
+import { MOCK_PROJECTS } from './../mock/projects.mock';
 import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80";
 const API_ORIGIN = BASE_URL.replace(/\/$/, "");
+
 
 function toAbsoluteImageUrl(url: string | undefined): string {
   if (!url || !url.trim()) return "";
@@ -94,7 +96,16 @@ function toTheme(val: string | PillarTheme | undefined): PillarTheme {
   }
 }
 
-const VALID_BLOCK_TYPES = ["rich-text", "image", "video", "showcase", "case-study", "feature", "stats", "fullbleed"];
+const VALID_BLOCK_TYPES = [
+  "rich-text",
+  "image",
+  "video",
+  "showcase",
+  "case-study",
+  "feature",
+  "stats",
+  "fullbleed",
+];
 
 function mapApiToPillar(api: ApiPillar): Pillar {
   const raw = api.content_blocks_data ?? api.content_blocks ?? [];
@@ -102,7 +113,9 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((b) => ({
       id: b.id,
-      type: VALID_BLOCK_TYPES.includes(b.type) ? (b.type as ContentBlock["type"]) : "rich-text",
+      type: VALID_BLOCK_TYPES.includes(b.type)
+        ? (b.type as ContentBlock["type"])
+        : "rich-text",
       theme: (b.theme === "dark" ? "dark" : "light") as ContentBlock["theme"],
       heading: b.heading,
       body: b.body,
@@ -137,19 +150,28 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
 }
 
 export async function getPillars(): Promise<Pillar[]> {
+  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+    return MOCK_PROJECTS;
+  }
+
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
   const items = res.data ?? res.results ?? [];
   return items.map(mapApiToPillar);
 }
 
 export async function getPillar(slug: string): Promise<Pillar | undefined> {
+  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+    return MOCK_PROJECTS.find((p) => p.slug === slug);
+  }
+
   try {
     const res = await apiFetch<{ data?: ApiPillar } | ApiPillar>(
       `/api/v1/pillars/${slug}/`,
     );
-    const api = res && typeof res === "object" && "data" in res && res.data
-      ? res.data
-      : (res as ApiPillar);
+    const api =
+      res && typeof res === "object" && "data" in res && res.data
+        ? res.data
+        : (res as ApiPillar);
     return mapApiToPillar(api);
   } catch {
     const pillars = await getPillars();
@@ -166,6 +188,10 @@ export async function getNextPillar(slug: string): Promise<Pillar> {
 }
 
 export async function getAllPillarSlugs(): Promise<string[]> {
+  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+    return MOCK_PROJECTS.map((p) => p.slug);
+  }
+
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
   const items = res.data ?? res.results ?? [];
   return items.map((p) => p.slug);
