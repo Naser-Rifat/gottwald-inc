@@ -437,43 +437,43 @@ export default function CareersClient() {
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             {/* What you'll find */}
             <div className="reveal-text">
-              <h2 className="text-4xl font-bold mb-10 tracking-tight">
+              <h2 className="text-4xl text-white font-bold mb-10 tracking-tight">
                 WHAT YOU&apos;LL FIND HERE
               </h2>
-              <ul className="flex flex-col gap-6 font-light text-2xl text-white/70">
-                <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>standards</span>
-                  <span className="text-white/30 italic text-md">
+              <ul className="flex flex-col gap-6 font-light text-2xl text-white/90">
+                <li className="flex justify-between  border-b border-white/10 pb-4">
+                  <span className="font-medium">standards</span>
+                  <span className="text-white/70 italic text-md">
                     instead of chaos
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>responsibility</span>
-                  <span className="text-white/30 italic text-md">
+                  <span className="font-medium">responsibility</span>
+                  <span className="text-white/70 italic text-md">
                     instead of excuses
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>strong people</span>
-                  <span className="text-white/30 italic text-md">
+                  <span className="font-medium">strong people</span>
+                  <span className="text-white/70 italic text-md">
                     instead of political noise
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>clean documentation</span>
-                  <span className="text-white/30 italic text-md">
+                  <span className="font-medium">clean documentation</span>
+                  <span className="text-white/70 italic text-md">
                     instead of knowledge islands
                   </span>
                 </li>
                 <li className="flex justify-between border-b border-white/10 pb-4">
-                  <span>discretion</span>
-                  <span className="text-white/30 italic text-md">
+                  <span className="font-medium">discretion</span>
+                  <span className="text-white/70 italic text-md">
                     as culture
                   </span>
                 </li>
                 <li className="flex justify-between pt-2">
                   <span className="text-gold">a global human family</span>
-                  <span className="text-white/30 italic text-md text-right">
+                  <span className="text-white/70 italic text-md text-right">
                     diversity is wanted
                     <br />
                     foundation is required
@@ -739,7 +739,7 @@ export default function CareersClient() {
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
                 </button>
-                <span className="text-md text-white/30 tracking-widest uppercase text-center sm:text-left">
+                <span className="text-md text-white/70 tracking-widest uppercase text-center sm:text-left">
                   Thank you. If there’s a fit, we’ll reach out with next steps. <br />
                   Your submission is confidential.
                 </span>
