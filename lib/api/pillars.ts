@@ -150,7 +150,8 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
 }
 
 export async function getPillars(): Promise<Pillar[]> {
-  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  if (dataSource === "mock") {
     return MOCK_PROJECTS;
   }
 
@@ -160,7 +161,8 @@ export async function getPillars(): Promise<Pillar[]> {
 }
 
 export async function getPillar(slug: string): Promise<Pillar | undefined> {
-  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  if (dataSource === "mock") {
     return MOCK_PROJECTS.find((p) => p.slug === slug);
   }
 
@@ -188,7 +190,8 @@ export async function getNextPillar(slug: string): Promise<Pillar> {
 }
 
 export async function getAllPillarSlugs(): Promise<string[]> {
-  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "mock") {
+  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  if (dataSource === "mock") {
     return MOCK_PROJECTS.map((p) => p.slug);
   }
 
