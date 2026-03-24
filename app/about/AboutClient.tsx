@@ -480,23 +480,29 @@ export default function AboutClient() {
                 { tag: "Entrepreneur / Holding", title: "Case 5 — Structure Deployment (Georgia)", before: "You want structure, but risk chaos, half-knowledge, wrong sequence.", intervention: "Assessment → defensible setup → clean coordination (compliant, bankable, operational).", after: "Structure stands. Operations are clear. Less stress. More safety." }
               ].map((c, i) => (
                 <div key={i} className="w-screen px-gutter flex justify-center shrink-0">
-                  <div className="w-full max-w-4xl bg-[#080808] border border-white/5 p-12 md:p-20 rounded-3xl relative overflow-hidden group">
+                  <div className="w-full max-w-4xl bg-[#0a0a0a] border border-white/5 p-10 md:p-16 rounded-4xl relative overflow-hidden group">
                     <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold/5 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[2s]" />
-                    <p className="text-sm font-mono text-gold/60 mb-8">{c.tag}</p>
-                    <h3 className="text-4xl md:text-5xl font-light text-white mb-16">{c.title}</h3>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <p className="text-lg font-mono tracking-wide text-gold/70 mb-10">{c.tag}</p>
+                    <h3 className="text-3xl md:text-4xl font-light text-white/95 leading-[1.1] mb-20 max-w-3xl">{c.title}</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+                      {/* BEFORE */}
                       <div className="space-y-4">
-                        <p className="text-lg tracking-widest uppercase text-white/30 font-bold">Before</p>
-                        <p className="text-xl text-white/60 font-light">{c.before}</p>
+                        <p className="text-lg tracking-[0.2em] uppercase text-white/40 font-bold">Before</p>
+                        <p className="text-xl text-white/90 font-light leading-relaxed pr-4">{c.before}</p>
                       </div>
-                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
-                        <p className="text-lg tracking-widest uppercase text-gold/50 font-bold">Intervention</p>
-                        <p className="text-xl text-white/80 font-light">{c.intervention}</p>
+                      
+                      {/* INTERVENTION */}
+                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-10">
+                        <p className="text-lg tracking-[0.2em] uppercase text-gold/60 font-bold">Intervention</p>
+                        <p className="text-xl text-white/90 font-light leading-relaxed pr-4">{c.intervention}</p>
                       </div>
-                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-12">
-                        <p className="text-lg tracking-widest uppercase text-white/90 font-bold">After</p>
-                        <p className="text-xl text-white font-light">{c.after}</p>
+                      
+                      {/* AFTER */}
+                      <div className="space-y-4 md:border-l md:border-white/5 md:pl-10">
+                        <p className="text-lg tracking-[0.2em] uppercase text-white/90 font-bold">After</p>
+                        <p className="text-xl text-white/90 font-light leading-relaxed">{c.after}</p>
                       </div>
                     </div>
                   </div>
@@ -526,7 +532,7 @@ export default function AboutClient() {
                 <div key={i} className="eco-item  reveal-text group py-8 border-t border-white/5 cursor-default relative overflow-hidden">
                   <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
                     <h3 className="text-2xl md:text-3xl text-white font-light group-hover:text-gold transition-colors duration-500">{eco.name}</h3>
-                    <p className="text-xl text-white/40 font-light md:w-1/2 md:text-right">{eco.desc}</p>
+                    <p className="text-xl text-white/70 font-light md:w-1/2 md:text-right">{eco.desc}</p>
                   </div>
                   <div className="eco-line absolute bottom-0 left-0 h-px w-0 bg-gold" />
                 </div>
@@ -554,32 +560,73 @@ export default function AboutClient() {
               </p>
             </div>
 
-            <div className="reveal-text grid grid-cols-1 md:grid-cols-2 gap-16 text-left border-t border-b border-white/5 py-16">
-              <div className="space-y-8">
-                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">The Decision Code</p>
-                <p className="text-lg text-white/60 font-light">GOTT WALD is not built on trends. It is built on principles. Timeless. Durable. Non-negotiable.</p>
-                <ul className="space-y-4 font-serif italic text-2xl text-white/80">
-                   <li>Love <span className="text-white/30 text-lg font-sans not-italic">as the measure</span></li>
-                   <li>Peace <span className="text-white/30 text-lg font-sans not-italic">as the direction</span></li>
-                   <li>Harmony <span className="text-white/30 text-lg font-sans not-italic">as the outcome</span></li>
-                   <li>Compassion <span className="text-white/30 text-lg font-sans not-italic">as the posture</span></li>
-                   <li>Empathy <span className="text-white/30 text-lg font-sans not-italic">as the capability</span></li>
-                   <li>Service <span className="text-white/30 text-lg font-sans not-italic">as lived responsibility</span></li>
+            <div className="reveal-text grid grid-cols-1 md:grid-cols-2 text-left border-y border-white/10 py-16 md:py-24 max-w-5xl mx-auto w-full relative">
+              
+              {/* Vertical divider line for desktop */}
+              <div className="hidden md:block absolute top-[10%] bottom-[10%] left-1/2 w-px bg-white/10" />
+
+              {/* LEFT COLUMN: THE DECISION CODE */}
+              <div className="md:pr-24 space-y-10 pb-16 md:pb-0">
+                <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
+                  The Decision Code
+                </p>
+                <p className="text-[17px] text-white/60 font-light leading-relaxed mb-6 max-w-100">
+                  GOTT WALD is not built on trends. It is built on principles. Timeless. Durable. Non-negotiable.
+                </p>
+                <ul className="space-y-6">
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Love</span>
+                      <span className="text-[15px] font-light text-white/50">as the measure</span>
+                   </li>
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Peace</span>
+                      <span className="text-[15px] font-light text-white/50">as the direction</span>
+                   </li>
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Harmony</span>
+                      <span className="text-[15px] font-light text-white/50">as the outcome</span>
+                   </li>
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Compassion</span>
+                      <span className="text-[15px] font-light text-white/50">as the posture</span>
+                   </li>
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Empathy</span>
+                      <span className="text-[15px] font-light text-white/50">as the capability</span>
+                   </li>
+                   <li className="flex items-baseline">
+                      <span className="font-serif italic text-[22px] text-white/90 mr-2">Service</span>
+                      <span className="text-[15px] font-light text-white/50">as lived responsibility</span>
+                   </li>
                 </ul>
-                <p className="text-lg font-bold text-white">This is not a slogan. This is lived reality.</p>
+                <p className="text-[14px] font-bold text-white pt-8">
+                  This is not a slogan. This is lived reality.
+                </p>
               </div>
-              <div className="space-y-8 md:pl-16 md:border-l md:border-white/5">
-                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold">A rare gift</p>
-                <p className="text-lg text-white/80 font-light">The PATRON carries a rare gift: a reader of people. a feeler. a gatherer. The PATRON sees you before you&apos;ve fully organized yourself.</p>
-                <div className="bg-[#080808] p-8 rounded-2xl border border-white/5 space-y-4">
-                  <p className="text-white/60 italic font-serif text-lg">&quot;nothing here is performed. everything here is held.&quot;</p>
-                  <ul className="space-y-2 text-white/50 text-base">
+
+              {/* RIGHT COLUMN: A RARE GIFT */}
+              <div className="space-y-10 md:pl-24 pt-16 md:pt-0 border-t border-white/10 md:border-t-0">
+                <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
+                  A rare gift
+                </p>
+                <p className="text-[17px] text-white/60 font-light leading-relaxed max-w-105">
+                  The PATRON carries a rare gift: a reader of people. a feeler. a gatherer. The PATRON sees you before you&apos;ve fully organized yourself.
+                </p>
+                
+                <div className="bg-[#0f0f0f] p-10 rounded-2xl border border-white/5 space-y-8 max-w-105">
+                  <p className="text-white/90 italic font-serif leading-[1.3] text-[26px]">
+                    &quot;nothing here is performed. everything here is held.&quot;
+                  </p>
+                  <ul className="space-y-3 text-[16px] text-white/50 font-light">
                      <li>Conflict becomes clear.</li>
                      <li>Disorder becomes direction.</li>
                      <li>Pressure becomes purpose.</li>
                   </ul>
                 </div>
-                <p className="text-lg text-white/80 font-light">So specialists can build without systems turning cold. So growth never consumes the soul. A framework that carries. A system that protects. A force that unites.</p>
+
+                <p className="text-[15px] text-white/70 font-light leading-relaxed max-w-105">
+                  So specialists can build without systems turning cold. So growth never consumes the soul. A framework that carries. A system that protects. A force that unites.
+                </p>
               </div>
             </div>
           </div>
@@ -594,7 +641,7 @@ export default function AboutClient() {
 
           <div className="reveal-text relative z-10 text-center flex flex-col items-center max-w-3xl space-y-16">
             <div>
-              <p className="text-sm tracking-[0.3em] uppercase text-white/30 font-bold mb-6">Who this is for</p>
+              <p className="text-lg tracking-[0.3em] uppercase text-white/90 font-bold mb-6">Who this is for</p>
               <h3 className="text-3xl md:text-5xl font-light leading-[1.3] text-white/90">
                 For CEOs, founders, executives, and SMEs who don&apos;t want to &quot;do more&quot; — but to do the right thing, the right way.
               </h3>
