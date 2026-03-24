@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "80",
+        pathname: "/media/**",
+      },
+    ],
+  },
+
   // Enable WASM support for Rapier3D physics via webpack
   webpack: (config) => {
     config.experiments = {

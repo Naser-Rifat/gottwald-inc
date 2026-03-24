@@ -1,38 +1,63 @@
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import CustomScrollbar from "@/components/CustomScrollbar";
-import GlobalAuthoritySection from "@/components/GlobalAuthoritySection";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
-import ProjectTilesSection from "@/components/ProjectTilesSection";
-import StrategicInquirySection from "@/components/StrategicInquirySection";
 import VideoPanelSection from "@/components/VideoPanelSection";
-import FooterSection from "@/components/FooterSection";
 import WebGLCanvas from "@/components/WebGLCanvas";
-import NextChapterTransition from "@/components/NextChapterTransition";
+import { getPillars } from "@/lib/api/pillars";
+import { breadcrumbJsonLd } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.",
+  alternates: { canonical: "/" },
+};
+
+const PillarsTilesSection = dynamic(
+  () => import("@/components/PillarTilesSection"),
+  { ssr: true },
+);
+const GlobalAuthoritySection = dynamic(
+  () => import("@/components/GlobalAuthoritySection"),
+  { ssr: true },
+);
+const StrategicInquirySection = dynamic(
+  () => import("@/components/StrategicInquirySection"),
+  { ssr: true },
+);
+const FooterSection = dynamic(() => import("@/components/FooterSection"), {
+  ssr: true,
+});
+const NextChapterTransition = dynamic(
+  () => import("@/components/NextChapterTransition"),
+  { ssr: true },
+);
+
+export default async function Home() {
+  const pillars = await getPillars();
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([{ name: "Home", url: "/" }])}
+      />
       <WebGLCanvas />
-      {/* Loading counter overlay */}
       <LoadingOverlay />
 
-      {/* Main scrollable content */}
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
         <VideoPanelSection />
-        <ProjectTilesSection />
+        <PillarsTilesSection pillars={pillars} />
         <GlobalAuthoritySection />
-        {/* <AboutSection /> */}
         <StrategicInquirySection />
         <FooterSection />
         <NextChapterTransition nextTitle="ABOUT US" nextHref="/about" />
       </div>
 
-      {/* Custom scrollbar */}
       <CustomScrollbar />
-
-      {/* Paging / scroll animation logic */}
       <PagingScript />
     </>
   );

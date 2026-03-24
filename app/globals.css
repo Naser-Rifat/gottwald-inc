@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@plugin "@tailwindcss/typography";
 @theme {
   --color-base: #000000;
   --color-text-primary: #1c1d21;
@@ -14,7 +14,7 @@
 
   --spacing-gutter: 5vw;
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-serif: "Playfair Display", ui-serif, Georgia, "Times New Roman", Times, serif;
 }
 
 /* ===== Base Reset & Global Styles ===== */
@@ -123,49 +123,6 @@ a.button:hover {
   #video-panel-end-parent {
     height: 70vh;
     aspect-ratio: unset;
-  }
-}
-
-/* ===== Animated Headings ===== */
-
-#h1-topline.animate {
-  visibility: visible !important;
-  animation: animate-topline 0.8s forwards;
-}
-
-#h1-tagline.animate {
-  visibility: visible !important;
-  animation: animate-tagline 0.8s forwards;
-}
-
-@keyframes animate-topline {
-  0% {
-    transform: translateY(var(--h1-font-size));
-  }
-
-  40% {
-    transform: translateY(0);
-    transform: translateX(0);
-    margin-left: 0;
-  }
-
-  100% {
-    transform: translateX(-50%);
-    margin-left: 50%;
-  }
-}
-
-@keyframes animate-tagline {
-  0% {
-    transform: translateY(calc(-1 * var(--h1-font-size)));
-  }
-
-  20% {
-    transform: translateY(calc(-1 * var(--h1-font-size)));
-  }
-
-  100% {
-    transform: translateY(0);
   }
 }
 

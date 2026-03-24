@@ -5,7 +5,7 @@ import CosmicDust from "./cosmicDust";
 import { initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
 import PhysicsSandbox from "./physicsSandbox";
-import ProjectTiles from "./projectTiles/projectTiles";
+import ProjectTiles from "./pillarTiles/pillarTiles";
 import { updateCameraIntrisics } from "./utils/utils";
 import VideoPanelShader from "./videoPanelShader";
 

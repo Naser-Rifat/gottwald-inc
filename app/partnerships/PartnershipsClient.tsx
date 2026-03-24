@@ -20,7 +20,7 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function PartnershipPage() {
+export default function PartnershipsClient() {
   const pageRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const accordionWrapperRef = useRef<HTMLDivElement>(null);

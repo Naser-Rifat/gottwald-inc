@@ -1,0 +1,306 @@
+import type { Pillar } from "./types/pillars";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gottwald.world";
+const SITE_NAME = "GOTT WALD Holding LLC";
+const DEFAULT_DESCRIPTION =
+  "Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets — turning complexity into clarity, and decisions into measurable impact.";
+// Must exist in `public/` for reliable social previews.
+// Choose a wide banner image already present in the repo.
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/about_horizontal_2.png`;
+
+export { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE };
+
+// ---------------------------------------------------------------------------
+// Organization — deep entity graph for AI knowledge extraction
+// ---------------------------------------------------------------------------
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    legalName: "GOTT WALD Holding LLC",
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/logo.png`,
+      width: 512,
+      height: 512,
+    },
+    image: DEFAULT_OG_IMAGE,
+    description: DEFAULT_DESCRIPTION,
+    foundingDate: "2024",
+    foundingLocation: {
+      "@type": "Place",
+      name: "Tbilisi, Georgia",
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Tbilisi",
+      addressCountry: "GE",
+    },
+    areaServed: [
+      { "@type": "Country", name: "Georgia" },
+      // Broad coverage: Europe (keeps claims accurate without listing every country)
+      { "@type": "Continent", name: "Europe" },
+      { "@type": "GeoCircle", geoMidpoint: { "@type": "GeoCoordinates", latitude: 41.7151, longitude: 44.8271 }, geoRadius: "5000 km" },
+    ],
+    knowsAbout: [
+      "Strategic Consulting",
+      "IT Solutions for SMEs",
+      "Business Relocation to Georgia",
+      "Executive Coaching & Mentoring",
+      "Marketing & Communication Infrastructure",
+      "Digital Transformation",
+      "Standards-Led Governance",
+      "Holding Company Operations",
+      "AI-Readable Web Architecture",
+      "Frequency & Wellness Technology",
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "GOTT WALD Structural Pillars",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "IT Solutions 2030", description: "Homepage transformation & future-ready digital infrastructure for SMEs" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "SolutionFinder & Management", description: "Structured analysis and systemic resolution of complex business situations" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Consulting", description: "Strategy architecture, organizational design, and scalable systems" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Coaching & Mentoring", description: "Executive coaching, identity & decision strength, holistic performance" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Marketing & Communication", description: "Executive visibility, engineered trust, predictable demand infrastructure" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Relocation & Strategic Deployment", description: "Corporate/holding setup, executive residency, and operational continuity in Georgia" } },
+      ],
+    },
+    sameAs: [],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// WebSite — with SearchAction for AI query understanding
+// ---------------------------------------------------------------------------
+export function webSiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: DEFAULT_DESCRIPTION,
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "en-US",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// BreadcrumbList — helps AI models understand page hierarchy
+// ---------------------------------------------------------------------------
+export function breadcrumbJsonLd(
+  items: { name: string; url: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+    })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Service — per-pillar rich schema for AI citation
+// ---------------------------------------------------------------------------
+export function pillarServiceJsonLd(pillar: Pillar) {
+  const imageUrl = pillar.image
+    ? pillar.image.startsWith("http")
+      ? pillar.image
+      : `${SITE_URL}${pillar.image}`
+    : "";
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${SITE_URL}/pillars/${pillar.slug}#service`,
+    name: pillar.title,
+    description: pillar.description,
+    url: `${SITE_URL}/pillars/${pillar.slug}`,
+    provider: { "@id": `${SITE_URL}/#organization` },
+    areaServed: [
+      { "@type": "Country", name: "Georgia" },
+      { "@type": "Continent", name: "Europe" },
+    ],
+    serviceType: pillar.tags.join(", "),
+    hasOfferCatalog: pillar.services.length > 0
+      ? {
+          "@type": "OfferCatalog",
+          name: `${pillar.title} Services`,
+          itemListElement: pillar.services.map((s) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: s },
+          })),
+        }
+      : undefined,
+    ...(imageUrl ? { image: imageUrl } : {}),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// FAQPage — for citation-worthy Q&A content
+// ---------------------------------------------------------------------------
+export function faqJsonLd(
+  faqs: { question: string; answer: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// AboutPage — explicit page type for AI understanding
+// ---------------------------------------------------------------------------
+export function aboutPageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${SITE_URL}/about#webpage`,
+    name: "About GOTT WALD Holding",
+    description:
+      "GOTT WALD is a unified architecture — modular components, one standard, one language of delivery. We turn complexity into clarity and decisions into measurable impact.",
+    url: `${SITE_URL}/about`,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    about: { "@id": `${SITE_URL}/#organization` },
+    mainEntity: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// ContactPage — for AI to surface contact info
+// ---------------------------------------------------------------------------
+export function contactPageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${SITE_URL}/contact#webpage`,
+    name: "Contact GOTT WALD Holding",
+    description:
+      "Strategic inquiries, partnership requests, and general communication with GOTT WALD Holding LLC.",
+    url: `${SITE_URL}/contact`,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    mainEntity: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "strategic inquiries",
+        email: "info@gottwald.world",
+        availableLanguage: ["English", "German"],
+      },
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// CollectionPage — for Our Work / Pillars listing
+// ---------------------------------------------------------------------------
+export function collectionPageJsonLd(
+  pillars: { title: string; slug: string; description: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${SITE_URL}/our-work#webpage`,
+    name: "All Pillars — GOTT WALD Services",
+    description:
+      "Full registry of GOTT WALD structural pillars — modular components designed to stand alone and engineered to connect into one integrated operating system.",
+    url: `${SITE_URL}/our-work`,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: pillars.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: p.title,
+        url: `${SITE_URL}/pillars/${p.slug}`,
+        description: p.description,
+      })),
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// JobPosting helper — for careers page
+// ---------------------------------------------------------------------------
+export function jobPostingJsonLd(jobs: {
+  title: string;
+  description: string;
+  pillar: string;
+}[]) {
+  return jobs.map((job) => ({
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: job.title,
+    description: job.description,
+    hiringOrganization: { "@id": `${SITE_URL}/#organization` },
+    jobLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Tbilisi",
+        addressCountry: "GE",
+      },
+    },
+    employmentType: "FULL_TIME",
+    industry: job.pillar,
+    datePosted: new Date().toISOString().split("T")[0],
+    validThrough: "2026-12-31",
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Speakable — marks content sections as speakable for voice assistants
+// ---------------------------------------------------------------------------
+export function speakableJsonLd(
+  pageUrl: string,
+  cssSelectors: string[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: pageUrl.startsWith("http") ? pageUrl : `${SITE_URL}${pageUrl}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: cssSelectors,
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// HowTo — for process-oriented content (partnerships, relocation)
+// ---------------------------------------------------------------------------
+export function howToJsonLd(howTo: {
+  name: string;
+  description: string;
+  steps: { name: string; text: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: howTo.name,
+    description: howTo.description,
+    step: howTo.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  };
+}

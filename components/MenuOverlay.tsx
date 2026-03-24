@@ -28,7 +28,7 @@ const MENU_ITEMS = [
   },
   {
     title: "PARTNERSHIPS",
-    href: "/partnership",
+    href: "/partnerships",
     motto: "Values-first selection. Confidential by default.",
   },
   {
