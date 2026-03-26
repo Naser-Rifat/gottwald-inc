@@ -1,4 +1,4 @@
-import { MOCK_PROJECTS } from './../mock/projects.mock';
+// import { MOCK_PROJECTS } from './../mock/projects.mock';
 import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80";
@@ -141,7 +141,7 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
   const apiKey = process.env.API_READ_KEY;
   if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
+  const res = await fetch(`${API_ORIGIN}${endpoint}`, {
     headers,
     next: { revalidate: 60 },
   });
@@ -150,10 +150,10 @@ async function apiFetch<T>(endpoint: string): Promise<T> {
 }
 
 export async function getPillars(): Promise<Pillar[]> {
-  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  if (dataSource === "mock") {
-    return MOCK_PROJECTS;
-  }
+  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  // if (dataSource === "mock") {
+  //   return MOCK_PROJECTS;
+  // }
 
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
   const items = res.data ?? res.results ?? [];
@@ -161,10 +161,10 @@ export async function getPillars(): Promise<Pillar[]> {
 }
 
 export async function getPillar(slug: string): Promise<Pillar | undefined> {
-  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  if (dataSource === "mock") {
-    return MOCK_PROJECTS.find((p) => p.slug === slug);
-  }
+  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  // if (dataSource === "mock") {
+  //   return MOCK_PROJECTS.find((p) => p.slug === slug);
+  // }
 
   try {
     const res = await apiFetch<{ data?: ApiPillar } | ApiPillar>(
@@ -190,10 +190,10 @@ export async function getNextPillar(slug: string): Promise<Pillar> {
 }
 
 export async function getAllPillarSlugs(): Promise<string[]> {
-  const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  if (dataSource === "mock") {
-    return MOCK_PROJECTS.map((p) => p.slug);
-  }
+  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
+  // if (dataSource === "mock") {
+  //   return MOCK_PROJECTS.map((p) => p.slug);
+  // }
 
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
   const items = res.data ?? res.results ?? [];
