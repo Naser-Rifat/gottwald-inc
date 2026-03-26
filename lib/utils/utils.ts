@@ -182,7 +182,30 @@ export function createVideoTexture(src: string): THREE.VideoTexture {
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
-  video.play();
+  video.preload = "metadata"; // Don't buffer the full 31MB — just header
+
+  // Defer play until the video section is actually in view
+  const startAnchor = document.getElementById("video-panel-start");
+  if (startAnchor) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "200px 0px" }, // Start loading slightly before in view
+    );
+    observer.observe(startAnchor);
+  } else {
+    // Fallback: play after idle
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(() => video.play().catch(() => {}));
+    } else {
+      setTimeout(() => video.play().catch(() => {}), 2000);
+    }
+  }
 
   const texture = new THREE.VideoTexture(video);
   texture.colorSpace = THREE.SRGBColorSpace;

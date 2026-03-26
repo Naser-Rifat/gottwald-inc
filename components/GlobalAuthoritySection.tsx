@@ -85,6 +85,23 @@ export default function GlobalAuthoritySection() {
       }
     });
 
+    // Pause CSS animations (animate-ping) when section is off-screen
+    const el = containerRef.current;
+    if (el) {
+      const pingObserver = new IntersectionObserver(
+        ([entry]) => {
+          const pings = el.querySelectorAll('.animate-ping');
+          pings.forEach((p) => {
+            (p as HTMLElement).style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+          });
+        },
+        { threshold: 0.01 },
+      );
+      pingObserver.observe(el);
+      // Cleanup observer on unmount via ctx.revert's scope — or inline:
+      return () => { ctx.revert(); pingObserver.disconnect(); };
+    }
+
     return () => ctx.revert();
   }, []);
 
@@ -141,7 +158,7 @@ export default function GlobalAuthoritySection() {
             alt="Global Network Map"
             fill
             className="object-contain opacity-50"
-            priority
+            priority={false}
           />
 
           {/* Radar Scanning Line */}

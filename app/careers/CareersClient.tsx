@@ -731,13 +731,13 @@ export default function CareersClient() {
                 <button
                   type="button"
                   data-magnetic
-                  className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 overflow-hidden w-max mt-8"
+                  className="group relative flex items-center gap-4 bg-white px-10 py-5 overflow-hidden w-max mt-8"
                   onClick={() => alert("Thank you. If there’s a fit, we’ll reach out with next steps.")}
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-md group-hover:text-white transition-colors duration-300">
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-md text-white mix-blend-difference pointer-events-none">
                     Submit Application
                   </span>
-                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
+                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>
                 <span className="text-md text-white/70 tracking-widest uppercase text-center sm:text-left">
                   Thank you. If there’s a fit, we’ll reach out with next steps. <br />

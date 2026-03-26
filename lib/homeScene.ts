@@ -50,17 +50,16 @@ export default class HomeScene {
     if (!canvas) return;
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: false,
       canvas,
       stencil: true,
       alpha: true,
+      powerPreference: "high-performance",
     });
     this.renderer.setClearColor(0x000000, 0);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setAnimationLoop(this.animate);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     this.camera = new THREE.OrthographicCamera();
     this.camera.near = 0;
@@ -73,10 +72,19 @@ export default class HomeScene {
     this.scene = new THREE.Scene();
     // this.scene.background = new THREE.Color(0x000000);
 
-    new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      this.scene.environment = texture;
-    });
+    // Defer HDR loading so it doesn't block first paint
+    const loadHDR = () => {
+      if (this.isDisposed) return;
+      new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        this.scene.environment = texture;
+      });
+    };
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(loadHDR);
+    } else {
+      setTimeout(loadHDR, 200);
+    }
   };
 
   initScene = () => {

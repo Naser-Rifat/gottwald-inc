@@ -107,40 +107,56 @@ export default function PhysicsSandboxSection() {
       }
 
       // Continuous animations — orb rotation + scroll arrow bob
+      // Store in array so we can pause when off-screen
+      const infiniteTweens: gsap.core.Tween[] = [];
+
       if (orb) {
-        gsap.to(orb.querySelector(".orb-ring-1"), {
-          rotation: 360,
-          duration: 20,
-          ease: "none",
-          repeat: -1,
-        });
-        gsap.to(orb.querySelector(".orb-ring-2"), {
-          rotation: -360,
-          duration: 15,
-          ease: "none",
-          repeat: -1,
-        });
-        gsap.to(orb.querySelector(".orb-glow"), {
-          scale: 1.3,
-          opacity: 0.4,
-          duration: 2.5,
-          ease: "power1.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
+        infiniteTweens.push(
+          gsap.to(orb.querySelector(".orb-ring-1"), {
+            rotation: 360,
+            duration: 20,
+            ease: "none",
+            repeat: -1,
+          }),
+          gsap.to(orb.querySelector(".orb-ring-2"), {
+            rotation: -360,
+            duration: 15,
+            ease: "none",
+            repeat: -1,
+          }),
+          gsap.to(orb.querySelector(".orb-glow"), {
+            scale: 1.3,
+            opacity: 0.4,
+            duration: 2.5,
+            ease: "power1.inOut",
+            yoyo: true,
+            repeat: -1,
+          })
+        );
       }
 
       const arrow = hero.querySelector(".hero-scroll svg");
       if (arrow) {
-        gsap.to(arrow, {
-          y: 4,
-          x: 4,
-          duration: 1.2,
-          ease: "power1.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
+        infiniteTweens.push(
+          gsap.to(arrow, {
+            y: 4,
+            x: 4,
+            duration: 1.2,
+            ease: "power1.inOut",
+            yoyo: true,
+            repeat: -1,
+          })
+        );
       }
+
+      // Pause infinite tweens when hero scrolls off-screen
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          infiniteTweens.forEach(t => entry.isIntersecting ? t.resume() : t.pause());
+        },
+        { threshold: 0.01 },
+      );
+      observer.observe(hero);
 
       // Parallax: title moves up slightly faster than section scroll
       gsap.to(hero.querySelector(".hero-title-block"), {
@@ -187,21 +203,21 @@ export default function PhysicsSandboxSection() {
   }, []);
 
   return (
-    <section
-      ref={heroRef}
-      aria-label="GOTT WALD Hero — Turning Complexity Into Clarity"
-      className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[10vh] px-gutter"
-      style={{ perspective: "1000px" }}
-    >
-      {/* Header */}
+    <>
+      {/* Header — must be outside perspective section to maintain fixed positioning */}
       <div
         ref={headerRef}
-        className="pointer-events-auto z-20 w-full relative opacity-0"
+        className="pointer-events-auto z-[100] w-full fixed top-0 left-0 px-gutter opacity-0"
       >
         <Header />
       </div>
 
-      {/* Hero content */}
+      <section
+        ref={heroRef}
+        aria-label="GOTT WALD Hero — Turning Complexity Into Clarity"
+        className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[10vh] px-gutter"
+        style={{ perspective: "1000px" }}
+      >
       <div className="flex-1 flex items-end z-10 relative w-full mx-auto pointer-events-auto">
         <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12 lg:gap-8">
           {/* Left: Label + Title */}
@@ -286,5 +302,6 @@ export default function PhysicsSandboxSection() {
         </div>
       </div>
     </section>
+    </>
   );
 }

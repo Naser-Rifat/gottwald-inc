@@ -54,21 +54,19 @@ export default function AboutClient() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Initial Hero Fade In — opacity+y only, NO blur (blur forces GPU repaint)
+      // 1. Initial Hero Fade In — opacity+y only, GPU-composited
       gsap.fromTo(
         ".hero-manifest-text",
         { opacity: 0, y: 24 },
         { 
           opacity: 1, 
           y: 0, 
-          duration: 2, 
-          ease: "power2.out", 
-          stagger: 0.5, 
-          delay: 0.4, 
+          duration: 1.8, 
+          ease: "expo.out", 
+          stagger: 0.4, 
+          delay: 0.3, 
+          force3D: true,
           clearProps: "transform",
-          onComplete: () => {
-            // Re-apply parallax logic if needed, or it works automatically if scrub is tied to trigger
-          }
         }
       );
 
@@ -105,7 +103,7 @@ export default function AboutClient() {
 
       // 1.5 Hero Image Breathing — opacity shift only, NO scale (scale creates new compositor layer)
       gsap.to(".hero-bg-texture", {
-        opacity: 0.45,
+        opacity: 0.65,
         duration: 10,
         repeat: -1,
         yoyo: true,
@@ -122,32 +120,99 @@ export default function AboutClient() {
         stagger: { each: 3, from: "random" }
       });
 
-      // 3. Reveal Elements on Scroll — opacity+y only, NO blur
+      // 3. Reveal Elements on Scroll — cinematic fade+rise, fire-once
       const revealElements = gsap.utils.toArray(".reveal-text") as HTMLElement[];
       revealElements.forEach((el) => {
         gsap.fromTo(
           el,
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 50 },
           {
             opacity: 1,
             y: 0,
-            duration: 1.2,
-            ease: "power2.out",
+            duration: 1.4,
+            ease: "expo.out",
+            force3D: true,
             clearProps: "transform",
             scrollTrigger: {
               trigger: el,
               start: "top 88%",
-              end: "top 65%",
-              scrub: false, // fire once, not scrub — scrub on every frame is expensive
               toggleActions: "play none none none",
             },
           }
         );
       });
 
+      // 3.5 "What we do differently" Custom Staggered Animation
+      const staggerContainer = document.querySelector(".stagger-container");
+      if (staggerContainer) {
+        const staggerLines = gsap.utils.toArray(".stagger-line");
+        const scaleLine = document.querySelector(".stagger-scaleX");
+
+        if (scaleLine) {
+          gsap.fromTo(scaleLine,
+            { scaleX: 0 },
+            {
+              scaleX: 1,
+              duration: 1.4,
+              ease: "expo.out",
+              force3D: true,
+              scrollTrigger: { trigger: staggerContainer, start: "top 80%" }
+            }
+          );
+        }
+
+        gsap.fromTo(staggerLines,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.4,
+            stagger: 0.12,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: staggerContainer,
+              start: "top 80%",
+            }
+          }
+        );
+      }
+
+      // 3.6 Pillar Rows — Staggered reveal with number counter
+      const pillarRows = gsap.utils.toArray(".pillar-row") as HTMLElement[];
+      pillarRows.forEach((row, i) => {
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: row, start: "top 85%" }
+        });
+
+        tl.fromTo(row,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            delay: i * 0.05,
+          }
+        );
+
+        // Animate the number from 0 opacity to visible
+        const numEl = row.querySelector("span");
+        if (numEl) {
+          tl.fromTo(numEl,
+            { opacity: 0, x: -10 },
+            { opacity: 1, x: 0, duration: 0.8, ease: "power2.out", force3D: true },
+            "-=0.8"
+          );
+        }
+      });
+
       // 4. Axis Background Image Reveal — opacity only, NO blur filter animation
       gsap.to(".axis-bg", {
-        opacity: 0.55,
+        opacity: 0.70,
         ease: "power1.inOut",
         scrollTrigger: {
           trigger: ".axis-trigger",
@@ -161,25 +226,85 @@ export default function AboutClient() {
       const horizontalContainer = document.querySelector(".cases-container") as HTMLElement;
       if (horizontalContainer) {
         gsap.to(horizontalContainer, {
-          xPercent: -100 + (100 / 5), // Scroll through 5 cards
+          xPercent: -100 + (100 / 5),
           ease: "none",
+          force3D: true,
           scrollTrigger: {
             trigger: ".cases-wrapper",
             start: "top top",
             end: "+=3000",
             pin: true,
+            scrub: 0.8,
+            anticipatePin: 1,
+          }
+        });
+      }
+
+      // 6. Ecosystem Items — GSAP-powered hover microinteractions
+      const ecoItems = gsap.utils.toArray(".eco-item") as HTMLElement[];
+      ecoItems.forEach(item => {
+        const line = item.querySelector(".eco-line");
+        const title = item.querySelector("h3");
+
+        item.addEventListener("mouseenter", () => {
+          gsap.to(line, { width: "100%", duration: 0.6, ease: "expo.out" });
+          if (title) gsap.to(title, { x: 8, duration: 0.4, ease: "power2.out", force3D: true });
+        });
+        item.addEventListener("mouseleave", () => {
+          gsap.to(line, { width: "0%", duration: 0.5, ease: "power2.inOut" });
+          if (title) gsap.to(title, { x: 0, duration: 0.3, ease: "power2.out", force3D: true });
+        });
+      });
+
+      // 7. Patron Section — floating orb parallax + content reveal
+      const patronOrb = document.querySelector(".patron-orb");
+      if (patronOrb) {
+        gsap.to(patronOrb, {
+          y: -60,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: ".patron-section",
+            start: "top bottom",
+            end: "bottom top",
             scrub: 1,
           }
         });
       }
 
-      // 5. Hover Effects for Ecosystem
-      const ecoItems = gsap.utils.toArray(".eco-item") as HTMLElement[];
-      ecoItems.forEach(item => {
-        const line = item.querySelector(".eco-line");
-        item.addEventListener("mouseenter", () => gsap.to(line, { width: "100%", duration: 0.5, ease: "power2.out" }));
-        item.addEventListener("mouseleave", () => gsap.to(line, { width: "0%", duration: 0.5, ease: "power2.out" }));
-      });
+      // 8. CTA Section — cinematic entrance
+      const ctaSection = document.querySelector(".cta-section");
+      if (ctaSection) {
+        const ctaElements = ctaSection.querySelectorAll(".cta-reveal");
+        gsap.fromTo(ctaElements,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.4,
+            stagger: 0.2,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: ctaSection,
+              start: "top 75%",
+            }
+          }
+        );
+        
+        // Pulsing glow on the CTA button
+        const ctaBtn = ctaSection.querySelector(".cta-btn-glow");
+        if (ctaBtn) {
+          gsap.to(ctaBtn, {
+            boxShadow: "0 0 80px rgba(212,175,55,0.3)",
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        }
+      }
       
     }, pageRef);
 
@@ -196,9 +321,9 @@ export default function AboutClient() {
         {/* HERO SECTION */}
         <section className="hero-section min-h-[100vh] w-full flex flex-col justify-center relative bg-[#030303] overflow-hidden px-gutter pt-32 pb-[15vh]">
           {/* Cinematic Background Texture — JPG for smaller GPU texture, no mix-blend-mode */}
-          <div className="hero-bg-texture absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ willChange: 'opacity' }}>
+          <div className="hero-bg-texture absolute inset-0 z-0 opacity-40 pointer-events-none" style={{ willChange: 'opacity' }}>
             <div className="absolute inset-0 bg-[url('/images/about_hero_abstract.jpg')] bg-cover bg-center bg-no-repeat" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/30 via-[#030303]/70 to-[#030303]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030303] from-0% via-transparent via-40% to-[#030303] to-95%" />
           </div>
 
           {/* Ambient Generative Light — contained layer, no mix-blend-mode to avoid compositing */}
@@ -226,10 +351,10 @@ export default function AboutClient() {
           </div>
 
           {/* Premium Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-0 scroll-indicator hidden sm:flex">
-            <span className="text-[9px] tracking-[0.4em] uppercase text-gold/50 font-bold">Scroll to tune in</span>
-            <div className="w-[1px] h-16 bg-white/10 relative overflow-hidden">
-              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-full bg-gold -translate-y-[101%]" />
+          <div className="absolute bottom-[18vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-0 scroll-indicator hidden sm:flex z-20">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-bold drop-shadow-md">Scroll to tune in</span>
+            <div className="w-px h-16 bg-white/20 relative overflow-hidden">
+              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-full bg-gold -translate-y-[101%] drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
             </div>
           </div>
         </section>
@@ -258,8 +383,8 @@ export default function AboutClient() {
         <section className="py-[25vh] px-gutter relative bg-[#030303] overflow-hidden">
           {/* Cinematic Axis Background — JPG, opacity-only reveal, no blur filter, no mix-blend-mode */}
           <div className="axis-bg absolute inset-0 z-0 opacity-0 pointer-events-none" style={{ willChange: 'opacity' }}>
-            <div className="absolute inset-0 bg-[url('/images/about_axis_nature.jpg')] bg-cover bg-center bg-no-repeat opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#030303] via-[#030303]/50 to-[#030303]" />
+            <div className="absolute inset-0 bg-[url('/images/about_axis_nature.jpg')] bg-cover bg-center bg-no-repeat" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030303] from-0% via-transparent via-50% to-[#030303] to-100%" />
           </div>
 
           <div className="max-w-4xl mx-auto text-center space-y-32 relative z-10">
@@ -280,7 +405,7 @@ export default function AboutClient() {
             </div>
 
             <div className="reveal-text space-y-8 max-w-3xl mx-auto pt-16 border-t border-white/5">
-              <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-4">The difference</p>
+              <p className="text-sm tracking-[0.3em] uppercase text-gold/90 font-bold mb-4">The difference</p>
               <h3 className="text-4xl md:text-6xl font-light text-white">We don&apos;t optimize parts.</h3>
               <p className="text-2xl md:text-4xl font-serif italic text-white/60">
                 We redesign the system — until &quot;solved&quot; is felt in real life.
@@ -322,26 +447,24 @@ export default function AboutClient() {
         {/* 5 PILLARS (WHAT WE DO DIFFERENTLY) */}
         <section className="py-[20vh] px-gutter relative bg-[#030303]">
           <div className="max-w-5xl mx-auto">
-            <div className="reveal-text mb-32 max-w-5xl">
-              <div className="flex items-center gap-4 mb-10">
-                <span className="w-8 md:w-16 h-px bg-gold/40" />
-                <p className="text-[12px] md:text-xs tracking-[0.4em] uppercase text-gold/60 font-bold">What we do differently</p>
+            <div className="mb-32 max-w-5xl stagger-container">
+              <div className="flex items-center gap-6 mb-12">
+                <span className="w-16 h-[2px] bg-gold/50 origin-left stagger-scaleX" />
+                <p className="text-[12px] tracking-[0.3em] uppercase text-gold/70 font-bold stagger-line">What we do differently</p>
               </div>
 
-              <h3 className="text-[clamp(2.5rem,5vw,5.5rem)] font-light leading-[1.1] tracking-tight text-white/80">
-                The world is full of <span className="text-white">“optimizations.”</span>
-                <br />
-                <span className="pl-4 md:pl-16 text-white/60">
+              <h3 className="text-[clamp(3rem,5vw,6rem)] font-light leading-[1.05] tracking-tight text-white/80 space-y-1">
+                <div className="overflow-hidden"><span className="block stagger-line">The world is full of</span></div>
+                <div className="overflow-hidden"><span className="block md:pl-4 text-white stagger-line">“optimizations.”</span></div>
+                <div className="overflow-hidden"><span className="block md:pl-8 text-white/60 stagger-line">
                   We build <span className="font-serif italic text-gold font-normal">architecture</span> —
-                </span>
-                <br />
-                <span className="pl-12 md:pl-32 text-white/60 text-[clamp(2rem,4vw,4.5rem)]">
+                </span></div>
+                <div className="overflow-hidden"><span className="block md:pl-16 text-white/70 text-[clamp(2rem,3.5vw,4rem)] py-2 stagger-line">
                   so growth doesn&apos;t mean “more pressure,”
-                </span>
-                <br />
-                <span className="text-white font-normal drop-shadow-2xl">
+                </span></div>
+                <div className="overflow-hidden"><span className="block font-medium text-white drop-shadow-2xl stagger-line pt-2">
                   but more clarity.
-                </span>
+                </span></div>
               </h3>
             </div>
 
@@ -373,13 +496,13 @@ export default function AboutClient() {
                   desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable."
                 }
               ].map((pillar, i) => (
-                <div key={i} className="reveal-text flex flex-col md:flex-row gap-8 md:gap-16 border-t border-white/5 pt-16">
+                <div key={i} className="pillar-row flex flex-col md:flex-row gap-6 md:gap-16 border-t border-white/5 pt-16 group">
                   <div className="md:w-1/4">
-                    <span className="text-5xl font-black text-white/30">{pillar.num}</span>
+                    <span className="text-[64px] md:text-[80px] font-black text-white/20 group-hover:text-gold/30 transition-colors duration-700 leading-none">{pillar.num}</span>
                   </div>
-                  <div className="md:w-3/4 space-y-6">
-                    <h4 className="text-3xl md:text-4xl font-light text-white">{pillar.title}</h4>
-                    <p className="text-xl md:text-2xl text-white/50 font-light leading-relaxed">{pillar.desc}</p>
+                  <div className="md:w-3/4 space-y-6 pt-2">
+                    <h4 className="text-[28px] md:text-[34px] font-light text-white">{pillar.title}</h4>
+                    <p className="text-[18px] md:text-[20px] text-white/40 font-light leading-relaxed max-w-3xl">{pillar.desc}</p>
                   </div>
                 </div>
               ))}
@@ -542,11 +665,11 @@ export default function AboutClient() {
         </section>
 
         {/* THE PATRON OF GOTT WALD */}
-        <section className="py-[30vh] px-gutter relative flex items-center justify-center bg-[#030303]">
+        <section className="patron-section py-[30vh] px-gutter relative flex items-center justify-center bg-[#030303]">
           {/* Breathing Orb */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
-            <div className="ambient-light w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-20 blur-[150px]"
-                 style={{ background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)" }} />
+            <div className="patron-orb ambient-light w-[80vw] h-[80vw] rounded-full opacity-20 blur-[150px]"
+                 style={{ background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)", willChange: 'transform' }} />
           </div>
 
           <div className="max-w-4xl mx-auto text-center relative z-10 space-y-24">
@@ -633,34 +756,40 @@ export default function AboutClient() {
         </section>
 
         {/* DECISION / CTA */}
-        <section className="h-screen px-gutter relative flex items-center justify-center bg-[#010101] overflow-hidden">
+        <section className="cta-section h-screen px-gutter relative flex items-center justify-center bg-[#010101] overflow-hidden">
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div className="reveal-text w-[60vw] h-[60vw] rounded-full mix-blend-screen opacity-10 blur-[100px]"
+            <div className="w-[60vw] h-[60vw] rounded-full opacity-10 blur-[100px]"
                  style={{ background: "radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 50%)" }} />
           </div>
 
-          <div className="reveal-text relative z-10 text-center flex flex-col items-center max-w-3xl space-y-16">
-            <div>
+          <div className="relative z-10 text-center flex flex-col items-center max-w-3xl space-y-16">
+            <div className="cta-reveal">
               <p className="text-lg tracking-[0.3em] uppercase text-white/90 font-bold mb-6">Who this is for</p>
               <h3 className="text-3xl md:text-5xl font-light leading-[1.3] text-white/90">
                 For CEOs, founders, executives, and SMEs who don&apos;t want to &quot;do more&quot; — but to do the right thing, the right way.
               </h3>
             </div>
             
-            <p className="text-2xl font-serif italic text-white/50">
+            <p className="cta-reveal text-2xl font-serif italic text-white/50">
               If you want it cleanly solved — we are.
             </p>
 
-            <div className="pt-16">
-              <button onClick={handleStrategicClick} className="group relative cursor-pointer px-12 py-6">
-                <div className="absolute inset-0 border border-white/10 rounded-full group-hover:border-gold/30 transition-colors duration-500" />
-                <span className="text-sm tracking-[0.4em] uppercase font-bold text-white/80 group-hover:text-gold transition-colors duration-700">
+            <div className="cta-reveal pt-16 pb-8">
+              <button 
+                onClick={handleStrategicClick} 
+                className="cta-btn-glow group relative cursor-pointer px-10 md:px-14 py-5 md:py-6 rounded-full overflow-hidden bg-[#0A0A0A] border border-gold/30 hover:border-gold transition-colors duration-700 shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:shadow-[0_0_60px_rgba(212,175,55,0.4)]"
+              >
+                {/* Sweep animation background */}
+                <div className="absolute inset-0 bg-gold translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                
+                {/* Button text */}
+                <span className="relative z-10 text-[11px] md:text-sm tracking-[0.3em] uppercase font-bold text-gold group-hover:text-[#030303] transition-colors duration-500">
                   Request a Strategic Conversation
                 </span>
               </button>
             </div>
             
-            <p className="text-base text-white/40 font-light mt-8">
+            <p className="cta-reveal text-base text-white/40 font-light mt-8">
               We don&apos;t create noise. We create structure.<br/>And structure creates inevitability.
             </p>
           </div>

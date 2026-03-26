@@ -204,15 +204,13 @@ select:focus {
 }
 
 /* ===== GPU Layer Promotion for GSAP-Animated Elements ===== */
-
-/* Elements that GSAP will transform get pre-promoted to GPU layers */
-.reveal-up,
-.hero-reveal,
-.hero-line {
-  will-change: transform, opacity;
-}
+/* NOTE: .reveal-up, .hero-reveal etc do NOT need will-change here.
+   GSAP's force3D:true handles GPU promotion during animation,
+   and clearProps:"transform" releases the layer after.
+   Persistent will-change wastes GPU memory. */
 
 /* Pinned sections need their own layer to prevent layout thrashing */
 .standards-scroll-wrapper {
   will-change: transform;
 }
+

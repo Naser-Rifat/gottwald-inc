@@ -5,6 +5,7 @@ import Link from "next/link";
 import MenuOverlay from "./MenuOverlay";
 import Image from "next/image";
 import logo from "@/public/logo.png";
+import AudioToggle from "./AudioToggle";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,7 +31,8 @@ export default function Header() {
 
         {/* ── Right Controls ── */}
         <div className="flex items-center gap-3">
-          {/* Apply Now — gold accent pill */}
+          {/* Audio Toggle — animated equalizer */}
+          <AudioToggle />
           <Link
             href="/partnerships#apply"
             className="hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium

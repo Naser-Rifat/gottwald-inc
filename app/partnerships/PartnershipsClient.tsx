@@ -89,7 +89,7 @@ export default function PartnershipsClient() {
         });
       }
 
-      // 2. Reveal Up animations
+      // 2. Reveal Up animations — fire-once, GPU-composited
       const reveals = gsap.utils.toArray(
         ".reveal-up",
         pageRef.current!,
@@ -97,17 +97,18 @@ export default function PartnershipsClient() {
       reveals.forEach((el) => {
         gsap.fromTo(
           el,
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 50 },
           {
             opacity: 1,
             y: 0,
-            duration: 1.2,
+            duration: 1.4,
             ease: "expo.out",
             force3D: true,
+            clearProps: "transform",
             scrollTrigger: {
               trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
+              start: "top 88%",
+              toggleActions: "play none none none",
             },
           },
         );
@@ -136,6 +137,137 @@ export default function PartnershipsClient() {
           },
         });
       }
+
+      // 4. Manifesto Lines — staggered cascade with counter fade
+      const manifestoLines = gsap.utils.toArray(".manifesto-line", pageRef.current!) as HTMLElement[];
+      manifestoLines.forEach((line, i) => {
+        gsap.fromTo(line,
+          { opacity: 0, x: -20 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            delay: i * 0.06,
+            scrollTrigger: {
+              trigger: line,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+
+      // 5. Archetype Cards — staggered grid entrance
+      const archCards = gsap.utils.toArray(".arch-card", pageRef.current!) as HTMLElement[];
+      gsap.fromTo(archCards,
+        { opacity: 0, y: 40, scale: 0.97 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "expo.out",
+          force3D: true,
+          clearProps: "transform",
+          scrollTrigger: {
+            trigger: archCards[0]?.parentElement,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // 6. Partner Benefits/Expectations — list item cascade
+      const benefitItems = gsap.utils.toArray(".benefit-item", pageRef.current!) as HTMLElement[];
+      benefitItems.forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0, x: -15 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            force3D: true,
+            clearProps: "transform",
+            delay: i * 0.05,
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+
+      // 7. Accordion sections — sequential slide-in
+      const accordionItems = gsap.utils.toArray(".accordion-item", pageRef.current!) as HTMLElement[];
+      accordionItems.forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            delay: i * 0.08,
+            scrollTrigger: {
+              trigger: item,
+              start: "top 88%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+
+      // 8. Selection Process Steps — cascade with scale
+      const processSteps = gsap.utils.toArray(".process-step", pageRef.current!) as HTMLElement[];
+      gsap.fromTo(processSteps,
+        { opacity: 0, y: 30, scale: 0.96 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.9,
+          stagger: 0.08,
+          ease: "expo.out",
+          force3D: true,
+          clearProps: "transform",
+          scrollTrigger: {
+            trigger: processSteps[0]?.parentElement,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // 9. Application Form — cinematic entrance
+      const formSection = document.querySelector(".form-section");
+      if (formSection) {
+        const formElements = formSection.querySelectorAll(".form-reveal");
+        gsap.fromTo(formElements,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "expo.out",
+            force3D: true,
+            clearProps: "transform",
+            scrollTrigger: {
+              trigger: formSection,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
     }, pageRef);
 
     return () => ctx.revert();
@@ -156,7 +288,7 @@ export default function PartnershipsClient() {
       </div>
 
       <main>
-        <section className="min-h-[100vh] lg:h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-0">
+        <section className="min-h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-40">
           <div
             className="absolute inset-0 pointer-events-none z-1"
             style={{
@@ -168,12 +300,12 @@ export default function PartnershipsClient() {
 
           <div
             ref={heroTextRef}
-            className="relative w-full px-gutter pb-32 md:pb-40 lg:pb-48 will-change-transform z-5 mt-auto"
+            className="relative w-full px-gutter pb-32 md:pb-40 lg:pb-48 xl:pb-56 will-change-transform z-5 mt-auto"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_340px] gap-12 lg:gap-16 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-10 lg:gap-16 xl:gap-24 items-end">
               {/* LEFT: Power-statement */}
-              <div className="hero-reveal">
-                <div className="flex items-center gap-3 mb-10">
+              <div className="hero-reveal w-full max-w-[850px]">
+                <div className="flex items-center gap-3 mb-8 lg:mb-10">
                   <span className="text-gold text-xs lg:text-sm font-bold tracking-[0.4em] uppercase">
                     02/
                   </span>
@@ -183,13 +315,14 @@ export default function PartnershipsClient() {
                   </span>
                 </div>
 
-                <h1 className="text-[clamp(1.8rem,9vw,9rem)] sm:text-[clamp(2.5rem,11vw,9rem)] md:text-[clamp(3rem,7.5vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
+                {/* Adjusted clamp sizes for better fit next to HUD on 1024-1280px screens */}
+                <h1 className="text-[clamp(1.8rem,9vw,9rem)] sm:text-[clamp(2.5rem,11vw,9rem)] lg:text-[clamp(2.5rem,5.5vw,9rem)] xl:text-[clamp(3.5rem,7vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
                   <span className="parallax-fast inline-block whitespace-nowrap">PARTNERSHIPS</span>
                   <span className="parallax-slow inline-block text-white/90">AT GOTT WALD</span>
                 </h1>
 
-                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.5rem,2.5vw,3rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-10 pl-0.5">
-                  <span className="w-8 md:w-16 h-0.5 bg-gold/50" />
+                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.2rem,2vw,2.5rem)] lg:text-[clamp(1.5rem,2.2vw,3rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-8 lg:mt-10 pl-0.5">
+                  <span className="w-8 md:w-16 h-0.5 bg-gold/50 flex-shrink-0" />
                   We don&apos;t buy vendors. We select PARTNERS.
                 </p>
 
@@ -303,7 +436,7 @@ export default function PartnershipsClient() {
               {MANIFESTO_LINES.map((line, i) => (
                 <div
                   key={i}
-                  className="reveal-up group flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/2 transition-colors duration-500 px-4 -mx-4"
+                  className="manifesto-line group flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/2 transition-colors duration-500 px-4 -mx-4"
                 >
                   <span className="text-gold font-mono text-xs shrink-0 w-8 text-right opacity-50 group-hover:opacity-100 transition-opacity">
                     {String(i + 1).padStart(2, "0")}
@@ -329,30 +462,37 @@ export default function PartnershipsClient() {
 
         {/* ── SECTION 4: PARTNERSHIP PRINCIPLE ── */}
         <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+          <div className="max-w-6xl mx-auto space-y-24">
+            {/* TOP: The Principle Statement */}
             <div className="reveal-up space-y-10">
               <div>
                 <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
                   The Principle
                 </p>
-                <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
-                  PARTNERSHIP
+                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
+                  PARTNERSHIP IS
                   <br />
-                  IS ALIGNMENT —<br />
-                  <span className="text-white/30">NOT PROCUREMENT.</span>
+                  ALIGNMENT
+                </h2>
+                <div className="w-16 h-1 bg-white mt-8 mb-6" />
+                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white/30">
+                  NOT
+                  <br />
+                  PROCUREMENT.
                 </h2>
               </div>
-              <p className="text-2xl text-white/60 leading-relaxed font-light">
+              <p className="text-2xl text-white/60 leading-relaxed font-light max-w-2xl">
                 We don&apos;t &quot;source services.&quot; We select partners who can
                 carry our foundation and protect our standard.
               </p>
             </div>
 
+            {/* BOTTOM: Partner Qualities */}
             <div className="reveal-up">
               <p className="text-sm uppercase tracking-[0.3em] text-white/40 mb-10 font-semibold">
                 We work with partners who:
               </p>
-              <div className="flex flex-col gap-0 border-t border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 border-t border-white/10">
                 {PARTNERSHIP_PRINCIPLES.map((principle, i) => (
                   <div
                     key={i}
@@ -387,25 +527,39 @@ export default function PartnershipsClient() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
                 <div
                   key={i}
-                  className="reveal-up group bg-[#060606] p-10 lg:p-12 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
+                  className="arch-card group relative bg-[#080808] p-10 lg:p-12 rounded-2xl border border-white/5 hover:border-gold/20 transition-all duration-700 flex flex-col gap-8 overflow-hidden"
                 >
-                  <span className="text-gold font-mono text-xs tracking-[0.4em]">
+                  {/* Hover ambient glow */}
+                  <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/5 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                  
+                  {/* Number */}
+                  <span className="text-gold/40 font-mono text-2xl font-bold tracking-[0.3em] group-hover:text-gold/80 transition-colors duration-500">
                     0{i + 1}
                   </span>
-                  <h3 className="text-2xl lg:text-3xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 leading-tight">
-                    {arch.title}
-                  </h3>
-                  <p className="text-white/40 text-lg font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
+
+                  {/* Title */}
+                  <div>
+                    <h3 className="text-2xl lg:text-3xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 leading-tight mb-3">
+                      {arch.title}
+                    </h3>
+                    {/* Animated gold underline */}
+                    <div className="w-full h-px bg-white/5 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-white/35 text-lg font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
                     {arch.desc}
                   </p>
                 </div>
               ))}
               {/* Filler cell to keep the last row even */}
-              <div className="hidden lg:block bg-[#060606] p-10 lg:p-12" />
+              <div className="hidden lg:block bg-[#080808] p-10 lg:p-12 rounded-2xl border border-white/5" />
             </div>
           </div>
         </section>
@@ -438,49 +592,47 @@ export default function PartnershipsClient() {
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col justify-between w-[88vw] md:w-[50vw] lg:w-[38vw] h-[55vh] lg:h-[62vh] border-r border-white/10 p-10 lg:p-16 overflow-hidden cursor-pointer shrink-0"
+                  className="relative group flex flex-col justify-between w-[80vw] md:w-[44vw] lg:w-[32vw] h-[45vh] lg:h-[50vh] border-r border-white/10 p-8 lg:p-12 overflow-hidden cursor-pointer shrink-0"
                 >
                   {/* Solid dark background */}
                   <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
 
                   {/* Image Background */}
-                  <div className="absolute inset-0 z-[1] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                  <div className="absolute inset-0 z-1 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
                       src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
                       alt={item.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 38vw"
+                      sizes="(max-width: 768px) 80vw, (max-width: 1200px) 44vw, 32vw"
                       quality={50}
                       loading="eager"
-                      className="object-cover opacity-25 scale-110 group-hover:scale-105 transition-transform duration-[2000ms] ease-out will-change-transform"
+                      className="object-cover opacity-25 scale-110 group-hover:scale-105 transition-transform duration-2000 ease-out will-change-transform"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30" />
                   </div>
 
                   {/* Ambient Hover Glow */}
-                  <div className="absolute inset-0 z-[2] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                  <div className="absolute inset-0 z-2 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
-                  {/* Top — index & label */}
-                  <div className="relative z-10 flex justify-between items-start">
-                    <span className="font-mono text-white/20 group-hover:text-gold text-sm lg:text-base tracking-[0.5em] uppercase font-bold transition-colors duration-700">
-                      / 0{i + 1}
-                    </span>
-                    <span className="font-serif italic text-2xl text-white/10 group-hover:text-white/40 transition-colors duration-700">
-                      Standard
+                  {/* Top — index + gold dot */}
+                  <div className="relative z-10 flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold/40 group-hover:bg-gold transition-colors duration-500" />
+                    <span className="font-mono text-white/30 group-hover:text-gold text-xs tracking-[0.4em] uppercase font-bold transition-colors duration-700">
+                      0{i + 1}
                     </span>
                   </div>
 
                   {/* Bottom — title + divider + desc */}
                   <div className="relative z-10">
-                    <h3 className="text-4xl lg:text-6xl font-black tracking-tighter mb-8 text-white/50 group-hover:text-white leading-[0.9] translate-y-6 group-hover:translate-y-0 transition-[color,transform] duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                    <h3 className="text-3xl lg:text-4xl font-black tracking-tighter mb-6 text-white/80 group-hover:text-white leading-[0.95] transition-colors duration-700">
                       {item.title}
                     </h3>
 
-                    <div className="w-full h-px bg-white/5 mb-8 relative overflow-hidden">
+                    <div className="w-full h-px bg-white/5 mb-5 relative overflow-hidden">
                       <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
                     </div>
 
-                    <p className="text-xl lg:text-2xl text-white/30 font-light leading-relaxed tracking-wide translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-hover:text-white/80 transition-[color,opacity,transform] duration-700 delay-100 ease-[cubic-bezier(0.19,1,0.22,1)] pr-8">
+                    <p className="text-base lg:text-lg text-white/50 font-light leading-relaxed group-hover:text-white/80 transition-colors duration-700 pr-4">
                       {item.desc}
                     </p>
                   </div>
@@ -510,7 +662,7 @@ export default function PartnershipsClient() {
                 {PARTNER_BENEFITS.map((benefit, i) => (
                   <li
                     key={i}
-                    className="flex gap-5 items-start text-white/70 text-xl"
+                    className="benefit-item flex gap-5 items-start text-white/70 text-xl"
                   >
                     <span className="mt-2.5 w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
                     {benefit}
@@ -538,7 +690,7 @@ export default function PartnershipsClient() {
                 {PARTNER_EXPECTATIONS.map((expectation, i) => (
                   <li
                     key={i}
-                    className="flex gap-5 items-start text-white/70 text-xl"
+                    className="benefit-item flex gap-5 items-start text-white/70 text-xl"
                   >
                     <span className="mt-2.5 w-1.5 h-1.5 bg-white/30 rounded-full shrink-0" />
                     {expectation}
@@ -572,7 +724,7 @@ export default function PartnershipsClient() {
                 return (
                   <div
                     key={domain.id}
-                    className="reveal-up border-b border-white/10 group"
+                    className="accordion-item border-b border-white/10 group"
                   >
                     <button
                       onClick={() => toggleAccordion(domain.id)}
@@ -643,7 +795,7 @@ export default function PartnershipsClient() {
               {PARTNERSHIP_SELECTION_STEPS.map((step, i) => (
                 <div
                   key={i}
-                  className="reveal-up group bg-[#060606] p-8 lg:p-10 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
+                  className="process-step group bg-[#060606] p-8 lg:p-10 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
                 >
                   <span className="text-gold font-mono text-3xl font-light tracking-tighter group-hover:text-white transition-colors duration-500">
                     {step.step}
@@ -665,10 +817,10 @@ export default function PartnershipsClient() {
         {/* ── SECTION 10: APPLICATION FORM ── */}
         <section
           id="apply"
-          className="px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10"
+          className="form-section px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10"
         >
-          <div className="max-w-4xl mx-auto reveal-up">
-            <div className="mb-20">
+          <div className="max-w-4xl mx-auto">
+            <div className="form-reveal mb-20">
               <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
                 Partnership Application
               </p>
@@ -688,7 +840,7 @@ export default function PartnershipsClient() {
             </div>
 
             <form
-              className="flex flex-col gap-12"
+              className="form-reveal flex flex-col gap-12"
               onSubmit={(e) => {
                 e.preventDefault();
                 alert("Application submitted. If there's a fit, we'll reach out with next steps.");
@@ -997,15 +1149,15 @@ export default function PartnershipsClient() {
               <button
                 type="submit"
                 data-magnetic
-                className="group relative flex items-center justify-center gap-4 bg-white text-black px-12 py-6 overflow-hidden w-full md:w-max mt-4"
+                className="group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4"
               >
-                <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm group-hover:text-white transition-colors duration-300 pointer-events-none">
+                <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm text-white mix-blend-difference pointer-events-none">
                   Submit Application
                 </span>
-                <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[40] transition-transform duration-500 ease-out origin-center pointer-events-none" />
+                <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
               </button>
 
-              <p className="text-white/30 text-sm font-light mt-2">
+              <p className="text-white/70 text-lg font-light mt-2">
                 After submission: Thank you. If there&apos;s a fit, we&apos;ll reach out with next steps.
               </p>
             </form>

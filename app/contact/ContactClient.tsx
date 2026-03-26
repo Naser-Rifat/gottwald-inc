@@ -294,12 +294,12 @@ export default function ContactClient() {
                 <button
                   type="submit"
                   data-magnetic
-                  className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 rounded-full overflow-hidden w-max"
+                  className="group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max"
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm group-hover:text-white transition-colors duration-300">
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-white mix-blend-difference pointer-events-none">
                     Submit Inquiry
                   </span>
-                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[30] transition-transform duration-500 ease-out origin-center" />
+                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>
               </div>
             </form>

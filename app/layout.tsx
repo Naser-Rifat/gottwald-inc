@@ -6,6 +6,7 @@ import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
 import PageLoader from "@/components/PageLoader";
+import AudioProvider from "@/components/AudioProvider";
 import {
   SITE_URL,
   SITE_NAME,
@@ -172,7 +173,9 @@ export default function RootLayout({
         <PageLoader />
         <GlobalCanvas />
         <NoiseOverlay />
-        {children}
+        <AudioProvider>
+          {children}
+        </AudioProvider>
       </body>
     </html>
   );
