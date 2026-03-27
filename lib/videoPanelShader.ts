@@ -7,19 +7,28 @@ import {
   createVideoTexture,
   elementToLocalRect,
   elementToWorldRect,
-  getElementPageCoords,
   pagePixelsToWorldUnit,
 } from "./utils/utils";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const PANEL_START_ID = "video-panel-start";
 const PANEL_END_ID = "video-panel-end";
 const PANEL_END_PARENT_ID = "video-panel-end-parent";
 const SIZE = 1;
 const SUBDIVISIONS = 16;
+
+/**
+ * Get the scroll position (in px) at which an element's TOP
+ * reaches the CENTER of the viewport — matching ScrollTrigger's
+ * "top center" semantics.
+ */
+function getScrollAtTopCenter(elementId: string): number {
+  const el = document.getElementById(elementId);
+  if (!el) return 0;
+  const rect = el.getBoundingClientRect();
+  // rect.top is viewport-relative; add scrollY to make it page-absolute,
+  // then subtract half the viewport height so the element top = vh/2.
+  return rect.top + window.scrollY - window.innerHeight * 0.5;
+}
 
 export default class VideoPanelShader extends THREE.Group {
   animateProgress = { value: 0 };
@@ -32,7 +41,10 @@ export default class VideoPanelShader extends THREE.Group {
   scrollPositionAnimEnd = 0;
   scrollPositionAnimFollowEnd = 0;
   followDistanceWorld = 0;
-  scrollTriggerContext!: gsap.Context;
+
+  // ResizeObserver watches for layout shifts that would invalidate
+  // our stored pixel boundaries (e.g. fonts load, images resize).
+  private layoutObserver?: ResizeObserver;
 
   constructor(camera: THREE.OrthographicCamera) {
     super();
@@ -42,9 +54,7 @@ export default class VideoPanelShader extends THREE.Group {
     const startWorldRect = elementToWorldRect(PANEL_START_ID, camera);
     this.position.copy(startWorldRect.position);
 
-    const videoTexture = createVideoTexture(
-      "/assets/about-gott-wald.webm",
-    );
+    const videoTexture = createVideoTexture("/assets/about-gott-wald.webm");
     const startRectLocal = elementToLocalRect(PANEL_START_ID, this, camera);
     const endRectLocal = elementToLocalRect(PANEL_END_ID, this, camera);
 
@@ -69,69 +79,73 @@ export default class VideoPanelShader extends THREE.Group {
     this.add(this.mesh);
 
     this.calculateElementValues();
-    this.initScrollTrigger();
+    this.watchLayout();
 
     this.initDebug();
   }
 
-  initScrollTrigger = () => {
-    // We clean up any existing GSAP instances on this class when resizing
-    if (this.scrollTriggerContext) {
-      this.scrollTriggerContext.revert();
-    }
-
-    this.scrollTriggerContext = gsap.context(() => {
-      const startEl = document.getElementById(PANEL_START_ID);
-      const endEl = document.getElementById(PANEL_END_PARENT_ID);
-      const innerEndEl = document.getElementById(PANEL_END_ID);
-
-      if (!startEl || !endEl || !innerEndEl) return;
-
-      // The core animation mask mapping
-      ScrollTrigger.create({
-        trigger: startEl,
-        start: "top center",
-        endTrigger: innerEndEl,
-        end: "top center",
-        onUpdate: (self) => {
-          this.animateProgress.value = self.progress;
-        },
-      });
-
-      // The positional follow distance 
-      ScrollTrigger.create({
-        trigger: innerEndEl,
-        start: "top center",
-        endTrigger: endEl,
-        end: "top center",
-        onUpdate: (self) => {
-          this.mesh.position.y = -self.progress * this.followDistanceWorld;
-        },
-      });
-    });
-  };
-
+  /**
+   * Store the scroll positions (in page pixels) at which each
+   * animation phase starts/ends. Uses element TOP at viewport CENTER
+   * to match the original ScrollTrigger "top center" semantics exactly.
+   */
   calculateElementValues() {
-    this.scrollPositionAnimStart =
-      getElementPageCoords(PANEL_START_ID).y +
-      window.scrollY -
-      window.innerHeight * 0.5;
-    this.scrollPositionAnimEnd =
-      getElementPageCoords(PANEL_END_ID).y +
-      window.scrollY -
-      window.innerHeight * 0.5;
-    this.scrollPositionAnimFollowEnd =
-      getElementPageCoords(PANEL_END_PARENT_ID).y +
-      window.scrollY -
-      window.innerHeight * 0.5;
+    this.scrollPositionAnimStart = getScrollAtTopCenter(PANEL_START_ID);
+    this.scrollPositionAnimEnd = getScrollAtTopCenter(PANEL_END_ID);
+    this.scrollPositionAnimFollowEnd = getScrollAtTopCenter(PANEL_END_PARENT_ID);
+
     this.followDistanceWorld = pagePixelsToWorldUnit(
       this.scrollPositionAnimFollowEnd - this.scrollPositionAnimEnd,
       this.camera,
     );
   }
 
+  /**
+   * Watch the home-content container for size changes.
+   * If fonts or images load and push elements down, we recalculate
+   * the stored pixel boundaries so the animation remains accurate.
+   */
+  private watchLayout() {
+    const container = document.getElementById("home-content");
+    if (!container || typeof ResizeObserver === "undefined") return;
+
+    let rafId = 0;
+    this.layoutObserver = new ResizeObserver(() => {
+      // Debounce to one recalculation per frame
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => this.calculateElementValues());
+    });
+    this.layoutObserver.observe(container);
+  }
+
+  /**
+   * Called every RAF frame from homeScene.animate().
+   * Computes animateProgress and mesh.position.y directly from
+   * window.scrollY — no GSAP callbacks, no tick-scheduling lag.
+   * Both camera and video panel update in the exact same animate() frame.
+   */
   onScroll = () => {
-    // Handled purely by GSAP scroll triggers now
+    const scroll = window.scrollY;
+
+    // ── Phase 1: mask morphs from pill → full-screen ──
+    const animRange = this.scrollPositionAnimEnd - this.scrollPositionAnimStart;
+    if (animRange > 0) {
+      this.animateProgress.value = Math.min(
+        1,
+        Math.max(0, (scroll - this.scrollPositionAnimStart) / animRange),
+      );
+    }
+
+    // ── Phase 2: mesh follows the page scroll after morph is complete ──
+    const followRange =
+      this.scrollPositionAnimFollowEnd - this.scrollPositionAnimEnd;
+    if (followRange > 0) {
+      const followProgress = Math.min(
+        1,
+        Math.max(0, (scroll - this.scrollPositionAnimEnd) / followRange),
+      );
+      this.mesh.position.y = -followProgress * this.followDistanceWorld;
+    }
   };
 
   initDebug = () => {
@@ -176,14 +190,12 @@ export default class VideoPanelShader extends THREE.Group {
     this.material.uniforms.endRect.value =
       VideoPanelShader.rectToVec4(endRectLocal);
 
-    this.initScrollTrigger();
+    this.onScroll();
   };
 
   update = () => {};
 
   dispose() {
-    if (this.scrollTriggerContext) {
-      this.scrollTriggerContext.revert();
-    }
+    this.layoutObserver?.disconnect();
   }
 }

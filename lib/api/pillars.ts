@@ -1,6 +1,5 @@
 // import { MOCK_PROJECTS } from './../mock/projects.mock';
 import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 const API_ORIGIN = BASE_URL.replace(/\/$/, "");
 

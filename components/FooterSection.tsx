@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import CookieSettingsTrigger from "./CookieSettingsTrigger";
 import logo from "@/public/logo.png";
-
 const directoryLinks = [
   { label: "Entity Grid", href: "/our-work" },
   { label: "Manifesto", href: "/about" },
@@ -13,21 +13,21 @@ const directoryLinks = [
 ];
 
 const protocolItems = [
-  "Confidential by default",
-  "Values-first selection",
-  "Standards-led governance",
-  "Execution over exposure",
+  { label: "Confidential by default", href: "/protocols#confidential-by-default" },
+  { label: "Values-first selection", href: "/protocols#values-first-selection" },
+  { label: "Standards-led governance", href: "/protocols#standards-led-governance" },
+  { label: "Execution over exposure", href: "/protocols#execution-over-exposure" },
 ];
 
 export default function FooterSection() {
   return (
     <footer
-      className="relative w-full bg-black text-white pt-16 lg:pt-24 pb-8 px-gutter z-10 overflow-hidden"
+      className="relative w-full bg-black text-white pt-16 lg:pt-24 pb-28 md:pb-12 px-gutter z-10 overflow-hidden"
     >
       {/* ═══════════════════════════════════════════════════════════
            MAIN GRID: 4-column layout matching reference
          ═══════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-6 pb-16 lg:pb-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-16 gap-x-8 lg:gap-6 pb-16 lg:pb-20">
         {/* ── COL 1: BRAND IDENTITY ── */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           {/* Logo */}
@@ -119,14 +119,15 @@ export default function FooterSection() {
           </h4>
           <div className="flex flex-col">
             {protocolItems.map((item, i) => (
-              <div
+              <Link
+                href={item.href}
                 key={i}
-                className="group flex items-center py-3 border-l-2 border-transparent hover:border-gold/40 pl-0 hover:pl-4 transition-all duration-500 cursor-default"
+                className="group flex items-center py-3 border-l-2 border-transparent hover:border-gold/40 pl-0 hover:pl-4 transition-all duration-500 cursor-pointer"
               >
                 <span className="text-base font-medium uppercase tracking-[0.15em] text-white/90 group-hover:text-white transition-colors duration-500">
-                  {item}
+                  {item.label}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -185,34 +186,29 @@ export default function FooterSection() {
       {/* ═══════════════════════════════════════════════════════════
            BOTTOM BAR: Copyright + Legal
          ═══════════════════════════════════════════════════════════ */}
-      <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-white/5">
-        <p className=" text-white/90 tracking-wide font-light">
+      <div className="w-full flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 xl:gap-4 pt-8 border-t border-white/10">
+        <p className="text-white/60 tracking-wide font-light text-[13px] leading-relaxed max-w-xl">
           © {new Date().getFullYear()} GOTTWALD HOLDING LLC. Security-led
           operations · Confidential by default.
         </p>
 
-        <div className="flex flex-wrap items-center gap-6 mt-4 md:mt-0">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-x-4 gap-y-4 w-full xl:w-auto mt-2 xl:mt-0">
           <Link
             href="/imprint"
             className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
           >
             Imprint / Legal Notice
           </Link>
-          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
+          <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/privacy-policy"
             className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
           >
             Privacy Policy
           </Link>
-          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
-          <Link
-            href="/cookie-settings"
-            className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
-          >
-            Cookie Settings
-          </Link>
-          <span className="text-white/10 hidden md:inline text-[13px]">·</span>
+          <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
+          <CookieSettingsTrigger />
+          <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/terms-of-use"
             className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"

@@ -113,7 +113,7 @@ export default function VideoPanelSection() {
             trigger: section,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.8,
+            scrub: true,
           },
         });
       }
@@ -125,7 +125,7 @@ export default function VideoPanelSection() {
             trigger: section,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.8,
+            scrub: true,
           },
         });
       }
