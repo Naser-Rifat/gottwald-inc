@@ -62,11 +62,11 @@ float snoise(vec2 v) {
   return 130.0 * dot(m, g);
 }
 
-// Fractal Brownian Motion — 3 octaves
+// Fractal Brownian Motion — 2 octaves (optimized for dual-context GPU)
 float fbm(vec2 p) {
     float value = 0.0;
     float amplitude = 0.5;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         value += amplitude * snoise(p);
         p *= 2.0;
         amplitude *= 0.5;

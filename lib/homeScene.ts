@@ -22,12 +22,10 @@ export default class HomeScene {
   videoPanel?: VideoPanelShader;
   projectTiles?: ProjectTiles;
   stats?: { dom: HTMLElement; update: () => void };
-  private scrollHandler: () => void;
   private resizeHandler: () => void;
   private isDisposed = false;
 
   constructor() {
-    this.scrollHandler = () => this.onScroll();
     this.resizeHandler = () => this.onWindowResized();
 
     this.initThree();
@@ -106,7 +104,6 @@ export default class HomeScene {
     // this.scene.add(this.animatedTube);
 
     this.videoPanel = new VideoPanelShader(this.camera);
-    this.videoPanel.onScroll();
     this.scene.add(this.videoPanel);
 
     this.projectTiles = new ProjectTiles(this);
@@ -115,7 +112,7 @@ export default class HomeScene {
 
   onScroll = () => {
     if (!this.camera) return;
-    // Move the threejs camera's y position to make it appear to be scrolling with the page.
+    // Move the Three.js camera's Y position to match the page scroll.
     this.camera.position.y =
       (-window.scrollY / window.innerHeight) * this.frustumSize;
   };
@@ -144,7 +141,9 @@ export default class HomeScene {
   animate = () => {
     if (this.isDisposed) return;
     
-    // Poll scroll layout synchronously before strictly drawing UI
+    // ─── CRITICAL: Update camera + video panel in SAME frame ───
+    // Both use direct window.scrollY math — zero GSAP callback delay,
+    // zero frame desync. The camera and mesh move in perfect lockstep.
     this.onScroll();
     this.videoPanel?.onScroll();
 
