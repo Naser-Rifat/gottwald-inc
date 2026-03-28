@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
+import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
@@ -12,6 +13,38 @@ export default function ContactClient() {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleFormSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
+      console.warn("EmailJS keys are missing. Please add them to .env.local");
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      await emailjs.sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
+        process.env.NEXT_PUBLIC_EMAILJS_CONTACTUS_TEMPLATE_ID || process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "",
+        formRef.current,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
+      );
+      setSubmitStatus("success");
+      formRef.current.reset();
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } catch (error) {
+      console.error("EmailJS submission failed:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -217,7 +250,7 @@ export default function ContactClient() {
             <form
               ref={formRef}
               className="fade-up-element flex flex-col gap-12"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleFormSubmit}
             >
               <div className="relative group/input">
                 <input
@@ -225,7 +258,8 @@ export default function ContactClient() {
                   id="name"
                   name="name"
                   required
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50"
                   placeholder="Your Name"
                 />
                 <label
@@ -243,7 +277,8 @@ export default function ContactClient() {
                   id="email"
                   name="email"
                   required
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50"
                   placeholder="Email Address"
                 />
                 <label
@@ -260,7 +295,8 @@ export default function ContactClient() {
                   type="text"
                   id="organization"
                   name="organization"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50"
                   placeholder="Organization (Optional)"
                 />
                 <label
@@ -278,7 +314,8 @@ export default function ContactClient() {
                   name="message"
                   required
                   rows={4}
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer resize-none focus:border-transparent transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer resize-none focus:border-transparent transition-colors disabled:opacity-50"
                   placeholder="Message Details"
                 />
                 <label
@@ -290,17 +327,29 @@ export default function ContactClient() {
                 <div className="focus-line absolute bottom-1 left-0 w-full h-0.5 bg-gold scale-x-0 origin-left pointer-events-none z-20" />
               </div>
 
-              <div className="mt-8">
+              <div className="mt-8 flex flex-col gap-4">
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   data-magnetic
-                  className="group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max"
+                  className="group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-white mix-blend-difference pointer-events-none">
-                    Submit Inquiry
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-black transition-colors duration-300 pointer-events-none">
+                    {isSubmitting ? "Sending..." : "Submit Inquiry"}
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>
+                
+                {submitStatus === "success" && (
+                  <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">
+                    Message securely transmitted. We will review and follow up shortly.
+                  </p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm">
+                    Transmission failed. Please attempt again.
+                  </p>
+                )}
               </div>
             </form>
           </div>
