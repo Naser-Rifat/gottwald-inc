@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
+import emailjs from "@emailjs/browser";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,7 +130,39 @@ const PILLARS = [
 
 export default function CareersClient() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [openPillar, setOpenPillar] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleFormSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
+      console.warn("EmailJS keys are missing. Please add them to .env.local");
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      await emailjs.sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
+        process.env.NEXT_PUBLIC_EMAILJS_CAREERS_TEMPLATE_ID || "",
+        formRef.current,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
+      );
+      setSubmitStatus("success");
+      formRef.current.reset();
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } catch (error) {
+      console.error("EmailJS submission failed:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -534,24 +567,25 @@ export default function CareersClient() {
             </div>
 
             <form
+              ref={formRef}
               className="flex flex-col gap-10"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleFormSubmit}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="name" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     First &amp; Last Name *
                   </label>
-                  <input
+                  <input required id="name" name="name"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="contact" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Email / Phone *
                   </label>
-                  <input
+                  <input required id="contact" name="contact"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
@@ -560,19 +594,19 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="location" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Country / City / Time Zone
                   </label>
-                  <input
+                  <input id="location" name="location"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="region" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Continent / Region
                   </label>
-                  <input
+                  <input id="region" name="region"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
@@ -580,10 +614,10 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="languages" className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Languages (Select / Free text)
                 </label>
-                <input
+                <input id="languages" name="languages"
                   type="text"
                   placeholder="e.g. English (Native), German (Fluent)"
                   className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
@@ -592,10 +626,10 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="work_model" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Work Model
                   </label>
-                  <select
+                  <select id="work_model" name="work_model"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue="remote"
                   >
@@ -606,10 +640,10 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="travel" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Travel Readiness
                   </label>
-                  <select
+                  <select id="travel" name="travel"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue="project"
                   >
@@ -619,31 +653,25 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="entry_path" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Entry Path
                   </label>
-                  <select
+                  <select id="entry_path" name="entry_path"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue="employee"
                   >
-                    <option value="employee" className="text-black">
-                      Employee
-                    </option>
-                    <option value="freelancer" className="text-black">
-                      Freelancer / Interim
-                    </option>
-                    <option value="specialist" className="text-black">
-                      Specialist Pool
-                    </option>
+                    <option value="employee" className="text-black">Employee</option>
+                    <option value="freelancer" className="text-black">Freelancer / Interim</option>
+                    <option value="specialist" className="text-black">Specialist Pool</option>
                   </select>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="roles" className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Pillars of Interest (Multi-select) &amp; Desired Role(s)
                 </label>
-                <input
+                <input id="roles" name="roles"
                   type="text"
                   placeholder="e.g. Pillar G - Copywriter"
                   className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
@@ -652,19 +680,19 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="linkedin" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     LinkedIn / Website
                   </label>
-                  <input
+                  <input id="linkedin" name="linkedin"
                     type="url"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="portfolio" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Portfolio / Proof Links (Max 3)
                   </label>
-                  <input
+                  <input id="portfolio" name="portfolio"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
@@ -672,10 +700,10 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="cv" className="text-md uppercase tracking-widest text-white/50 font-bold">
                   CV Upload or Profile Link
                 </label>
-                <input
+                <input id="cv" name="cv"
                   type="text"
                   placeholder="URL or Upload Link"
                   className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
@@ -684,19 +712,19 @@ export default function CareersClient() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="availability" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Availability (Start date / Hrs per week)
                   </label>
-                  <input
+                  <input id="availability" name="availability"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="salary" className="text-md uppercase tracking-widest text-white/50 font-bold">
                     Salary range or Day rate (Optional)
                   </label>
-                  <input
+                  <input id="salary" name="salary"
                     type="text"
                     className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
                   />
@@ -704,45 +732,57 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-md uppercase tracking-widest text-gold font-bold">
+                <label htmlFor="foundation" className="text-md uppercase tracking-widest text-gold font-bold">
                   Foundation Fit (Required) *
                 </label>
                 <p className="text-md text-white/30 mb-2">
                   2–3 sentences on truth, responsibility, justice, compassion,
                   discretion, and excellence.
                 </p>
-                <textarea
+                <textarea required id="foundation" name="foundation"
                   rows={4}
                   className="w-full bg-transparent border-b border-gold/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
                 />
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="message" className="text-md uppercase tracking-widest text-white/50 font-bold">
                   Short Message (Optional)
                 </label>
-                <textarea
+                <textarea id="message" name="message"
                   rows={2}
                   className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
                 />
               </div>
 
-              <div className="pt-8 border-t border-white/10 flex flex-col items-center sm:items-start gap-6">
+              <div className="pt-8 border-t border-white/10 flex flex-col items-center justify-center sm:items-start gap-6">
                 <button
-                  type="button"
+                  type="submit"
+                  disabled={isSubmitting}
                   data-magnetic
-                  className="group relative flex items-center gap-4 bg-white px-10 py-5 overflow-hidden w-max mt-8"
-                  onClick={() => alert("Thank you. If there’s a fit, we’ll reach out with next steps.")}
+                  className="group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-md text-white mix-blend-difference pointer-events-none">
-                    Submit Application
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
+                    {isSubmitting ? "Submitting..." : "Submit Application"}
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>
-                <span className="text-md text-white/70 tracking-widest uppercase text-center sm:text-left">
-                  Thank you. If there’s a fit, we’ll reach out with next steps. <br />
-                  Your submission is confidential.
-                </span>
+                
+                {submitStatus === "success" && (
+                  <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm w-full">
+                    Application submitted successfully. We&apos;ll reach out with next steps if there is a fit.
+                  </p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm w-full">
+                    Failed to submit application. Please try again later.
+                  </p>
+                )}
+                {submitStatus === "idle" && (
+                  <span className="text-md text-white/70 tracking-widest uppercase text-center sm:text-left">
+                    Your submission is confidential.
+                  </span>
+                )}
               </div>
             </form>
           </div>

@@ -1178,7 +1178,7 @@ export default function PartnershipsClient() {
 
               {submitStatus === "success" && (
                 <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">
-                  Application submitted successfully. If there's a fit, we'll reach out with next steps.
+                  Application submitted successfully. If there&apos;s a fit, we&apos;ll reach out with next steps.
                 </p>
               )}
               {submitStatus === "error" && (
