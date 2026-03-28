@@ -315,7 +315,7 @@ export default function StrategicInquirySection() {
                 </span>
               </div>
             </Link>
-            <span className="italic text-white/40 text-[13px] tracking-wide leading-tight font-light text-center">
+            <span className="italic text-white/40  tracking-wide leading-tight font-light text-center">
               Confidential inquiry. Values-first selection.
             </span>
           </div>
