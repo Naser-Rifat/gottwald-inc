@@ -141,12 +141,12 @@ export default function VideoPanelSection() {
       aria-label="Company Mission"
       className="flex flex-col px-gutter w-full min-h-screen py-[15vh]"
     >
-      <div className="about-headers pb-[8vh]">
+      <div className="about-headers pb-[6vh] md:pb-[8vh]">
         <div className="overflow-hidden w-full">
           <h2
             ref={toplineRef}
             id="h1-topline"
-            className="text-[5vw] lg:text-[6vw] mb-0 text-white uppercase tracking-tight"
+            className="text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white uppercase tracking-tight leading-[0.95]"
           >
             Peace. Love. Harmony
           </h2>
@@ -155,7 +155,7 @@ export default function VideoPanelSection() {
           <h2
             ref={taglineRef}
             id="h1-tagline"
-            className="text-[5vw] lg:text-[6vw] mb-0 text-white tracking-tight uppercase"
+            className="text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white tracking-tight uppercase leading-[0.95]"
           >
             for more Humanity.
           </h2>
@@ -163,10 +163,10 @@ export default function VideoPanelSection() {
       </div>
 
       {/* About paragraphs */}
-      <div className="flex flex-col items-end pb-[10vh]">
+      <div className="flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
         <p
           ref={descRef}
-          className="w-[40%] mb-8 text-md md:text-lg lg:text-xl xl:text-2xl leading-relaxed text-white/70 font-sans opacity-0"
+          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed text-white/70 font-sans opacity-0"
         >
           GOTT WALD is not a collection of services. It is a unified
           architecture: modular components, one standard, one language of
@@ -175,11 +175,11 @@ export default function VideoPanelSection() {
         </p>
         <div
           ref={ctaRef}
-          className="w-[40%] mb-8 text-xl leading-relaxed text-white/50 font-sans opacity-0"
+          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 leading-relaxed text-white/50 font-sans opacity-0"
         >
           <Link href="/about">
             <button
-              className="h-11.5 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
+              className="h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
                          tracking-[0.02em] transition-colors mt-4
                          bg-white/20 text-white hover:bg-white/15 border border-white/10"
               style={{ padding: "0 18px 0 22px" }}
@@ -192,11 +192,12 @@ export default function VideoPanelSection() {
       </div>
 
       {/* Video panel anchors */}
-      <div id="video-panel-start" className="w-1/2 aspect-video mt-[5vh]" />
+      {/* Start anchor: smaller on mobile so video starts as a pill rather than half-screen block */}
+      <div id="video-panel-start" className="w-full sm:w-3/4 md:w-1/2 aspect-video mt-[3vh] md:mt-[5vh]" />
 
       <div
         id="video-panel-end-parent"
-        className="relative w-full mt-[10vh] mb-[5vh] aspect-video 3xl:h-[70vh] 3xl:aspect-auto"
+        className="relative w-full mt-[8vh] md:mt-[10vh] mb-[3vh] md:mb-[5vh] aspect-video"
       >
         <div id="video-panel-end" className="absolute inset-0 w-full h-full" />
       </div>

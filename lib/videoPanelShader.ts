@@ -33,7 +33,7 @@ function getScrollAtTopCenter(elementId: string): number {
 export default class VideoPanelShader extends THREE.Group {
   animateProgress = { value: 0 };
   borderRadius = { value: 0.085 };
-  tintColour = { value: new THREE.Color(0.6, 0.6, 1.0) };
+  tintColour = { value: new THREE.Color(1.0, 1.0, 1.0) };
   camera: THREE.OrthographicCamera;
   material!: THREE.ShaderMaterial;
   mesh!: THREE.Mesh;
@@ -113,7 +113,10 @@ export default class VideoPanelShader extends THREE.Group {
     this.layoutObserver = new ResizeObserver(() => {
       // Debounce to one recalculation per frame
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => this.calculateElementValues());
+      rafId = requestAnimationFrame(() => {
+        // Must call full resize() to update both uniforms and scroll start/end offsets
+        this.resize();
+      });
     });
     this.layoutObserver.observe(container);
   }

@@ -332,12 +332,12 @@ export default function ContactClient() {
                   type="submit"
                   disabled={isSubmitting}
                   data-magnetic
-                  className="group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative flex items-center  gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-black transition-colors duration-300 pointer-events-none">
+                  <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
                     {isSubmitting ? "Sending..." : "Submit Inquiry"}
                   </span>
-                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
+                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none " />
                 </button>
                 
                 {submitStatus === "success" && (

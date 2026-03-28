@@ -106,6 +106,22 @@ const VALID_BLOCK_TYPES = [
   "fullbleed",
 ];
 
+/** Deduplicate and truncate malformed titles from the backend */
+function sanitizeTitle(raw: string): string {
+  const trimmed = raw.trim();
+  if (trimmed.length <= 80) return trimmed;
+
+  // Detect repeated substrings: try lengths from 5..half the string
+  for (let len = 5; len <= trimmed.length / 2; len++) {
+    const candidate = trimmed.slice(0, len);
+    const repeated = candidate.repeat(Math.ceil(trimmed.length / len)).slice(0, trimmed.length);
+    if (repeated === trimmed) return candidate;
+  }
+
+  // Fallback: just truncate
+  return trimmed.slice(0, 80);
+}
+
 function mapApiToPillar(api: ApiPillar): Pillar {
   const raw = api.content_blocks_data ?? api.content_blocks ?? [];
   const blocks: ContentBlock[] = raw
@@ -123,7 +139,7 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     }));
   return {
     slug: api.slug,
-    title: api.title,
+    title: sanitizeTitle(api.title),
     description: api.description ?? "",
     details: api.details ?? api.description ?? "",
     image: toAbsoluteImageUrl(api.image),

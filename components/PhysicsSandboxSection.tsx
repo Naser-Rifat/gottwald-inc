@@ -215,7 +215,7 @@ export default function PhysicsSandboxSection() {
       <section
         ref={heroRef}
         aria-label="GOTT WALD Hero — Turning Complexity Into Clarity"
-        className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[10vh] px-gutter"
+        className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[8vh] sm:pb-[10vh] px-gutter"
         style={{ perspective: "1000px" }}
       >
       <div className="flex-1 flex items-end z-10 relative w-full mx-auto pointer-events-auto">
@@ -230,7 +230,7 @@ export default function PhysicsSandboxSection() {
 
             <h1
               className="font-light tracking-[-0.03em] leading-[0.95] uppercase mix-blend-screen shrink-0"
-              style={{ fontSize: "clamp(2.5rem, 5.5vw, 8rem)", transformStyle: "preserve-3d" }}
+              style={{ fontSize: "clamp(1.6rem, 5.5vw, 8rem)", transformStyle: "preserve-3d" }}
             >
               <span className="block overflow-hidden py-1">
                 <span className="hero-word block" style={{ transformOrigin: "bottom center" }}>
@@ -256,7 +256,7 @@ export default function PhysicsSandboxSection() {
           </div>
 
           {/* Right: Orb + Scroll */}
-          <div className="flex flex-col md:flex-row lg:flex-col justify-between items-start md:items-end lg:items-end w-full lg:w-auto gap-8 lg:gap-6 mb-2">
+          <div className="flex flex-row lg:flex-col justify-between items-end lg:items-end w-full lg:w-auto gap-4 lg:gap-6 mb-2">
             {/* Ambient orb */}
             <div
               ref={orbRef}
@@ -268,10 +268,10 @@ export default function PhysicsSandboxSection() {
               <div className="w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_15px_rgba(201,168,76,0.8)]" />
             </div>
 
-            {/* Scroll indicator with magnetic hover */}
+            {/* Scroll indicator */}
             <div
               ref={scrollBtnRef}
-              className="hero-scroll group flex items-center gap-3 cursor-pointer mt-4 lg:mt-8 opacity-0"
+              className="hero-scroll group flex items-center gap-3 cursor-pointer lg:mt-8 opacity-0"
               style={{ willChange: "transform" }}
               onClick={() =>
                 window.scrollTo({ top: window.innerHeight, behavior: "smooth" })

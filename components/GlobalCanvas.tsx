@@ -123,9 +123,10 @@ void main() {
     // Mouse glow — warm gold near cursor
     color += uColorGold * mouseForce * 0.12;
 
-    // Vignette for cinematic depth
-    float mask = smoothstep(0.85, 0.15, distance(vUv, vec2(0.5)));
-    color *= mask + 0.15;
+    // Vignette for cinematic depth — tight edge darkening only, no color bleed
+    float vignetteDist = distance(vUv, vec2(0.5)) * 2.0; // 0 at center, 1 at corners
+    float mask = 1.0 - smoothstep(0.6, 1.0, vignetteDist) * 0.5;
+    color *= mask;
 
     gl_FragColor = vec4(color, 1.0);
 }
@@ -221,6 +222,7 @@ export default function GlobalCanvas() {
     <div
       ref={containerRef}
       className="fixed inset-0 w-screen h-screen pointer-events-none -z-20 bg-black"
+      style={{ overflow: "hidden" }}
     >
       <Canvas
         camera={{ position: [0, 0, 1] }}
@@ -231,6 +233,7 @@ export default function GlobalCanvas() {
           antialias: false,
         }}
         dpr={dprCap}
+        style={{ outline: "none", display: "block" }}
       >
         <FluidPlane />
       </Canvas>
