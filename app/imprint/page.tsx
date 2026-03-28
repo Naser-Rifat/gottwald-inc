@@ -19,14 +19,14 @@ export default function ImprintPage() {
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-light leading-none tracking-tighter text-white mb-6 uppercase">
           IMPRINT / LEGAL NOTICE
         </h1>
-        <p className="text-sm tracking-widest uppercase text-white/40 mb-20 drop-shadow-sm">
+        <p className=" tracking-widest uppercase text-white/70 mb-20 drop-shadow-sm">
           Last updated: <span className="text-white/80">March 27, 2026</span>
         </p>
 
         <div className="space-y-16 lg:space-y-20 text-lg font-light text-white/70 leading-relaxed">
           {/* Company Details */}
           <section>
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
               COMPANY NAME
             </h2>
             <p className="text-2xl font-light text-white mb-10">
@@ -35,10 +35,10 @@ export default function ImprintPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
               <div>
-                <h3 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+                <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   REGISTERED OFFICE
                 </h3>
-                <address className="not-italic opacity-90 border-l border-gold/30 pl-5 py-2 leading-loose">
+                <address className="not-italic text-white/80 border-l border-gold/30 pl-5 py-2 leading-loose">
                   Georgia, Tbilisi<br />
                   Gldani district<br />
                   Maseli Street N2a<br />
@@ -49,24 +49,24 @@ export default function ImprintPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+                <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   HEAD OFFICE
                 </h3>
                 <p className="opacity-90 mb-8">
-                  <a href="mailto:office@gottwald.world" className="hover:text-white transition-colors">
+                  <a href="mailto:office@gottwald.world" className="hover:text-white transition-colors text-white/80">
                     office@gottwald.world
                   </a>
                 </p>
 
-                <h3 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+                <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   PHONE
                 </h3>
-                <p className="opacity-90 mb-8">+995 591 086 578</p>
+                <p className="opacity-90 mb-8 text-white/80">+995 591 086 578</p>
 
-                <h3 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+                <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   WEBSITE
                 </h3>
-                <p className="opacity-90">
+                <p className="opacity-90 text-white/80">
                   <a href="https://www.gottwald.world" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                     www.gottwald.world
                   </a>
@@ -77,27 +77,27 @@ export default function ImprintPage() {
 
           {/* Company Information */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               COMPANY INFORMATION
             </h2>
-            <ul className="space-y-4 opacity-90 text-[19px]">
+            <ul className="space-y-4 opacity-90">
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/40 w-full sm:w-64 uppercase tracking-widest text-xs mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
                   Legal form
                 </span>
-                <span>Limited Liability Company (LLC)</span>
+                <span className="text-white font-medium">Limited Liability Company (LLC)</span>
               </li>
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/40 w-full sm:w-64 uppercase tracking-widest text-xs mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm mb-1 sm:mb-0 block shrink-0">
                   Registered company name
                 </span>
-                <span>GOTT WALD Holding LLC</span>
+                <span className="text-white font-medium">GOTT WALD Holding LLC</span>
               </li>
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/40 w-full sm:w-64 uppercase tracking-widest text-xs mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
                   Company ID
                 </span>
-                <span>400415421</span>
+                <span className="text-white font-medium">400415421</span>
               </li>
             </ul>
           </section>
@@ -105,7 +105,7 @@ export default function ImprintPage() {
           {/* Direct Representation block */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 border-t border-white/10 pt-16">
             <section>
-              <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+              <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
                 REPRESENTED BY
               </h2>
               <p className="opacity-90 text-[19px]">Mathias Gottwald, Patron</p>
@@ -120,7 +120,7 @@ export default function ImprintPage() {
           </div>
 
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               BUSINESS PURPOSE
             </h2>
             <p className="opacity-90 text-[19px] leading-relaxed max-w-3xl">
@@ -130,11 +130,11 @@ export default function ImprintPage() {
 
           {/* Media Owner and Publisher */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               MEDIA OWNER AND PUBLISHER
             </h2>
             <p className="opacity-90 text-[19px] font-medium text-white mb-4">GOTT WALD Holding LLC</p>
-            <address className="not-italic opacity-90 border-l border-gold/30 pl-5 py-2 leading-loose">
+            <address className="not-italic text-white/80 border-l border-gold/30 pl-5 py-2 leading-loose">
               Georgia, Tbilisi<br />
               Gldani district<br />
               Maseli Street N2a<br />

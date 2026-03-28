@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, FormEvent } from "react";
+import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -25,6 +26,41 @@ export default function PartnershipsClient() {
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
+
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleFormSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
+      console.warn("EmailJS keys are missing. Please add them to .env.local");
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      await emailjs.sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID",
+        formRef.current,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY"
+      );
+      setSubmitStatus("success");
+      formRef.current.reset();
+      
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } catch (error) {
+      console.error("EmailJS submission failed:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -840,19 +876,16 @@ export default function PartnershipsClient() {
             </div>
 
             <form
+              ref={formRef}
               className="form-reveal flex flex-col gap-12"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Application submitted. If there's a fit, we'll reach out with next steps.");
-              }}
+              onSubmit={handleFormSubmit}
             >
               {/* Group 1: Company + Website */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="text"
-                    id="company"
+                    id="company" name="company"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Company Name"
                   />
@@ -864,10 +897,9 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="url"
-                    id="website"
+                    id="website" name="website"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Website URL"
                   />
@@ -883,10 +915,9 @@ export default function PartnershipsClient() {
               {/* Group 2: Country + Contact */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="text"
-                    id="country"
+                    id="country" name="country"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Country / Region"
                   />
@@ -898,10 +929,9 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="text"
-                    id="contact"
+                    id="contact" name="contact"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Main Contact (Name, Email, Phone)"
                   />
@@ -923,9 +953,8 @@ export default function PartnershipsClient() {
                   >
                     Partnership Type
                   </label>
-                  <select
-                    required
-                    id="type"
+                  <select required
+                    id="type" name="type"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white/80 focus:text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue=""
                   >
@@ -955,9 +984,8 @@ export default function PartnershipsClient() {
                   </div>
                 </div>
                 <div className="relative">
-                  <input
-                    type="text"
-                    id="pillars"
+                  <input type="text"
+                    id="pillars" name="pillars"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Relevant Pillars (A, B, C...)"
                   />
@@ -972,9 +1000,8 @@ export default function PartnershipsClient() {
 
               {/* Group 4: What you do */}
               <div className="relative">
-                <textarea
-                  required
-                  id="description"
+                <textarea required
+                  id="description" name="description"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                   placeholder="What you do (1–3 sentences)"
@@ -990,9 +1017,8 @@ export default function PartnershipsClient() {
               {/* Group 5: Capabilities + Proof */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <textarea
-                    required
-                    id="capabilities"
+                  <textarea required
+                    id="capabilities" name="capabilities"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Top 3 capabilities (bullet points)"
@@ -1005,9 +1031,8 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <textarea
-                    required
-                    id="proof"
+                  <textarea required
+                    id="proof" name="proof"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Proof of work (links / portfolio / cases)"
@@ -1024,9 +1049,8 @@ export default function PartnershipsClient() {
               {/* Group 5.1: References, Capacity, Budget */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <div className="relative">
-                  <input
-                    type="text"
-                    id="references"
+                  <input type="text"
+                    id="references" name="references"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="References (optional)"
                   />
@@ -1038,10 +1062,9 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="text"
-                    id="capacity"
+                    id="capacity" name="capacity"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Capacity (project slots / hours)"
                   />
@@ -1053,10 +1076,9 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input
-                    required
+                  <input required
                     type="text"
-                    id="budget"
+                    id="budget" name="budget"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Typical project range (budget/scope)"
                   />
@@ -1071,9 +1093,8 @@ export default function PartnershipsClient() {
 
               {/* Group 6: Values Fit */}
               <div className="relative">
-                <textarea
-                  required
-                  id="values"
+                <textarea required
+                  id="values" name="values"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                   placeholder="Values Fit (required): 2–3 sentences on responsibility, integrity, excellence, discretion"
@@ -1089,8 +1110,7 @@ export default function PartnershipsClient() {
               {/* Group 7: Why GOTT WALD */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <textarea
-                    id="why"
+                  <textarea id="why" name="why"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Why GOTT WALD? (short)"
@@ -1103,8 +1123,7 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <textarea
-                    id="constraints"
+                  <textarea id="constraints" name="constraints"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Anything we must know? (timing, constraints, risks)"
@@ -1121,9 +1140,8 @@ export default function PartnershipsClient() {
               {/* NDA Checkbox */}
               <div className="flex items-center gap-4 mt-4">
                 <div className="relative flex items-center shrink-0">
-                  <input
-                    type="checkbox"
-                    id="nda"
+                  <input type="checkbox"
+                    id="nda" name="nda"
                     className="peer w-6 h-6 appearance-none border border-white/30 rounded-sm checked:bg-gold checked:border-gold cursor-pointer transition-colors"
                   />
                   <svg
@@ -1148,18 +1166,31 @@ export default function PartnershipsClient() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 data-magnetic
-                className="group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4"
+                className="group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm text-white mix-blend-difference pointer-events-none">
-                  Submit Application
+                <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
                 </span>
                 <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
               </button>
 
-              <p className="text-white/70 text-lg font-light mt-2">
-                After submission: Thank you. If there&apos;s a fit, we&apos;ll reach out with next steps.
-              </p>
+              {submitStatus === "success" && (
+                <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">
+                  Application submitted successfully. If there's a fit, we'll reach out with next steps.
+                </p>
+              )}
+              {submitStatus === "error" && (
+                <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm">
+                  Failed to submit application. Please verify your EmailJS keys or try again later.
+                </p>
+              )}
+              {submitStatus === "idle" && (
+                <p className="text-white/40 text-sm font-light mt-2">
+                  All transmissions are secured and treated with strict confidentiality.
+                </p>
+              )}
             </form>
           </div>
         </section>

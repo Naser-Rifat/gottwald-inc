@@ -19,7 +19,7 @@ export default function TermsOfUsePage() {
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-light leading-none tracking-tighter text-white mb-6 uppercase">
           TERMS OF USE
         </h1>
-        <p className="text-sm tracking-widest uppercase text-white/40 mb-20 drop-shadow-sm">
+        <p className=" tracking-widest uppercase text-white/50 mb-20 drop-shadow-sm">
           Last updated: <span className="text-white/80">March 27, 2026</span>
         </p>
 
@@ -27,7 +27,7 @@ export default function TermsOfUsePage() {
           
           {/* Introduction */}
           <section>
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               INTRODUCTION
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
@@ -39,8 +39,8 @@ export default function TermsOfUsePage() {
 
           {/* 1. Scope */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">01</span> SCOPE
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">01</span> SCOPE
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>These Terms of Use apply to all visitors, users, and other persons accessing this website and its content.</p>
@@ -49,8 +49,8 @@ export default function TermsOfUsePage() {
 
           {/* 2. Purpose of the website */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">02</span> PURPOSE OF THE WEBSITE
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">02</span> PURPOSE OF THE WEBSITE
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>This website is provided for general information about GOTT WALD Holding LLC, its activities, services, ventures, projects, and related areas of interest.</p>
@@ -60,8 +60,8 @@ export default function TermsOfUsePage() {
 
           {/* 3. No offer / no binding commitment */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">03</span> NO OFFER / NO BINDING COMMITMENT
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">03</span> NO OFFER / NO BINDING COMMITMENT
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>The information provided on this website does not constitute a binding offer, guarantee, promise of availability, or invitation to enter into a contract unless expressly stated otherwise in writing.</p>
@@ -71,8 +71,8 @@ export default function TermsOfUsePage() {
 
           {/* 4. Acceptable use */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">04</span> ACCEPTABLE USE
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">04</span> ACCEPTABLE USE
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>You agree to use this website only for lawful purposes and in a way that does not infringe the rights of others, restrict access, interfere with operations, or compromise the security or integrity of the website.</p>
@@ -89,8 +89,8 @@ export default function TermsOfUsePage() {
 
           {/* 5. Intellectual property */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">05</span> INTELLECTUAL PROPERTY
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">05</span> INTELLECTUAL PROPERTY
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>Unless otherwise stated, all content on this website, including text, structure, design elements, graphics, branding, logos, layouts, concepts, and other materials, is owned by or licensed to GOTT WALD Holding LLC and is protected by applicable intellectual property laws.</p>
@@ -100,8 +100,8 @@ export default function TermsOfUsePage() {
 
           {/* 6. Third-party links and external content */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">06</span> THIRD-PARTY LINKS AND EXTERNAL CONTENT
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">06</span> THIRD-PARTY LINKS AND EXTERNAL CONTENT
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>This website may contain links to third-party websites, platforms, or services for convenience or reference.</p>
@@ -111,8 +111,8 @@ export default function TermsOfUsePage() {
 
           {/* 7. Disclaimer */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">07</span> DISCLAIMER
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">07</span> DISCLAIMER
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>We aim to keep the information on this website accurate, current, and useful. However, we make no representation or warranty, express or implied, that the website or its content is complete, accurate, reliable, suitable, available, or up to date at all times.</p>
@@ -122,8 +122,8 @@ export default function TermsOfUsePage() {
 
           {/* 8. Limitation of liability */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">08</span> LIMITATION OF LIABILITY
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">08</span> LIMITATION OF LIABILITY
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>To the fullest extent permitted by applicable law, GOTT WALD Holding LLC shall not be liable for any direct, indirect, incidental, consequential, special, or other damages arising out of or in connection with access to, use of, inability to use, or reliance on this website or its content.</p>
@@ -133,8 +133,8 @@ export default function TermsOfUsePage() {
 
           {/* 9. Privacy and cookies */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">09</span> PRIVACY AND COOKIES
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">09</span> PRIVACY AND COOKIES
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>The processing of personal data is governed by our Privacy Policy.</p>
@@ -144,8 +144,8 @@ export default function TermsOfUsePage() {
 
           {/* 10. Availability and changes */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">10</span> AVAILABILITY AND CHANGES
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">10</span> AVAILABILITY AND CHANGES
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>We may modify, suspend, restrict, or discontinue any part of this website at any time and without notice.</p>
@@ -155,8 +155,8 @@ export default function TermsOfUsePage() {
 
           {/* 11. Governing law */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">11</span> GOVERNING LAW
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">11</span> GOVERNING LAW
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>These Terms of Use shall be governed by the applicable laws relevant to the operation of GOTT WALD Holding LLC, unless mandatory legal provisions require otherwise.</p>
@@ -165,24 +165,24 @@ export default function TermsOfUsePage() {
 
           {/* 12. Contact */}
           <section className="border-t border-white/10 pt-16 pb-12">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/30 text-xs tracking-widest">12</span> CONTACT
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white text-md tracking-widest">12</span> CONTACT
             </h2>
             <div className="space-y-8 opacity-90 text-[19px]">
               <p>If you have any questions regarding these Terms of Use, please contact:</p>
               <div>
                 <p className="font-medium text-white mb-2">GOTT WALD Holding LLC</p>
                 <div className="flex gap-4">
-                  <span className="text-white/40 uppercase tracking-widest text-xs w-20 shrink-0 mt-1.5">Email</span>
-                  <a href="mailto:office@gottwald.world" className="hover:text-gold transition-colors block">office@gottwald.world</a>
+                  <span className="text-white uppercase tracking-widest text-sm w-20 shrink-0 mt-1.5">Email</span>
+                  <a href="mailto:office@gottwald.world" className="hover:text-gold transition-colors block font-medium">office@gottwald.world</a>
                 </div>
                 <div className="flex gap-4 mt-2">
-                  <span className="text-white/40 uppercase tracking-widest text-xs w-20 shrink-0 mt-1.5">Phone</span>
-                  <span>+995 591 086 578</span>
+                  <span className="text-white uppercase tracking-widest text-sm  w-20 shrink-0 mt-1.5 ">Phone</span>
+                  <span className="font-medium">+995 591 086 578</span>
                 </div>
                 <div className="flex gap-4 mt-2">
-                  <span className="text-white/40 uppercase tracking-widest text-xs w-20 shrink-0 mt-1.5">Website</span>
-                  <a href="https://www.gottwald.world" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block">www.gottwald.world</a>
+                  <span className="text-white uppercase tracking-widest text-sm w-20 shrink-0 mt-1.5">Website</span>
+                  <a href="https://www.gottwald.world" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors block font-medium">www.gottwald.world</a>
                 </div>
               </div>
             </div>
