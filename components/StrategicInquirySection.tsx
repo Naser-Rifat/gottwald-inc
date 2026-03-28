@@ -205,7 +205,7 @@ export default function StrategicInquirySection() {
         {/* Monolithic Heading — word-by-word 3D flip */}
         <h2
           ref={headingRef}
-          className="text-[clamp(3.5rem,7vw,9.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-16 w-full flex flex-col items-center"
+          className="text-[clamp(2.4rem,7vw,9.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-12 md:mb-16 w-full flex flex-col items-center"
           style={{ perspective: "800px" }}
         >
           <span className="heading-line block overflow-hidden">

@@ -22,7 +22,7 @@ export default function PillarCard({
   index,
   className = "",
   imageClassName = "aspect-3/2 mb-5",
-  titleClassName = "text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight whitespace-pre-line group-hover:text-gold transition-colors duration-500",
+  titleClassName = "text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight leading-[1.15] group-hover:text-gold transition-colors duration-500 line-clamp-2",
 }: PillarCardProps) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
@@ -169,7 +169,7 @@ export default function PillarCard({
       <div
         ref={imageWrapRef}
         className={`relative overflow-hidden rounded-xl ${imageClassName}`}
-        style={{ clipPath: "inset(100% 0 0 0)" }}
+        style={{ clipPath: "inset(100% 0 0 0)", minHeight: "180px" }}
       >
         <div
           ref={imageRef}
@@ -187,11 +187,19 @@ export default function PillarCard({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
               loading="lazy"
-              unoptimized={pillar.image.includes("localhost")}
+              unoptimized
+              onError={(e) => {
+                // Hide the broken image and show fallback
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
             />
-          ) : (
-            <div className="absolute inset-0 bg-white/5" />
-          )}
+          ) : null}
+          {/* Fallback gradient (visible when image is missing or fails to load) */}
+          <div className="absolute inset-0 bg-linear-to-br from-white/6 via-white/2 to-transparent flex items-end p-6 pointer-events-none">
+            <span className="text-white/10 text-[clamp(1.2rem,3vw,2.5rem)] font-bold uppercase tracking-tight leading-tight line-clamp-3">
+              {pillar.title}
+            </span>
+          </div>
           <div
             ref={overlayRef}
             className="absolute inset-0 pointer-events-none opacity-0"

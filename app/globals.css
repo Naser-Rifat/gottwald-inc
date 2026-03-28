@@ -26,6 +26,11 @@
     box-sizing: border-box;
   }
 
+  canvas {
+    outline: none;
+    display: block;
+  }
+
   :root {
     --h1-font-size: 9vw;
   }

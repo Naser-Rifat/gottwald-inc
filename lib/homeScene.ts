@@ -125,11 +125,15 @@ export default class HomeScene {
   onWindowResized = () => {
     if (!this.renderer) return;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    updateCameraIntrisics(this.camera, this.frustumSize);
-    
+
     // Crucial: Update the camera's Y position to match the new innerHeight
     // before computing any unproject() math in the children's resize() hooks.
     this.onScroll();
+
+    updateCameraIntrisics(this.camera, this.frustumSize);
+
+    // Explicitly update the global matrix so child component unproject math uses the precise coordinate system
+    this.camera.updateMatrixWorld(true);
 
     // this.cosmicDust?.resize();
     // this.physicsSandbox?.resize();

@@ -108,7 +108,7 @@ export default function GlobalAuthoritySection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-transparent overflow-hidden flex flex-col pt-[6vh] pb-8 lg:pb-12 px-gutter min-h-screen"
+      className="relative w-full bg-transparent overflow-hidden flex flex-col pt-[5vh] md:pt-[6vh] pb-8 lg:pb-12 px-gutter min-h-screen"
     >
       {/* 1. Foreground Title (At the top of the flow) */}
       <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-4 lg:mt-8">
@@ -119,11 +119,11 @@ export default function GlobalAuthoritySection() {
           <div>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse" />
-              <span className="text-[10px] sm:text-xs tracking-[0.4em] text-[#d4af37] uppercase font-bold">
+              <span className="text-[9px] sm:text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[#d4af37] uppercase font-bold">
                 Node 001. Worldwide Execution.
               </span>
             </div>
-            <h2 className="text-[clamp(2.5rem,7.5vw,10rem)] font-bold text-white tracking-[-0.04em] leading-[0.85] uppercase">
+            <h2 className="text-[clamp(2rem,7.5vw,10rem)] font-bold text-white tracking-[-0.04em] leading-[0.85] uppercase">
               GLOBAL
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">
@@ -142,9 +142,9 @@ export default function GlobalAuthoritySection() {
         </div>
       </div>
 
-      {/* 2. Map Container (In-flow, relative, pushes bottom bar down based on ratio) */}
+      {/* 2. Map Container — clipped edges to prevent horizontal overflow on mobile */}
       <div
-        className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center opacity-90 my-[-10%] lg:my-[-5%]"
+        className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center opacity-90 my-[-8%] md:my-[-5%] overflow-hidden"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
@@ -152,7 +152,7 @@ export default function GlobalAuthoritySection() {
             "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
         }}
       >
-        <div className="relative w-[150%] md:w-[120%] lg:w-[90%] max-w-[1600px] aspect-[1.47]">
+        <div className="relative w-full sm:w-[130%] md:w-[120%] lg:w-[90%] max-w-[1600px] aspect-[1.47]">
           <Image
             src="/assets/world-map-dark.svg"
             alt="Global Network Map"

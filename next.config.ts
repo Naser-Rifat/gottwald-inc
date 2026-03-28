@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         port: "80",
         pathname: "/media/**",
       },
+      {
+        protocol: "https",
+        hostname: "gottwald-backend.onrender.com",
+        pathname: "/media/**",
+      },
     ],
   },
 
