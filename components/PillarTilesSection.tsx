@@ -197,17 +197,19 @@ export default function PillarTilesSection({
         ))}
       </div>
 
-      <Link
-        href="/our-work"
-        className="group mx-auto inline-flex items-center gap-4 text-white hover:text-gold transition-colors mt-12 w-fit"
-      >
-        <span className="text-[clamp(1rem,1vw,1.3rem)] tracking-[0.2em] uppercase font-bold">
-          View all pillars
-        </span>
-        <span className="text-2xl font-light transform transition-transform duration-500 group-hover:translate-x-3">
-          →
-        </span>
-      </Link>
+      {pillars.length > 4 && (
+        <Link
+          href="/our-work"
+          className="group mx-auto inline-flex items-center gap-4 text-white hover:text-gold transition-colors mt-12 w-fit"
+        >
+          <span className="text-[clamp(1rem,1vw,1.3rem)] tracking-[0.2em] uppercase font-bold">
+            View all pillars
+          </span>
+          <span className="text-2xl font-light transform transition-transform duration-500 group-hover:translate-x-3">
+            →
+          </span>
+        </Link>
+      )}
     </section>
   );
 }

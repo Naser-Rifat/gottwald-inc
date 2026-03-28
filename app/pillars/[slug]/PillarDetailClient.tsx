@@ -22,65 +22,119 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    document.body.style.height = "100vh";
-    document.documentElement.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.height = "";
-      document.documentElement.style.overflow = "";
-    };
-  }, []);
-
-  useEffect(() => {
     const outer = outerRef.current;
     const track = trackRef.current;
     const progress = progressRef.current;
     if (!outer || !track) return;
 
-    let xTo = 0;
-    let currentX = 0;
-    const ease = 0.07;
-    let raf: number;
-    let maxScroll = 0;
+    const mm = gsap.matchMedia();
 
-    const recalc = () => {
-      maxScroll = track.scrollWidth - window.innerWidth;
-    };
-    recalc();
+    // =============== DESKTOP: Horizontal Scroll ===============
+    mm.add("(min-width: 1024px)", () => {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+      document.documentElement.style.overflow = "hidden";
 
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const delta =
-        Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      xTo = Math.max(0, Math.min(xTo + delta, maxScroll));
-    };
+      let xTo = 0;
+      let currentX = 0;
+      const ease = 0.07;
+      let raf: number;
+      let maxScroll = 0;
 
-    const animate = () => {
-      currentX += (xTo - currentX) * ease;
-      gsap.set(track, { x: -currentX });
+      const recalc = () => {
+        maxScroll = track.scrollWidth - window.innerWidth;
+      };
+      recalc();
 
-      if (progress && maxScroll > 0) {
-        const pct = (currentX / maxScroll) * 100;
-        gsap.set(progress, { width: `${pct}%` });
-      }
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        const delta =
+          Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        xTo = Math.max(0, Math.min(xTo + delta, maxScroll));
+      };
 
-      const panels = panelRefs.current;
-      panels.forEach((panel) => {
-        if (!panel) return;
-        const rect = panel.getBoundingClientRect();
-        const viewW = window.innerWidth;
-        const visible = rect.left < viewW && rect.right > 0;
+      const animate = () => {
+        currentX += (xTo - currentX) * ease;
+        gsap.set(track, { x: -currentX });
 
-        if (visible && !panel.dataset.revealed) {
-          panel.dataset.revealed = "1";
-          revealPanel(panel);
+        if (progress && maxScroll > 0) {
+          const pct = (currentX / maxScroll) * 100;
+          gsap.set(progress, { width: `${pct}%` });
         }
-      });
 
+        const panels = panelRefs.current;
+        panels.forEach((panel) => {
+          if (!panel) return;
+          const rect = panel.getBoundingClientRect();
+          const viewW = window.innerWidth;
+          const visible = rect.left < viewW && rect.right > 0;
+
+          if (visible && !panel.dataset.revealed) {
+            panel.dataset.revealed = "1";
+            revealPanel(panel);
+          }
+        });
+
+        raf = requestAnimationFrame(animate);
+      };
+
+      outer.addEventListener("wheel", onWheel, { passive: false });
+      window.addEventListener("resize", recalc);
       raf = requestAnimationFrame(animate);
-    };
 
+      return () => {
+        document.body.style.overflow = "";
+        document.body.style.height = "";
+        document.documentElement.style.overflow = "";
+        outer.removeEventListener("wheel", onWheel);
+        window.removeEventListener("resize", recalc);
+        cancelAnimationFrame(raf);
+        gsap.set(track, { clearProps: "x" });
+      };
+    });
+
+    // =============== MOBILE: Vertical Native Scroll ===============
+    mm.add("(max-width: 1023px)", () => {
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+      document.documentElement.style.overflow = "";
+
+      let raf: number;
+
+      // Simple intersection observer polyfill via rAF for mobile reveals
+      const animateMobile = () => {
+        const panels = panelRefs.current;
+        panels.forEach((panel) => {
+          if (!panel) return;
+          const rect = panel.getBoundingClientRect();
+          // Reveal when top is within viewport
+          const visible = rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
+
+          if (visible && !panel.dataset.revealed) {
+            panel.dataset.revealed = "1";
+            revealPanel(panel);
+          }
+        });
+
+        // Update progress bar based on vertical scroll
+        if (progress) {
+          const scrollY = window.scrollY;
+          const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = maxScrollY > 0 ? (scrollY / maxScrollY) * 100 : 0;
+          gsap.set(progress, { width: `${pct}%` });
+        }
+
+        raf = requestAnimationFrame(animateMobile);
+      };
+
+      raf = requestAnimationFrame(animateMobile);
+
+      return () => {
+        cancelAnimationFrame(raf);
+      };
+    });
+
+    // =============== INITIAL HERO REVEAL (Both) ===============
     const heroPanel = panelRefs.current[0];
     if (heroPanel) {
       gsap.fromTo(
@@ -114,7 +168,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.8 },
       );
-      if (heroPanel) heroPanel.dataset.revealed = "1";
+      heroPanel.dataset.revealed = "1";
     }
 
     gsap.fromTo(
@@ -123,15 +177,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       { opacity: 1, duration: 0.5, ease: "power2.out" },
     );
 
-    outer.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("resize", recalc);
-    raf = requestAnimationFrame(animate);
-
-    return () => {
-      outer.removeEventListener("wheel", onWheel);
-      window.removeEventListener("resize", recalc);
-      cancelAnimationFrame(raf);
-    };
+    return () => mm.revert();
   }, []);
 
   const bg = project.theme.background;
@@ -208,43 +254,21 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
       <div
         ref={trackRef}
-        style={{
-          display: "flex",
-          height: "100vh",
-          alignItems: "stretch",
-          willChange: "transform",
-          opacity: 0,
-        }}
+        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-0 will-change-transform"
       >
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
           ref={(el) => registerPanel(el, 0)}
-          style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            backgroundColor: bg,
-          }}
+          className="w-full h-auto min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
+          style={{ backgroundColor: bg }}
         >
-          <div
-            style={{
-              width: "46%",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              paddingLeft: "60px",
-              paddingRight: "40px",
-              overflow: "hidden",
-            }}
-          >
+          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-24 lg:py-0 lg:pl-[60px] lg:pr-[40px] overflow-hidden pt-32 lg:pt-0">
             <h1
               className="hero-title"
               style={{
-                fontSize: "clamp(2rem, 4vw, 3.8rem)",
+                fontSize: "clamp(2.5rem, 5vw, 3.8rem)",
                 fontWeight: 400,
-                lineHeight: 1.08,
+                lineHeight: 1.05,
                 letterSpacing: "-0.02em",
                 marginBottom: "28px",
                 color: txt,
@@ -255,12 +279,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {project.title}
             </h1>
 
-            <div
-              style={{ display: "flex", gap: "32px", alignItems: "flex-start" }}
-            >
+            <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-8 items-start">
               <div
-                className="hero-desc"
-                style={{ flex: 1, maxWidth: "320px", opacity: 0 }}
+                className="hero-desc flex-1 max-w-[320px] lg:max-w-[100%]"
+                style={{ opacity: 0 }}
               >
                 <p
                   style={{
@@ -323,8 +345,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               </div>
 
               <div
-                className="hero-services"
-                style={{ width: "180px", flexShrink: 0, opacity: 0 }}
+                className="hero-services w-full sm:w-[180px] shrink-0"
+                style={{ opacity: 0 }}
               >
                 <div style={{ marginBottom: "16px" }}>
                   <h3
@@ -388,42 +410,50 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </div>
           </div>
 
-          <div
-            style={{
-              width: "54%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              paddingRight: "30px",
-              paddingTop: "16px",
-              paddingBottom: "16px",
-            }}
-          >
+          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full flex items-center px-6 pb-24 lg:pb-4 lg:pr-[30px] lg:pt-4">
             <div
-              className="hero-image"
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "16px",
-                overflow: "hidden",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-                clipPath: "inset(0 0 100% 0)",
-              }}
+              className="hero-image relative w-full h-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
+              style={{ clipPath: "inset(0 0 100% 0)" }}
             >
               {project.image ? (
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  sizes="54vw"
-                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 1024px) 100vw, 54vw"
+                  className="object-cover"
                   priority
-                  unoptimized={project.image.includes("localhost")}
+                  unoptimized
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                  }}
                 />
-              ) : (
-                <div className="absolute inset-0 bg-white/5" />
-              )}
+              ) : null}
+
+              {/* Premium abstract fallback */}
+              <div className="absolute inset-0 pointer-events-none select-none">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+                  }}
+                />
+                <div
+                  className="absolute inset-0 opacity-[0.03]"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                    backgroundSize: "6px 6px",
+                  }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-5">
+                  <span className="text-[min(40vw,20rem)] font-black tracking-tighter mix-blend-overlay">
+                    01
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -496,27 +526,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           ref={(el) =>
             registerPanel(el, (project.contentBlocks?.length || 0) + 1)
           }
+          className="w-full h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center overflow-hidden"
           style={{
-            flexShrink: 0,
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            alignItems: "center",
-            overflow: "hidden",
             background:
               "linear-gradient(90deg, #111118 0%, #f5f0eb 18%, #f5f0eb 100%)",
           }}
         >
           <div
-            className="panel-content"
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              padding: "0 60px 48px",
-              opacity: 0,
-            }}
+            className="panel-content w-full flex flex-col md:flex-row md:align-bottom justify-between gap-8 px-8 pb-12 lg:px-[60px] lg:pb-[48px] opacity-0"
           >
             <Link
               href={`/pillars/${nextProject.slug}`}
@@ -525,7 +542,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               <h2
                 className="next-title"
                 style={{
-                  fontSize: "clamp(3rem, 9vw, 10rem)",
+                  fontSize: "clamp(2.5rem, 8vw, 10rem)",
                   fontWeight: 700,
                   letterSpacing: "-0.02em",
                   lineHeight: 0.92,
@@ -545,13 +562,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </Link>
             <Link
               href={`/pillars/${nextProject.slug}`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-                marginBottom: "16px",
-                textDecoration: "none",
-              }}
+              className="flex items-center gap-4 lg:gap-5 mb-0 md:mb-4 no-underline"
             >
               <span
                 style={{
@@ -566,10 +577,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 NEXT PROJECT
               </span>
               <span
+                className="block w-12 lg:w-20 h-[1px]"
                 style={{
-                  display: "block",
-                  width: "80px",
-                  height: "1px",
                   backgroundColor: "rgba(26,26,26,0.2)",
                   transition: "width 0.3s",
                 }}
@@ -673,42 +682,49 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
     return (
       <section
         ref={ref}
+        className="w-full min-h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center justify-center px-6 py-16 lg:py-0 lg:px-[60px]"
         style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
           backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 60px",
         }}
       >
         <div
-          className="panel-image"
-          style={{
-            position: "relative",
-            width: "100%",
-            maxWidth: "1050px",
-            aspectRatio: "16/10",
-            borderRadius: "16px",
-            overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-            clipPath: "inset(0 100% 0 0)",
-          }}
+          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/10] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+          style={{ clipPath: "inset(0 100% 0 0)" }}
         >
           {block.image || project.image ? (
             <Image
               src={block.image || project.image}
               alt={`${project.title} showcase`}
               fill
-              sizes="100vw"
-              style={{ objectFit: "cover" }}
-              unoptimized={(block.image || project.image).includes("localhost")}
+              sizes="(max-width: 1024px) 100vw, 100vw"
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.display = "none";
+              }}
             />
-          ) : (
-            <div className="absolute inset-0 bg-white/5" />
-          )}
+          ) : null}
+
+          {/* Premium abstract fallback */}
+          <div className="absolute inset-0 pointer-events-none select-none">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                backgroundSize: "6px 6px",
+              }}
+            />
+          </div>
+
           <div
             style={{
               position: "absolute",
@@ -734,30 +750,19 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
     return (
       <section
         ref={ref}
+        className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
         style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
           backgroundColor: bgColor,
           color: txtColor,
-          display: "flex",
         }}
       >
         <div
-          className="panel-content"
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "40px 40px 40px 60px",
-            opacity: 0,
-          }}
+          className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:p-[40px_40px_40px_60px] opacity-0"
         >
           <h3
             className="panel-heading"
             style={{
-              fontSize: "2.6rem",
+              fontSize: "clamp(2rem, 3.5vw, 2.6rem)",
               fontWeight: 700,
               letterSpacing: "-0.02em",
               lineHeight: 1.1,
@@ -781,40 +786,46 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           </p>
         </div>
         <div
-          style={{
-            width: "38%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "40px 40px 40px 36px",
-            borderLeft: `1px solid ${border}`,
-          }}
+          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-[40px_40px_40px_36px]"
+          style={{ borderLeft: `1px solid ${border}` }}
         >
           <div
-            className="panel-image"
-            style={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "4/5",
-              borderRadius: "12px",
-              overflow: "hidden",
-              clipPath: "inset(0 100% 0 0)",
-            }}
+            className="panel-image relative w-full aspect-[4/5] rounded-xl overflow-hidden shadow-2xl"
+            style={{ clipPath: "inset(0 100% 0 0)" }}
           >
             {block.image || project.image ? (
               <Image
                 src={block.image || project.image}
                 alt="Case Study"
                 fill
-                sizes="38vw"
-                style={{ objectFit: "cover" }}
-                unoptimized={(block.image || project.image).includes(
-                  "localhost",
-                )}
+                sizes="(max-width: 1024px) 100vw, 38vw"
+                className="object-cover"
+                unoptimized
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                }}
               />
-            ) : (
-              <div className="absolute inset-0 bg-white/5" />
-            )}
+            ) : null}
+
+            {/* Premium abstract fallback */}
+            <div className="absolute inset-0 pointer-events-none select-none">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+                }}
+              />
+              <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                  backgroundSize: "6px 6px",
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -835,25 +846,14 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
   return (
     <section
       ref={ref}
+      className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
       style={{
-        flexShrink: 0,
-        width: "100vw",
-        height: "100vh",
         backgroundColor: bgColor,
         color: txtColor,
-        display: "flex",
       }}
     >
       <div
-        className="panel-content"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "40px 40px 40px 60px",
-          opacity: 0,
-        }}
+        className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:p-[40px_40px_40px_60px] opacity-0"
       >
         <p
           className="panel-body"
@@ -867,7 +867,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         >
           {block.body}
         </p>
-        <div style={{ display: "flex", gap: "48px" }}>
+        <div className="flex gap-8 lg:gap-12 flex-wrap">
           {block.stats?.map((stat, idx) => (
             <div key={idx} className="panel-stat">
               <span
@@ -896,38 +896,46 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         </div>
       </div>
       <div
-        style={{
-          width: "32%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "40px 40px 40px 36px",
-          borderLeft: `1px solid ${border}`,
-        }}
+        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-[40px_40px_40px_36px]"
+        style={{ borderLeft: `1px solid ${border}` }}
       >
         <div
-          className="panel-image"
-          style={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "1/1",
-            borderRadius: "12px",
-            overflow: "hidden",
-            clipPath: "inset(0 100% 0 0)",
-          }}
+          className="panel-image relative w-full aspect-square rounded-xl overflow-hidden shadow-2xl"
+          style={{ clipPath: "inset(0 100% 0 0)" }}
         >
           {block.image || project.image ? (
             <Image
               src={block.image || project.image}
               alt="Stats"
               fill
-              sizes="32vw"
-              style={{ objectFit: "cover" }}
-              unoptimized={(block.image || project.image).includes("localhost")}
+              sizes="(max-width: 1024px) 100vw, 32vw"
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.display = "none";
+              }}
             />
-          ) : (
-            <div className="absolute inset-0 bg-white/5" />
-          )}
+          ) : null}
+
+          {/* Premium abstract fallback */}
+          <div className="absolute inset-0 pointer-events-none select-none">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                backgroundSize: "6px 6px",
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -941,46 +949,51 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
   return (
     <section
       ref={ref}
+      className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16 px-6 py-16 lg:py-0 lg:px-[60px]"
       style={{
-        flexShrink: 0,
-        width: "100vw",
-        height: "100vh",
         backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "48px",
-        padding: "0 60px",
         color: block.theme === "light" ? "#1a1a1a" : "#fff",
       }}
     >
       <div
-        className="panel-image"
-        style={{
-          position: "relative",
-          width: "45vw",
-          maxWidth: "560px",
-          aspectRatio: "4/3",
-          borderRadius: "16px",
-          overflow: "hidden",
-          boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
-          clipPath: "inset(0 100% 0 0)",
-        }}
+        className="panel-image relative w-full lg:w-[45vw] max-w-[560px] aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+        style={{ clipPath: "inset(0 100% 0 0)" }}
       >
         {block.image || project.image ? (
           <Image
             src={block.image || project.image}
             alt="Feature"
             fill
-            sizes="45vw"
-            style={{ objectFit: "cover" }}
-            unoptimized={(block.image || project.image).includes("localhost")}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            className="object-cover"
+            unoptimized
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              img.style.display = "none";
+            }}
           />
-        ) : (
-          <div className="absolute inset-0 bg-white/5" />
-        )}
+        ) : null}
+
+        {/* Premium abstract fallback */}
+        <div className="absolute inset-0 pointer-events-none select-none">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+              backgroundSize: "6px 6px",
+            }}
+          />
+        </div>
       </div>
-      <div className="panel-content" style={{ maxWidth: "300px", opacity: 0 }}>
+      <div className="panel-content w-full lg:max-w-[300px] opacity-0">
         <span
           style={{
             fontSize: "11px",
@@ -1027,42 +1040,47 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
     return (
       <section
         ref={ref}
-        style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "#111118",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 60px",
-        }}
+        className="w-full min-h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center justify-center px-6 py-16 lg:py-0 lg:px-[60px]"
+        style={{ backgroundColor: "#111118" }}
       >
         <div
-          className="panel-image"
-          style={{
-            position: "relative",
-            width: "100%",
-            maxWidth: "1050px",
-            aspectRatio: "16/9",
-            borderRadius: "16px",
-            overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-            clipPath: "inset(0 100% 0 0)",
-          }}
+          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/9] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+          style={{ clipPath: "inset(0 100% 0 0)" }}
         >
           {block.image || project.image ? (
             <Image
               src={block.image || project.image}
               alt="Final"
               fill
-              sizes="100vw"
-              style={{ objectFit: "cover" }}
-              unoptimized={(block.image || project.image).includes("localhost")}
+              sizes="(max-width: 1024px) 100vw, 100vw"
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.display = "none";
+              }}
             />
-          ) : (
-            <div className="absolute inset-0 bg-white/5" />
-          )}
+          ) : null}
+
+          {/* Premium abstract fallback */}
+          <div className="absolute inset-0 pointer-events-none select-none">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                backgroundSize: "6px 6px",
+              }}
+            />
+          </div>
+
           <div
             style={{
               position: "absolute",
@@ -1096,27 +1114,19 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
     return (
       <section
         ref={ref}
+        className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row items-center justify-center px-6 py-16 lg:py-0 lg:px-[120px] gap-12 lg:gap-[64px]"
         style={{
-          flexShrink: 0,
-          width: "100vw",
-          height: "100vh",
           backgroundColor: isLight ? "#f0ece6" : "#0d0d12",
           color: isLight ? "#1a1a1a" : "#f5f5f5",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 120px",
-          gap: "64px",
         }}
       >
         <div
-          className="panel-content"
-          style={{ flex: 1, maxWidth: "600px", opacity: 0 }}
+          className="panel-content flex-1 w-full lg:max-w-[600px] opacity-0"
         >
           <h3
             className="panel-heading"
             style={{
-              fontSize: "2.4rem",
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
               fontWeight: 700,
               marginBottom: "32px",
               letterSpacing: "-0.01em",
@@ -1135,25 +1145,40 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
         {block.image ? (
           <div
-            className="panel-image"
-            style={{
-              width: "40%",
-              aspectRatio: "4/5",
-              position: "relative",
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-              clipPath: "inset(0 100% 0 0)",
-            }}
+            className="panel-image relative w-full lg:w-[40%] aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
+            style={{ clipPath: "inset(0 100% 0 0)" }}
           >
             <Image
               src={block.image}
               alt={block.heading || "Rich Text Image"}
               fill
-              sizes="40vw"
-              style={{ objectFit: "cover" }}
-              unoptimized={block.image.includes("localhost")}
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.display = "none";
+              }}
             />
+
+            {/* Premium abstract fallback */}
+            <div className="absolute inset-0 pointer-events-none select-none">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+                }}
+              />
+              <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                  backgroundSize: "6px 6px",
+                }}
+              />
+            </div>
           </div>
         ) : null}
       </section>

@@ -189,17 +189,63 @@ export default function PillarCard({
               loading="lazy"
               unoptimized
               onError={(e) => {
-                // Hide the broken image and show fallback
-                (e.target as HTMLImageElement).style.display = "none";
+                const img = e.target as HTMLImageElement;
+                img.style.display = "none";
               }}
             />
           ) : null}
-          {/* Fallback gradient (visible when image is missing or fails to load) */}
-          <div className="absolute inset-0 bg-linear-to-br from-white/6 via-white/2 to-transparent flex items-end p-6 pointer-events-none">
-            <span className="text-white/10 text-[clamp(1.2rem,3vw,2.5rem)] font-bold uppercase tracking-tight leading-tight line-clamp-3">
-              {pillar.title}
-            </span>
+
+          {/* Premium fallback — always rendered beneath the image layer */}
+          <div className="absolute inset-0 pointer-events-none select-none">
+            {/* Multi-stop gradient background */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+              }}
+            />
+
+            {/* Subtle diagonal scan line texture */}
+            <div
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                backgroundSize: "6px 6px",
+              }}
+            />
+
+            {/* Left accent bar */}
+            <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-gold/40 via-gold/10 to-transparent" />
+
+            {/* Large index number — editorial hero */}
+            <div className="absolute top-6 right-6 sm:top-8 sm:right-8">
+              <span
+                className="text-white/[0.04] font-black leading-none tracking-tighter"
+                style={{ fontSize: "clamp(5rem, 10vw, 12rem)" }}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </div>
+
+            {/* Bottom content — title integrated into the card */}
+            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-gold/50" />
+                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/25 uppercase font-medium">
+                  Pillar {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <p className="text-white/[0.12] text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
+                {pillar.title}
+              </p>
+            </div>
+
+            {/* Top-right corner bracket */}
+            <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-6 h-6 border-t border-r border-white/[0.06]" />
           </div>
+
           <div
             ref={overlayRef}
             className="absolute inset-0 pointer-events-none opacity-0"
