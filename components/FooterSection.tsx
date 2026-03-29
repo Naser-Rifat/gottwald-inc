@@ -5,7 +5,7 @@ import logo from "@/public/logo.png";
 
 const directoryLinks = [
   { label: "Entity Grid", href: "/entity-grid" },
-  { label: "Manifesto", href: "/about" },
+  { label: "Manifesto", href: "/partnerships#manifesto" },
   { label: "Cooperation Hub", href: "/cooperation-hub" },
   { label: "Strategic Assets", href: "/strategic-assets" },
   { label: "Strategic Inquiry.", href: "/contact" },
