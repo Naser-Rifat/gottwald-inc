@@ -35,8 +35,11 @@ function setConsentCookie(functional: boolean) {
     savedAt: new Date().toISOString(),
   };
   const payload = encodeURIComponent(JSON.stringify(consent));
-  // Set for 1 year (31536000 seconds), secure, sameSite=Lax
-  document.cookie = `${COOKIE_NAME}=${payload}; max-age=31536000; path=/; samesite=Lax; secure`;
+  // Only set `secure` on HTTPS (production). On localhost HTTP, `secure` silently
+  // prevents the cookie from being saved, causing the consent bar to reappear.
+  const isSecure = typeof window !== "undefined" && window.location.protocol === "https:";
+  const secureFlag = isSecure ? "; secure" : "";
+  document.cookie = `${COOKIE_NAME}=${payload}; max-age=31536000; path=/; samesite=Lax${secureFlag}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -70,9 +73,11 @@ export default function CookieManager() {
   const [functional, setFunctional] = useState(true);
 
   // ── On mount: show bar if no consent cookie exists ──
+  // Delay is set to 4000ms so the cookie bar appears AFTER the PageLoader
+  // animation has fully completed (~2-3s), preventing z-index overlap.
   useEffect(() => {
     if (!getConsentCookie()) {
-      const t = setTimeout(() => setShowBar(true), 1200);
+      const t = setTimeout(() => setShowBar(true), 4000);
       return () => clearTimeout(t);
     }
   }, []);
@@ -115,7 +120,7 @@ export default function CookieManager() {
           LAYER 1: Compact Floating Bar (Bottom Right Desktop, Bottom Mobile)
       ════════════════════════════════════════════════════════════════ */}
       {showBar && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 lg:right-12 z-9999 animate-fade-up pointer-events-none">
+        <div className="fixed bottom-4 left-4 right-4 md:bottom-8 md:left-auto md:right-8 lg:bottom-12 lg:right-12 z-9999 animate-fade-up pointer-events-none">
           <div className="max-w-[480px] w-full ml-auto bg-[#030303]/90 backdrop-blur-2xl border border-white/10 p-6 md:p-8 pointer-events-auto relative overflow-hidden">
             {/* Subtle gold glow behind */}
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-gold/5 blur-[80px] rounded-full pointer-events-none" />
@@ -132,7 +137,7 @@ export default function CookieManager() {
               <div className="flex items-center gap-3 w-full">
                 <button
                   onClick={() => openPanel()}
-                  className="px-0 py-3 text-white/40 hover:text-white text-[10px] tracking-[0.2em] uppercase transition-colors duration-300 relative group"
+                  className="px-0 py-3 text-white/55 hover:text-white text-[10px] tracking-[0.2em] uppercase transition-colors duration-300 relative group"
                 >
                   Configure
                   <span className="absolute bottom-1 left-0 w-0 h-px bg-white/40 transition-all duration-300 group-hover:w-full" />
