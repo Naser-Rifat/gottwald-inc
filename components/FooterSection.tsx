@@ -198,7 +198,7 @@ export default function FooterSection() {
               Build Version
             </h4>
             <span className="text-white tracking-[0.1em] font-mono">
-              GOTTWALD_INFRA_1.0
+              GOTT_WALD_INFRA_1.0
             </span>
           </div>
 
