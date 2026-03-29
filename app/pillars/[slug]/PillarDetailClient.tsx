@@ -248,7 +248,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
       {/* ─── Panel Counter ─── */}
       <div
-        className="fixed bottom-6 right-8 z-50 text-[10px] tracking-[0.25em] uppercase font-medium hidden lg:block"
+        className="fixed bottom-10 right-8 z-50 text-[10px] tracking-[0.25em] uppercase font-medium hidden lg:block"
         style={{ color: TXT_MUTED }}
       >
         <span ref={counterRef} style={{ color: GOLD }}>01</span>
@@ -562,17 +562,17 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           }
           className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${BG_DARK} 0%, ${BG_PANEL} 30%, ${BG_LIGHT} 30.5%, ${BG_LIGHT} 100%)`,
+            background: `linear-gradient(135deg, ${BG_DARK} 0%, ${BG_PANEL} 20%, ${BG_LIGHT} 20.5%, ${BG_LIGHT} 100%)`,
           }}
         >
-          <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-12 lg:px-15 lg:pb-12 opacity-0">
+          <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
             <Link
               href={`/pillars/${nextProject.slug}`}
               className="no-underline group"
             >
               <span
                 className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
-                style={{ color: TXT_DARK_MUTED }}
+                style={{ color: "rgba(28,29,33,0.6)" }}
               >
                 Next Chapter
               </span>
@@ -583,16 +583,17 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   fontSize: "clamp(2rem, 7vw, 7rem)",
                   fontWeight: 400,
                   letterSpacing: "-0.02em",
-                  lineHeight: 0.92,
-                  color: "rgba(28,29,33,0.08)",
+                  lineHeight: 1.05,
+                  paddingBottom: "12px",
+                  color: "rgba(28,29,33,0.45)",
                   whiteSpace: "pre-line" as const,
                   transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "rgba(28,29,33,0.2)")
+                  (e.currentTarget.style.color = "#1c1d21")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "rgba(28,29,33,0.08)")
+                  (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
                 }
               >
                 {nextProject.title}
@@ -603,18 +604,18 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               className="flex items-center gap-4 mb-0 md:mb-4 no-underline group"
             >
               <span
-                className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300"
-                style={{ color: TXT_DARK_MUTED }}
+                className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300 group-hover:text-text-primary"
+                style={{ color: "rgba(28,29,33,0.7)" }}
               >
                 Next Project
               </span>
               <span
-                className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
-                style={{ backgroundColor: "rgba(28,29,33,0.15)" }}
+                className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20 group-hover:bg-text-primary"
+                style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
               />
               <span
-                className="text-lg transition-transform duration-300 group-hover:translate-x-1"
-                style={{ color: TXT_DARK_MUTED }}
+                className="text-lg transition-all duration-300 group-hover:translate-x-1 group-hover:text-text-primary"
+                style={{ color: "rgba(28,29,33,0.7)" }}
               >
                 →
               </span>
@@ -1141,7 +1142,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
           {block.body && (
             <div
-              className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-[#d4af37] [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-[#d4af37] focus:[&_input]:ring-1 focus:[&_input]:ring-[#d4af37] [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-[#d4af37] focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-[#d4af37] [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-[#d4af37] [&_button]:text-[#000000] [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
+              className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-gold [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-gold focus:[&_input]:ring-1 focus:[&_input]:ring-gold [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-gold focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-gold [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-gold [&_button]:text-black [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
               style={{ fontSize: "14px", lineHeight: 1.8 }}
               dangerouslySetInnerHTML={{ __html: block.body }}
             />
