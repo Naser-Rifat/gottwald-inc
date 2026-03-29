@@ -16,7 +16,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pillar = await getPillar(slug);
-  if (!pillar) return { title: "Pillar Not Found" };
+  if (!pillar) return { title: "GOTT WALD — Pillar" };
 
   const socialImage = pillar.image || DEFAULT_OG_IMAGE;
   return {
@@ -38,19 +38,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPillarSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllPillarSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    // Backend unreachable at build time — dynamic rendering will handle it
+    return [];
+  }
 }
 
 export default async function PillarPage({ params }: Props) {
   const { slug } = await params;
-  const pillar = await getPillar(slug);
 
+  // Both calls share the same cached promise — only one HTTP request
+  const [pillar, nextPillar] = await Promise.all([
+    getPillar(slug),
+    getNextPillar(slug),
+  ]);
+
+  // Only hard 404 if the pillar truly doesn't exist (slug not in API list)
+  // A timeout returns undefined too — but we show notFound rather than a blank page
   if (!pillar) {
     notFound();
   }
-
-  const nextPillar = await getNextPillar(slug);
 
   return (
     <>

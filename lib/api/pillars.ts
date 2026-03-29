@@ -3,7 +3,6 @@ import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 const API_ORIGIN = BASE_URL.replace(/\/$/, "");
 
-
 function toAbsoluteImageUrl(url: string | undefined): string {
   if (!url || !url.trim()) return "";
   const s = url.trim();
@@ -61,13 +60,13 @@ function toArray(val: string | string[] | undefined): string[] {
   const result: string[] = [];
   for (const item of arr) {
     const s = String(item).trim();
-    if (!s) continue;
+    if (!s || s.toLowerCase() === "string") continue;
     try {
       const parsed = JSON.parse(s);
       if (Array.isArray(parsed)) {
         result.push(...toArray(parsed));
       } else if (typeof parsed === "string") {
-        result.push(parsed.trim());
+        if (parsed.toLowerCase() !== "string") result.push(parsed.trim());
       } else {
         result.push(s);
       }
@@ -111,14 +110,14 @@ function sanitizeTitle(raw: string): string {
   const trimmed = raw.trim();
   if (trimmed.length <= 80) return trimmed;
 
-  // Detect repeated substrings: try lengths from 5..half the string
   for (let len = 5; len <= trimmed.length / 2; len++) {
     const candidate = trimmed.slice(0, len);
-    const repeated = candidate.repeat(Math.ceil(trimmed.length / len)).slice(0, trimmed.length);
+    const repeated = candidate
+      .repeat(Math.ceil(trimmed.length / len))
+      .slice(0, trimmed.length);
     if (repeated === trimmed) return candidate;
   }
 
-  // Fallback: just truncate
   return trimmed.slice(0, 80);
 }
 
@@ -137,50 +136,91 @@ function mapApiToPillar(api: ApiPillar): Pillar {
       image: toAbsoluteImageUrl(b.image),
       videoUrl: b.video_url,
     }));
+  const title = sanitizeTitle(api.title);
+  const finalTitle = title.toLowerCase() === "string" ? "Pillar Details" : title;
+
   return {
     slug: api.slug,
-    title: sanitizeTitle(api.title),
+    title: finalTitle,
     description: api.description ?? "",
     details: api.details ?? api.description ?? "",
     image: toAbsoluteImageUrl(api.image),
     launchUrl: api.launch_url ?? "",
-    tags: toArray(api.tags),
+    tags: toArray(api.tags).filter(t => !t.startsWith("http://") && !t.startsWith("https://")),
     services: toArray(api.services),
     theme: toTheme(api.theme),
     contentBlocks: blocks,
   };
 }
 
-async function apiFetch<T>(endpoint: string): Promise<T> {
-  const headers: HeadersInit = { "Content-Type": "application/json" };
-  const apiKey = process.env.API_READ_KEY;
-  if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
+// ─── Resilient fetch with AbortController timeout ─────────────────────────────
+// Render free-tier cold starts can stall for 30+ seconds.
+// We abort after 8s so Next.js always responds — even if the API is sleeping.
+const FETCH_TIMEOUT_MS = 8_000;
 
-  const res = await fetch(`${API_ORIGIN}${endpoint}`, {
-    headers,
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error(`API Error ${res.status}: ${endpoint}`);
-  return res.json();
+async function apiFetch<T>(endpoint: string): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    const headers: HeadersInit = { "Content-Type": "application/json" };
+    const apiKey = process.env.API_READ_KEY;
+    if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
+
+    const res = await fetch(`${API_ORIGIN}${endpoint}`, {
+      headers,
+      signal: controller.signal,
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) throw new Error(`API ${res.status}: ${endpoint}`);
+    return res.json() as Promise<T>;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
-export async function getPillars(): Promise<Pillar[]> {
-  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  // if (dataSource === "mock") {
-  //   return MOCK_PROJECTS;
-  // }
+// ─── Module-level request deduplication cache ────────────────────────────────
+// `getPillars()` can be called up to 3× per page render:
+//   1. generateStaticParams  2. getPillar (fallback)  3. getNextPillar
+// Storing a single Promise means all three share one HTTP connection.
+let pillarsPromise: Promise<Pillar[]> | null = null;
+let pillarsCachedAt = 0;
+const CACHE_TTL_MS = 60_000; // matches next.revalidate: 60
 
-  const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
-  const items = res.data ?? res.results ?? [];
-  return items.map(mapApiToPillar);
+async function fetchAllPillars(): Promise<Pillar[]> {
+  const now = Date.now();
+  if (pillarsPromise && now - pillarsCachedAt > CACHE_TTL_MS) {
+    pillarsPromise = null;
+  }
+
+  if (!pillarsPromise) {
+    pillarsCachedAt = now;
+    pillarsPromise = apiFetch<PillarsApiResponse>("/api/v1/pillars/")
+      .then((res) => {
+        const items = res.data ?? res.results ?? [];
+        return items.map(mapApiToPillar);
+      })
+      .catch((err: unknown) => {
+        // Release cache slot so next request retries
+        pillarsPromise = null;
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error("[pillars] list fetch failed:", msg);
+        return [] as Pillar[];
+      });
+  }
+
+  return pillarsPromise;
+}
+
+// ─── Public exports ───────────────────────────────────────────────────────────
+
+export async function getPillars(): Promise<Pillar[]> {
+  return fetchAllPillars();
 }
 
 export async function getPillar(slug: string): Promise<Pillar | undefined> {
-  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  // if (dataSource === "mock") {
-  //   return MOCK_PROJECTS.find((p) => p.slug === slug);
-  // }
-
+  // 1. Try the individual endpoint (fastest — avoids downloading all pillars)
   try {
     const res = await apiFetch<{ data?: ApiPillar } | ApiPillar>(
       `/api/v1/pillars/${slug}/`,
@@ -190,27 +230,37 @@ export async function getPillar(slug: string): Promise<Pillar | undefined> {
         ? res.data
         : (res as ApiPillar);
     return mapApiToPillar(api);
-  } catch {
-    const pillars = await getPillars();
-    const found = pillars.find((p) => p.slug === slug);
-    return found ?? undefined;
+  } catch (err: unknown) {
+    // 2. Fall back to the shared cached list — NOT a second TCP call
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn(`[pillars] getPillar("${slug}") failed, using list:`, msg);
   }
+
+  const pillars = await fetchAllPillars();
+  return pillars.find((p) => p.slug === slug);
 }
 
 export async function getNextPillar(slug: string): Promise<Pillar> {
-  const pillars = await getPillars();
+  const pillars = await fetchAllPillars();
   const index = pillars.findIndex((p) => p.slug === slug);
-  const nextIndex = index < 0 ? 0 : (index + 1) % pillars.length;
-  return pillars[nextIndex];
+  const nextIndex = index < 0 ? 0 : (index + 1) % Math.max(pillars.length, 1);
+  return (
+    pillars[nextIndex] ?? {
+      slug,
+      title: "",
+      description: "",
+      details: "",
+      image: "",
+      launchUrl: "",
+      tags: [],
+      services: [],
+      theme: DEFAULT_THEME,
+      contentBlocks: [],
+    }
+  );
 }
 
 export async function getAllPillarSlugs(): Promise<string[]> {
-  // const dataSource = process.env.NEXT_PUBLIC_DATA_SOURCE || "mock";
-  // if (dataSource === "mock") {
-  //   return MOCK_PROJECTS.map((p) => p.slug);
-  // }
-
-  const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/");
-  const items = res.data ?? res.results ?? [];
-  return items.map((p) => p.slug);
+  const pillars = await fetchAllPillars();
+  return pillars.map((p) => p.slug);
 }
