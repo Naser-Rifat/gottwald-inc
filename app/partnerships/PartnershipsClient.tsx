@@ -1187,7 +1187,7 @@ export default function PartnershipsClient() {
                 </p>
               )}
               {submitStatus === "idle" && (
-                <p className="text-white/40 text-sm font-light mt-2">
+                <p className="text-white/40 text-md font-light mt-2">
                   All transmissions are secured and treated with strict confidentiality.
                 </p>
               )}

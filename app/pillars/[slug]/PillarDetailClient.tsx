@@ -6,6 +6,20 @@ import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import type { Pillar, ContentBlock } from "@/lib/types/pillars";
 
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — matched to homepage globals.css
+   ───────────────────────────────────────────────────────────── */
+const GOLD = "#d4af37";
+const BG_DARK = "#000000";
+const BG_PANEL = "#0a0a0e";
+const BG_LIGHT = "#f5f0eb";
+const TXT_LIGHT = "#f5f5f5";
+const TXT_MUTED = "rgba(255,255,255,0.5)";
+const TXT_DARK = "#1c1d21";
+const TXT_DARK_MUTED = "rgba(28,29,33,0.5)";
+const BORDER_DARK = "rgba(212,175,55,0.12)";
+const BORDER_LIGHT = "rgba(28,29,33,0.08)";
+
 interface Props {
   project: Pillar;
   nextProject: Pillar;
@@ -16,6 +30,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<HTMLElement[]>([]);
   const progressRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
 
   const registerPanel = useCallback((el: HTMLElement | null, idx: number) => {
     if (el) panelRefs.current[idx] = el;
@@ -29,7 +44,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
     const mm = gsap.matchMedia();
 
-    // =============== DESKTOP: Horizontal Scroll ===============
+    // ─── Desktop: Horizontal Scroll ───────────────────────────
     mm.add("(min-width: 1024px)", () => {
       document.body.style.overflow = "hidden";
       document.body.style.height = "100vh";
@@ -62,18 +77,22 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           gsap.set(progress, { width: `${pct}%` });
         }
 
+        // Counter update
         const panels = panelRefs.current;
-        panels.forEach((panel) => {
+        let activeIdx = 0;
+        panels.forEach((panel, idx) => {
           if (!panel) return;
           const rect = panel.getBoundingClientRect();
-          const viewW = window.innerWidth;
-          const visible = rect.left < viewW && rect.right > 0;
-
+          if (rect.left < window.innerWidth * 0.5) activeIdx = idx;
+          const visible = rect.left < window.innerWidth && rect.right > 0;
           if (visible && !panel.dataset.revealed) {
             panel.dataset.revealed = "1";
             revealPanel(panel);
           }
         });
+        if (counterRef.current) {
+          counterRef.current.textContent = String(activeIdx + 1).padStart(2, "0");
+        }
 
         raf = requestAnimationFrame(animate);
       };
@@ -93,7 +112,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       };
     });
 
-    // =============== MOBILE: Vertical Native Scroll ===============
+    // ─── Mobile: Vertical Native Scroll ──────────────────────
     mm.add("(max-width: 1023px)", () => {
       document.body.style.overflow = "";
       document.body.style.height = "";
@@ -101,22 +120,18 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
       let raf: number;
 
-      // Simple intersection observer polyfill via rAF for mobile reveals
       const animateMobile = () => {
         const panels = panelRefs.current;
         panels.forEach((panel) => {
           if (!panel) return;
           const rect = panel.getBoundingClientRect();
-          // Reveal when top is within viewport
           const visible = rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
-
           if (visible && !panel.dataset.revealed) {
             panel.dataset.revealed = "1";
             revealPanel(panel);
           }
         });
 
-        // Update progress bar based on vertical scroll
         if (progress) {
           const scrollY = window.scrollY;
           const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
@@ -134,39 +149,50 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       };
     });
 
-    // =============== INITIAL HERO REVEAL (Both) ===============
+    // ─── Initial Hero Reveal ─────────────────────────────────
     const heroPanel = panelRefs.current[0];
     if (heroPanel) {
-      gsap.fromTo(
-        heroPanel.querySelector(".hero-title"),
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.3 },
+      const tl = gsap.timeline({ delay: 0.2 });
+      tl.fromTo(
+        heroPanel.querySelector(".hero-label"),
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0
       );
-      gsap.fromTo(
+      tl.fromTo(
+        heroPanel.querySelector(".hero-title"),
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" },
+        0.1
+      );
+      tl.fromTo(
         heroPanel.querySelector(".hero-desc"),
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.5 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+        0.4
       );
-      gsap.fromTo(
+      tl.fromTo(
         heroPanel.querySelector(".hero-services"),
         { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.6 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+        0.5
       );
-      gsap.fromTo(
+      tl.fromTo(
+        heroPanel.querySelector(".hero-cta"),
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0.6
+      );
+      tl.fromTo(
         heroPanel.querySelector(".hero-image"),
-        { clipPath: "inset(0 0 100% 0)", scale: 1.1 },
+        { clipPath: "inset(0 0 100% 0)", scale: 1.08 },
         {
           clipPath: "inset(0 0 0% 0)",
           scale: 1,
-          duration: 1.4,
+          duration: 1.6,
           ease: "power4.inOut",
-          delay: 0.15,
         },
-      );
-      gsap.fromTo(
-        heroPanel.querySelector(".hero-cta"),
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.8 },
+        0.1
       );
       heroPanel.dataset.revealed = "1";
     }
@@ -174,84 +200,63 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     gsap.fromTo(
       track,
       { opacity: 0 },
-      { opacity: 1, duration: 0.5, ease: "power2.out" },
+      { opacity: 1, duration: 0.6, ease: "power2.out" }
     );
 
     return () => mm.revert();
   }, []);
-
-  const bg = project.theme.background;
-  const txt = project.theme.text;
-  const accent = project.theme.accent;
 
   const totalPanels = 2 + (project.contentBlocks?.length || 0);
 
   return (
     <div
       ref={outerRef}
-      style={{
-        position: "fixed",
-        inset: 0,
-        overflow: "hidden",
-        backgroundColor: bg,
-        color: txt,
-      }}
+      className="relative lg:fixed lg:inset-0 overflow-y-auto lg:overflow-hidden"
+      style={{ backgroundColor: BG_DARK, color: TXT_LIGHT }}
     >
-      <nav
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 50,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "24px 60px",
-          pointerEvents: "none",
-        }}
-      >
+      {/* ─── Top Navigation ─── */}
+      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium tracking-wider opacity-65 no-underline transition-opacity duration-300 hover:opacity-100 pointer-events-auto"
-          style={{ color: txt }}
+          className="inline-flex items-center gap-3 text-xs font-medium tracking-[0.18em] uppercase opacity-50 no-underline transition-opacity duration-300 hover:opacity-100 pointer-events-auto"
+          style={{ color: TXT_LIGHT }}
         >
-          ← back
+          <span className="inline-block w-5 h-px bg-current opacity-60" />
+          Back
         </Link>
-        <span
-          style={{
-            color: txt,
-            fontSize: "11px",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            opacity: 0.35,
-          }}
-        >
-          {project.tags?.join(" · ")}
-        </span>
+        {project.tags && project.tags.length > 0 && (
+          <span
+            className="hidden sm:inline text-[10px] tracking-[0.25em] uppercase font-medium"
+            style={{ color: GOLD, opacity: 0.6 }}
+          >
+            {project.tags?.join(" · ")}
+          </span>
+        )}
       </nav>
 
-      {/* Progress bar */}
+      {/* ─── Progress Bar ─── */}
       <div
-        className="fixed bottom-0 left-0 w-full h-[2px] z-50"
-        style={{ backgroundColor: `${txt}10` }}
+        className="fixed bottom-0 left-0 w-full h-px z-50"
+        style={{ backgroundColor: "rgba(212,175,55,0.1)" }}
       >
         <div
           ref={progressRef}
           className="h-full"
-          style={{ backgroundColor: accent, width: 0, willChange: "width" }}
+          style={{ backgroundColor: GOLD, width: 0, willChange: "width" }}
         />
       </div>
 
-      {/* Panel counter */}
+      {/* ─── Panel Counter ─── */}
       <div
-        className="fixed bottom-6 right-8 z-50 text-[11px] tracking-[0.2em] uppercase font-medium"
-        style={{ color: `${txt}40` }}
+        className="fixed bottom-6 right-8 z-50 text-[10px] tracking-[0.25em] uppercase font-medium hidden lg:block"
+        style={{ color: TXT_MUTED }}
       >
-        <span style={{ color: accent }}>01</span> /{" "}
+        <span ref={counterRef} style={{ color: GOLD }}>01</span>
+        <span className="mx-1 opacity-30">/</span>
         {String(totalPanels).padStart(2, "0")}
       </div>
 
+      {/* ─── Scroll Track ─── */}
       <div
         ref={trackRef}
         className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-0 will-change-transform"
@@ -259,116 +264,138 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
           ref={(el) => registerPanel(el, 0)}
-          className="w-full h-auto min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
-          style={{ backgroundColor: bg }}
+          className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
+          style={{ backgroundColor: BG_DARK }}
         >
-          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-24 lg:py-0 lg:pl-[60px] lg:pr-[40px] overflow-hidden pt-32 lg:pt-0">
+          {/* Left: Text Content */}
+          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-20 lg:py-0 lg:pl-15 lg:pr-10 pt-28 lg:pt-0">
+            {/* Section marker — matching homepage pattern */}
+            <div
+              className="hero-label mb-8 flex items-center gap-3"
+              style={{ opacity: 0 }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: GOLD }}
+              />
+              <span
+                className="text-[10px] tracking-[0.25em] uppercase font-semibold"
+                style={{ color: TXT_MUTED }}
+              >
+                01 — {project.tags?.[0] || "Pillar"}
+              </span>
+            </div>
+
             <h1
               className="hero-title"
               style={{
-                fontSize: "clamp(2.5rem, 5vw, 3.8rem)",
+                fontFamily: "var(--font-serif), Georgia, serif",
+                fontSize: "clamp(2.4rem, 5.5vw, 4.2rem)",
                 fontWeight: 400,
                 lineHeight: 1.05,
                 letterSpacing: "-0.02em",
-                marginBottom: "28px",
-                color: txt,
-                whiteSpace: "pre-line",
+                marginBottom: "32px",
+                color: TXT_LIGHT,
                 opacity: 0,
               }}
             >
               {project.title}
             </h1>
 
-            <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-8 items-start">
+            <div className="flex flex-col sm:flex-row gap-10 sm:gap-14 lg:gap-10 items-start">
               <div
-                className="hero-desc flex-1 max-w-[320px] lg:max-w-[100%]"
+                className="hero-desc flex-1 max-w-[380px]"
                 style={{ opacity: 0 }}
               >
-                <p
-                  style={{
-                    fontSize: "15px",
-                    lineHeight: 1.65,
-                    opacity: 0.7,
-                    margin: "0 0 10px 0",
-                  }}
-                >
-                  {project.description}
-                </p>
-                <p
-                  style={{
-                    fontSize: "15px",
-                    lineHeight: 1.65,
-                    opacity: 0.7,
-                    margin: "0 0 20px 0",
-                  }}
-                >
-                  {project.details}
-                </p>
+                {project.description && project.description !== project.title && (
+                  <p
+                    className="mb-4"
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: 1.75,
+                      color: TXT_MUTED,
+                    }}
+                  >
+                    {project.description}
+                  </p>
+                )}
+                {project.details && project.details !== project.description && project.details !== project.title && (
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: 1.75,
+                      color: TXT_MUTED,
+                      marginBottom: "28px",
+                    }}
+                  >
+                    {project.details}
+                  </p>
+                )}
+
+                {/* CTA — pill with gold border, matching homepage "APPLY →" pattern */}
                 {project.launchUrl && (
                   <a
                     href={project.launchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hero-cta"
+                    className="hero-cta inline-flex items-center gap-3 no-underline group"
                     style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      backgroundColor: "#fff",
-                      color: accent || "#222",
-                      padding: "14px 32px",
+                      padding: "14px 30px",
                       borderRadius: "100px",
-                      border: "none",
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      fontSize: "13px",
-                      fontWeight: 700,
-                      letterSpacing: "0.16em",
+                      border: `1px solid ${GOLD}`,
+                      color: GOLD,
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.2em",
                       textTransform: "uppercase" as const,
-                      boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
-                      transition: "transform 0.2s",
+                      transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
                       opacity: 0,
                     }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = GOLD;
+                      e.currentTarget.style.color = BG_DARK;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                      e.currentTarget.style.color = GOLD;
+                    }}
                   >
-                    <span
-                      style={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: "50%",
-                        backgroundColor: accent || "#c00",
-                        flexShrink: 0,
-                      }}
-                    />
                     Visit Website
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </a>
                 )}
               </div>
 
-              <div
-                className="hero-services w-full sm:w-[180px] shrink-0"
-                style={{ opacity: 0 }}
-              >
-                <div style={{ marginBottom: "16px" }}>
+              {/* Services column */}
+              {project.services && project.services.length > 0 && (
+                <div
+                  className="hero-services w-full sm:w-[160px] shrink-0"
+                  style={{ opacity: 0 }}
+                >
                   <h3
+                    className="mb-3"
                     style={{
-                      fontSize: "11px",
-                      letterSpacing: "0.18em",
-                      fontWeight: 700,
+                      fontSize: "10px",
+                      letterSpacing: "0.25em",
+                      fontWeight: 600,
                       textTransform: "uppercase" as const,
-                      marginBottom: "8px",
-                      color: accent,
+                      color: GOLD,
                     }}
                   >
                     Services
                   </h3>
+                  <div
+                    className="w-8 h-px mb-4"
+                    style={{ backgroundColor: BORDER_DARK }}
+                  />
                   <ul
                     style={{
                       listStyle: "none",
                       padding: 0,
                       margin: 0,
-                      fontSize: "14px",
-                      lineHeight: 1.6,
-                      opacity: 0.7,
+                      fontSize: "13px",
+                      lineHeight: 1.8,
+                      color: TXT_MUTED,
                     }}
                   >
                     {project.services.map((s) => (
@@ -376,44 +403,18 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     ))}
                   </ul>
                 </div>
-                {project.recognitions && (
-                  <div>
-                    <h3
-                      style={{
-                        fontSize: "11px",
-                        letterSpacing: "0.18em",
-                        fontWeight: 700,
-                        textTransform: "uppercase" as const,
-                        marginBottom: "8px",
-                        color: accent,
-                      }}
-                    >
-                      Recognitions
-                    </h3>
-                    <ul
-                      style={{
-                        listStyle: "none",
-                        padding: 0,
-                        margin: 0,
-                        fontSize: "14px",
-                        lineHeight: 1.6,
-                        opacity: 0.7,
-                      }}
-                    >
-                      {project.recognitions.map((r) => (
-                        <li key={r}>{r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
 
-          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full flex items-center px-6 pb-24 lg:pb-4 lg:pr-[30px] lg:pt-4">
+          {/* Right: Hero Image */}
+          <div className="w-full lg:w-[54%] h-[45vh] lg:h-full flex items-center px-6 pb-12 lg:pb-4 lg:pr-8 lg:pt-4">
             <div
-              className="hero-image relative w-full h-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
-              style={{ clipPath: "inset(0 0 100% 0)" }}
+              className="hero-image relative w-full h-full rounded-xl overflow-hidden"
+              style={{
+                clipPath: "inset(0 0 100% 0)",
+                boxShadow: "0 20px 80px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.04)",
+              }}
             >
               {project.image ? (
                 <Image
@@ -431,29 +432,56 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 />
               ) : null}
 
-              {/* Premium abstract fallback */}
+              {/* Premium abstract fallback — consistent dark palette */}
               <div className="absolute inset-0 pointer-events-none select-none">
                 <div
                   className="absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
+                      "linear-gradient(145deg, #08090e 0%, #0c1020 35%, #0a0e18 65%, #060810 100%)",
                   }}
                 />
+                {/* Diagonal fine lines */}
                 <div
-                  className="absolute inset-0 opacity-[0.03]"
+                  className="absolute inset-0 opacity-[0.025]"
                   style={{
                     backgroundImage:
-                      "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                    backgroundSize: "6px 6px",
+                      "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(212,175,55,.15) 2px, rgba(212,175,55,.15) 3px)",
+                    backgroundSize: "8px 8px",
                   }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center opacity-5">
-                  <span className="text-[min(40vw,20rem)] font-black tracking-tighter mix-blend-overlay">
+                {/* Gold accent ring */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div
+                    className="w-[min(50vw,280px)] h-[min(50vw,280px)] rounded-full opacity-[0.03]"
+                    style={{
+                      border: `1px solid ${GOLD}`,
+                      boxShadow: `inset 0 0 80px rgba(212,175,55,0.03)`,
+                    }}
+                  />
+                </div>
+                {/* Index watermark */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                  <span
+                    className="font-black tracking-tighter"
+                    style={{
+                      fontFamily: "var(--font-serif), Georgia, serif",
+                      fontSize: "min(35vw, 16rem)",
+                    }}
+                  >
                     01
                   </span>
                 </div>
               </div>
+
+              {/* Subtle gold edge glow */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  border: "1px solid rgba(212,175,55,0.06)",
+                  borderRadius: "12px",
+                }}
+              />
             </div>
           </div>
         </section>
@@ -468,6 +496,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -477,6 +506,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -486,6 +516,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -495,6 +526,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -504,6 +536,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -513,6 +546,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   key={i}
                   block={block}
                   project={project}
+                  panelIdx={panelIdx}
                   ref={(el) => registerPanel(el, panelIdx)}
                 />
               );
@@ -521,40 +555,44 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           }
         })}
 
-        {/* ═══════ LAST PANEL — Next project ═══════ */}
+        {/* ═══════ LAST PANEL — Next Project ═══════ */}
         <section
           ref={(el) =>
             registerPanel(el, (project.contentBlocks?.length || 0) + 1)
           }
-          className="w-full h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center overflow-hidden"
+          className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden"
           style={{
-            background:
-              "linear-gradient(90deg, #111118 0%, #f5f0eb 18%, #f5f0eb 100%)",
+            background: `linear-gradient(135deg, ${BG_DARK} 0%, ${BG_PANEL} 30%, ${BG_LIGHT} 30.5%, ${BG_LIGHT} 100%)`,
           }}
         >
-          <div
-            className="panel-content w-full flex flex-col md:flex-row md:align-bottom justify-between gap-8 px-8 pb-12 lg:px-[60px] lg:pb-[48px] opacity-0"
-          >
+          <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-12 lg:px-15 lg:pb-12 opacity-0">
             <Link
               href={`/pillars/${nextProject.slug}`}
-              style={{ textDecoration: "none" }}
+              className="no-underline group"
             >
+              <span
+                className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
+                style={{ color: TXT_DARK_MUTED }}
+              >
+                Next Chapter
+              </span>
               <h2
                 className="next-title"
                 style={{
-                  fontSize: "clamp(2.5rem, 8vw, 10rem)",
-                  fontWeight: 700,
+                  fontFamily: "var(--font-serif), Georgia, serif",
+                  fontSize: "clamp(2rem, 7vw, 7rem)",
+                  fontWeight: 400,
                   letterSpacing: "-0.02em",
                   lineHeight: 0.92,
-                  color: "rgba(26,26,26,0.1)",
-                  whiteSpace: "pre-line",
-                  transition: "color 0.5s",
+                  color: "rgba(28,29,33,0.08)",
+                  whiteSpace: "pre-line" as const,
+                  transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "rgba(26,26,26,0.25)")
+                  (e.currentTarget.style.color = "rgba(28,29,33,0.2)")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "rgba(26,26,26,0.1)")
+                  (e.currentTarget.style.color = "rgba(28,29,33,0.08)")
                 }
               >
                 {nextProject.title}
@@ -562,33 +600,21 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </Link>
             <Link
               href={`/pillars/${nextProject.slug}`}
-              className="flex items-center gap-4 lg:gap-5 mb-0 md:mb-4 no-underline"
+              className="flex items-center gap-4 mb-0 md:mb-4 no-underline group"
             >
               <span
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 600,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase" as const,
-                  color: "rgba(26,26,26,0.4)",
-                  transition: "color 0.3s",
-                }}
+                className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300"
+                style={{ color: TXT_DARK_MUTED }}
               >
-                NEXT PROJECT
+                Next Project
               </span>
               <span
-                className="block w-12 lg:w-20 h-[1px]"
-                style={{
-                  backgroundColor: "rgba(26,26,26,0.2)",
-                  transition: "width 0.3s",
-                }}
+                className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
+                style={{ backgroundColor: "rgba(28,29,33,0.15)" }}
               />
               <span
-                style={{
-                  color: "rgba(26,26,26,0.4)",
-                  fontSize: "18px",
-                  transition: "all 0.3s",
-                }}
+                className="text-lg transition-transform duration-300 group-hover:translate-x-1"
+                style={{ color: TXT_DARK_MUTED }}
               >
                 →
               </span>
@@ -600,26 +626,40 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   REVEAL ANIMATION — cinematic panel entrance
+   ═══════════════════════════════════════════════════════════════ */
+
 function revealPanel(panel: HTMLElement) {
   const content = panel.querySelector(".panel-content");
   const image = panel.querySelector(".panel-image");
   const heading = panel.querySelector(".panel-heading");
   const body = panel.querySelector(".panel-body");
   const stats = panel.querySelectorAll(".panel-stat");
+  const label = panel.querySelector(".panel-label");
 
   const tl = gsap.timeline();
+
+  if (label) {
+    tl.fromTo(
+      label,
+      { y: 15, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+      0
+    );
+  }
 
   if (image) {
     tl.fromTo(
       image,
-      { clipPath: "inset(0 100% 0 0)", scale: 1.08 },
+      { clipPath: "inset(0 100% 0 0)", scale: 1.06 },
       {
         clipPath: "inset(0 0% 0 0)",
         scale: 1,
-        duration: 1.2,
+        duration: 1.4,
         ease: "power4.inOut",
       },
-      0,
+      0
     );
   }
 
@@ -627,8 +667,8 @@ function revealPanel(panel: HTMLElement) {
     tl.fromTo(
       heading,
       { y: 50, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-      0.3,
+      { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+      0.25
     );
   }
 
@@ -637,7 +677,7 @@ function revealPanel(panel: HTMLElement) {
       body,
       { y: 30, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-      0.45,
+      0.4
     );
   }
 
@@ -646,7 +686,7 @@ function revealPanel(panel: HTMLElement) {
       content,
       { opacity: 0 },
       { opacity: 1, duration: 0.6, ease: "power2.out" },
-      0.1,
+      0.1
     );
   }
 
@@ -658,45 +698,110 @@ function revealPanel(panel: HTMLElement) {
         y: 0,
         opacity: 1,
         duration: 0.6,
-        stagger: 0.1,
+        stagger: 0.12,
         ease: "power3.out",
       },
-      0.5,
+      0.5
     );
   }
 }
 
-// ════════════════════════════════════════════════════════════════════
-// DYNAMIC CMS BLOCK COMPONENTS — with ref forwarding for reveal
-// ════════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   SHARED UI COMPONENTS
+   ═══════════════════════════════════════════════════════════════ */
 
 import { forwardRef } from "react";
 
 interface BlockProps {
   block: ContentBlock;
   project: Pillar;
+  panelIdx: number;
 }
 
+/** Reusable premium fallback for images (dark gradient + gold accents) */
+function ImageFallback({ idx }: { idx: number }) {
+  return (
+    <div className="absolute inset-0 pointer-events-none select-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(145deg, #08090e 0%, #0c1020 35%, #0a0e18 65%, #060810 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(212,175,55,.12) 2px, rgba(212,175,55,.12) 3px)",
+          backgroundSize: "8px 8px",
+        }}
+      />
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+        <span
+          className="font-black tracking-tighter"
+          style={{
+            fontFamily: "var(--font-serif), Georgia, serif",
+            fontSize: "min(30vw, 12rem)",
+          }}
+        >
+          {String(idx + 1).padStart(2, "0")}
+        </span>
+      </div>
+      <div
+        className="absolute inset-0"
+        style={{ border: "1px solid rgba(212,175,55,0.05)", borderRadius: "12px" }}
+      />
+    </div>
+  );
+}
+
+/** Section label — "• 02 — HEADING" matching homepage style */
+function SectionLabel({ idx, text, light }: { idx: number; text: string; light?: boolean }) {
+  return (
+    <div className="panel-label flex items-center gap-3 mb-6" style={{ opacity: 0 }}>
+      <span
+        className="w-1.5 h-1.5 rounded-full"
+        style={{ backgroundColor: light ? TXT_DARK : GOLD }}
+      />
+      <span
+        className="text-[10px] tracking-[0.25em] uppercase font-semibold"
+        style={{ color: light ? TXT_DARK_MUTED : TXT_MUTED }}
+      >
+        {String(idx + 1).padStart(2, "0")} — {text}
+      </span>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CMS BLOCK COMPONENTS
+   ═══════════════════════════════════════════════════════════════ */
+
 const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
-  function ShowcaseBlock({ block, project }, ref) {
+  function ShowcaseBlock({ block, project, panelIdx }, ref) {
     return (
       <section
         ref={ref}
-        className="w-full min-h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center justify-center px-6 py-16 lg:py-0 lg:px-[60px]"
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col items-center justify-center px-6 py-16 lg:py-0 lg:px-15 gap-6"
         style={{
-          backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
+          backgroundColor: block.theme === "light" ? BG_LIGHT : BG_PANEL,
         }}
       >
+        <SectionLabel idx={panelIdx} text="Showcase" light={block.theme === "light"} />
         <div
-          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/10] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
-          style={{ clipPath: "inset(0 100% 0 0)" }}
+          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/10] rounded-xl overflow-hidden"
+          style={{
+            clipPath: "inset(0 100% 0 0)",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.4)",
+          }}
         >
-          {block.image || project.image ? (
+          {(block.image || project.image) ? (
             <Image
               src={block.image || project.image}
               alt={`${project.title} showcase`}
               fill
-              sizes="(max-width: 1024px) 100vw, 100vw"
+              sizes="100vw"
               className="object-cover"
               unoptimized
               onError={(e) => {
@@ -705,68 +810,44 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
               }}
             />
           ) : null}
-
-          {/* Premium abstract fallback */}
-          <div className="absolute inset-0 pointer-events-none select-none">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-              }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                backgroundSize: "6px 6px",
-              }}
-            />
-          </div>
-
+          <ImageFallback idx={panelIdx} />
           <div
+            className="absolute inset-0"
             style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.35), transparent 60%)",
             }}
           />
         </div>
       </section>
     );
-  },
+  }
 );
 
 const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
-  function CaseStudyBlock({ block, project }, ref) {
+  function CaseStudyBlock({ block, project, panelIdx }, ref) {
     const isLight = block.theme !== "dark";
-    const bgColor = isLight ? "#f0ece6" : "#0a0a12";
-    const txtColor = isLight ? "#1a1a1a" : "#f5f5f5";
-    const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
-    const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
+    const bgColor = isLight ? BG_LIGHT : BG_PANEL;
+    const txtColor = isLight ? TXT_DARK : TXT_LIGHT;
+    const muted = isLight ? TXT_DARK_MUTED : TXT_MUTED;
+    const border = isLight ? BORDER_LIGHT : BORDER_DARK;
 
     return (
       <section
         ref={ref}
-        className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
-        style={{
-          backgroundColor: bgColor,
-          color: txtColor,
-        }}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
+        style={{ backgroundColor: bgColor, color: txtColor }}
       >
-        <div
-          className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:p-[40px_40px_40px_60px] opacity-0"
-        >
+        <div className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:py-0 lg:pl-15 lg:pr-10 opacity-0">
+          <SectionLabel idx={panelIdx} text="Case Study" light={isLight} />
           <h3
             className="panel-heading"
             style={{
-              fontSize: "clamp(2rem, 3.5vw, 2.6rem)",
-              fontWeight: 700,
+              fontFamily: "var(--font-serif), Georgia, serif",
+              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              fontWeight: 400,
               letterSpacing: "-0.02em",
               lineHeight: 1.1,
-              marginBottom: "20px",
+              marginBottom: "24px",
             }}
           >
             {block.heading || "Case Study"}
@@ -774,11 +855,10 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           <p
             className="panel-body"
             style={{
-              fontSize: "15px",
+              fontSize: "14px",
               color: muted,
-              lineHeight: 1.75,
+              lineHeight: 1.8,
               maxWidth: "480px",
-              marginBottom: "40px",
               whiteSpace: "pre-line",
             }}
           >
@@ -786,14 +866,17 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           </p>
         </div>
         <div
-          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-[40px_40px_40px_36px]"
+          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-10"
           style={{ borderLeft: `1px solid ${border}` }}
         >
           <div
-            className="panel-image relative w-full aspect-[4/5] rounded-xl overflow-hidden shadow-2xl"
-            style={{ clipPath: "inset(0 100% 0 0)" }}
+            className="panel-image relative w-full aspect-[4/5] rounded-xl overflow-hidden"
+            style={{
+              clipPath: "inset(0 100% 0 0)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            }}
           >
-            {block.image || project.image ? (
+            {(block.image || project.image) ? (
               <Image
                 src={block.image || project.image}
                 alt="Case Study"
@@ -807,85 +890,65 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                 }}
               />
             ) : null}
-
-            {/* Premium abstract fallback */}
-            <div className="absolute inset-0 pointer-events-none select-none">
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-                }}
-              />
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                  backgroundSize: "6px 6px",
-                }}
-              />
-            </div>
+            <ImageFallback idx={panelIdx} />
           </div>
         </div>
       </section>
     );
-  },
+  }
 );
 
 const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
-  { block, project },
-  ref,
+  { block, project, panelIdx },
+  ref
 ) {
   const isLight = block.theme !== "dark";
-  const bgColor = isLight ? "#f0ece6" : "#0a0a12";
-  const txtColor = isLight ? "#1a1a1a" : "#f5f5f5";
-  const muted = isLight ? "rgba(26,26,26,0.55)" : "rgba(255,255,255,0.55)";
-  const border = isLight ? "rgba(26,26,26,0.08)" : "rgba(255,255,255,0.08)";
+  const bgColor = isLight ? BG_LIGHT : BG_PANEL;
+  const txtColor = isLight ? TXT_DARK : TXT_LIGHT;
+  const muted = isLight ? TXT_DARK_MUTED : TXT_MUTED;
+  const border = isLight ? BORDER_LIGHT : BORDER_DARK;
 
   return (
     <section
       ref={ref}
-      className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row"
-      style={{
-        backgroundColor: bgColor,
-        color: txtColor,
-      }}
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
+      style={{ backgroundColor: bgColor, color: txtColor }}
     >
-      <div
-        className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:p-[40px_40px_40px_60px] opacity-0"
-      >
+      <div className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:py-0 lg:pl-15 lg:pr-10 opacity-0">
+        <SectionLabel idx={panelIdx} text="Key Metrics" light={isLight} />
         <p
           className="panel-body"
           style={{
-            fontSize: "15px",
+            fontSize: "14px",
             color: muted,
-            lineHeight: 1.75,
-            marginBottom: "40px",
+            lineHeight: 1.8,
+            marginBottom: "48px",
             maxWidth: "380px",
           }}
         >
           {block.body}
         </p>
-        <div className="flex gap-8 lg:gap-12 flex-wrap">
+        <div className="flex gap-10 lg:gap-16 flex-wrap">
           {block.stats?.map((stat, idx) => (
             <div key={idx} className="panel-stat">
               <span
                 style={{
-                  fontSize: "3rem",
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
+                  fontFamily: "var(--font-serif), Georgia, serif",
+                  fontSize: "3.5rem",
+                  fontWeight: 400,
+                  letterSpacing: "-0.03em",
                   lineHeight: 1,
+                  color: GOLD,
                 }}
               >
                 {stat.value}
               </span>
               <p
+                className="mt-2"
                 style={{
-                  fontSize: "12px",
+                  fontSize: "10px",
                   color: muted,
-                  marginTop: "8px",
-                  letterSpacing: "0.04em",
+                  letterSpacing: "0.15em",
                   textTransform: "uppercase",
                 }}
               >
@@ -896,14 +959,17 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         </div>
       </div>
       <div
-        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-[40px_40px_40px_36px]"
+        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-10"
         style={{ borderLeft: `1px solid ${border}` }}
       >
         <div
-          className="panel-image relative w-full aspect-square rounded-xl overflow-hidden shadow-2xl"
-          style={{ clipPath: "inset(0 100% 0 0)" }}
+          className="panel-image relative w-full aspect-square rounded-xl overflow-hidden"
+          style={{
+            clipPath: "inset(0 100% 0 0)",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          }}
         >
-          {block.image || project.image ? (
+          {(block.image || project.image) ? (
             <Image
               src={block.image || project.image}
               alt="Stats"
@@ -917,25 +983,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
               }}
             />
           ) : null}
-
-          {/* Premium abstract fallback */}
-          <div className="absolute inset-0 pointer-events-none select-none">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-              }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                backgroundSize: "6px 6px",
-              }}
-            />
-          </div>
+          <ImageFallback idx={panelIdx} />
         </div>
       </div>
     </section>
@@ -943,23 +991,27 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
 });
 
 const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
-  { block, project },
-  ref,
+  { block, project, panelIdx },
+  ref
 ) {
+  const isLight = block.theme === "light";
   return (
     <section
       ref={ref}
-      className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16 px-6 py-16 lg:py-0 lg:px-[60px]"
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-6 py-16 lg:py-0 lg:px-15"
       style={{
-        backgroundColor: block.theme === "light" ? "#f0ece6" : "#0a0a12",
-        color: block.theme === "light" ? "#1a1a1a" : "#fff",
+        backgroundColor: isLight ? BG_LIGHT : BG_PANEL,
+        color: isLight ? TXT_DARK : TXT_LIGHT,
       }}
     >
       <div
-        className="panel-image relative w-full lg:w-[45vw] max-w-[560px] aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
-        style={{ clipPath: "inset(0 100% 0 0)" }}
+        className="panel-image relative w-full lg:w-[45vw] max-w-[560px] aspect-[4/3] rounded-xl overflow-hidden"
+        style={{
+          clipPath: "inset(0 100% 0 0)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+        }}
       >
-        {block.image || project.image ? (
+        {(block.image || project.image) ? (
           <Image
             src={block.image || project.image}
             alt="Feature"
@@ -973,47 +1025,18 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
             }}
           />
         ) : null}
-
-        {/* Premium abstract fallback */}
-        <div className="absolute inset-0 pointer-events-none select-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-              backgroundSize: "6px 6px",
-            }}
-          />
-        </div>
+        <ImageFallback idx={panelIdx} />
       </div>
-      <div className="panel-content w-full lg:max-w-[300px] opacity-0">
-        <span
-          style={{
-            fontSize: "11px",
-            letterSpacing: "0.25em",
-            color: "currentColor",
-            opacity: 0.4,
-            textTransform: "uppercase",
-            display: "block",
-            marginBottom: "12px",
-          }}
-        >
-          Feature Focus
-        </span>
+      <div className="panel-content w-full lg:max-w-[320px] opacity-0">
+        <SectionLabel idx={panelIdx} text="Feature Focus" light={isLight} />
         <h3
           className="panel-heading"
           style={{
-            fontSize: "1.5rem",
-            fontWeight: 700,
+            fontFamily: "var(--font-serif), Georgia, serif",
+            fontSize: "1.6rem",
+            fontWeight: 400,
             lineHeight: 1.2,
-            marginBottom: "14px",
+            marginBottom: "16px",
             whiteSpace: "pre-line",
           }}
         >
@@ -1023,9 +1046,9 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           className="panel-body"
           style={{
             color: "currentColor",
-            opacity: 0.6,
-            fontSize: "15px",
-            lineHeight: 1.75,
+            opacity: 0.55,
+            fontSize: "14px",
+            lineHeight: 1.8,
           }}
         >
           {block.body}
@@ -1036,23 +1059,27 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
 });
 
 const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
-  function FullbleedBlock({ block, project }, ref) {
+  function FullbleedBlock({ block, project, panelIdx }, ref) {
     return (
       <section
         ref={ref}
-        className="w-full min-h-[60vh] lg:w-[100vw] lg:h-[100vh] shrink-0 flex items-center justify-center px-6 py-16 lg:py-0 lg:px-[60px]"
-        style={{ backgroundColor: "#111118" }}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col items-center justify-center px-6 py-16 lg:py-0 lg:px-15 gap-6"
+        style={{ backgroundColor: BG_PANEL }}
       >
+        <SectionLabel idx={panelIdx} text="Visual" />
         <div
-          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/9] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
-          style={{ clipPath: "inset(0 100% 0 0)" }}
+          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/9] rounded-xl overflow-hidden"
+          style={{
+            clipPath: "inset(0 100% 0 0)",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.5)",
+          }}
         >
-          {block.image || project.image ? (
+          {(block.image || project.image) ? (
             <Image
               src={block.image || project.image}
-              alt="Final"
+              alt="Visual"
               fill
-              sizes="(max-width: 1024px) 100vw, 100vw"
+              sizes="100vw"
               className="object-cover"
               unoptimized
               onError={(e) => {
@@ -1061,40 +1088,17 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
               }}
             />
           ) : null}
-
-          {/* Premium abstract fallback */}
-          <div className="absolute inset-0 pointer-events-none select-none">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-              }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                backgroundSize: "6px 6px",
-              }}
-            />
-          </div>
-
+          <ImageFallback idx={panelIdx} />
           <div
+            className="absolute inset-0"
             style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.5), transparent)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.45), transparent 50%)",
             }}
           />
           <p
+            className="absolute bottom-5 left-6"
             style={{
-              position: "absolute",
-              bottom: "24px",
-              left: "32px",
-              color: "rgba(255,255,255,0.4)",
+              color: TXT_MUTED,
               fontSize: "10px",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
@@ -1105,29 +1109,29 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  },
+  }
 );
 
 const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
-  function RichTextBlock({ block }, ref) {
+  function RichTextBlock({ block, panelIdx }, ref) {
     const isLight = block.theme === "light";
     return (
       <section
         ref={ref}
-        className="w-full min-h-screen lg:w-[100vw] lg:h-[100vh] shrink-0 flex flex-col lg:flex-row items-center justify-center px-6 py-16 lg:py-0 lg:px-[120px] gap-12 lg:gap-[64px]"
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row items-center justify-center px-6 py-16 lg:py-0 lg:px-[120px] gap-12 lg:gap-16"
         style={{
-          backgroundColor: isLight ? "#f0ece6" : "#0d0d12",
-          color: isLight ? "#1a1a1a" : "#f5f5f5",
+          backgroundColor: isLight ? BG_LIGHT : BG_PANEL,
+          color: isLight ? TXT_DARK : TXT_LIGHT,
         }}
       >
-        <div
-          className="panel-content flex-1 w-full lg:max-w-[600px] opacity-0"
-        >
+        <div className="panel-content flex-1 w-full lg:max-w-[600px] opacity-0">
+          <SectionLabel idx={panelIdx} text="Details" light={isLight} />
           <h3
             className="panel-heading"
             style={{
-              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
-              fontWeight: 700,
+              fontFamily: "var(--font-serif), Georgia, serif",
+              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+              fontWeight: 400,
               marginBottom: "32px",
               letterSpacing: "-0.01em",
             }}
@@ -1137,7 +1141,8 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
           {block.body && (
             <div
-              className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-semibold prose-a:text-gold`}
+              className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-[#d4af37] [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-[#d4af37] focus:[&_input]:ring-1 focus:[&_input]:ring-[#d4af37] [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-[#d4af37] focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-[#d4af37] [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-[#d4af37] [&_button]:text-[#000000] [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
+              style={{ fontSize: "14px", lineHeight: 1.8 }}
               dangerouslySetInnerHTML={{ __html: block.body }}
             />
           )}
@@ -1145,12 +1150,15 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
         {block.image ? (
           <div
-            className="panel-image relative w-full lg:w-[40%] aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
-            style={{ clipPath: "inset(0 100% 0 0)" }}
+            className="panel-image relative w-full lg:w-[40%] aspect-[4/5] rounded-xl overflow-hidden"
+            style={{
+              clipPath: "inset(0 100% 0 0)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            }}
           >
             <Image
               src={block.image}
-              alt={block.heading || "Rich Text Image"}
+              alt={block.heading || "Detail"}
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover"
@@ -1160,28 +1168,10 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                 img.style.display = "none";
               }}
             />
-
-            {/* Premium abstract fallback */}
-            <div className="absolute inset-0 pointer-events-none select-none">
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-                }}
-              />
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                  backgroundSize: "6px 6px",
-                }}
-              />
-            </div>
+            <ImageFallback idx={panelIdx} />
           </div>
         ) : null}
       </section>
     );
-  },
+  }
 );
