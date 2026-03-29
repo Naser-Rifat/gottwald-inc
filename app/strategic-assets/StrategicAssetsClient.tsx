@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
-import BrutalistContactForm from "@/components/BrutalistContactForm";
 
 export default function StrategicAssetsClient() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,8 +38,8 @@ export default function StrategicAssetsClient() {
       <main className="flex-1 w-full pt-[20vh] pb-32 px-gutter">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8">
           
-          {/* Left Column: Context */}
-          <div className="lg:col-span-5 flex flex-col pt-10">
+          {/* Left Column: Context Only */}
+          <div className="lg:col-span-8 lg:col-start-3 flex flex-col pt-10">
             <span className="reveal-text block text-[10px] uppercase tracking-[0.4em] text-gold/80 font-medium mb-6">
               Directory
             </span>
@@ -56,14 +55,6 @@ export default function StrategicAssetsClient() {
                 Built to protect substance, create resilience, and support long-term meaningful growth.
               </p>
             </div>
-          </div>
-
-          {/* Right Column: Brutalist Form */}
-          <div className="lg:col-span-6 lg:col-start-7 lg:pt-10">
-            <BrutalistContactForm 
-              subject="Inquiry: Strategic Assets" 
-              submitLabel="Submit Inquiry" 
-            />
           </div>
 
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, FormEvent } from "react";
+import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
 import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -309,6 +309,29 @@ export default function PartnershipsClient() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    const handleHashScroll = () => {
+      if (window.location.hash === "#manifesto") {
+        setTimeout(() => {
+          const element = document.getElementById("manifesto");
+          if (element) {
+            // Calculate a slight offset for fixed header
+            const yOffset = -100; 
+            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+            window.scrollTo({ top: y, behavior: "smooth" });
+          }
+        }, 600); // Wait for GSAP and layout
+      }
+    };
+
+    // Run on initial load
+    handleHashScroll();
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleHashScroll);
+    return () => window.removeEventListener("hashchange", handleHashScroll);
+  }, []);
+
   const toggleAccordion = (id: string) => {
     setActiveAccordion(activeAccordion === id ? null : id);
   };
@@ -456,7 +479,7 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 3: 7-LINE MANIFESTO ── */}
-        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
+        <section id="manifesto" className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
               <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-4">
