@@ -179,24 +179,8 @@ export default function PillarCard({
             transformStyle: "preserve-3d",
           }}
         >
-          {pillar.image ? (
-            <Image
-              src={pillar.image}
-              alt={pillar.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              loading="lazy"
-              unoptimized
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.style.display = "none";
-              }}
-            />
-          ) : null}
-
-          {/* Premium fallback — always rendered beneath the image layer */}
-          <div className="absolute inset-0 pointer-events-none select-none">
+          {/* 1. Base Dark Background / Texture (Fallback) */}
+          <div className="absolute inset-0 pointer-events-none select-none z-0">
             {/* Multi-stop gradient background */}
             <div
               className="absolute inset-0"
@@ -215,14 +199,38 @@ export default function PillarCard({
                 backgroundSize: "6px 6px",
               }}
             />
+          </div>
 
+          {/* 2. Image Layer (Sits above background) */}
+          {pillar.image && (
+            <div className="absolute inset-0 z-10">
+              <Image
+                src={pillar.image}
+                alt={pillar.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
+                unoptimized
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                }}
+              />
+              {/* Optional: Add a dark gradient at bottom for text readability if image exists */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+            </div>
+          )}
+
+          {/* 3. Foreground Text / Accents (Sits above background and image) */}
+          <div className="absolute inset-0 pointer-events-none select-none z-20">
             {/* Left accent bar */}
             <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-gold/40 via-gold/10 to-transparent" />
 
             {/* Large index number — editorial hero */}
-            <div className="absolute top-6 right-6 sm:top-8 sm:right-8">
+            <div className="absolute top-6 right-6 sm:top-8 sm:right-8 mix-blend-screen">
               <span
-                className="text-white/[0.04] font-black leading-none tracking-tighter"
+                className="text-white/[0.15] font-black leading-none tracking-tighter"
                 style={{ fontSize: "clamp(5rem, 10vw, 12rem)" }}
               >
                 {String(index + 1).padStart(2, "0")}
@@ -230,25 +238,26 @@ export default function PillarCard({
             </div>
 
             {/* Bottom content — title integrated into the card */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 drop-shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-gold/50" />
-                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/25 uppercase font-medium">
+                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/60 uppercase font-medium">
                   Pillar {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              <p className="text-white/[0.12] text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
+              <p className="text-white text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
                 {pillar.title}
               </p>
             </div>
 
             {/* Top-right corner bracket */}
-            <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-6 h-6 border-t border-r border-white/[0.06]" />
+            <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-6 h-6 border-t border-r border-white/20" />
           </div>
 
+          {/* Hover overlay — on top of everything */}
           <div
             ref={overlayRef}
-            className="absolute inset-0 pointer-events-none opacity-0"
+            className="absolute inset-0 pointer-events-none opacity-0 z-30"
           />
         </div>
       </div>
