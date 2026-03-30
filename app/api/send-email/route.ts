@@ -104,15 +104,17 @@ function getTypeLabel(type: string): string {
 }
 
 function buildHtml(type: string, fields: Record<string, string>): string {
+  // Filter out empty values and internal metadata fields
+  const HIDDEN_FIELDS = ["subject"];
   const rows = Object.entries(fields)
-    .filter(([, value]) => value && value.trim() !== "")
+    .filter(([key, value]) => value && value.trim() !== "" && !HIDDEN_FIELDS.includes(key))
     .map(([key, value]) => {
       const label = getLabel(key);
       const formatted = formatValue(key, value);
       return `
       <tr>
-        <td style="padding: 20px 0; border-bottom: 1px solid #1a1a1a; vertical-align: top; text-align: left;">
-          <div style="color: #d4af37; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 6px;">${sanitize(label)}</div>
+        <td style="padding: 14px 0; border-bottom: 1px solid #1a1a1a; vertical-align: top; text-align: left;">
+          <div style="color: #d4af37; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 4px;">${sanitize(label)}</div>
           <div style="color: #e8e8e8; font-size: 15px; line-height: 1.6; font-weight: 300;">${linkifyAndSanitize(formatted)}</div>
         </td>
       </tr>`;
