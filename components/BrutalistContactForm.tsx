@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, FormEvent } from "react";
-import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 
 interface BrutalistContactFormProps {
@@ -11,15 +10,12 @@ interface BrutalistContactFormProps {
   submitLabel?: string;
   /** Optional custom success message */
   successMessage?: string;
-  /** Optional custom template ID for EmailJS (defaults to the contact template) */
-  templateId?: string;
 }
 
 export default function BrutalistContactForm({
   subject = "Website Inquiry",
   submitLabel = "Submit Inquiry",
   successMessage = "Message securely transmitted. We will review and follow up shortly.",
-  templateId,
 }: BrutalistContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,31 +25,28 @@ export default function BrutalistContactForm({
     e.preventDefault();
     if (!formRef.current) return;
 
-    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
-      console.warn("EmailJS keys are missing. Please add them to .env.local");
-    }
-
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
     try {
-      const activeTemplateId =
-        templateId ||
-        process.env.NEXT_PUBLIC_EMAILJS_CONTACTUS_TEMPLATE_ID ||
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ||
-        "";
+      const formData = new FormData(formRef.current);
+      formData.append("type", "contact");
 
-      await emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
-        activeTemplateId,
-        formRef.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
-      );
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send");
+      }
+
       setSubmitStatus("success");
       formRef.current.reset();
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
-      console.error("EmailJS submission failed:", error);
+      console.error("Contact form submission failed:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);

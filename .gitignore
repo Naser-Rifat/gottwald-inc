@@ -5,7 +5,8 @@ node_modules/
 .next/
 out/
 
-# env files
+# env files (NEVER commit credentials)
+# .env is tracked intentionally as a safe template (no real secrets)
 .env.local
 .env*.local
 

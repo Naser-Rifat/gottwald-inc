@@ -1,7 +1,6 @@
 "use client";
 
 import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
-import emailjs from "@emailjs/browser";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -36,26 +35,28 @@ export default function PartnershipsClient() {
     e.preventDefault();
     if (!formRef.current) return;
 
-    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
-      console.warn("EmailJS keys are missing. Please add them to .env.local");
-    }
-
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
     try {
-      await emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID",
-        formRef.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY"
-      );
+      const formData = new FormData(formRef.current);
+      formData.append("type", "partnership");
+
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send");
+      }
+
       setSubmitStatus("success");
       formRef.current.reset();
-      
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
-      console.error("EmailJS submission failed:", error);
+      console.error("Partnership form submission failed:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -971,13 +972,13 @@ export default function PartnershipsClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative mt-2">
                   <label
-                    htmlFor="type"
+                    htmlFor="partnership_type"
                     className="absolute left-0 -top-4 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50"
                   >
                     Partnership Type
                   </label>
                   <select required
-                    id="type" name="type"
+                    id="partnership_type" name="partnership_type"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white/80 focus:text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue=""
                   >
@@ -1206,7 +1207,7 @@ export default function PartnershipsClient() {
               )}
               {submitStatus === "error" && (
                 <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm">
-                  Failed to submit application. Please verify your EmailJS keys or try again later.
+                  Failed to submit application. Please try again later or contact us directly.
                 </p>
               )}
               {submitStatus === "idle" && (
