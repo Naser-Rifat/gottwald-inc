@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
-import emailjs from "@emailjs/browser";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +20,7 @@ const PILLARS = [
       "PMO / Operations / Quality Management",
       "Executive Assistant / Office Management",
     ],
-    impact: "precise, discreet, process-driven, “no drama”",
+    impact: "precise, discreet, process-driven, 'no drama'",
   },
   {
     letter: "B",
@@ -139,25 +138,28 @@ export default function CareersClient() {
     e.preventDefault();
     if (!formRef.current) return;
 
-    if (!process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID) {
-      console.warn("EmailJS keys are missing. Please add them to .env.local");
-    }
-
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
     try {
-      await emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
-        process.env.NEXT_PUBLIC_EMAILJS_CAREERS_TEMPLATE_ID || "",
-        formRef.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ""
-      );
+      const formData = new FormData(formRef.current);
+      formData.append("type", "careers");
+
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send");
+      }
+
       setSubmitStatus("success");
       formRef.current.reset();
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
-      console.error("EmailJS submission failed:", error);
+      console.error("Careers form submission failed:", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -701,12 +703,12 @@ export default function CareersClient() {
 
               <div className="flex flex-col gap-3">
                 <label htmlFor="cv" className="text-md uppercase tracking-widest text-white/50 font-bold">
-                  CV Upload or Profile Link
+                  CV / Resume Upload (PDF, DOC — max 5MB)
                 </label>
                 <input id="cv" name="cv"
-                  type="text"
-                  placeholder="URL or Upload Link"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-lg font-medium text-white/60 file:mr-4 file:py-2 file:px-6 file:border-0 file:text-sm file:font-bold file:uppercase file:tracking-widest file:bg-white/10 file:text-white/80 file:cursor-pointer file:rounded-none hover:file:bg-gold/20 hover:file:text-gold transition-colors focus:border-gold"
                 />
               </div>
               
