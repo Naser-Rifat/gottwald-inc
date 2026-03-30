@@ -245,9 +245,9 @@ export default function PillarCard({
                   Pillar {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              <p className="text-white text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
+              {/* <p className="text-white text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
                 {pillar.title}
-              </p>
+              </p> */}
             </div>
 
             {/* Top-right corner bracket */}
