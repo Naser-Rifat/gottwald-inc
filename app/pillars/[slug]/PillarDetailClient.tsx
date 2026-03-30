@@ -416,24 +416,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 boxShadow: "0 20px 80px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.04)",
               }}
             >
-              {project.image ? (
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 54vw"
-                  className="object-cover"
-                  priority
-                  unoptimized
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.display = "none";
-                  }}
-                />
-              ) : null}
-
-              {/* Premium abstract fallback — consistent dark palette */}
-              <div className="absolute inset-0 pointer-events-none select-none">
+              {/* Premium abstract fallback — consistent dark palette (z-0 behind the image) */}
+              <div className="absolute inset-0 pointer-events-none select-none z-0">
                 <div
                   className="absolute inset-0"
                   style={{
@@ -474,9 +458,27 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 </div>
               </div>
 
+              {project.image ? (
+                <div className="absolute inset-0 z-10">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 54vw"
+                    className="object-cover"
+                    priority
+                    unoptimized
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = "none";
+                    }}
+                  />
+                </div>
+              ) : null}
+
               {/* Subtle gold edge glow */}
               <div
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0 pointer-events-none z-20"
                 style={{
                   border: "1px solid rgba(212,175,55,0.06)",
                   borderRadius: "12px",
@@ -803,7 +805,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
               alt={`${project.title} showcase`}
               fill
               sizes="100vw"
-              className="object-cover"
+              className="object-cover z-10"
               unoptimized
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
@@ -883,7 +885,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                 alt="Case Study"
                 fill
                 sizes="(max-width: 1024px) 100vw, 38vw"
-                className="object-cover"
+                className="object-cover z-10"
                 unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
@@ -976,7 +978,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
               alt="Stats"
               fill
               sizes="(max-width: 1024px) 100vw, 32vw"
-              className="object-cover"
+              className="object-cover z-10"
               unoptimized
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
@@ -1018,7 +1020,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
             alt="Feature"
             fill
             sizes="(max-width: 1024px) 100vw, 45vw"
-            className="object-cover"
+            className="object-cover z-10"
             unoptimized
             onError={(e) => {
               const img = e.target as HTMLImageElement;
@@ -1081,7 +1083,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
               alt="Visual"
               fill
               sizes="100vw"
-              className="object-cover"
+              className="object-cover z-10"
               unoptimized
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
@@ -1162,7 +1164,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
               alt={block.heading || "Detail"}
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
-              className="object-cover"
+              className="object-cover z-10"
               unoptimized
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
