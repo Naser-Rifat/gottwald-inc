@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "gottwald-backend.onrender.com",
         pathname: "/media/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
 
