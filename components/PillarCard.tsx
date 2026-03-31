@@ -210,7 +210,7 @@ export default function PillarCard({
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                loading="lazy"
+                priority={index < 4}
                 unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
