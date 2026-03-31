@@ -26,10 +26,11 @@ export default function PartnershipsClient() {
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
-
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ export default function PartnershipsClient() {
         gsap.fromTo(
           ".scroll-indicator-line",
           { yPercent: -100 },
-          { yPercent: 400, duration: 2, repeat: -1, ease: "none" }
+          { yPercent: 400, duration: 2, repeat: -1, ease: "none" },
         );
 
         // Complete Hero section container fade/scale
@@ -176,9 +177,13 @@ export default function PartnershipsClient() {
       }
 
       // 4. Manifesto Lines — staggered cascade with counter fade
-      const manifestoLines = gsap.utils.toArray(".manifesto-line", pageRef.current!) as HTMLElement[];
+      const manifestoLines = gsap.utils.toArray(
+        ".manifesto-line",
+        pageRef.current!,
+      ) as HTMLElement[];
       manifestoLines.forEach((line, i) => {
-        gsap.fromTo(line,
+        gsap.fromTo(
+          line,
           { opacity: 0, x: -20 },
           {
             opacity: 1,
@@ -193,13 +198,17 @@ export default function PartnershipsClient() {
               start: "top 90%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
 
       // 5. Archetype Cards — staggered grid entrance
-      const archCards = gsap.utils.toArray(".arch-card", pageRef.current!) as HTMLElement[];
-      gsap.fromTo(archCards,
+      const archCards = gsap.utils.toArray(
+        ".arch-card",
+        pageRef.current!,
+      ) as HTMLElement[];
+      gsap.fromTo(
+        archCards,
         { opacity: 0, y: 40, scale: 0.97 },
         {
           opacity: 1,
@@ -215,13 +224,17 @@ export default function PartnershipsClient() {
             start: "top 80%",
             toggleActions: "play none none none",
           },
-        }
+        },
       );
 
       // 6. Partner Benefits/Expectations — list item cascade
-      const benefitItems = gsap.utils.toArray(".benefit-item", pageRef.current!) as HTMLElement[];
+      const benefitItems = gsap.utils.toArray(
+        ".benefit-item",
+        pageRef.current!,
+      ) as HTMLElement[];
       benefitItems.forEach((item, i) => {
-        gsap.fromTo(item,
+        gsap.fromTo(
+          item,
           { opacity: 0, x: -15 },
           {
             opacity: 1,
@@ -236,14 +249,18 @@ export default function PartnershipsClient() {
               start: "top 90%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
 
       // 7. Accordion sections — sequential slide-in
-      const accordionItems = gsap.utils.toArray(".accordion-item", pageRef.current!) as HTMLElement[];
+      const accordionItems = gsap.utils.toArray(
+        ".accordion-item",
+        pageRef.current!,
+      ) as HTMLElement[];
       accordionItems.forEach((item, i) => {
-        gsap.fromTo(item,
+        gsap.fromTo(
+          item,
           { opacity: 0, y: 25 },
           {
             opacity: 1,
@@ -258,13 +275,17 @@ export default function PartnershipsClient() {
               start: "top 88%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
 
       // 8. Selection Process Steps — cascade with scale
-      const processSteps = gsap.utils.toArray(".process-step", pageRef.current!) as HTMLElement[];
-      gsap.fromTo(processSteps,
+      const processSteps = gsap.utils.toArray(
+        ".process-step",
+        pageRef.current!,
+      ) as HTMLElement[];
+      gsap.fromTo(
+        processSteps,
         { opacity: 0, y: 30, scale: 0.96 },
         {
           opacity: 1,
@@ -280,14 +301,15 @@ export default function PartnershipsClient() {
             start: "top 80%",
             toggleActions: "play none none none",
           },
-        }
+        },
       );
 
       // 9. Application Form — cinematic entrance
       const formSection = document.querySelector(".form-section");
       if (formSection) {
         const formElements = formSection.querySelectorAll(".form-reveal");
-        gsap.fromTo(formElements,
+        gsap.fromTo(
+          formElements,
           { opacity: 0, y: 35 },
           {
             opacity: 1,
@@ -302,7 +324,7 @@ export default function PartnershipsClient() {
               start: "top 75%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       }
     }, pageRef);
@@ -317,8 +339,9 @@ export default function PartnershipsClient() {
           const element = document.getElementById("manifesto");
           if (element) {
             // Calculate a slight offset for fixed header
-            const yOffset = -100; 
-            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+            const yOffset = -100;
+            const y =
+              element.getBoundingClientRect().top + window.scrollY + yOffset;
             window.scrollTo({ top: y, behavior: "smooth" });
           }
         }, 600); // Wait for GSAP and layout
@@ -377,8 +400,12 @@ export default function PartnershipsClient() {
 
                 {/* Adjusted clamp sizes for better fit next to HUD on 1024-1280px screens */}
                 <h1 className="text-[clamp(1.8rem,9vw,9rem)] sm:text-[clamp(2.5rem,11vw,9rem)] lg:text-[clamp(2.5rem,5.5vw,9rem)] xl:text-[clamp(3.5rem,7vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
-                  <span className="parallax-fast inline-block whitespace-nowrap">PARTNERSHIPS</span>
-                  <span className="parallax-slow inline-block text-white/90">AT GOTT WALD</span>
+                  <span className="parallax-fast inline-block whitespace-nowrap">
+                    PARTNERSHIPS
+                  </span>
+                  <span className="parallax-slow inline-block text-white/90">
+                    AT GOTT WALD
+                  </span>
                 </h1>
 
                 <p className="hero-reveal flex items-center gap-4 text-[clamp(1.2rem,2vw,2.5rem)] lg:text-[clamp(1.5rem,2.2vw,3rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-8 lg:mt-10 pl-0.5">
@@ -472,15 +499,18 @@ export default function PartnershipsClient() {
                 GOTT WALD is a standard.
               </p>
               <p className="text-2xl md:text-3xl font-serif italic text-white/55 leading-relaxed max-w-2xl mx-auto">
-                We only work with companies that have principle — and can deliver.
-                When both are true, partnership becomes inevitable.
+                We only work with companies that have principle — and can
+                deliver. When both are true, partnership becomes inevitable.
               </p>
             </div>
           </div>
         </section>
 
         {/* ── SECTION 3: 7-LINE MANIFESTO ── */}
-        <section id="manifesto" className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
+        <section
+          id="manifesto"
+          className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5"
+        >
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
               <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-4">
@@ -542,8 +572,8 @@ export default function PartnershipsClient() {
                 </h2>
               </div>
               <p className="text-2xl text-white/60 leading-relaxed font-light max-w-2xl">
-                We don&apos;t &quot;source services.&quot; We select partners who can
-                carry our foundation and protect our standard.
+                We don&apos;t &quot;source services.&quot; We select partners
+                who can carry our foundation and protect our standard.
               </p>
             </div>
 
@@ -595,7 +625,7 @@ export default function PartnershipsClient() {
                 >
                   {/* Hover ambient glow */}
                   <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/5 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-                  
+
                   {/* Number */}
                   <span className="text-gold/40 font-mono text-2xl font-bold tracking-[0.3em] group-hover:text-gold/80 transition-colors duration-500">
                     0{i + 1}
@@ -744,7 +774,9 @@ export default function PartnershipsClient() {
               <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
                 Professionalism that
                 <br />
-                <span className="text-white/40">doesn&apos;t require supervision.</span>
+                <span className="text-white/40">
+                  doesn&apos;t require supervision.
+                </span>
               </h4>
               <ul className="flex flex-col gap-6">
                 {PARTNER_EXPECTATIONS.map((expectation, i) => (
@@ -766,8 +798,7 @@ export default function PartnershipsClient() {
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
             <div className="lg:w-1/3 reveal-up">
               <h2 className="text-5xl lg:text-6xl font-bold tracking-tighter uppercase mb-8 sticky top-[20vh]">
-                Partnership{" "}
-                <span className="text-white/40">Domains</span>
+                Partnership <span className="text-white/40">Domains</span>
               </h2>
               <p className="text-white/70 text-xl lg:text-2xl leading-relaxed font-light mb-8 max-w-md sticky top-[30vh]">
                 Full transparency across all our operating pillars. We integrate
@@ -890,12 +921,15 @@ export default function PartnershipsClient() {
                 <span className="text-white/30">APPLICATION</span>
               </h2>
               <p className="text-xl lg:text-2xl text-white/60 font-light leading-relaxed max-w-2xl">
-                If foundation and proof are real — you&apos;re welcome.
-                If not — honesty is better.{" "}
-                <em className="text-white/80 font-serif">That&apos;s how we operate.</em>
+                If foundation and proof are real — you&apos;re welcome. If not —
+                honesty is better.{" "}
+                <em className="text-white/80 font-serif">
+                  That&apos;s how we operate.
+                </em>
               </p>
               <p className="mt-4 text-white/40 text-lg font-light">
-                Please keep it clear and proof-based. We review every serious application.
+                Please keep it clear and proof-based. We review every serious
+                application.
               </p>
             </div>
 
@@ -907,9 +941,11 @@ export default function PartnershipsClient() {
               {/* Group 1: Company + Website */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="text"
-                    id="company" name="company"
+                    id="company"
+                    name="company"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Company Name"
                   />
@@ -921,9 +957,11 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="url"
-                    id="website" name="website"
+                    id="website"
+                    name="website"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Website URL"
                   />
@@ -939,9 +977,11 @@ export default function PartnershipsClient() {
               {/* Group 2: Country + Contact */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="text"
-                    id="country" name="country"
+                    id="country"
+                    name="country"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Country / Region"
                   />
@@ -953,9 +993,11 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="text"
-                    id="contact" name="contact"
+                    id="contact"
+                    name="contact"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Main Contact (Name, Email, Phone)"
                   />
@@ -977,8 +1019,10 @@ export default function PartnershipsClient() {
                   >
                     Partnership Type
                   </label>
-                  <select required
-                    id="partnership_type" name="partnership_type"
+                  <select
+                    required
+                    id="partnership_type"
+                    name="partnership_type"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white/80 focus:text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue=""
                   >
@@ -1003,13 +1047,22 @@ export default function PartnershipsClient() {
                   </select>
                   <div className="absolute right-0 bottom-6 pointer-events-none">
                     <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
-                      <path d="M1 1L7 7L13 1" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M1 1L7 7L13 1"
+                        stroke="white"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </div>
                 </div>
                 <div className="relative">
-                  <input type="text"
-                    id="pillars" name="pillars"
+                  <input
+                    type="text"
+                    id="pillars"
+                    name="pillars"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Relevant Pillars (A, B, C...)"
                   />
@@ -1024,8 +1077,10 @@ export default function PartnershipsClient() {
 
               {/* Group 4: What you do */}
               <div className="relative">
-                <textarea required
-                  id="description" name="description"
+                <textarea
+                  required
+                  id="description"
+                  name="description"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                   placeholder="What you do (1–3 sentences)"
@@ -1041,8 +1096,10 @@ export default function PartnershipsClient() {
               {/* Group 5: Capabilities + Proof */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <textarea required
-                    id="capabilities" name="capabilities"
+                  <textarea
+                    required
+                    id="capabilities"
+                    name="capabilities"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Top 3 capabilities (bullet points)"
@@ -1055,8 +1112,10 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <textarea required
-                    id="proof" name="proof"
+                  <textarea
+                    required
+                    id="proof"
+                    name="proof"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Proof of work (links / portfolio / cases)"
@@ -1073,8 +1132,10 @@ export default function PartnershipsClient() {
               {/* Group 5.1: References, Capacity, Budget */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <div className="relative">
-                  <input type="text"
-                    id="references" name="references"
+                  <input
+                    type="text"
+                    id="references"
+                    name="references"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="References (optional)"
                   />
@@ -1086,9 +1147,11 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="text"
-                    id="capacity" name="capacity"
+                    id="capacity"
+                    name="capacity"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Capacity (project slots / hours)"
                   />
@@ -1100,9 +1163,11 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <input required
+                  <input
+                    required
                     type="text"
-                    id="budget" name="budget"
+                    id="budget"
+                    name="budget"
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
                     placeholder="Typical project range (budget/scope)"
                   />
@@ -1117,8 +1182,10 @@ export default function PartnershipsClient() {
 
               {/* Group 6: Values Fit */}
               <div className="relative">
-                <textarea required
-                  id="values" name="values"
+                <textarea
+                  required
+                  id="values"
+                  name="values"
                   rows={2}
                   className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                   placeholder="Values Fit (required): 2–3 sentences on responsibility, integrity, excellence, discretion"
@@ -1134,7 +1201,9 @@ export default function PartnershipsClient() {
               {/* Group 7: Why GOTT WALD */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">
-                  <textarea id="why" name="why"
+                  <textarea
+                    id="why"
+                    name="why"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Why GOTT WALD? (short)"
@@ -1147,7 +1216,9 @@ export default function PartnershipsClient() {
                   </label>
                 </div>
                 <div className="relative">
-                  <textarea id="constraints" name="constraints"
+                  <textarea
+                    id="constraints"
+                    name="constraints"
                     rows={2}
                     className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
                     placeholder="Anything we must know? (timing, constraints, risks)"
@@ -1164,8 +1235,10 @@ export default function PartnershipsClient() {
               {/* NDA Checkbox */}
               <div className="flex items-center gap-4 mt-4">
                 <div className="relative flex items-center shrink-0">
-                  <input type="checkbox"
-                    id="nda" name="nda"
+                  <input
+                    type="checkbox"
+                    id="nda"
+                    name="nda"
                     className="peer w-6 h-6 appearance-none border border-white/30 rounded-sm checked:bg-gold checked:border-gold cursor-pointer transition-colors"
                   />
                   <svg
@@ -1202,17 +1275,20 @@ export default function PartnershipsClient() {
 
               {submitStatus === "success" && (
                 <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">
-                  Application submitted successfully. If there&apos;s a fit, we&apos;ll reach out with next steps.
+                  Application submitted successfully. If there&apos;s a fit,
+                  we&apos;ll reach out with next steps.
                 </p>
               )}
               {submitStatus === "error" && (
                 <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm">
-                  Failed to submit application. Please try again later or contact us directly.
+                  Failed to submit application. Please try again later or
+                  contact us directly.
                 </p>
               )}
               {submitStatus === "idle" && (
                 <p className="text-white/40 text-md font-light mt-2">
-                  All transmissions are secured and treated with strict confidentiality.
+                  All transmissions are secured and treated with strict
+                  confidentiality.
                 </p>
               )}
             </form>
