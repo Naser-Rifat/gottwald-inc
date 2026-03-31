@@ -143,7 +143,7 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     slug: api.slug,
     title: finalTitle,
     description: api.description ?? "",
-    details: api.details ?? api.description ?? "",
+    details: api.details ?? "",
     image: toAbsoluteImageUrl(api.image),
     launchUrl: api.launch_url ?? "",
     tags: toArray(api.tags).filter(t => !t.startsWith("http://") && !t.startsWith("https://")),
