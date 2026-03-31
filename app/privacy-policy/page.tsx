@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           PRIVACY POLICY
         </h1>
         <p className="text-sm tracking-widest uppercase text-white/40 mb-20 drop-shadow-sm">
-          Last updated: <span className="text-white/80">March 27, 2026</span>
+          Last updated: <span className="text-white/80">March 31, 2026</span>
         </p>
 
         <div className="space-y-16 lg:space-y-20 text-lg font-light text-white/70 leading-relaxed">
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
           {/* 1. General Info & Controller */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/ text-md tracking-widest">01</span> CONTROLLER IDENTITY
+              <span className="text-white/70 text-md tracking-widest">01</span> CONTROLLER IDENTITY
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>The controller responsible for data processing on this website is:</p>
@@ -57,11 +57,11 @@ export default function PrivacyPolicyPage() {
           {/* 2. Hosting & Infrastructure */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">02</span> HOSTING & TECHNICAL INFRASTRUCTURE
+              <span className="text-white/70 text-md tracking-widest">02</span> HOSTING & TECHNICAL ARCHITECTURE
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
-              <p>This website is architected for maximum security and performance. The frontend application is deployed via <strong>Vercel Inc.</strong>, utilizing their global Edge Network (CDN). Our core backend infrastructure is securely hosted on <strong>Amazon Web Services (AWS)</strong> servers.</p>
-              <p>Our operational systems operate on a robust <strong>Django</strong> architecture, and all relational data is strictly encrypted and maintained within a highly secure <strong>PostgreSQL</strong> database layer. Routine, encrypted backups of server and application data are strictly maintained to ensure operational continuity and data integrity.</p>
+              <p>This website is architected for maximum security and performance utilizing a modern <strong>React / Next.js</strong> frontend. The frontend application is deployed via <strong>Vercel Inc.</strong>, utilizing their global Edge Network (CDN).</p>
+              <p>Our operational backend logic and secure API framework are hosted on <strong>Amazon Web Services (AWS)</strong> servers. All relational data is strictly encrypted and maintained within a highly secure <strong>PostgreSQL</strong> database layer. Routine, encrypted backups of server and application data are strictly maintained to ensure operational continuity and data integrity.</p>
               <p>During a visit, our servers (and Vercel&apos;s edge network) automatically collect standard technical logs, including IP addresses, timestamps, HTTP status codes, and browser versions. These logs are strictly utilized to prevent DDoS attacks and maintain the platform&apos;s structural stability.</p>
             </div>
           </section>
@@ -72,15 +72,35 @@ export default function PrivacyPolicyPage() {
               <span className="text-white/70 text-md tracking-widest">03</span> FORMS & DATA SUBMISSION
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
-              <p>When you submit information via our Contact form, Strategic Inquiry form, Careers form, or the GOTT WALD Application form, the data is transmitted directly to our secure Django backend framework and permanently stored within our strict-clearance PostgreSQL database.</p>
-              <p>This data is processed exclusively to evaluate alignments, establish contact, or assess professional capabilities. We categorically <strong>do not</strong> route submissions through third-party interconnected CRMs, automation systems, or newsletter tools (such as Salesforce or HubSpot). Access to this deeply encrypted database and applicant data is reserved solely for authorized internal personnel.</p>
+              <p>When you submit information via our Contact form, Strategic Inquiry form, Careers form, or the GOTT WALD Application form, the data is securely transmitted via our backend API and permanently stored within our strict-clearance PostgreSQL database on AWS.</p>
+              <p>This data is processed exclusively to evaluate alignments, establish contact, or assess professional capabilities. In addition to database logging, secure email notifications of these submissions are dispatched to our authorized internal personnel exclusively via the <strong>Resend API</strong>.</p>
             </div>
           </section>
 
-          {/* 4. Analytics & Tracking */}
+          {/* 4. CRM & Third-Party Integrations */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">04</span> ANALYTICS & TRACKING PIXELS
+              <span className="text-white/70 text-md tracking-widest">04</span> CRM & AUTOMATION TOOLS
+            </h2>
+            <div className="space-y-6 opacity-90 text-[19px]">
+              <p>We categorically <strong>do not</strong> route any submissions through third-party interconnected Customer Relationship Management (CRM) platforms, marketing automation systems, or newsletter tools (such as Salesforce, HubSpot, or Mailchimp). Your submitted data remains entirely isolated within our private technical infrastructure.</p>
+            </div>
+          </section>
+
+          {/* 5. Career Data */}
+          <section className="border-t border-white/10 pt-16">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white/70 text-md tracking-widest">05</span> APPLICANT & CAREER DATA
+            </h2>
+            <div className="space-y-6 opacity-90 text-[19px]">
+              <p>Applicant data submitted securely through our forms seamlessly travels to designated HR personnel without the involvement of external Applicant Tracking Systems (ATS). Access to the database and applicant data is strictly limited to authorized personnel holding elevated system clearance. Submissions are dispatched natively via secure email alerts handled by Resend.</p>
+            </div>
+          </section>
+
+          {/* 6. Analytics & Tracking */}
+          <section className="border-t border-white/10 pt-16">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+              <span className="text-white/70 text-md tracking-widest">06</span> ANALYTICS & TRACKING PIXELS
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>In adherence to our strict privacy doctrine, we do not employ invasive third-party analytics or behavioral tracking suites. <strong>This platform does not utilize Google Analytics, Google Tag Manager, Meta Pixel, Hotjar, or LinkedIn Insight Tags.</strong></p>
@@ -88,10 +108,10 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
 
-          {/* 5. Cookie Management */}
+          {/* 7. Cookie Management */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">05</span> COOKIES & CONSENT
+              <span className="text-white/70 text-md tracking-widest">07</span> COOKIES & CONSENT
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>We deploy a proprietary, self-contained Cookie Manager. We issue only strictly necessary operational cookies required for platform security and navigation. Optional performance cookies are only utilized upon your explicit opt-in.</p>
@@ -99,31 +119,31 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
 
-          {/* 6. Communication & Emails */}
+          {/* 8. Communication & Emails */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">06</span> EMAIL COMMUNICATION
+              <span className="text-white/70 text-md tracking-widest">08</span> EMAIL COMMUNICATION
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
-              <p>Direct email communications to our corporate addresses are processed securely. Any systemic or transactional email (e.g., inquiry confirmations) originates strictly from our Django backend infrastructure. We do not utilize external bulk newsletter automation tools.</p>
+              <p>For all outgoing communications and automated notifications from the website (such as form submission alerts and transactional inquiries), we exclusively utilize <strong>Resend</strong> as our secure transactional email API infrastructure. We categorically <strong>do not</strong> utilize external bulk newsletter automation tools.</p>
             </div>
           </section>
 
-          {/* 7. International Data Transfers */}
+          {/* 9. International Data Transfers */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">07</span> INTERNATIONAL DATA TRANSFERS
+              <span className="text-white/70 text-md tracking-widest">09</span> INTERNATIONAL DATA TRANSFERS
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
-              <p>Because our architecture utilizes AWS and Vercel&apos;s global Edge Networks, personal data may technically be processed or stored on servers outside the European Economic Area (EEA), including the United States.</p>
-              <p>In all such instances, we mandate that our infrastructure partners adhere to rigorous data protection standards, relying on Standard Contractual Clauses (SCCs) and recognizing adequacy decisions where legally required to ensure your data remains deeply secured.</p>
+              <p>Our core physical servers are hosted in European-based regions. However, because our architecture utilizes global infrastructure partners—including <strong>Vercel</strong> (Frontend/CDN), <strong>AWS</strong> (Backend/Database), and <strong>Resend</strong> (for transactional emails)—incidental data processing or storage may occur on servers outside the European Economic Area (EEA), including the United States.</p>
+              <p>In all such instances, we mandate that our infrastructure partners adhere to rigorous data protection standards. Vercel, AWS, and Resend all rely on the <strong>Data Privacy Framework (DPF)</strong> and/or <strong>Standard Contractual Clauses (SCCs)</strong>, recognizing adequacy decisions where legally required to ensure your data remains deeply secured and compliant with European data protection standards.</p>
             </div>
           </section>
 
-          {/* 8. Retention Periods */}
+          {/* 10. Retention Periods */}
           <section className="border-t border-white/10 pt-16">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">08</span> RETENTION & DELETION PERIODS
+              <span className="text-white/70 text-md tracking-widest">10</span> RETENTION & DELETION PERIODS
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>We govern data lifecycle through strict minimization rules:</p>
@@ -135,10 +155,10 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
 
-          {/* 9. Your Rights */}
+          {/* 11. Your Rights */}
           <section className="border-t border-white/10 pt-16 pb-12">
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
-              <span className="text-white/70 text-md tracking-widest">09</span> YOUR LEGAL RIGHTS
+              <span className="text-white/70 text-md tracking-widest">11</span> YOUR LEGAL RIGHTS
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
               <p>Subject to the applicable provisions of the GDPR or commensurate jurisdictional legislation, you unequivocally maintain the following rights:</p>
