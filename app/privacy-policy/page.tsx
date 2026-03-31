@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
 
           {/* 8. Communication & Emails */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
+            <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md flex items-center gap-4">
               <span className="text-white/70 text-md tracking-widest">08</span> EMAIL COMMUNICATION
             </h2>
             <div className="space-y-6 opacity-90 text-[19px]">
