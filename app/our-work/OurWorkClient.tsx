@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import PillarCard from "@/components/PillarCard";
+import FooterSection from "@/components/FooterSection";
 import type { Pillar } from "@/lib/types/pillars";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -200,6 +201,8 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
           </div>
         </section>
       </main>
+
+      <FooterSection />
     </div>
   );
 }
