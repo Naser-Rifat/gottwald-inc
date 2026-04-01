@@ -62,6 +62,25 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       recalc();
 
       const onWheel = (e: WheelEvent) => {
+        // Check if the user is hovering over an internal scrollable zone
+        const target = e.target as HTMLElement;
+        const scrollableNode = target.closest(".allow-native-scroll");
+        
+        if (scrollableNode) {
+          const el = scrollableNode as HTMLElement;
+          const isScrollable = el.scrollHeight > el.clientHeight;
+          
+          if (isScrollable) {
+            const isAtTop = el.scrollTop === 0;
+            // +1px variance for fractional pixel rendering differences
+            const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 1;
+            
+            // Bypass GSAP hijack if internal native scrolling is possible
+            if (e.deltaY < 0 && !isAtTop) return; 
+            if (e.deltaY > 0 && !isAtBottom) return;
+          }
+        }
+
         e.preventDefault();
         const delta =
           Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
@@ -290,7 +309,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               className="hero-title pt-2"
               style={{
                 fontFamily: "var(--font-serif), Georgia, serif",
-                fontSize: "clamp(2.8rem, 6vw, 5rem)",
+                fontSize: "clamp(2.5rem, 6vw, 4rem)",
                 fontWeight: 400,
                 lineHeight: 1.1,
                 letterSpacing: "-0.01em",
@@ -302,13 +321,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {project.title}
             </h1>
 
-            <div className="flex flex-col xl:flex-row gap-12 lg:gap-20 items-start w-full pr-8">
+            <div className="flex flex-col xl:flex-row gap-12 lg:gap-20 items-start w-full xl:pr-8">
               <div
                 className="hero-desc w-full xl:max-w-105"
                 style={{ opacity: 0 }}
               >
                 <div 
-                  className="flex-1 overflow-y-auto pr-3 mb-8"
+                  className="flex-1 pr-3 mb-8 "
                   style={{ 
                     maxHeight: "clamp(200px, 35vh, 400px)",
                     scrollbarWidth: "thin",
@@ -317,10 +336,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 >
                   {project.description && project.description !== project.title && (
                     <p
-                      className="mb-5 lg:mb-6 text-base lg:text-lg tracking-wide"
+                      className="mb-5 lg:mb-6"
                       style={{
-                        fontSize: "17px",
-                        lineHeight: 1.85,
+                        fontSize: "clamp(14px, 1.2vw, 16px)",
+                        // lineHeight: 1.85,
                         color: "rgba(255, 255, 255, 0.85)",
                         fontWeight: 300,
                       }}
@@ -330,8 +349,9 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   )}
                   {project.details && project.details !== project.description && project.details !== project.title && (
                     <p
-                      className="text-base lg:text-[17px] tracking-wide"
+                      className="text-md tracking-wide"
                       style={{
+                        fontSize: "clamp(12px, 1.1vw, 15px)",
                         lineHeight: 1.85,
                         color: "rgba(255, 255, 255, 0.75)",
                         fontWeight: 300,
@@ -403,8 +423,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       listStyle: "none",
                       padding: 0,
                       margin: 0,
-                      fontSize: "15px",
-                      lineHeight: 1.6,
+                      // fontSize: "clamp(12px, 1.1vw, 16px)",
+                      lineHeight: 1.7,
                       color: "rgba(255,255,255,0.85)",
                       fontWeight: 300,
                     }}
@@ -597,10 +617,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 className="next-title"
                 style={{
                   fontFamily: "var(--font-serif), Georgia, serif",
-                  fontSize: "clamp(2rem, 7vw, 7rem)",
+                  fontSize: "clamp(3rem, 10vw, 11rem)",
                   fontWeight: 400,
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.05,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 0.9,
                   paddingBottom: "12px",
                   color: "rgba(28,29,33,0.45)",
                   whiteSpace: "pre-line" as const,
@@ -861,7 +881,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
             className="panel-heading"
             style={{
               fontFamily: "var(--font-serif), Georgia, serif",
-              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              fontSize: "clamp(2rem, 4vw, 3.2rem)",
               fontWeight: 400,
               letterSpacing: "-0.02em",
               lineHeight: 1.1,
@@ -873,9 +893,9 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           <p
             className="panel-body"
             style={{
-              fontSize: "17px",
+              fontSize: "clamp(16px, 1.2vw, 19px)",
               color: muted,
-              lineHeight: 1.85,
+              lineHeight: 1.9,
               maxWidth: "520px",
               whiteSpace: "pre-line",
             }}
@@ -884,11 +904,11 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           </p>
         </div>
         <div
-          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-10"
-          style={{ borderLeft: `1px solid ${border}` }}
+          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 pt-16 lg:pt-0 lg:pb-0 lg:p-10 border-t lg:border-t-0 lg:border-l"
+          style={{ borderColor: border }}
         >
           <div
-            className="panel-image relative w-full aspect-[4/5] rounded-xl overflow-hidden"
+            className="panel-image relative w-full aspect-square lg:aspect-4/5 rounded-xl overflow-hidden"
             style={{
               clipPath: "inset(0 100% 0 0)",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
@@ -937,7 +957,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         <p
           className="panel-body"
           style={{
-            fontSize: "17px",
+            fontSize: "clamp(16px, 1.2vw, 19px)",
             color: muted,
             lineHeight: 1.85,
             marginBottom: "48px",
@@ -977,8 +997,8 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         </div>
       </div>
       <div
-        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 lg:pb-0 lg:p-10"
-        style={{ borderLeft: `1px solid ${border}` }}
+        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 pt-16 lg:pt-0 lg:pb-0 lg:p-10 border-t lg:border-t-0 lg:border-l"
+        style={{ borderColor: border }}
       >
         <div
           className="panel-image relative w-full aspect-square rounded-xl overflow-hidden"
@@ -1051,10 +1071,11 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           className="panel-heading"
           style={{
             fontFamily: "var(--font-serif), Georgia, serif",
-            fontSize: "1.6rem",
+            fontSize: "clamp(2rem, 4vw, 3.2rem)",
             fontWeight: 400,
-            lineHeight: 1.2,
-            marginBottom: "16px",
+            lineHeight: 1.1,
+            marginBottom: "20px",
+            letterSpacing: "-0.02em",
             whiteSpace: "pre-line",
           }}
         >
@@ -1065,7 +1086,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           style={{
             color: "currentColor",
             opacity: 0.75,
-            fontSize: "17px",
+            fontSize: "clamp(16px, 1.2vw, 19px)",
             lineHeight: 1.85,
           }}
         >
@@ -1148,10 +1169,11 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
             className="panel-heading"
             style={{
               fontFamily: "var(--font-serif), Georgia, serif",
-              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+              fontSize: "clamp(2rem, 4vw, 3.2rem)",
               fontWeight: 400,
+              lineHeight: 1.1,
               marginBottom: "32px",
-              letterSpacing: "-0.01em",
+              letterSpacing: "-0.02em",
             }}
           >
             {block.heading}
@@ -1160,7 +1182,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
           {block.body && (
             <div
               className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-gold [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-gold focus:[&_input]:ring-1 focus:[&_input]:ring-gold [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-gold focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-gold [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-gold [&_button]:text-black [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
-              style={{ fontSize: "17px", lineHeight: 1.85 }}
+              style={{ fontSize: "clamp(16px, 1.2vw, 19px)", lineHeight: 1.85 }}
               dangerouslySetInnerHTML={{ __html: block.body }}
             />
           )}
@@ -1168,7 +1190,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
         {block.image ? (
           <div
-            className="panel-image relative w-full lg:w-[40%] aspect-[4/5] rounded-xl overflow-hidden"
+            className="panel-image relative w-full lg:w-[40%] aspect-square lg:aspect-4/5 rounded-xl overflow-hidden"
             style={{
               clipPath: "inset(0 100% 0 0)",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
