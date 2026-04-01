@@ -334,18 +334,20 @@ export default function PartnershipsClient() {
 
   useEffect(() => {
     const handleHashScroll = () => {
-      if (window.location.hash === "#manifesto") {
-        setTimeout(() => {
-          const element = document.getElementById("manifesto");
-          if (element) {
-            // Calculate a slight offset for fixed header
-            const yOffset = -100;
-            const y =
-              element.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({ top: y, behavior: "smooth" });
-          }
-        }, 600); // Wait for GSAP and layout
-      }
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const id = hash.replace("#", "");
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          // Calculate a slight offset for fixed header
+          const yOffset = -100;
+          const y =
+            element.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }, 600); // Wait for GSAP and layout
     };
 
     // Run on initial load

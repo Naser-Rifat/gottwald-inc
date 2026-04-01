@@ -32,6 +32,8 @@ export default function GlobalPageLoader() {
   const progressObj = useRef({ val: 0 });
   const activeTimeline = useRef<gsap.core.Timeline | null>(null);
   const hasInitiallyLoaded = useRef(false);
+  const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingHashRef = useRef<string | null>(null);
 
   // ── Initial page load reveal ──────────────────────────────────────────
   useLayoutEffect(() => {
@@ -112,8 +114,27 @@ export default function GlobalPageLoader() {
         return;
       }
 
-      // Ignore if clicking the exact same URL we are already on
-      if (href === pathname) return;
+      // ── Hash-aware routing ──
+      // If href is like "/partnerships#apply" and we are already on "/partnerships",
+      // skip the loader and manually scroll to the target.
+      // Next.js <Link> swallows native hash behavior, so we must handle it ourselves.
+      const [basePath, hash] = href.split("#");
+      if (hash && basePath === pathname) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Update the URL hash without triggering a Next.js navigation
+        window.history.pushState(null, "", `${basePath}#${hash}`);
+        const target = document.getElementById(hash);
+        if (target) {
+          const yOffset = -100; // Account for fixed header
+          const y = target.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+        return;
+      }
+
+      // Ignore if clicking the exact same base path we are already on (no hash)
+      if (basePath === pathname && !hash) return;
       
       // If we are currently mid-animation, bypass to avoid glitching
       if (isTransitioning.current) return;
@@ -124,7 +145,10 @@ export default function GlobalPageLoader() {
       e.stopPropagation(); 
       isTransitioning.current = true;
 
-      const label = ROUTE_LABELS[href] ?? "LOADING";
+      // Track pending hash for post-navigation scroll
+      pendingHashRef.current = hash || null;
+
+      const label = ROUTE_LABELS[basePath] ?? ROUTE_LABELS[href] ?? "LOADING";
       if (labelTextRef.current) labelTextRef.current.textContent = label;
 
       // Guarantee any previous timeline is eradicated to prevent object overwrites 
@@ -159,14 +183,79 @@ export default function GlobalPageLoader() {
           React.startTransition(() => {
             router.push(href);
           });
+
+          // ── Safety timeout: force completion if stuck at 90% for 4s ──
+          // This handles cases where React.startTransition takes too long
+          // (heavy server components, slow data fetches, etc.).
+          if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+          safetyTimerRef.current = setTimeout(() => {
+            if (isTransitioning.current) {
+              forceComplete();
+            }
+          }, 4000);
         }
       }, "-=0.2");
     };
 
     // Capture phase intercepts before React SyntheticEvents
     document.addEventListener("click", handleLinkClick, { capture: true });
-    return () => document.removeEventListener("click", handleLinkClick, { capture: true });
+    return () => {
+      document.removeEventListener("click", handleLinkClick, { capture: true });
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+    };
   }, [pathname, router]);
+
+  // ── Shared completion logic — reused by both pathname effect and safety timeout ──
+  const forceComplete = () => {
+    if (safetyTimerRef.current) {
+      clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = null;
+    }
+
+    if (activeTimeline.current) activeTimeline.current.kill();
+    
+    const hash = pendingHashRef.current;
+    pendingHashRef.current = null;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = "";
+        isTransitioning.current = false;
+        gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+
+        // ── Post-navigation hash scroll ──
+        // After the loader curtain lifts, scroll to the hash target if one was pending.
+        if (hash) {
+          requestAnimationFrame(() => {
+            const target = document.getElementById(hash);
+            if (target) {
+              const yOffset = -100; // Account for fixed header
+              const y = target.getBoundingClientRect().top + window.scrollY + yOffset;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
+          });
+        }
+      },
+    });
+    activeTimeline.current = tl;
+
+    // Extract the current value explicitly so no object references are shared incorrectly
+    const startVal = Number(counterRef.current?.textContent) || 90;
+    progressObj.current.val = startVal;
+    
+    tl.to(progressObj.current, {
+      val: 100,
+      duration: 0.4,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
+        if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+      },
+    });
+
+    tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -20, duration: 0.4, ease: "power3.in" }, "-=0.05");
+    tl.to(curtainRef.current, { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "-=0.1");
+  };
 
   // ── 3. Completion handler (Fires when Next.js finishes routing) ─────────────
   useEffect(() => {
@@ -180,33 +269,7 @@ export default function GlobalPageLoader() {
 
     // If a route change happened and we WERE tracking an Eager transition
     if (isTransitioning.current) {
-      if (activeTimeline.current) activeTimeline.current.kill();
-      
-      const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.style.overflow = "";
-          isTransitioning.current = false;
-          gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
-        },
-      });
-      activeTimeline.current = tl;
-
-      // Extract the current value explicitly so no object references are shared incorrectly
-      const startVal = Number(counterRef.current?.textContent) || 90;
-      progressObj.current.val = startVal;
-      
-      tl.to(progressObj.current, {
-        val: 100,
-        duration: 0.4,
-        ease: "power2.inOut",
-        onUpdate: () => {
-          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
-          if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
-        },
-      });
-
-      tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -20, duration: 0.4, ease: "power3.in" }, "-=0.05");
-      tl.to(curtainRef.current, { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "-=0.1");
+      forceComplete();
     }
   }, [pathname]);
 
