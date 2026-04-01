@@ -31,6 +31,11 @@ export default class LoadingGroup extends THREE.Group {
     this.loadingContentEl = document.getElementById(LOADING_CONTENT_ID);
     this.homeContentEl = document.getElementById(HOME_CONTENT_ID);
 
+    // Hide the fluid canvas behind our loading overlay —
+    // the post-load sequence (80–100%) will smoothly fade it back in.
+    const gc = document.getElementById("global-fluid-canvas");
+    if (gc) gc.style.opacity = "0";
+
     document.body.classList.add("no-scroll");
 
     this.onDoneLoadSequence = onDoneLoadSequence;
@@ -139,6 +144,10 @@ export default class LoadingGroup extends THREE.Group {
 
       if (this.postLoadSequenceProgress.value === 1) {
         this.isSequenceFinished = true;
+
+        // Guarantee fluid canvas is fully visible
+        const gc = document.getElementById("global-fluid-canvas");
+        if (gc) gc.style.opacity = "1";
 
         document.body.classList.remove("no-scroll");
         this.loadingContentEl?.remove();

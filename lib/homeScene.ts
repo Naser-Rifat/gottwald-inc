@@ -177,6 +177,11 @@ export default class HomeScene {
   dispose = () => {
     this.isDisposed = true;
 
+    // Restore the fluid canvas in case we're mid-loading sequence
+    // (LoadingGroup may have set it to opacity: 0)
+    const gc = document.getElementById("global-fluid-canvas");
+    if (gc) gc.style.opacity = "1";
+
     // 1. Stop the animation loop IMMEDIATELY
     this.renderer?.setAnimationLoop(null);
 
