@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
+import { useLayoutEffect, useEffect, useRef, useState, useCallback, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -83,21 +83,22 @@ export default function PartnershipsClient() {
         });
 
         // Hero decoupled parallax typography
-        gsap.to(".parallax-fast", {
+        const heroParent = heroTextRef.current?.parentElement;
+        gsap.to(gsap.utils.toArray(".parallax-fast", pageRef.current!), {
           y: -150,
           ease: "none",
           scrollTrigger: {
-            trigger: heroTextRef.current?.parentElement,
+            trigger: heroParent,
             start: "top top",
             end: "bottom top",
             scrub: true,
           },
         });
-        gsap.to(".parallax-slow", {
+        gsap.to(gsap.utils.toArray(".parallax-slow", pageRef.current!), {
           y: -50,
           ease: "none",
           scrollTrigger: {
-            trigger: heroTextRef.current?.parentElement,
+            trigger: heroParent,
             start: "top top",
             end: "bottom top",
             scrub: true,
@@ -106,7 +107,7 @@ export default function PartnershipsClient() {
 
         // Setup Scroll Indicator Loop
         gsap.fromTo(
-          ".scroll-indicator-line",
+          gsap.utils.toArray(".scroll-indicator-line", pageRef.current!),
           { yPercent: -100 },
           { yPercent: 400, duration: 2, repeat: -1, ease: "none" },
         );
@@ -304,8 +305,8 @@ export default function PartnershipsClient() {
         },
       );
 
-      // 9. Application Form — cinematic entrance
-      const formSection = document.querySelector(".form-section");
+      // 9. Application Form — cinematic entrance (scoped to pageRef)
+      const formSection = pageRef.current!.querySelector(".form-section");
       if (formSection) {
         const formElements = formSection.querySelectorAll(".form-reveal");
         gsap.fromTo(
@@ -619,40 +620,83 @@ export default function PartnershipsClient() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
-                <div
-                  key={i}
-                  className="arch-card group relative bg-[#080808] p-10 lg:p-12 rounded-2xl border border-white/5 hover:border-gold/20 transition-all duration-700 flex flex-col gap-8 overflow-hidden"
-                >
-                  {/* Hover ambient glow */}
-                  <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/5 rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+            {(() => {
+              const bentoClasses = [
+                "md:col-span-7 min-h-[380px] lg:min-h-[440px]",
+                "md:col-span-5 min-h-[380px] lg:min-h-[440px]",
+                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
+                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
+                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
+              ];
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-12 w-full">
+                  {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
+                    <div
+                      key={i}
+                      className={`arch-card group relative bg-[#080808] p-8 lg:p-10 rounded-2xl border border-white/8 overflow-hidden flex flex-col justify-between cursor-default transition-[border-color,box-shadow] duration-700 ${bentoClasses[i]}`}
+                      onMouseMove={(e) => {
+                        const el = e.currentTarget;
+                        const rect = el.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        requestAnimationFrame(() => {
+                          el.style.setProperty("--x", `${x}px`);
+                          el.style.setProperty("--y", `${y}px`);
+                        });
+                      }}
+                    >
+                      {/* Solid opaque bg to block fluid bg bleed */}
+                      <div className="absolute inset-0 bg-[#080808] rounded-2xl z-0" />
 
-                  {/* Number */}
-                  <span className="text-gold/40 font-mono text-2xl font-bold tracking-[0.3em] group-hover:text-gold/80 transition-colors duration-500">
-                    0{i + 1}
-                  </span>
+                      {/* Spotlight Glow Background */}
+                      <div
+                        className="pointer-events-none absolute inset-0 z-1 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                        style={{
+                          background: `radial-gradient(600px circle at var(--x) var(--y), rgba(212,175,55,0.07), transparent 50%)`,
+                        }}
+                      />
 
-                  {/* Title */}
-                  <div>
-                    <h3 className="text-2xl lg:text-3xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 leading-tight mb-3">
-                      {arch.title}
-                    </h3>
-                    {/* Animated gold underline */}
-                    <div className="w-full h-px bg-white/5 relative overflow-hidden">
-                      <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                      {/* Spotlight Border */}
+                      <div
+                        className="pointer-events-none absolute inset-0 z-2 rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 ring-1 ring-inset ring-gold/50"
+                        style={{
+                          maskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
+                          WebkitMaskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
+                        }}
+                      />
+
+                      {/* Giant Watermark Number */}
+                      <div className="absolute -bottom-8 -right-4 text-[10rem] lg:text-[13rem] font-black leading-none text-white/2 group-hover:-translate-y-3 group-hover:text-gold/4 transition-[transform,color] duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-3">
+                        0{i + 1}
+                      </div>
+
+                      {/* Content */}
+                      <div className="relative z-10 flex flex-col h-full justify-between">
+                        {/* Top Header */}
+                        <div className="flex items-center justify-between mb-auto">
+                          <span className="text-gold/50 font-mono text-sm tracking-[0.4em] font-medium">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <div className="w-12 h-px bg-white/10 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                          </div>
+                        </div>
+
+                        {/* Bottom Text */}
+                        <div className="mt-8 pt-4 border-t border-white/5 group-hover:border-gold/15 transition-colors duration-700">
+                          <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${i === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
+                            {arch.title}
+                          </h3>
+                          <p className="text-white/35 text-base font-light leading-relaxed group-hover:text-white/60 transition-colors duration-700">
+                            {arch.desc}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-white/35 text-lg font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
-                    {arch.desc}
-                  </p>
+                  ))}
                 </div>
-              ))}
-              {/* Filler cell to keep the last row even */}
-              <div className="hidden lg:block bg-[#080808] p-10 lg:p-12 rounded-2xl border border-white/5" />
-            </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -684,47 +728,49 @@ export default function PartnershipsClient() {
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col justify-between w-[80vw] md:w-[44vw] lg:w-[32vw] h-[45vh] lg:h-[50vh] border-r border-white/10 p-8 lg:p-12 overflow-hidden cursor-pointer shrink-0"
+                  className="relative group flex flex-col justify-between w-[85vw] md:w-[50vw] lg:w-[35vw] h-[55vh] lg:h-[65vh] border-r border-white/10 p-10 lg:p-14 overflow-hidden cursor-pointer shrink-0 bg-[#060606]"
                 >
-                  {/* Solid dark background */}
-                  <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
-
-                  {/* Image Background */}
-                  <div className="absolute inset-0 z-1 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                  {/* Image Background - Always slightly visible, brightens on hover */}
+                  <div className="absolute inset-0 z-0 opacity-20 grayscale mix-blend-luminosity group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
                       src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
                       alt={item.title}
                       fill
-                      sizes="(max-width: 768px) 80vw, (max-width: 1200px) 44vw, 32vw"
+                      sizes="(max-width: 768px) 85vw, (max-width: 1200px) 50vw, 35vw"
                       quality={50}
-                      loading="eager"
-                      className="object-cover opacity-25 scale-110 group-hover:scale-105 transition-transform duration-2000 ease-out will-change-transform"
+                      loading="lazy"
+                      className="object-cover scale-105 group-hover:scale-100 transition-transform duration-2000 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#060606] via-[#060606]/60 to-[#060606]/30" />
                   </div>
 
                   {/* Ambient Hover Glow */}
                   <div className="absolute inset-0 z-2 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
+                  {/* Huge Watermark Number */}
+                  <div className="absolute -bottom-10 -right-6 text-[12rem] lg:text-[16rem] font-black leading-none text-white/2 transform group-hover:-translate-y-4 group-hover:text-gold/4 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-1">
+                    0{i + 1}
+                  </div>
+
                   {/* Top — index + gold dot */}
                   <div className="relative z-10 flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-gold/40 group-hover:bg-gold transition-colors duration-500" />
-                    <span className="font-mono text-white/30 group-hover:text-gold text-xs tracking-[0.4em] uppercase font-bold transition-colors duration-700">
+                    <span className="font-mono text-white/30 group-hover:text-gold text-sm tracking-[0.4em] uppercase font-bold transition-colors duration-700">
                       0{i + 1}
                     </span>
                   </div>
 
                   {/* Bottom — title + divider + desc */}
-                  <div className="relative z-10">
-                    <h3 className="text-3xl lg:text-4xl font-black tracking-tighter mb-6 text-white/80 group-hover:text-white leading-[0.95] transition-colors duration-700">
+                  <div className="relative z-10 flex flex-col justify-end h-full mt-auto pb-4">
+                    <h3 className="text-4xl lg:text-5xl xl:text-6xl font-black tracking-tighter mb-6 text-white/80 group-hover:text-white leading-[0.9] transition-colors duration-700 uppercase drop-shadow-lg w-[90%]">
                       {item.title}
                     </h3>
 
-                    <div className="w-full h-px bg-white/5 mb-5 relative overflow-hidden">
+                    <div className="w-full h-px bg-white/5 mb-6 relative overflow-hidden">
                       <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
                     </div>
 
-                    <p className="text-base lg:text-lg text-white/50 font-light leading-relaxed group-hover:text-white/80 transition-colors duration-700 pr-4">
+                    <p className="text-lg lg:text-xl text-white/40 font-light leading-relaxed group-hover:text-white/70 transition-colors duration-700 pr-4">
                       {item.desc}
                     </p>
                   </div>
