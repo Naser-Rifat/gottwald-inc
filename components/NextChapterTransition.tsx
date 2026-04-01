@@ -41,6 +41,23 @@ export default function NextChapterTransition({
   const pctRef = useRef<HTMLSpanElement>(null);
   const router = useRouter();
   const hasNavigatedRef = useRef(false);
+  const lastProgressRef = useRef(0);
+
+  // Disable transition if any link is clicked on the page
+  // This prevents the DOM collapse unmount from triggering a false scroll completion
+  // when navigating via Header or Footer links.
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a")) {
+        hasNavigatedRef.current = true;
+      }
+    };
+    // Use capture phase to ensure we catch it before any default behavior or unmounts
+    window.addEventListener("click", handleGlobalClick, { capture: true });
+    return () =>
+      window.removeEventListener("click", handleGlobalClick, { capture: true });
+  }, []);
 
   const navigate = useCallback(() => {
     if (hasNavigatedRef.current) return;
@@ -110,8 +127,13 @@ export default function NextChapterTransition({
         }
 
         if (p >= 0.98 && !hasNavigatedRef.current) {
-          navigate();
+          // Guard against instant 0 -> 1 jumps caused by DOM collapsing
+          // during route transitions when another link is clicked.
+          if (lastProgressRef.current > 0.2) {
+            navigate();
+          }
         }
+        lastProgressRef.current = p;
       },
     });
 
