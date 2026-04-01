@@ -14,7 +14,7 @@ const BG_DARK = "#000000";
 const BG_PANEL = "#0a0a0e";
 const BG_LIGHT = "#f5f0eb";
 const TXT_LIGHT = "#f5f5f5";
-const TXT_MUTED = "rgba(255,255,255,0.5)";
+const TXT_MUTED = "rgba(255,255,255,0.8)";
 const TXT_DARK = "#1c1d21";
 const TXT_DARK_MUTED = "rgba(28,29,33,0.5)";
 const BORDER_DARK = "rgba(212,175,55,0.12)";
@@ -218,7 +218,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
         <Link
           href="/"
-          className="inline-flex items-center gap-3 text-xs font-medium tracking-[0.18em] uppercase opacity-50 no-underline transition-opacity duration-300 hover:opacity-100 pointer-events-auto"
+          className="inline-flex items-center gap-3 text-md font-medium tracking-[0.18em] uppercase opacity-50 no-underline transition-opacity duration-300 hover:opacity-100 pointer-events-auto"
           style={{ color: TXT_LIGHT }}
         >
           <span className="inline-block w-5 h-px bg-current opacity-60" />
@@ -226,8 +226,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         </Link>
         {project.tags && project.tags.length > 0 && (
           <span
-            className="hidden sm:inline text-[10px] tracking-[0.25em] uppercase font-medium"
-            style={{ color: GOLD, opacity: 0.6 }}
+            className="hidden sm:inline text-sm tracking-[0.25em] uppercase font-medium"
+            style={{ color: GOLD, opacity: 0.8 }}
           >
             {project.tags?.join(" · ")}
           </span>
@@ -248,7 +248,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
       {/* ─── Panel Counter ─── */}
       <div
-        className="fixed bottom-10 right-8 z-50 text-[10px] tracking-[0.25em] uppercase font-medium hidden lg:block"
+        className="fixed bottom-10 right-8 z-50 text-sm tracking-[0.25em] uppercase font-medium hidden lg:block"
         style={{ color: TXT_MUTED }}
       >
         <span ref={counterRef} style={{ color: GOLD }}>01</span>
@@ -279,7 +279,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 style={{ backgroundColor: GOLD }}
               />
               <span
-                className="text-[10px] tracking-[0.25em] uppercase font-semibold"
+                className="text-sm tracking-[0.25em] uppercase font-semibold"
                 style={{ color: TXT_MUTED }}
               >
                 01 — {project.tags?.[0] || "Pillar"}
@@ -287,14 +287,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </div>
 
             <h1
-              className="hero-title"
+              className="hero-title pt-2"
               style={{
                 fontFamily: "var(--font-serif), Georgia, serif",
-                fontSize: "clamp(2.4rem, 5.5vw, 4.2rem)",
+                fontSize: "clamp(2.8rem, 6vw, 5rem)",
                 fontWeight: 400,
-                lineHeight: 1.05,
-                letterSpacing: "-0.02em",
-                marginBottom: "32px",
+                lineHeight: 1.1,
+                letterSpacing: "-0.01em",
+                marginBottom: "40px",
                 color: TXT_LIGHT,
                 opacity: 0,
               }}
@@ -302,35 +302,45 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {project.title}
             </h1>
 
-            <div className="flex flex-col sm:flex-row gap-10 sm:gap-14 lg:gap-10 items-start">
+            <div className="flex flex-col xl:flex-row gap-12 lg:gap-20 items-start w-full pr-8">
               <div
-                className="hero-desc flex-1 max-w-[380px]"
+                className="hero-desc w-full xl:max-w-105"
                 style={{ opacity: 0 }}
               >
-                {project.description && project.description !== project.title && (
-                  <p
-                    className="mb-4"
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: 1.75,
-                      color: TXT_MUTED,
-                    }}
-                  >
-                    {project.description}
-                  </p>
-                )}
-                {project.details && project.details !== project.description && project.details !== project.title && (
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: 1.75,
-                      color: TXT_MUTED,
-                      marginBottom: "28px",
-                    }}
-                  >
-                    {project.details}
-                  </p>
-                )}
+                <div 
+                  className="flex-1 overflow-y-auto pr-3 mb-8"
+                  style={{ 
+                    maxHeight: "clamp(200px, 35vh, 400px)",
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "rgba(255,255,255,0.15) transparent",
+                  }}
+                >
+                  {project.description && project.description !== project.title && (
+                    <p
+                      className="mb-5 lg:mb-6 text-base lg:text-lg tracking-wide"
+                      style={{
+                        fontSize: "17px",
+                        lineHeight: 1.85,
+                        color: "rgba(255, 255, 255, 0.85)",
+                        fontWeight: 300,
+                      }}
+                    >
+                      {project.description}
+                    </p>
+                  )}
+                  {project.details && project.details !== project.description && project.details !== project.title && (
+                    <p
+                      className="text-base lg:text-[17px] tracking-wide"
+                      style={{
+                        lineHeight: 1.85,
+                        color: "rgba(255, 255, 255, 0.75)",
+                        fontWeight: 300,
+                      }}
+                    >
+                      {project.details}
+                    </p>
+                  )}
+                </div>
 
                 {/* CTA — pill with gold border, matching homepage "APPLY →" pattern */}
                 {project.launchUrl && (
@@ -338,13 +348,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     href={project.launchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hero-cta inline-flex items-center gap-3 no-underline group"
+                    className="hero-cta inline-flex items-center gap-3 no-underline group w-max"
                     style={{
-                      padding: "14px 30px",
+                      padding: "16px 36px",
                       borderRadius: "100px",
                       border: `1px solid ${GOLD}`,
                       color: GOLD,
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 600,
                       letterSpacing: "0.2em",
                       textTransform: "uppercase" as const,
@@ -369,14 +379,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {/* Services column */}
               {project.services && project.services.length > 0 && (
                 <div
-                  className="hero-services w-full sm:w-[160px] shrink-0"
+                  className="hero-services w-full xl:w-60 shrink-0 xl:pt-1"
                   style={{ opacity: 0 }}
                 >
                   <h3
-                    className="mb-3"
+                    className="mb-4"
                     style={{
-                      fontSize: "10px",
-                      letterSpacing: "0.25em",
+                      fontSize: "12px",
+                      letterSpacing: "0.3em",
                       fontWeight: 600,
                       textTransform: "uppercase" as const,
                       color: GOLD,
@@ -385,7 +395,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     Services
                   </h3>
                   <div
-                    className="w-8 h-px mb-4"
+                    className="w-12 h-px mb-6 opacity-60"
                     style={{ backgroundColor: BORDER_DARK }}
                   />
                   <ul
@@ -393,13 +403,18 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       listStyle: "none",
                       padding: 0,
                       margin: 0,
-                      fontSize: "13px",
-                      lineHeight: 1.8,
-                      color: TXT_MUTED,
+                      fontSize: "15px",
+                      lineHeight: 1.6,
+                      color: "rgba(255,255,255,0.85)",
+                      fontWeight: 300,
                     }}
+                    className="flex flex-col gap-3"
                   >
                     {project.services.map((s) => (
-                      <li key={s}>{s}</li>
+                      <li key={s} className="flex items-start gap-4">
+                        <span className="text-[10px] mt-1.5" style={{ color: GOLD, opacity: 0.7 }}>■</span>
+                        <span className="tracking-wide">{s}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -858,10 +873,10 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
           <p
             className="panel-body"
             style={{
-              fontSize: "14px",
+              fontSize: "17px",
               color: muted,
-              lineHeight: 1.8,
-              maxWidth: "480px",
+              lineHeight: 1.85,
+              maxWidth: "520px",
               whiteSpace: "pre-line",
             }}
           >
@@ -922,11 +937,11 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
         <p
           className="panel-body"
           style={{
-            fontSize: "14px",
+            fontSize: "17px",
             color: muted,
-            lineHeight: 1.8,
+            lineHeight: 1.85,
             marginBottom: "48px",
-            maxWidth: "380px",
+            maxWidth: "420px",
           }}
         >
           {block.body}
@@ -949,9 +964,9 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
               <p
                 className="mt-2"
                 style={{
-                  fontSize: "10px",
+                  fontSize: "12px",
                   color: muted,
-                  letterSpacing: "0.15em",
+                  letterSpacing: "0.25em",
                   textTransform: "uppercase",
                 }}
               >
@@ -1049,9 +1064,9 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           className="panel-body"
           style={{
             color: "currentColor",
-            opacity: 0.55,
-            fontSize: "14px",
-            lineHeight: 1.8,
+            opacity: 0.75,
+            fontSize: "17px",
+            lineHeight: 1.85,
           }}
         >
           {block.body}
@@ -1102,8 +1117,8 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
             className="absolute bottom-5 left-6"
             style={{
               color: TXT_MUTED,
-              fontSize: "10px",
-              letterSpacing: "0.2em",
+              fontSize: "11px",
+              letterSpacing: "0.3em",
               textTransform: "uppercase",
             }}
           >
@@ -1128,7 +1143,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         }}
       >
         <div className="panel-content flex-1 w-full lg:max-w-[600px] opacity-0">
-          <SectionLabel idx={panelIdx} text="Details" light={isLight} />
+          <SectionLabel idx={panelIdx} text="System Specifications" light={isLight} />
           <h3
             className="panel-heading"
             style={{
@@ -1145,7 +1160,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
           {block.body && (
             <div
               className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-gold [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-gold focus:[&_input]:ring-1 focus:[&_input]:ring-gold [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-gold focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-gold [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-gold [&_button]:text-black [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
-              style={{ fontSize: "14px", lineHeight: 1.8 }}
+              style={{ fontSize: "17px", lineHeight: 1.85 }}
               dangerouslySetInnerHTML={{ __html: block.body }}
             />
           )}

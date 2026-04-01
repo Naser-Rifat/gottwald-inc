@@ -316,20 +316,12 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       </div>
 
       {/* ── Footer Area ── */}
-      <div className="flex justify-between items-end menu-fade-in flex-none text-[9px] lg:text-[10px] uppercase tracking-[0.2em] text-white/40">
-        <div className="flex gap-6 lg:gap-8 flex-col sm:flex-row">
-          <a href="#" className="hover:text-white transition-colors">
-            TWITTER
-          </a>
-          <a href="#" className="hover:text-white transition-colors">
-            LINKEDIN
-          </a>
-          <a href="#" className="hover:text-white transition-colors">
-            INSTAGRAM
-          </a>
-        </div>
-        <div className="hidden sm:block text-right tracking-[0.3em]">
-          GOTT WALD PRO STANDARD — ARCHITECTURE 2026
+      <div className="flex justify-center lg:justify-end items-end menu-fade-in flex-none text-[9px] lg:text-[10px] uppercase tracking-[0.2em] lg:tracking-[0.3em] text-white/40 font-medium pb-2 lg:pb-0">
+        <div className="text-center lg:text-right flex items-center gap-4">
+          <span className="hidden lg:block w-6 h-px bg-white/20"></span>
+          <span className="opacity-80 hover:opacity-100 transition-opacity duration-500">
+            GOTTWALD_INFRA_1.0 <span className="text-gold/60 mx-1 border-none">·</span> 2026
+          </span>
         </div>
       </div>
     </div>
