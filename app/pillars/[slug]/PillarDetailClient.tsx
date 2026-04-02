@@ -298,7 +298,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 style={{ backgroundColor: GOLD }}
               />
               <span
-                className="text-sm tracking-[0.25em] uppercase font-semibold"
+                className="text-xs tracking-[0.25em] uppercase font-semibold"
                 style={{ color: TXT_MUTED }}
               >
                 01 — {project.tags?.[0] || "Pillar"}
@@ -321,13 +321,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {project.title}
             </h1>
 
-            <div className="flex flex-col xl:flex-row gap-12 lg:gap-20 items-start w-full xl:pr-8">
+            <div className="flex flex-col xl:flex-row gap-8 lg:gap-10 items-start w-full">
               <div
                 className="hero-desc w-full xl:max-w-105"
                 style={{ opacity: 0 }}
               >
                 <div 
-                  className="flex-1 pr-3 mb-8 "
+                  className="flex-1 mb-8"
                   style={{ 
                     maxHeight: "clamp(200px, 35vh, 400px)",
                     scrollbarWidth: "thin",
@@ -339,7 +339,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       className="mb-5 lg:mb-6"
                       style={{
                         fontSize: "clamp(14px, 1.2vw, 16px)",
-                        // lineHeight: 1.85,
+                        lineHeight: 1.5,
                         color: "rgba(255, 255, 255, 0.85)",
                         fontWeight: 300,
                       }}
@@ -352,7 +352,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       className="text-md tracking-wide"
                       style={{
                         fontSize: "clamp(12px, 1.1vw, 15px)",
-                        lineHeight: 1.85,
+                        lineHeight: 1.5,
                         color: "rgba(255, 255, 255, 0.75)",
                         fontWeight: 300,
                       }}
