@@ -355,74 +355,100 @@ export default function AboutClient() {
       </div>
 
       <main>
-        {/* HERO SECTION */}
-        <section className="hero-section min-h-[100vh] w-full flex flex-col justify-center relative bg-[#030303] overflow-hidden px-gutter pt-32 pb-[15vh]">
-          {/* Cinematic Background Texture — JPG for smaller GPU texture, no mix-blend-mode */}
+        {/* ── HERO ── Awwwards-level cinematic composition */}
+        <section className="hero-section relative w-full min-h-[100svh] bg-[#030303] overflow-hidden flex flex-col">
+
+          {/* ① Full-bleed image — covers 100% of hero */}
+          <div className="hero-bg-texture absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.62, willChange: "opacity" }}>
+            <div className="absolute inset-0 bg-[url('/images/about_hero_abstract.jpg')] bg-cover bg-[center_20%] bg-no-repeat" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/90 via-transparent via-[45%] to-[#030303]/92" />
+            <div className="absolute inset-0 bg-linear-to-r from-[#030303]/85 via-transparent via-[55%] to-transparent" />
+          </div>
+
+          {/* ② Ambient orb */}
           <div
-            className="hero-bg-texture absolute inset-0 z-0 opacity-40 pointer-events-none"
-            style={{ willChange: "opacity" }}
-          >
-            <div className="absolute inset-0 bg-[url('/images/about_hero_abstract.jpg')] bg-cover bg-center bg-no-repeat" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#030303] from-0% via-transparent via-40% to-[#030303] to-95%" />
-          </div>
+            className="ambient-light absolute top-[10%] left-[-5%] w-[50vw] h-[50vh] rounded-full blur-[140px] pointer-events-none z-0"
+            style={{ background: "radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)", opacity: 0.5, willChange: "opacity" }}
+          />
 
-          {/* Ambient Generative Light — contained layer, no mix-blend-mode to avoid compositing */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <div
-              className="ambient-light absolute top-[10%] left-[10%] w-[45vw] h-[45vw] rounded-full opacity-15 blur-[100px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)",
-                willChange: "opacity",
-              }}
-            />
-            <div
-              className="ambient-light absolute bottom-[20%] right-[10%] w-[50vw] h-[50vw] rounded-full opacity-8 blur-[80px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)",
-                willChange: "opacity",
-              }}
-            />
-          </div>
+          {/* ③ HERO CONTENT */}
+          <div className="relative z-10 flex flex-col justify-between flex-1 pt-[18vh] pb-0">
 
-          <div className="max-w-6xl mx-auto w-full relative z-10 space-y-12 lg:space-y-16 mt-[-10vh]">
-            <div>
-              <p className="hero-manifest-text text-gold/40 text-[10px] md:text-xs tracking-[0.4em] uppercase font-bold mb-6 lg:mb-8">
-                ABOUT US — GOTT WALD HOLDING
-              </p>
-              <h1 className="hero-manifest-text text-[clamp(2.5rem,6vw,6.5rem)] leading-[1.03] font-light tracking-tighter text-white/90">
-                <span className="inline-block parallax-fast">
-                  WE TURN COMPLEXITY
-                </span>{" "}
-                <br />
-                <span className="font-serif italic text-gold/80 px-1 lg:px-4 inline-block parallax-slow">
-                  into inevitability.
-                </span>
+            {/* Eyebrow */}
+            <div className="hero-manifest-text px-gutter flex items-center gap-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
+              <span className="text-gold text-[9px] font-black tracking-[0.65em] uppercase">About Us</span>
+              <span className="h-px w-8 bg-white/20" />
+              <span className="text-white/30 text-[9px] font-bold tracking-[0.4em] uppercase">Gott Wald Holding</span>
+            </div>
+
+            {/* HEADLINE — full-viewport-width cascade */}
+            <div className="px-gutter mt-8">
+              <h1 className="hero-manifest-text" aria-label="We Turn Complexity into Inevitability">
+                <div className="overflow-hidden">
+                  <span
+                    className="block font-black uppercase text-white leading-[0.82] tracking-[-0.04em] parallax-fast"
+                    style={{ fontSize: "clamp(4rem, 12.5vw, 160px)" }}
+                  >
+                    WE TURN
+                  </span>
+                </div>
+                <div className="overflow-hidden">
+                  <span
+                    className="block font-black uppercase text-white leading-[0.82] tracking-[-0.04em] parallax-fast"
+                    style={{ fontSize: "clamp(4rem, 12.5vw, 160px)" }}
+                  >
+                    COMPLEXITY
+                  </span>
+                </div>
+                {/* Serif italic — offset right to break left-column monotony */}
+                <div className="overflow-hidden flex justify-end pr-4 lg:pr-16 mt-2">
+                  <span
+                    className="block font-serif italic text-gold leading-[1.0] tracking-[-0.01em] parallax-slow"
+                    style={{ fontSize: "clamp(2.8rem, 9vw, 118px)" }}
+                  >
+                    into inevitability.
+                  </span>
+                </div>
               </h1>
             </div>
 
-            <div className="hero-manifest-text max-w-2xl text-lg md:text-2xl font-light text-white/60 leading-[1.6]">
-              <p>
-                If you&apos;re a CEO, founder, executive — or you run an SME
-                that must grow — you know this moment.
-              </p>
-            </div>
-          </div>
+            {/* BOTTOM BAR — full-width, left copy / right data */}
+            <div className="hero-manifest-text px-gutter mt-auto border-t border-white/[0.08]">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 py-8">
+                {/* Sub-copy — widened so text doesn't wrap on 3rd line */}
+                <p className="text-white/80 text-base lg:text-lg font-light leading-[1.65] max-w-md">
+                  If you&apos;re a CEO, founder, executive — or you run an SME that must grow —{" "}
+                  <strong className="text-white font-semibold">you know this moment.</strong>
+                </p>
 
-          {/* Premium Scroll Indicator */}
-          <div className="absolute bottom-[18vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-0 scroll-indicator hidden sm:flex z-20">
-            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-bold drop-shadow-md">
-              Scroll to tune in
-            </span>
-            <div className="w-px h-16 bg-white/20 relative overflow-hidden">
-              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-full bg-gold -translate-y-[101%] drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+                {/* Data + scroll indicator */}
+                <div className="flex items-end gap-10 lg:gap-14 shrink-0">
+                  {[
+                    { n: "5+",  label: "Axes" },
+                    { n: "7",   label: "Entities" },
+                    { n: "GEO", label: "Georgia HQ" },
+                  ].map(({ n, label }) => (
+                    <div key={label} className="flex flex-col gap-1.5">
+                      <span className="text-[2rem] font-black text-white leading-none tracking-tight">{n}</span>
+                      <span className="text-[8px] uppercase tracking-[0.45em] text-white/40 font-bold">{label}</span>
+                    </div>
+                  ))}
+
+                  {/* Scroll indicator — just line, no text */}
+                  <div className="scroll-indicator hidden sm:flex flex-col items-center gap-1 opacity-0 pb-0.5 ml-6">
+                    <div className="w-px h-12 bg-white/15 relative overflow-hidden">
+                      <div className="scroll-indicator-line absolute top-0 left-0 w-full h-full bg-gold -translate-y-[101%]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* NARRATIVE SCROLL SEQUENCE */}
-        <section className="bg-[#030303] relative z-10 -mt-[15vh]">
+        <section className="bg-[#030303] relative z-10 pt-[20vh]">
           <div className="max-w-4xl mx-auto px-gutter space-y-[35vh] pb-[25vh]">
             <p className="reveal-text text-[clamp(1.5rem,3.5vw,3rem)] font-light text-white/60 leading-[1.5] parallax-slow">
               You can feel there&apos;s more possible... yet something in the
