@@ -151,7 +151,7 @@ export default function NextChapterTransition({
         {/* Massive Interactive Title Container */}
         <div className="relative w-full h-full flex flex-col justify-center items-center">
           <div className="absolute top-[20vh] text-center w-full">
-            <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-white/30">
+            <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-white/80">
               Next Chapter
             </span>
           </div>
@@ -166,7 +166,7 @@ export default function NextChapterTransition({
 
           {/* Bottom Progress UI */}
           <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-48 sm:w-64">
-            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.3em] font-bold text-white/40 mb-1">
+            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.3em] font-bold text-white/80 mb-1">
               <span>Next Page</span>
               <span>→</span>
             </div>

@@ -392,11 +392,11 @@ export default function PartnershipsClient() {
               {/* LEFT: Power-statement */}
               <div className="hero-reveal w-full max-w-[850px]">
                 <div className="flex items-center gap-3 mb-8 lg:mb-10">
-                  <span className="text-gold text-xs lg:text-sm font-bold tracking-[0.4em] uppercase">
+                  <span className="text-gold text-sm lg:text-sm font-bold tracking-[0.4em] uppercase">
                     02/
                   </span>
                   <span className="w-16 h-px bg-white/15" />
-                  <span className="text-xs lg:text-sm tracking-[0.35em] text-white/40 uppercase font-bold">
+                  <span className="text-sm lg:text-sm tracking-[0.35em] text-white/40 uppercase font-bold">
                     Partnerships
                   </span>
                 </div>
@@ -417,7 +417,7 @@ export default function PartnershipsClient() {
                 </p>
 
                 {/* Trust line */}
-                <p className="hero-reveal mt-6 text-sm uppercase tracking-[0.3em] text-white/30 font-medium pl-0.5">
+                <p className="hero-reveal mt-6 text-sm uppercase tracking-[0.3em] text-white/80 font-medium pl-0.5">
                   Confidential by default. NDA-ready on request.
                 </p>
               </div>
@@ -426,7 +426,7 @@ export default function PartnershipsClient() {
               <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-[#0a0a0a]/95 rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
                 <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gold/20">
                   <span className="w-2 h-2 rounded-full bg-gold" />
-                  <p className="text-[10px] lg:text-xs uppercase tracking-[0.5em] text-gold/80 font-bold">
+                  <p className="text-[10px] lg:text-sm uppercase tracking-[0.5em] text-gold/80 font-bold">
                     Our Reach — Live
                   </p>
                 </div>
@@ -441,7 +441,7 @@ export default function PartnershipsClient() {
                     key={label}
                     className="group flex items-baseline justify-between py-5 border-b border-white/5 last:border-0 cursor-default"
                   >
-                    <span className="text-xs lg:text-sm uppercase tracking-[0.3em] text-white/60 group-hover:text-white transition-colors duration-300">
+                    <span className="text-sm lg:text-sm uppercase tracking-[0.3em] text-white/80 group-hover:text-white transition-colors duration-300">
                       {label}
                     </span>
                     <span className="text-4xl lg:text-5xl font-light text-white/90 tabular-nums group-hover:text-gold transition-colors duration-300">
@@ -456,7 +456,7 @@ export default function PartnershipsClient() {
                     data-magnetic
                     className="group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
                   >
-                    <span className="text-xs lg:text-sm tracking-[0.3em] uppercase font-bold">
+                    <span className="text-sm lg:text-sm tracking-[0.3em] uppercase font-bold">
                       Apply for Partnership
                     </span>
                     <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
@@ -466,7 +466,7 @@ export default function PartnershipsClient() {
                   <a
                     href="#apply"
                     data-magnetic
-                    className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-white/40 hover:text-white transition-colors duration-300 w-full"
+                    className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-white hover:text-white transition-colors duration-300 w-full"
                   >
                     <span className="text-[11px] tracking-[0.3em] uppercase font-medium">
                       Request an Intro Call
@@ -491,7 +491,7 @@ export default function PartnershipsClient() {
         {/* ── SECTION 2: GOTT WALD STANDARD (3 statements) ── */}
         <section className="px-gutter py-[18vh] bg-[#0a0a0a] relative z-10 border-t border-white/5">
           <div className="max-w-4xl mx-auto text-center space-y-12 reveal-up">
-            <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold">
+            <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold">
               What we are
             </p>
             <div className="space-y-6">
@@ -516,7 +516,7 @@ export default function PartnershipsClient() {
         >
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
-              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-4">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-4">
                 Our Foundation
               </p>
               <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
@@ -531,10 +531,10 @@ export default function PartnershipsClient() {
                   key={i}
                   className="manifesto-line group flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/2 transition-colors duration-500 px-4 -mx-4"
                 >
-                  <span className="text-gold font-mono text-xs shrink-0 w-8 text-right opacity-50 group-hover:opacity-100 transition-opacity">
+                  <span className="text-gold font-mono text-sm shrink-0 w-8 text-right opacity-90 group-hover:opacity-100 transition-opacity">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/70 group-hover:text-white transition-colors duration-500 leading-tight">
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/90 group-hover:text-white transition-colors duration-500 leading-tight">
                     {i === 5 ? (
                       <>
                         We build for{" "}
@@ -559,7 +559,7 @@ export default function PartnershipsClient() {
             {/* TOP: The Principle Statement */}
             <div className="reveal-up space-y-10">
               <div>
-                <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+                <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-6">
                   The Principle
                 </p>
                 <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
@@ -606,7 +606,7 @@ export default function PartnershipsClient() {
         <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
-              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-6">
                 Who We&apos;re Looking For
               </p>
               <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
@@ -615,7 +615,7 @@ export default function PartnershipsClient() {
                   proven in action, not in slides.
                 </span>
               </h2>
-              <p className="text-xl text-white/50 font-light max-w-2xl">
+              <p className="text-xl text-white/80 font-light max-w-2xl">
                 We select five partnership archetypes.
               </p>
             </div>
@@ -674,7 +674,7 @@ export default function PartnershipsClient() {
                       <div className="relative z-10 flex flex-col h-full justify-between">
                         {/* Top Header */}
                         <div className="flex items-center justify-between mb-auto">
-                          <span className="text-gold/50 font-mono text-sm tracking-[0.4em] font-medium">
+                          <span className="text-gold/80 font-mono text-sm tracking-[0.4em] font-medium">
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <div className="w-12 h-px bg-white/10 relative overflow-hidden">
@@ -687,7 +687,7 @@ export default function PartnershipsClient() {
                           <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${i === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
                             {arch.title}
                           </h3>
-                          <p className="text-white/35 text-base font-light leading-relaxed group-hover:text-white/60 transition-colors duration-700">
+                          <p className="text-white/80 text-base font-light leading-relaxed group-hover:text-white/60 transition-colors duration-700">
                             {arch.desc}
                           </p>
                         </div>
@@ -717,7 +717,7 @@ export default function PartnershipsClient() {
               </h2>
               <div className="hidden lg:flex flex-col items-end pb-4">
                 <span className="w-2.5 h-2.5 rounded-full bg-gold mb-5" />
-                <p className="text-xs lg:text-sm tracking-[0.4em] text-white/50 uppercase font-bold">
+                <p className="text-sm lg:text-sm tracking-[0.4em] text-white/50 uppercase font-bold">
                   Non-Negotiables
                 </p>
               </div>
@@ -788,7 +788,7 @@ export default function PartnershipsClient() {
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-24">
             {/* What Partners Get */}
             <div className="reveal-up">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-10">
+              <h3 className="text-sm uppercase tracking-[0.3em] text-white/40 mb-10">
                 What Partners Get
               </h3>
               <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
@@ -816,7 +816,7 @@ export default function PartnershipsClient() {
 
             {/* What We Expect */}
             <div className="reveal-up">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-white/40 mb-10">
+              <h3 className="text-sm uppercase tracking-[0.3em] text-white/40 mb-10">
                 What We Expect
               </h3>
               <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
@@ -920,7 +920,7 @@ export default function PartnershipsClient() {
         <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
-              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
                 How It Works
               </p>
               <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
@@ -960,7 +960,7 @@ export default function PartnershipsClient() {
         >
           <div className="max-w-4xl mx-auto">
             <div className="form-reveal mb-20">
-              <p className="text-xs tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
                 Partnership Application
               </p>
               <h2 className="text-[clamp(3rem,6.5vw,7rem)] font-black tracking-tighter uppercase mb-8 leading-[0.9]">
@@ -999,7 +999,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="company"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Company Name
                   </label>
@@ -1015,7 +1015,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="website"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Website
                   </label>
@@ -1035,7 +1035,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="country"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Country / Region
                   </label>
@@ -1051,7 +1051,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="contact"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Main Contact
                   </label>
@@ -1063,7 +1063,7 @@ export default function PartnershipsClient() {
                 <div className="relative mt-2">
                   <label
                     htmlFor="partnership_type"
-                    className="absolute left-0 -top-4 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50"
+                    className="absolute left-0 -top-4 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50"
                   >
                     Partnership Type
                   </label>
@@ -1116,7 +1116,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="pillars"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Relevant Pillars
                   </label>
@@ -1135,7 +1135,7 @@ export default function PartnershipsClient() {
                 />
                 <label
                   htmlFor="description"
-                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                 >
                   What you do
                 </label>
@@ -1154,7 +1154,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="capabilities"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Top 3 capabilities
                   </label>
@@ -1170,7 +1170,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="proof"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Proof of work
                   </label>
@@ -1189,7 +1189,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="references"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     References (optional)
                   </label>
@@ -1205,7 +1205,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="capacity"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Capacity
                   </label>
@@ -1221,7 +1221,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="budget"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Typical project range
                   </label>
@@ -1240,7 +1240,7 @@ export default function PartnershipsClient() {
                 />
                 <label
                   htmlFor="values"
-                  className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                 >
                   Values Fit (Required)
                 </label>
@@ -1258,7 +1258,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="why"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Why GOTT WALD?
                   </label>
@@ -1273,7 +1273,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="constraints"
-                    className="absolute left-0 top-3 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/40 transition-all duration-300 pointer-events-none"
                   >
                     Anything we must know?
                   </label>

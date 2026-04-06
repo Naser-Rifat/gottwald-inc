@@ -234,7 +234,7 @@ export default function FooterSection() {
            BOTTOM BAR: Copyright + Legal
          ═══════════════════════════════════════════════════════════ */}
       <div className="w-full flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 xl:gap-4 pt-8 border-t border-white/10">
-        <p className="text-white/60 tracking-wide font-light text-[13px] leading-relaxed max-w-xl">
+        <p className="text-white/80 tracking-wide font-light text-[13px] leading-relaxed max-w-xl">
           © {new Date().getFullYear()} GOTTWALD HOLDING LLC. Security-led
           operations · Confidential by default.
         </p>

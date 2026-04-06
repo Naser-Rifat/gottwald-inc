@@ -315,7 +315,7 @@ export default function StrategicInquirySection() {
                 </span>
               </div>
             </Link>
-            <span className="italic text-white/40  tracking-wide leading-tight font-light text-center">
+            <span className="italic text-white/80  tracking-wide leading-tight font-light text-center">
               Confidential inquiry. Values-first selection.
             </span>
           </div>
@@ -330,7 +330,7 @@ export default function StrategicInquirySection() {
               ].map((pill, idx) => (
                 <span
                   key={idx}
-                  className="proof-pill px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[11px] tracking-widest uppercase text-white/50 cursor-default flex items-center gap-2 font-medium transition-colors hover:bg-white/10 hover:text-white/70"
+                  className="proof-pill px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[11px] tracking-widest uppercase text-white/80 cursor-default flex items-center gap-2 font-medium transition-colors hover:bg-white/10 hover:text-white/70"
                 >
                   <span className="text-gold font-bold mb-px opacity-70">
                     ·
