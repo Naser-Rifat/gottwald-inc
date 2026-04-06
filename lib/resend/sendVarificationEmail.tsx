@@ -27,9 +27,9 @@ export const sendVarificationEmail = async ({
     // RESEND_FROM must be a verified domain on resend.com (e.g. noreply@gottwald.world)
     // Fallback is Resend's own test sender — works without domain verification
     const fromAddress =
-      process.env.RESEND_FROM || "onboarding@resend.dev";
+      process.env.RESEND_FROM || "";
     const toAddress =
-      process.env.RESEND_TO || process.env.SMTP_TO || "abunaserrifat971@gmail.com";
+      process.env.RESEND_TO || "";
 
     const data = await resend.emails.send({
       from: `GOTT WALD <${fromAddress}>`,

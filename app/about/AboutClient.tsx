@@ -462,7 +462,7 @@ export default function AboutClient() {
               <h2 className="text-3xl md:text-5xl font-light text-white leading-tight">
                 GOT WALD HOLDING is not a traditional service provider.
               </h2>
-              <p className="text-xl md:text-2xl text-white/50 leading-relaxed font-light">
+              <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light">
                 We are an execution standard: strategy, structure, technology,
                 communication, and human performance — built as one integrated
                 system that reduces complexity and makes outcomes inevitable.
@@ -470,12 +470,12 @@ export default function AboutClient() {
             </div>
 
             <div className="axis-trigger reveal-text">
-              <p className="text-lg md:text-xl text-white/40 mb-6">
+              <p className="text-lg md:text-xl text-white/80 mb-6">
                 And we carry an axis you don&apos;t debate — you feel it:
               </p>
               <p className="text-3xl md:text-5xl font-black tracking-widest text-gold opacity-90 drop-shadow-2xl">
-                NATURE<span className="text-white/20 mx-4">–</span>ANIMALS
-                <span className="text-white/20 mx-4">–</span>HUMANS
+                NATURE<span className="text-white/80 mx-4">–</span>ANIMALS
+                <span className="text-white/80 mx-4">–</span>HUMANS
               </p>
             </div>
 
@@ -497,7 +497,7 @@ export default function AboutClient() {
         {/* WHAT WE STAND FOR */}
         <section className="py-[25vh] px-gutter relative bg-[#050505]">
           <div className="max-w-5xl mx-auto">
-            <p className="reveal-text text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-16">
+            <p className="reveal-text text-sm tracking-[0.3em] uppercase text-gold/80 font-bold mb-16">
               What we stand for
             </p>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
@@ -506,7 +506,7 @@ export default function AboutClient() {
                   We believe in something radical —{" "}
                   <span className="font-serif italic text-gold/80 hover:text-gold transition-colors duration-500">
                     and practical:
-                  </span>
+                  </span> 
                 </h3>
                 <p className="text-2xl text-white/80 leading-relaxed font-light">
                   When structure becomes visible, the right solution becomes
@@ -987,7 +987,7 @@ export default function AboutClient() {
                 <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
                   The Decision Code
                 </p>
-                <p className="text-[17px] text-white/60 font-light leading-relaxed mb-6 max-w-100">
+                <p className="text-[17px] text-white/80 font-light leading-relaxed mb-6 max-w-100">
                   GOTT WALD is not built on trends. It is built on principles.
                   Timeless. Durable. Non-negotiable.
                 </p>
@@ -996,7 +996,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Love
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as the measure
                     </span>
                   </li>
@@ -1004,7 +1004,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Peace
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as the direction
                     </span>
                   </li>
@@ -1012,7 +1012,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Harmony
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as the outcome
                     </span>
                   </li>
@@ -1020,7 +1020,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Compassion
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as the posture
                     </span>
                   </li>
@@ -1028,7 +1028,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Empathy
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as the capability
                     </span>
                   </li>
@@ -1036,7 +1036,7 @@ export default function AboutClient() {
                     <span className="font-serif italic text-[22px] text-white/90 mr-2">
                       Service
                     </span>
-                    <span className="text-[15px] font-light text-white/50">
+                    <span className="text-[15px] font-light text-white/70">
                       as lived responsibility
                     </span>
                   </li>
@@ -1051,7 +1051,7 @@ export default function AboutClient() {
                 <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
                   A rare gift
                 </p>
-                <p className="text-[17px] text-white/60 font-light leading-relaxed max-w-105">
+                <p className="text-[17px] text-white/80 font-light leading-relaxed max-w-105">
                   The PATRON carries a rare gift: a reader of people. a feeler.
                   a gatherer. The PATRON sees you before you&apos;ve fully
                   organized yourself.
@@ -1062,14 +1062,14 @@ export default function AboutClient() {
                     &quot;nothing here is performed. everything here is
                     held.&quot;
                   </p>
-                  <ul className="space-y-3 text-[16px] text-white/50 font-light">
+                  <ul className="space-y-3 text-[16px] text-white/70 font-light">
                     <li>Conflict becomes clear.</li>
                     <li>Disorder becomes direction.</li>
                     <li>Pressure becomes purpose.</li>
                   </ul>
                 </div>
 
-                <p className="text-[15px] text-white/70 font-light leading-relaxed max-w-105">
+                <p className="text-[15px] text-white/80 font-light leading-relaxed max-w-105">
                   So specialists can build without systems turning cold. So
                   growth never consumes the soul. A framework that carries. A
                   system that protects. A force that unites.
@@ -1102,7 +1102,7 @@ export default function AboutClient() {
               </h3>
             </div>
 
-            <p className="cta-reveal text-2xl font-serif italic text-white/50">
+            <p className="cta-reveal text-2xl font-serif italic text-white/80">
               If you want it cleanly solved — we are.
             </p>
 
@@ -1121,7 +1121,7 @@ export default function AboutClient() {
               </button>
             </div>
 
-            <p className="cta-reveal text-base text-white/40 font-light mt-8">
+            <p className="cta-reveal text-base text-white/90 font-light mt-8">
               We don&apos;t create noise. We create structure.
               <br />
               And structure creates inevitability.
