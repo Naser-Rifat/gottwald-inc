@@ -730,8 +730,8 @@ export default function PartnershipsClient() {
                   key={i}
                   className="relative group flex flex-col justify-between w-[85vw] md:w-[50vw] lg:w-[35vw] h-[55vh] lg:h-[65vh] border-r border-white/10 p-10 lg:p-14 overflow-hidden cursor-pointer shrink-0 bg-[#060606]"
                 >
-                  {/* Image Background - Always slightly visible, brightens on hover */}
-                  <div className="absolute inset-0 z-0 opacity-20 grayscale mix-blend-luminosity group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                  {/* Image Background - bright and visible */}
+                  <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-80 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
                     <Image
                       src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
                       alt={item.title}
