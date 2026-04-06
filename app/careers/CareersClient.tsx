@@ -247,11 +247,11 @@ export default function CareersClient() {
             </h1>
 
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
-              <div className="flex-1 flex flex-col gap-6 text-white/80 font-light leading-relaxed tracking-wide reveal-text">
+              <div className="flex-1 flex flex-col gap-6 text-white font-light leading-relaxed tracking-wide reveal-text">
                 <p className="text-2xl md:text-3xl font-medium tracking-tight">
                   We recruit intentionally worldwide — and we mean it.
                 </p>
-                <p className="text-white/60 max-w-md text-lg">
+                <p className="text-white max-w-md text-lg">
                   GOTT WALD is a human family: different cultures, traditions, languages, life paths — wanted. Because diversity increases our intelligence. 
                   <br /><br />
                   Our axis of impact: NATURE — ANIMALS — HUMANS.
@@ -301,33 +301,33 @@ export default function CareersClient() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
                   Path 01
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
-                <p className="text-white/60 font-light leading-relaxed text-lg">
+                <p className="text-white font-light leading-relaxed text-lg">
                   For people who want to build long-term and carry responsibility.
                 </p>
               </div>
 
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
                   Path 02
                 </div>
-                <h3 className="text-2xl font-bold mb-4">
+                <h3 className="text-2xl font-bold mb-4">ƒ
                   Freelancer / Interim
                 </h3>
-                <p className="text-white/60 font-light leading-relaxed text-lg">
+                <p className="text-white font-light leading-relaxed text-lg">
                   For professionals who deliver at a high level for defined scopes — clean standards, clear ownership.
                 </p>
               </div>
 
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/40 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
-                <p className="text-white/60 font-light leading-relaxed text-lg">
+                <p className="text-white font-light leading-relaxed text-lg">
                   For selected experts we activate on demand (project-based, NDA-ready).
                 </p>
               </div>
@@ -342,7 +342,7 @@ export default function CareersClient() {
               <h2 className="text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8">
                 WHO WE&apos;RE <br /> LOOKING FOR
               </h2>
-              <p className="text-white/50 italic text-lg border-l border-gold pl-6 mt-12">
+              <p className="text-white/80 italic text-lg border-l border-gold pl-6 mt-12">
                 &quot;If this feels &apos;normal&apos; to you, you&apos;re
                 probably in the right room.&quot;
               </p>
@@ -562,7 +562,7 @@ export default function CareersClient() {
               <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6">
                 APPLICATION
               </h2>
-              <p className="text-white/60 font-light text-lg">
+              <p className="text-white/80 font-light text-lg">
                 Keep it clear and proof-based. If there&apos;s a fit, we&apos;ll
                 reach out.
               </p>
@@ -575,7 +575,7 @@ export default function CareersClient() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="name" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="name" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     First &amp; Last Name *
                   </label>
                   <input required id="name" name="name"
@@ -584,7 +584,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="contact" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="contact" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Email / Phone *
                   </label>
                   <input required id="contact" name="contact"
@@ -596,7 +596,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="location" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="location" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Country / City / Time Zone
                   </label>
                   <input id="location" name="location"
@@ -605,7 +605,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="region" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="region" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Continent / Region
                   </label>
                   <input id="region" name="region"
@@ -616,7 +616,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="languages" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="languages" className="text-md uppercase tracking-widest text-white/80 font-bold">
                   Languages (Select / Free text)
                 </label>
                 <input id="languages" name="languages"
@@ -628,7 +628,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="work_model" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="work_model" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Work Model
                   </label>
                   <select id="work_model" name="work_model"
@@ -655,7 +655,7 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="entry_path" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="entry_path" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Entry Path
                   </label>
                   <select id="entry_path" name="entry_path"
@@ -670,7 +670,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="roles" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="roles" className="text-md uppercase tracking-widest text-white/80 font-bold">
                   Pillars of Interest (Multi-select) &amp; Desired Role(s)
                 </label>
                 <input id="roles" name="roles"
@@ -682,7 +682,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="linkedin" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="linkedin" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     LinkedIn / Website
                   </label>
                   <input id="linkedin" name="linkedin"
@@ -691,7 +691,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="portfolio" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="portfolio" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Portfolio / Proof Links (Max 3)
                   </label>
                   <input id="portfolio" name="portfolio"
@@ -702,7 +702,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="cv" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="cv" className="text-md uppercase tracking-widest text-white/80 font-bold">
                   CV / Resume Upload (PDF, DOC — max 5MB)
                 </label>
                 <input id="cv" name="cv"
@@ -714,7 +714,7 @@ export default function CareersClient() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="availability" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="availability" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Availability (Start date / Hrs per week)
                   </label>
                   <input id="availability" name="availability"
@@ -723,7 +723,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="salary" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="salary" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Salary range or Day rate (Optional)
                   </label>
                   <input id="salary" name="salary"
@@ -737,7 +737,7 @@ export default function CareersClient() {
                 <label htmlFor="foundation" className="text-md uppercase tracking-widest text-gold font-bold">
                   Foundation Fit (Required) *
                 </label>
-                <p className="text-md text-white/30 mb-2">
+                <p className="text-md text-white/80 mb-2">
                   2–3 sentences on truth, responsibility, justice, compassion,
                   discretion, and excellence.
                 </p>
@@ -748,7 +748,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="message" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                <label htmlFor="message" className="text-md uppercase tracking-widest text-white/80 font-bold">
                   Short Message (Optional)
                 </label>
                 <textarea id="message" name="message"
