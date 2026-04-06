@@ -19,7 +19,7 @@ export default function ImprintPage() {
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-light leading-none tracking-tighter text-white mb-6 uppercase">
           IMPRINT / LEGAL NOTICE
         </h1>
-        <p className=" tracking-widest uppercase text-white/70 mb-20 drop-shadow-sm">
+        <p className=" tracking-widest uppercase text-white/40 mb-20 drop-shadow-sm">
           Last updated: <span className="text-white/80">March 27, 2026</span>
         </p>
 
@@ -38,7 +38,7 @@ export default function ImprintPage() {
                 <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   REGISTERED OFFICE
                 </h3>
-                <address className="not-italic text-white/80 border-l border-gold/30 pl-5 py-2 leading-loose">
+                <address className="not-italic text-white border-l border-gold/30 pl-5 py-2 leading-loose">
                   Georgia, Tbilisi<br />
                   Gldani district<br />
                   Maseli Street N2a<br />
@@ -52,8 +52,8 @@ export default function ImprintPage() {
                 <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   HEAD OFFICE
                 </h3>
-                <p className="opacity-90 mb-8">
-                  <a href="mailto:office@gottwald.world" className="hover:text-white transition-colors text-white/80">
+                <p className="mb-8">
+                  <a href="mailto:office@gottwald.world" className="hover:text-white transition-colors text-white">
                     office@gottwald.world
                   </a>
                 </p>
@@ -61,12 +61,12 @@ export default function ImprintPage() {
                 <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   PHONE
                 </h3>
-                <p className="opacity-90 mb-8 text-white/80">+995 591 086 578</p>
+                <p className="mb-8 text-white">+995 591 086 578</p>
 
                 <h3 className="text-md font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
                   WEBSITE
                 </h3>
-                <p className="opacity-90 text-white/80">
+                <p className="text-white">
                   <a href="https://www.gottwald.world" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                     www.gottwald.world
                   </a>
@@ -80,21 +80,21 @@ export default function ImprintPage() {
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               COMPANY INFORMATION
             </h2>
-            <ul className="space-y-4 opacity-90">
+            <ul className="space-y-4">
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
                   Legal form
                 </span>
                 <span className="text-white font-medium">Limited Liability Company (LLC)</span>
               </li>
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white w-full sm:w-64 uppercase tracking-widest text-sm mb-1 sm:mb-0 block shrink-0">
                   Registered company name
                 </span>
                 <span className="text-white font-medium">GOTT WALD Holding LLC</span>
               </li>
               <li className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="text-white/80 w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
+                <span className="text-white w-full sm:w-64 uppercase tracking-widest text-sm  mb-1 sm:mb-0 block shrink-0">
                   Company ID
                 </span>
                 <span className="text-white font-medium">400415421</span>
@@ -108,14 +108,14 @@ export default function ImprintPage() {
               <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
                 REPRESENTED BY
               </h2>
-              <p className="opacity-90 text-[19px]">Mathias Gottwald, Patron</p>
+              <p className="text-[19px] text-white">Mathias Gott Wald, Patron</p>
             </section>
 
             <section>
-              <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+              <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
                 RESPONSIBLE FOR CONTENT
               </h2>
-              <p className="opacity-90 text-[19px]">Mathias Gottwald</p>
+              <p className="text-[19px] text-white">Mathias Gottwald</p>
             </section>
           </div>
 
@@ -123,7 +123,7 @@ export default function ImprintPage() {
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               BUSINESS PURPOSE
             </h2>
-            <p className="opacity-90 text-[19px] leading-relaxed max-w-3xl">
+            <p className="text-[19px] text-white leading-relaxed max-w-3xl">
               Strategic holding structure, consulting, solution management, digital systems, executive advisory, and related project development.
             </p>
           </section>
@@ -133,8 +133,8 @@ export default function ImprintPage() {
             <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               MEDIA OWNER AND PUBLISHER
             </h2>
-            <p className="opacity-90 text-[19px] font-medium text-white mb-4">GOTT WALD Holding LLC</p>
-            <address className="not-italic text-white/80 border-l border-gold/30 pl-5 py-2 leading-loose">
+            <p className="text-[19px] font-medium text-white mb-4">GOTT WALD Holding LLC</p>
+            <address className="not-italic text-white border-l border-gold/30 pl-5 py-2 leading-loose">
               Georgia, Tbilisi<br />
               Gldani district<br />
               Maseli Street N2a<br />
@@ -146,37 +146,37 @@ export default function ImprintPage() {
 
           {/* Editorial Direction */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               BASIC EDITORIAL DIRECTION
             </h2>
-            <p className="opacity-90 text-[19px] leading-relaxed max-w-3xl">
+            <p className="text-[19px] text-white leading-relaxed max-w-3xl">
               This website provides information about GOTT WALD Holding LLC, its strategic activities, services, ventures, and related projects.
             </p>
           </section>
 
           {/* Disclaimer */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               DISCLAIMER
             </h2>
-            <p className="opacity-90 text-[19px] leading-relaxed max-w-3xl">
+            <p className="text-[19px] text-white leading-relaxed max-w-3xl">
               The contents of this website are created with great care. However, no guarantee is given for the accuracy, completeness, or current validity of the information provided. Liability for external links or third-party content is excluded to the extent permitted by law.
             </p>
           </section>
 
           {/* Copyright Notice */}
           <section className="border-t border-white/10 pt-16">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-6 drop-shadow-md">
+            <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
               COPYRIGHT NOTICE
             </h2>
-            <p className="opacity-90 text-[19px] leading-relaxed max-w-3xl">
+            <p className="text-[19px] text-white leading-relaxed max-w-3xl">
               All content on this website, including text, structure, design elements, graphics, branding, and other materials, is protected by applicable intellectual property laws unless stated otherwise. Any use, reproduction, or distribution requires prior written permission unless legally permitted.
             </p>
           </section>
 
           {/* Contact */}
           <section className="border-t border-white/10 pt-16 pb-12">
-            <h2 className="text-sm font-medium text-gold/80 tracking-widest uppercase mb-4 drop-shadow-md">
+            <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-4 drop-shadow-md">
               CONTACT FOR LEGAL INQUIRIES
             </h2>
             <p className="text-xl">
