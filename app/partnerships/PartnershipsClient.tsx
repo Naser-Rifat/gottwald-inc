@@ -703,83 +703,153 @@ export default function PartnershipsClient() {
         {/* ── SECTION 6: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
         <section
           id="standards-section"
-          className="bg-[#020202] relative z-10 isolate"
+          className="bg-black relative z-10 isolate"
         >
           <div className="standards-pin-container">
             {/* Section Title Row */}
-            <div className="flex justify-between items-end px-gutter pt-[12vh] pb-10 lg:pb-14 reveal-up">
-              <h2 className="text-[clamp(3rem,max(5vw,6vh),8rem)] font-black tracking-tighter leading-[0.85] uppercase text-white drop-shadow-xl">
-                OUR
-                <br />
-                PARTNERSHIP
-                <br />
-                STANDARD
-              </h2>
-              <div className="hidden lg:flex flex-col items-end pb-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-gold mb-5" />
-                <p className="text-sm lg:text-sm tracking-[0.4em] text-white/50 uppercase font-bold">
-                  Non-Negotiables
+            <div className="flex justify-between items-end px-gutter pt-[12vh] pb-12 lg:pb-16 reveal-up">
+              <div>
+                <p className="text-xs tracking-[0.5em] uppercase text-gold font-bold mb-5">Non-Negotiables</p>
+                <h2 className="text-[clamp(3rem,max(5vw,6vh),8rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
+                  OUR
+                  <br />
+                  <span className="text-white/30">PARTNERSHIP</span>
+                  <br />
+                  STANDARD
+                </h2>
+              </div>
+              <div className="hidden lg:flex flex-col items-end gap-3 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-px bg-white/20" />
+                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                </div>
+                <p className="text-[10px] tracking-[0.5em] text-white/40 uppercase font-medium text-right max-w-40">
+                  Scroll horizontally to explore
                 </p>
               </div>
             </div>
 
-            {/* Scroll Wrapper */}
-            <div className="standards-scroll-wrapper flex flex-row w-max reveal-up border-t border-white/10 will-change-transform">
+            {/* Scroll Wrapper — cinematic full-bleed cards */}
+            <div className="standards-scroll-wrapper flex flex-row w-max will-change-transform">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col justify-between w-[85vw] md:w-[50vw] lg:w-[35vw] h-[55vh] lg:h-[65vh] border-r border-white/10 p-10 lg:p-14 overflow-hidden cursor-pointer shrink-0 bg-[#060606]"
+                  className="relative group flex flex-col w-[92vw] md:w-[55vw] lg:w-[38vw] h-[70vh] lg:h-[75vh] overflow-hidden cursor-pointer shrink-0"
+                  onMouseMove={(e) => {
+                    const el = e.currentTarget;
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    requestAnimationFrame(() => {
+                      el.style.setProperty("--mx", `${x}px`);
+                      el.style.setProperty("--my", `${y}px`);
+                    });
+                  }}
                 >
-                  {/* Image Background - bright and visible */}
-                  <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-80 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]">
+                  {/* FULL-BLEED Image — always very visible */}
+                  <div className="absolute inset-0 z-0">
                     <Image
-                      src={`/images/futuristic_standard_${(i % 3) + 1}.png`}
+                      src={`/images/futuristic_standard_${i + 1}.png`}
                       alt={item.title}
                       fill
-                      sizes="(max-width: 768px) 85vw, (max-width: 1200px) 50vw, 35vw"
-                      quality={50}
+                      sizes="(max-width: 768px) 92vw, (max-width: 1200px) 55vw, 38vw"
+                      quality={75}
                       loading="lazy"
-                      className="object-cover scale-105 group-hover:scale-100 transition-transform duration-2000 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform"
+                      className="object-cover scale-[1.08] group-hover:scale-100 transition-transform duration-2500 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-[#060606] via-[#060606]/60 to-[#060606]/30" />
                   </div>
 
-                  {/* Ambient Hover Glow */}
-                  <div className="absolute inset-0 z-2 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                  {/* Multi-layer dramatic gradient overlay */}
+                  <div className="absolute inset-0 z-1 bg-linear-to-t from-black via-black/60 to-transparent" />
+                  <div className="absolute inset-0 z-1 bg-linear-to-r from-black/50 via-transparent to-black/20" />
+                  
+                  {/* Cinematic vignette */}
+                  <div className="absolute inset-0 z-1 opacity-60"
+                    style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%)' }}
+                  />
 
-                  {/* Huge Watermark Number */}
-                  <div className="absolute -bottom-10 -right-6 text-[12rem] lg:text-[16rem] font-black leading-none text-white/2 transform group-hover:-translate-y-4 group-hover:text-gold/4 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-1">
-                    0{i + 1}
-                  </div>
+                  {/* Mouse-follow Gold Spotlight */}
+                  <div
+                    className="absolute inset-0 z-2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(212,175,55,0.12), transparent 60%)`,
+                    }}
+                  />
 
-                  {/* Top — index + gold dot */}
-                  <div className="relative z-10 flex items-center gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold/40 group-hover:bg-gold transition-colors duration-500" />
-                    <span className="font-mono text-white/30 group-hover:text-gold text-sm tracking-[0.4em] uppercase font-bold transition-colors duration-700">
-                      0{i + 1}
-                    </span>
-                  </div>
+                  {/* Right border separator */}
+                  <div className="absolute top-0 right-0 w-px h-full bg-white/10 z-10" />
 
-                  {/* Bottom — title + divider + desc */}
-                  <div className="relative z-10 flex flex-col justify-end h-full mt-auto pb-4">
-                    <h3 className="text-4xl lg:text-5xl xl:text-6xl font-black tracking-tighter mb-6 text-white/80 group-hover:text-white leading-[0.9] transition-colors duration-700 uppercase drop-shadow-lg w-[90%]">
-                      {item.title}
-                    </h3>
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col justify-between h-full p-10 lg:p-12">
 
-                    <div className="w-full h-px bg-white/5 mb-6 relative overflow-hidden">
-                      <div className="absolute top-0 left-0 h-full w-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                    {/* TOP: Counter + minimal HUD */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="w-2 h-2 rounded-full bg-gold group-hover:scale-150 transition-transform duration-500" />
+                        <span className="font-mono text-gold text-sm tracking-[0.5em] font-bold">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      {/* Corner bracket decoration */}
+                      <div className="w-6 h-6 border-t border-r border-white/20 group-hover:border-gold/60 transition-colors duration-700" />
                     </div>
 
-                    <p className="text-lg lg:text-xl text-white/70 font-light leading-relaxed group-hover:text-white/70 transition-colors duration-700 pr-4">
-                      {item.desc}
-                    </p>
+                    {/* BOTTOM: Title Block */}
+                    <div className="flex flex-col gap-5">
+                      {/* Gold accent line — expands on hover */}
+                      <div className="w-12 h-0.5 bg-gold/40 group-hover:w-24 group-hover:bg-gold transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                      
+                      <h3 className="text-[clamp(2.5rem,4.5vw,5rem)] font-black tracking-tighter leading-[0.85] text-white uppercase drop-shadow-2xl">
+                        {item.title}
+                      </h3>
+                      
+                      {/* Description — slides up & appears on hover */}
+                      <div className="overflow-hidden">
+                        <p className="text-lg text-white/70 font-light leading-relaxed translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] delay-75">
+                          {item.desc}
+                        </p>
+                      </div>
+
+                      {/* Bottom meta row */}
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10 group-hover:border-gold/20 transition-colors duration-700">
+                        <span className="text-[10px] tracking-[0.4em] uppercase text-white/30 font-medium">
+                          GOTT WALD Standard
+                        </span>
+                        <span className="text-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm">
+                          →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Giant Watermark Number */}
+                  <div className="absolute -bottom-12 -right-6 text-[14rem] lg:text-[18rem] font-black leading-none text-white/3 group-hover:text-gold/6 group-hover:-translate-y-6 transition-all duration-1200 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-3">
+                    {String(i + 1).padStart(2, "0")}
                   </div>
                 </div>
               ))}
+
+              {/* CTA End Card */}
+              <div className="relative flex flex-col items-center justify-center w-[60vw] md:w-[35vw] lg:w-[22vw] h-[70vh] lg:h-[75vh] shrink-0 bg-[#0a0a0a] border-r border-white/5 px-10">
+                <div className="w-px h-20 bg-linear-to-b from-transparent via-gold to-transparent mb-8" />
+                <p className="text-center text-sm tracking-[0.4em] uppercase text-white/40 font-bold mb-4">
+                  All of These
+                </p>
+                <p className="text-center text-2xl font-black uppercase text-white leading-tight mb-8">
+                  Are Non-<br />Negotiable
+                </p>
+                <a
+                  href="#apply"
+                  className="inline-flex items-center gap-3 px-6 py-3 border border-gold/40 text-gold text-xs tracking-[0.35em] uppercase font-bold hover:bg-gold hover:text-black transition-all duration-300"
+                >
+                  Apply Now
+                </a>
+                <div className="w-px h-20 bg-linear-to-b from-transparent via-gold/30 to-transparent mt-8" />
+              </div>
             </div>
 
             {/* Bottom spacing */}
-            <div className="pb-[10vh]" />
+            <div className="pb-[8vh]" />
           </div>
         </section>
 

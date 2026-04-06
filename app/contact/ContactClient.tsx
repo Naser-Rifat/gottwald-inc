@@ -92,7 +92,7 @@ export default function ContactClient() {
           {/* Left Column: Direct Inquiries */}
           <div className="lg:col-span-4 flex flex-col gap-10">
             <div className="fade-up-element space-y-2">
-              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
+              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">
                 Head Office
               </h3>
               <div className="flex flex-col gap-2 text-xl font-medium tracking-tight">
@@ -114,7 +114,7 @@ export default function ContactClient() {
             </div>
 
             <div className="fade-up-element space-y-2">
-              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
+              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">
                 Website
               </h3>
               <div className="flex flex-col gap-2 text-xl font-medium tracking-tight">
@@ -131,10 +131,10 @@ export default function ContactClient() {
             </div>
 
             <div className="fade-up-element space-y-2">
-              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
+              <h3 className="text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">
                 GOTT WALD HOLDING
               </h3>
-              <address className="text-xl font-medium tracking-tight not-italic text-white/80 leading-relaxed">
+              <address className="text-xl font-medium tracking-tight not-italic text-white leading-relaxed">
                 Company ID: 400415421
                 <br />
                 <br />
