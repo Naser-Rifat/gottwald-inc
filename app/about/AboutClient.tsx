@@ -675,7 +675,7 @@ export default function AboutClient() {
                     <h4 className="text-[28px] md:text-[34px] font-light text-white">
                       {pillar.title}
                     </h4>
-                    <p className="text-[18px] md:text-[20px] text-white/40 font-light leading-relaxed max-w-3xl">
+                    <p className="text-[18px] md:text-[20px] text-white/80 font-light leading-relaxed max-w-3xl">
                       {pillar.desc}
                     </p>
                   </div>
@@ -690,7 +690,7 @@ export default function AboutClient() {
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             <div className="reveal-text space-y-12">
               <div>
-                <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-6">
+                <p className="text-sm tracking-[0.3em] uppercase text-gold font-bold mb-6">
                   Proof (without bragging)
                 </p>
                 <h3 className="text-4xl font-light leading-tight mb-4">
@@ -754,7 +754,7 @@ export default function AboutClient() {
 
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div>
-                  <p className="text-sm tracking-[0.3em] uppercase text-gold/50 font-bold mb-6">
+                  <p className="text-sm tracking-[0.3em] uppercase text-gold font-bold mb-6">
                     Time-to-value
                   </p>
                   {/* <h3 className="text-3xl font-light mb-16 text-white/80">(Realistic Orientation)</h3> */}
@@ -798,7 +798,7 @@ export default function AboutClient() {
                           <h4 className="text-3xl md:text-4xl text-white group-hover/item:text-gold font-light tracking-tight transition-colors duration-500">
                             {phase.days}
                           </h4>
-                          <span className="text-xs font-mono tracking-widest text-gold/60 mt-2">
+                          <span className="text-sm font-mono tracking-widest text-gold/80 mt-2 hover:text-gold transition-colors duration-500">
                             {phase.title}
                           </span>
                         </div>
@@ -1030,7 +1030,7 @@ export default function AboutClient() {
 
               {/* LEFT COLUMN: THE DECISION CODE */}
               <div className="md:pr-24 space-y-10 pb-16 md:pb-0">
-                <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
+                <p className="text-sm tracking-[0.25em] uppercase text-gold font-bold">
                   The Decision Code
                 </p>
                 <p className="text-[17px] text-white/80 font-light leading-relaxed mb-6 max-w-100">
@@ -1039,39 +1039,39 @@ export default function AboutClient() {
                 </p>
                 <ul className="space-y-6">
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Love
                     </span>
-                    <span className="text-[15px] font-light text-white/70">
+                    <span className="text-[15px] font-light text-white/90">
                       as the measure
                     </span>
                   </li>
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Peace
                     </span>
-                    <span className="text-[15px] font-light text-white/70">
+                    <span className="text-[15px] font-light text-white/90">
                       as the direction
                     </span>
                   </li>
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Harmony
                     </span>
-                    <span className="text-[15px] font-light text-white/70">
+                    <span className="text-[15px] font-light text-white/90">
                       as the outcome
                     </span>
                   </li>
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Compassion
                     </span>
-                    <span className="text-[15px] font-light text-white/70">
+                    <span className="text-[15px] font-light text-white/90">
                       as the posture
                     </span>
                   </li>
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Empathy
                     </span>
                     <span className="text-[15px] font-light text-white/70">
@@ -1079,10 +1079,10 @@ export default function AboutClient() {
                     </span>
                   </li>
                   <li className="flex items-baseline">
-                    <span className="font-serif italic text-[22px] text-white/90 mr-2">
+                    <span className="font-serif italic text-[22px] text-white mr-2">
                       Service
                     </span>
-                    <span className="text-[15px] font-light text-white/70">
+                    <span className="text-[15px] font-light text-white/90">
                       as lived responsibility
                     </span>
                   </li>
@@ -1094,7 +1094,7 @@ export default function AboutClient() {
 
               {/* RIGHT COLUMN: A RARE GIFT */}
               <div className="space-y-10 md:pl-24 pt-16 md:pt-0 border-t border-white/10 md:border-t-0">
-                <p className="text-xs tracking-[0.25em] uppercase text-gold/90 font-bold">
+                <p className="text-sm tracking-[0.25em] uppercase text-gold font-bold">
                   A rare gift
                 </p>
                 <p className="text-[17px] text-white/80 font-light leading-relaxed max-w-105">
@@ -1167,7 +1167,7 @@ export default function AboutClient() {
               </button>
             </div>
 
-            <p className="cta-reveal text-base text-white/90 font-light mt-8">
+            <p className="cta-reveal text-md text-white font-light mt-8">
               We don&apos;t create noise. We create structure.
               <br />
               And structure creates inevitability.
