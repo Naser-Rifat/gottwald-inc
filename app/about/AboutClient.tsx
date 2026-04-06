@@ -357,9 +357,11 @@ export default function AboutClient() {
       <main>
         {/* ── HERO ── Awwwards-level cinematic composition */}
         <section className="hero-section relative w-full min-h-[100svh] bg-[#030303] overflow-hidden flex flex-col">
-
           {/* ① Full-bleed image — covers 100% of hero */}
-          <div className="hero-bg-texture absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.62, willChange: "opacity" }}>
+          <div
+            className="hero-bg-texture absolute inset-0 z-0 pointer-events-none"
+            style={{ opacity: 0.62, willChange: "opacity" }}
+          >
             <div className="absolute inset-0 bg-[url('/images/about_hero_abstract.jpg')] bg-cover bg-[center_20%] bg-no-repeat" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/90 via-transparent via-[45%] to-[#030303]/92" />
             <div className="absolute inset-0 bg-linear-to-r from-[#030303]/85 via-transparent via-[55%] to-transparent" />
@@ -368,23 +370,34 @@ export default function AboutClient() {
           {/* ② Ambient orb */}
           <div
             className="ambient-light absolute top-[10%] left-[-5%] w-[50vw] h-[50vh] rounded-full blur-[140px] pointer-events-none z-0"
-            style={{ background: "radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)", opacity: 0.5, willChange: "opacity" }}
+            style={{
+              background:
+                "radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)",
+              opacity: 0.5,
+              willChange: "opacity",
+            }}
           />
 
           {/* ③ HERO CONTENT */}
           <div className="relative z-10 flex flex-col justify-between flex-1 pt-[18vh] pb-0">
-
             {/* Eyebrow */}
             <div className="hero-manifest-text px-gutter flex items-center gap-4">
               <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
-              <span className="text-gold text-[9px] font-black tracking-[0.65em] uppercase">About Us</span>
+              <span className="text-gold text-[9px] font-black tracking-[0.65em] uppercase">
+                About Us
+              </span>
               <span className="h-px w-8 bg-white/20" />
-              <span className="text-white/30 text-[9px] font-bold tracking-[0.4em] uppercase">Gott Wald Holding</span>
+              <span className="text-white/30 text-[9px] font-bold tracking-[0.4em] uppercase">
+                Gott Wald Holding
+              </span>
             </div>
 
             {/* HEADLINE — full-viewport-width cascade */}
             <div className="px-gutter mt-8">
-              <h1 className="hero-manifest-text" aria-label="We Turn Complexity into Inevitability">
+              <h1
+                className="hero-manifest-text"
+                aria-label="We Turn Complexity into Inevitability"
+              >
                 <div className="overflow-hidden">
                   <span
                     className="block font-black uppercase text-white leading-[0.82] tracking-[-0.04em] parallax-fast"
@@ -418,20 +431,27 @@ export default function AboutClient() {
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 py-8">
                 {/* Sub-copy — widened so text doesn't wrap on 3rd line */}
                 <p className="text-white/80 text-base lg:text-lg font-light leading-[1.65] max-w-md">
-                  If you&apos;re a CEO, founder, executive — or you run an SME that must grow —{" "}
-                  <strong className="text-white font-semibold">you know this moment.</strong>
+                  If you&apos;re a CEO, founder, executive — or you run an SME
+                  that must grow —{" "}
+                  <strong className="text-white font-semibold">
+                    you know this moment.
+                  </strong>
                 </p>
 
                 {/* Data + scroll indicator */}
                 <div className="flex items-end gap-10 lg:gap-14 shrink-0">
                   {[
-                    { n: "5+",  label: "Axes" },
-                    { n: "7",   label: "Entities" },
+                    { n: "5+", label: "Axes" },
+                    { n: "7", label: "Entities" },
                     { n: "GEO", label: "Georgia HQ" },
                   ].map(({ n, label }) => (
                     <div key={label} className="flex flex-col gap-1.5">
-                      <span className="text-[2rem] font-black text-white leading-none tracking-tight">{n}</span>
-                      <span className="text-[8px] uppercase tracking-[0.45em] text-white/40 font-bold">{label}</span>
+                      <span className="text-[2rem] font-black text-white leading-none tracking-tight">
+                        {n}
+                      </span>
+                      <span className="text-[8px] uppercase tracking-[0.45em] text-white/40 font-bold">
+                        {label}
+                      </span>
                     </div>
                   ))}
 
@@ -532,7 +552,7 @@ export default function AboutClient() {
                   We believe in something radical —{" "}
                   <span className="font-serif italic text-gold/80 hover:text-gold transition-colors duration-500">
                     and practical:
-                  </span> 
+                  </span>
                 </h3>
                 <p className="text-2xl text-white/80 leading-relaxed font-light">
                   When structure becomes visible, the right solution becomes
