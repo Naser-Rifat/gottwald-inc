@@ -582,7 +582,7 @@ export default function PartnershipsClient() {
 
             {/* BOTTOM: Partner Qualities */}
             <div className="reveal-up">
-              <p className="text-sm uppercase tracking-[0.3em] text-white mb-10 font-semibold">
+              <p className="text-sm uppercase tracking-[0.3em] text-white/70 mb-10 font-semibold">
                 We work with partners who:
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 border-t border-white/10">

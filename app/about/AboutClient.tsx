@@ -596,7 +596,7 @@ export default function AboutClient() {
             <div className="mb-32 max-w-5xl stagger-container">
               <div className="flex items-center gap-6 mb-12">
                 <span className="w-16 h-[2px] bg-gold/50 origin-left stagger-scaleX" />
-                <p className="text-[12px] tracking-[0.3em] uppercase text-gold/70 font-bold stagger-line">
+                <p className="text-[12px] tracking-[0.3em] uppercase text-gold font-bold stagger-line">
                   What we do differently
                 </p>
               </div>
@@ -701,7 +701,7 @@ export default function AboutClient() {
                 </p>
               </div>
               <div className="space-y-2 pt-8">
-                <p className="text-sm tracking-[0.2em] uppercase text-white/50 font-bold mb-8">
+                <p className="text-sm tracking-[0.2em] uppercase text-white font-bold mb-8">
                   Typical outcomes felt quickly:
                 </p>
                 <div className="flex flex-col border-t border-white/5">
@@ -734,7 +734,7 @@ export default function AboutClient() {
                       <span className="text-gold/50 font-mono text-md group-hover:text-gold transition-colors duration-500 pt-1 tracking-widest">
                         {(idx + 1).toString().padStart(2, "0")}
                       </span>
-                      <p className="text-xl text-white/60 font-light transition-transform duration-500 group-hover:translate-x-2">
+                      <p className="text-xl text-white/80 font-light transition-transform duration-500 group-hover:translate-x-2">
                         <strong className="text-white block mb-1 group-hover:text-gold transition-colors duration-500">
                           {item.strong}
                         </strong>
@@ -802,7 +802,7 @@ export default function AboutClient() {
                             {phase.title}
                           </span>
                         </div>
-                        <p className="text-xl text-white/50 font-light leading-[1.6] group-hover/item:text-white/80 transition-colors duration-500">
+                        <p className="text-xl text-white/70 font-light leading-[1.6] group-hover/item:text-white/80 transition-colors duration-500">
                           {phase.desc}
                         </p>
                       </div>
@@ -810,7 +810,7 @@ export default function AboutClient() {
                   ))}
                 </div>
 
-                <p className="text-lg text-white/50 italic mt-16 pt-8 border-t border-white/5">
+                <p className="text-lg text-white italic mt-16 pt-8 border-t border-white/5">
                   Wherever metrics belong (conversion, lead quality, meeting
                   time), we use numbers only when they are measurable and
                   defensible.
@@ -823,7 +823,7 @@ export default function AboutClient() {
         {/* MINI CASES - HORIZONTAL SCROLL */}
         <section className="cases-wrapper h-screen bg-[#030303] overflow-hidden flex flex-col justify-center relative">
           <div className="absolute top-12 left-gutter z-20">
-            <p className="text-xl tracking-[0.3em] uppercase text-gold/80 font-bold">
+            <p className="text-xl tracking-[0.3em] uppercase text-gold font-bold">
               Mini Case Stories
             </p>
             <p className="text-xl font-serif italic text-white/60">
@@ -891,7 +891,7 @@ export default function AboutClient() {
                 <div className="w-full max-w-4xl bg-[#0a0a0a] border border-white/5 p-10 md:p-16 rounded-4xl relative overflow-hidden group">
                   <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold/5 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[2s]" />
 
-                  <p className="text-lg font-mono tracking-wide text-gold/70 mb-10">
+                  <p className="text-lg font-mono tracking-wide text-gold/90 mb-10">
                     {c.tag}
                   </p>
                   <h3 className="text-3xl md:text-4xl font-light text-white/95 leading-[1.1] mb-20 max-w-3xl">
@@ -911,7 +911,7 @@ export default function AboutClient() {
 
                     {/* INTERVENTION */}
                     <div className="space-y-4 md:border-l md:border-white/5 md:pl-10">
-                      <p className="text-lg tracking-[0.2em] uppercase text-gold/60 font-bold">
+                      <p className="text-lg tracking-[0.2em] uppercase text-gold/80 font-bold">
                         Intervention
                       </p>
                       <p className="text-xl text-white/90 font-light leading-relaxed pr-4">
@@ -939,8 +939,10 @@ export default function AboutClient() {
         <section className="pt-[10vh] pb-[20vh] px-gutter relative bg-[#050505]">
           <div className="max-w-5xl mx-auto space-y-16">
             <div className="reveal-text">
-              <h2 className="text-4xl md:text-5xl font-light">Our Ecosystem</h2>
-              <p className="text-2xl font-serif italic text-white/50 mt-4">
+              <h2 className="text-4xl md:text-5xl font-light text-white">
+                Our Ecosystem
+              </h2>
+              <p className="text-2xl font-serif italic text-white/60 mt-4">
                 (everything reinforces everything)
               </p>
             </div>
