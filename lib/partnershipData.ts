@@ -43,26 +43,32 @@ export const NON_NEGOTIABLES = [
   {
     title: "Integrity",
     desc: "Clear ethics. No shortcuts.",
+    image: "/images/futuristic_standard_1.png",
   },
   {
     title: "Delivery Proof",
     desc: "References, cases, real outcomes — not promises.",
+    image: "/images/futuristic_standard_2.png",
   },
   {
     title: "Systems Thinking",
     desc: "Structure, process hygiene, repeatable quality.",
+    image: "/images/futuristic_standard_3.png",
   },
   {
     title: "Discretion",
     desc: "Confidentiality is reflex. No noise. No name-dropping.",
+    image: "/images/futuristic_standard_4.png",
   },
   {
     title: "Quality Under Pressure",
     desc: "Pressure reveals class — it doesn't create chaos.",
+    image: "/images/futuristic_standard_5.png",
   },
   {
     title: "Values Compatibility",
     desc: "Your work must align with our foundation — and never contradict NATURE — ANIMALS — HUMANS.",
+    image: "/images/futuristic_standard_6.png",
   },
 ];
 

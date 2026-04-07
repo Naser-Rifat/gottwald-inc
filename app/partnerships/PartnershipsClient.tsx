@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useEffect, useRef, useState, useCallback, FormEvent } from "react";
+import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -169,7 +169,7 @@ export default function PartnershipsClient() {
             trigger: "#standards-section",
             start: "top top",
             end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
-            scrub: 0.5,
+            scrub: 1.2, // Smoother scrub value for Awwwards-level fluidity
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -705,12 +705,12 @@ export default function PartnershipsClient() {
           id="standards-section"
           className="bg-black relative z-10 isolate"
         >
-          <div className="standards-pin-container">
+          <div className="standards-pin-container h-screen flex flex-col overflow-hidden">
             {/* Section Title Row */}
-            <div className="flex justify-between items-end px-gutter pt-[12vh] pb-12 lg:pb-16 reveal-up">
+            <div className="flex-none flex justify-between items-center px-gutter pt-20 pb-6 reveal-up shrink-0">
               <div>
-                <p className="text-xs tracking-[0.5em] uppercase text-gold font-bold mb-5">Non-Negotiables</p>
-                <h2 className="text-[clamp(3rem,max(5vw,6vh),8rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
+                <p className="text-xs tracking-[0.5em] uppercase text-gold font-bold mb-3">Non-Negotiables</p>
+                <h2 className="text-[clamp(2rem,max(3.5vw,4.5vh),5.5rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
                   OUR
                   <br />
                   <span className="text-white/30">PARTNERSHIP</span>
@@ -718,23 +718,25 @@ export default function PartnershipsClient() {
                   STANDARD
                 </h2>
               </div>
-              <div className="hidden lg:flex flex-col items-end gap-3 pb-2">
+              <div className="hidden lg:flex flex-col items-end gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="w-6 h-px bg-white/20" />
+                  <span className="w-8 h-px bg-white/20" />
                   <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
                 </div>
-                <p className="text-[10px] tracking-[0.5em] text-white/40 uppercase font-medium text-right max-w-40">
-                  Scroll horizontally to explore
+                <p className="text-[10px] tracking-[0.45em] text-white/50 uppercase font-semibold text-right">
+                  Scroll horizontally
+                  <br />
+                  to explore
                 </p>
               </div>
             </div>
 
-            {/* Scroll Wrapper — cinematic full-bleed cards */}
-            <div className="standards-scroll-wrapper flex flex-row w-max will-change-transform">
+            {/* Scroll Wrapper — Flex-1 to fill remaining screen height entirely */}
+            <div className="standards-scroll-wrapper flex-1 min-h-0 flex flex-row items-stretch w-max will-change-transform">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col w-[92vw] md:w-[55vw] lg:w-[38vw] h-[70vh] lg:h-[75vh] overflow-hidden cursor-pointer shrink-0"
+                  className="relative group flex flex-col w-[88vw] md:w-[52vw] lg:w-[38vw] xl:w-[34vw] h-full overflow-hidden cursor-pointer shrink-0 border-r border-white/10"
                   onMouseMove={(e) => {
                     const el = e.currentTarget;
                     const rect = el.getBoundingClientRect();
@@ -749,19 +751,19 @@ export default function PartnershipsClient() {
                   {/* FULL-BLEED Image — always very visible */}
                   <div className="absolute inset-0 z-0">
                     <Image
-                      src={`/images/futuristic_standard_${i + 1}.png`}
+                      src={item.image}
                       alt={item.title}
                       fill
-                      sizes="(max-width: 768px) 92vw, (max-width: 1200px) 55vw, 38vw"
+                      sizes="(max-width: 768px) 88vw, (max-width: 1200px) 50vw, 35vw"
                       quality={75}
                       loading="lazy"
                       className="object-cover scale-[1.08] group-hover:scale-100 transition-transform duration-2500 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform"
                     />
                   </div>
 
-                  {/* Multi-layer dramatic gradient overlay */}
-                  <div className="absolute inset-0 z-1 bg-linear-to-t from-black via-black/60 to-transparent" />
-                  <div className="absolute inset-0 z-1 bg-linear-to-r from-black/50 via-transparent to-black/20" />
+                  {/* Multi-layer dramatic gradient overlay to ensure text readability */}
+                  <div className="absolute inset-0 z-1 bg-gradient-to-t from-black via-black/70 to-transparent" />
+                  <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
                   
                   {/* Cinematic vignette */}
                   <div className="absolute inset-0 z-1 opacity-60"
@@ -776,11 +778,8 @@ export default function PartnershipsClient() {
                     }}
                   />
 
-                  {/* Right border separator */}
-                  <div className="absolute top-0 right-0 w-px h-full bg-white/10 z-10" />
-
-                  {/* Content */}
-                  <div className="relative z-10 flex flex-col justify-between h-full p-10 lg:p-12">
+                  {/* Content — Positioned relative inside the h-full flex container */}
+                  <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 border-t border-white/5 group-hover:border-gold/20 transition-colors duration-700">
 
                     {/* TOP: Counter + minimal HUD */}
                     <div className="flex items-start justify-between">
@@ -795,47 +794,47 @@ export default function PartnershipsClient() {
                     </div>
 
                     {/* BOTTOM: Title Block */}
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-3 mt-auto pb-6">
                       {/* Gold accent line — expands on hover */}
-                      <div className="w-12 h-0.5 bg-gold/40 group-hover:w-24 group-hover:bg-gold transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                      <div className="w-10 h-0.5 bg-gold/60 group-hover:w-20 group-hover:bg-gold transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] mb-1" />
                       
-                      <h3 className="text-[clamp(2.5rem,4.5vw,5rem)] font-black tracking-tighter leading-[0.85] text-white uppercase drop-shadow-2xl">
+                      <h3 className="text-[clamp(1.4rem,2.6vw,2.8rem)] font-black tracking-tighter leading-[0.9] text-white uppercase drop-shadow-2xl break-words hyphens-auto">
                         {item.title}
                       </h3>
                       
-                      {/* Description — slides up & appears on hover */}
-                      <div className="overflow-hidden">
-                        <p className="text-lg text-white/70 font-light leading-relaxed translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] delay-75">
+                      {/* Description — always visible, high contrast */}
+                      <div className="overflow-hidden mb-2">
+                        <p className="text-sm lg:text-base text-white/75 font-light leading-relaxed group-hover:text-white/95 transition-colors duration-700 max-w-sm drop-shadow-md">
                           {item.desc}
                         </p>
                       </div>
 
                       {/* Bottom meta row */}
-                      <div className="flex items-center justify-between pt-2 border-t border-white/10 group-hover:border-gold/20 transition-colors duration-700">
-                        <span className="text-[10px] tracking-[0.4em] uppercase text-white/30 font-medium">
+                      <div className="flex items-center justify-between pt-3 border-t border-white/15 group-hover:border-gold/30 transition-colors duration-700">
+                        <span className="text-[9px] tracking-[0.45em] uppercase text-white/50 font-medium">
                           GOTT WALD Standard
                         </span>
-                        <span className="text-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-sm">
+                        <span className="text-gold opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-sm">
                           →
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Giant Watermark Number */}
-                  <div className="absolute -bottom-12 -right-6 text-[14rem] lg:text-[18rem] font-black leading-none text-white/3 group-hover:text-gold/6 group-hover:-translate-y-6 transition-all duration-1200 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-3">
+                  {/* Giant Watermark Number — behind image overlays */}
+                  <div className="absolute top-[18%] -right-4 text-[10rem] lg:text-[14rem] font-black leading-none text-white/3 group-hover:text-gold/6 group-hover:-translate-y-3 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-[-1]">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                 </div>
               ))}
 
               {/* CTA End Card */}
-              <div className="relative flex flex-col items-center justify-center w-[60vw] md:w-[35vw] lg:w-[22vw] h-[70vh] lg:h-[75vh] shrink-0 bg-[#0a0a0a] border-r border-white/5 px-10">
-                <div className="w-px h-20 bg-linear-to-b from-transparent via-gold to-transparent mb-8" />
-                <p className="text-center text-sm tracking-[0.4em] uppercase text-white/40 font-bold mb-4">
+              <div className="relative flex flex-col items-center justify-center w-[60vw] md:w-[35vw] lg:w-[22vw] h-full shrink-0 bg-[#0a0a0a] border-t border-white/5 px-10 border-l border-white/10">
+                <div className="w-px h-16 bg-linear-to-b from-transparent via-gold to-transparent mb-6" />
+                <p className="text-center text-xs tracking-[0.4em] uppercase text-white/40 font-bold mb-3">
                   All of These
                 </p>
-                <p className="text-center text-2xl font-black uppercase text-white leading-tight mb-8">
+                <p className="text-center text-xl lg:text-2xl font-black uppercase text-white leading-tight mb-8">
                   Are Non-<br />Negotiable
                 </p>
                 <a
@@ -844,12 +843,9 @@ export default function PartnershipsClient() {
                 >
                   Apply Now
                 </a>
-                <div className="w-px h-20 bg-linear-to-b from-transparent via-gold/30 to-transparent mt-8" />
+                <div className="w-px h-16 bg-linear-to-b from-transparent via-gold/30 to-transparent mt-8" />
               </div>
             </div>
-
-            {/* Bottom spacing */}
-            <div className="pb-[8vh]" />
           </div>
         </section>
 
