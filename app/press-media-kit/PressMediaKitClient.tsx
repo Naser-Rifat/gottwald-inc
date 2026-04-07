@@ -48,10 +48,10 @@ export default function PressMediaKitClient() {
             </h1>
             <div className="reveal-text w-16 h-px bg-gradient-to-r from-gold/60 to-transparent mb-10" />
             <div className="space-y-6">
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light pr-4">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light pr-4">
                 A structured point of access for media inquiries, official materials, and selected brand information.
               </p>
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light pr-4">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light pr-4">
                 Intended for professional communication with clarity, consistency, and discretion.
               </p>
             </div>

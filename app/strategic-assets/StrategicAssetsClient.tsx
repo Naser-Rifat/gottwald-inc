@@ -48,10 +48,10 @@ export default function StrategicAssetsClient() {
             </h1>
             <div className="reveal-text w-16 h-px bg-gradient-to-r from-gold/60 to-transparent mb-10" />
             <div className="space-y-6">
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light">
                 A curated portfolio of strategic structures, platforms, ventures, and real-world value frameworks.
               </p>
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light">
                 Built to protect substance, create resilience, and support long-term meaningful growth.
               </p>
             </div>
