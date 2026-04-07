@@ -604,7 +604,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           }
           className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${BG_DARK} 0%, ${BG_PANEL} 20%, ${BG_LIGHT} 20.5%, ${BG_LIGHT} 100%)`,
+            backgroundColor: BG_LIGHT,
           }}
         >
           {/* Guard: only show "Next Chapter" when a different pillar exists */}
