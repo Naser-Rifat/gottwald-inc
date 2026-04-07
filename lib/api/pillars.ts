@@ -194,50 +194,24 @@ async function apiFetch<T>(
   }
 }
 
-// ─── Per-request deduplication (NOT cross-request caching) ───────────────────
-// Multiple calls to getPillars() within the SAME server render (e.g.
-// generateStaticParams + getPillar + getNextPillar) share one HTTP call.
-// React / Next.js automatically deduplicates fetch() calls with the same URL
-// within a single render pass, but we also guard at the JS level for safety.
+// ─── Pillar fetching ─────────────────────────────────────────────────────────
+// Next.js automatically deduplicates fetch() calls with the same URL within a
+// single server render pass, so no manual dedup cache is needed.
 //
-// IMPORTANT: This is NOT a long-lived cache. Next.js server components run in
-// isolated request scopes — module-level variables reset between requests in
-// production. In dev mode, the module stays alive, so we add a short TTL guard
-// to prevent serving stale data during local development.
+// IMPORTANT: We intentionally let errors PROPAGATE instead of returning [].
+// When we return [] on failure, Next.js ISR treats it as a "successful" render
+// with 0 pillars and may replace the cached page. By letting the error throw,
+// ISR keeps the last valid cached page and retries on the next request.
 // ─────────────────────────────────────────────────────────────────────────────
-let _dedupPromise: Promise<Pillar[]> | null = null;
-let _dedupTimestamp = 0;
-const DEDUP_TTL_MS = 5_000; // 5s — only deduplicates within a single render
 
 async function fetchAllPillars(): Promise<Pillar[]> {
-  const now = Date.now();
-
-  // Expire dedup cache after 5s to prevent stale data in dev mode
-  if (_dedupPromise && now - _dedupTimestamp > DEDUP_TTL_MS) {
-    _dedupPromise = null;
-  }
-
-  if (!_dedupPromise) {
-    _dedupTimestamp = now;
-    _dedupPromise = apiFetch<PillarsApiResponse>("/api/v1/pillars/", {
-      tags: [PILLARS_CACHE_TAG],
-    })
-      .then((res) => {
-        const items = res.data ?? res.results ?? [];
-        const pillars = items.map(mapApiToPillar);
-        console.log(`[pillars] Fetched ${pillars.length} pillars from API`);
-        return pillars;
-      })
-      .catch((err: unknown) => {
-        // Release dedup slot so next call retries immediately
-        _dedupPromise = null;
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error("[pillars] list fetch failed:", msg);
-        return [] as Pillar[];
-      });
-  }
-
-  return _dedupPromise;
+  const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/", {
+    tags: [PILLARS_CACHE_TAG],
+  });
+  const items = res.data ?? res.results ?? [];
+  const pillars = items.map(mapApiToPillar);
+  console.log(`[pillars] Fetched ${pillars.length} pillars from API`);
+  return pillars;
 }
 
 // ─── Public exports ───────────────────────────────────────────────────────────
