@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 // import { AnimatedTube } from "./animatedTube";
-import CosmicDust from "./cosmicDust";
+// import CosmicDust from "./cosmicDust";
 import { initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
 import PhysicsSandbox from "./physicsSandbox";
@@ -18,7 +18,7 @@ export default class HomeScene {
   loadingGroup?: LoadingGroup;
   physicsSandbox?: PhysicsSandbox;
   // animatedTube?: AnimatedTube;
-  cosmicDust?: CosmicDust;
+  // cosmicDust?: CosmicDust;
   videoPanel?: VideoPanelShader;
   projectTiles?: ProjectTiles;
   stats?: { dom: HTMLElement; update: () => void };
