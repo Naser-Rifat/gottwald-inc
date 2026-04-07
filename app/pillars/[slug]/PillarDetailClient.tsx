@@ -607,62 +607,120 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             background: `linear-gradient(135deg, ${BG_DARK} 0%, ${BG_PANEL} 20%, ${BG_LIGHT} 20.5%, ${BG_LIGHT} 100%)`,
           }}
         >
-          <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
-            <Link
-              href={`/pillars/${nextProject.slug}`}
-              className="no-underline group"
-            >
-              <span
-                className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
-                style={{ color: "rgba(28,29,33,0.6)" }}
+          {/* Guard: only show "Next Chapter" when a different pillar exists */}
+          {nextProject.slug !== project.slug ? (
+            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
+              <Link
+                href={`/pillars/${nextProject.slug}`}
+                className="no-underline group"
               >
-                Next Chapter
-              </span>
-              <h2
-                className="next-title"
-                style={{
-                  fontFamily: "var(--font-serif), Georgia, serif",
-                  fontSize: "clamp(3rem, 10vw, 11rem)",
-                  fontWeight: 400,
-                  letterSpacing: "-0.04em",
-                  lineHeight: 0.9,
-                  paddingBottom: "12px",
-                  color: "rgba(28,29,33,0.45)",
-                  whiteSpace: "pre-line" as const,
-                  transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "#1c1d21")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
-                }
+                <span
+                  className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
+                  style={{ color: "rgba(28,29,33,0.6)" }}
+                >
+                  Next Chapter
+                </span>
+                <h2
+                  className="next-title"
+                  style={{
+                    fontFamily: "var(--font-serif), Georgia, serif",
+                    fontSize: "clamp(3rem, 10vw, 11rem)",
+                    fontWeight: 400,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 0.9,
+                    paddingBottom: "12px",
+                    color: "rgba(28,29,33,0.45)",
+                    whiteSpace: "pre-line" as const,
+                    transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#1c1d21")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
+                  }
+                >
+                  {nextProject.title}
+                </h2>
+              </Link>
+              <Link
+                href={`/pillars/${nextProject.slug}`}
+                className="flex items-center gap-4 mb-0 md:mb-4 no-underline group"
               >
-                {nextProject.title}
-              </h2>
-            </Link>
-            <Link
-              href={`/pillars/${nextProject.slug}`}
-              className="flex items-center gap-4 mb-0 md:mb-4 no-underline group"
-            >
-              <span
-                className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300 group-hover:text-text-primary"
-                style={{ color: "rgba(28,29,33,0.7)" }}
+                <span
+                  className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300"
+                  style={{ color: "rgba(28,29,33,0.7)" }}
+                >
+                  Next Project
+                </span>
+                <span
+                  className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
+                  style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
+                />
+                <span
+                  className="text-lg transition-all duration-300 group-hover:translate-x-1"
+                  style={{ color: "rgba(28,29,33,0.7)" }}
+                >
+                  →
+                </span>
+              </Link>
+            </div>
+          ) : (
+            /* Fallback when only 1 pillar exists — elegant return-to-home CTA */
+            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
+              <Link href="/" className="no-underline group">
+                <span
+                  className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
+                  style={{ color: "rgba(28,29,33,0.6)" }}
+                >
+                  Return
+                </span>
+                <h2
+                  className="next-title"
+                  style={{
+                    fontFamily: "var(--font-serif), Georgia, serif",
+                    fontSize: "clamp(3rem, 10vw, 11rem)",
+                    fontWeight: 400,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 0.9,
+                    paddingBottom: "12px",
+                    color: "rgba(28,29,33,0.45)",
+                    whiteSpace: "pre-line" as const,
+                    transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#1c1d21")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
+                  }
+                >
+                  GOTT WALD
+                </h2>
+              </Link>
+              <Link
+                href="/"
+                className="flex items-center gap-4 mb-0 md:mb-4 no-underline group"
               >
-                Next Project
-              </span>
-              <span
-                className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20 group-hover:bg-text-primary"
-                style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
-              />
-              <span
-                className="text-lg transition-all duration-300 group-hover:translate-x-1 group-hover:text-text-primary"
-                style={{ color: "rgba(28,29,33,0.7)" }}
-              >
-                →
-              </span>
-            </Link>
-          </div>
+                <span
+                  className="text-[10px] font-semibold tracking-[0.25em] uppercase"
+                  style={{ color: "rgba(28,29,33,0.7)" }}
+                >
+                  Back to Home
+                </span>
+                <span
+                  className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
+                  style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
+                />
+                <span
+                  className="text-lg transition-all duration-300 group-hover:translate-x-1"
+                  style={{ color: "rgba(28,29,33,0.7)" }}
+                >
+                  →
+                </span>
+              </Link>
+            </div>
+          )}
         </section>
       </div>
     </div>
