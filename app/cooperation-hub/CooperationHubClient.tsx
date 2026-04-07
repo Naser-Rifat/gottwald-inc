@@ -48,10 +48,10 @@ export default function CooperationHubClient() {
             </h1>
             <div className="reveal-text w-16 h-px bg-gradient-to-r from-gold/60 to-transparent mb-10" />
             <div className="space-y-6">
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light">
                 A dedicated point of entry for aligned partners, operators, advisors, investors, and strategic collaborators.
               </p>
-              <p className="reveal-text text-white/55 text-lg lg:text-xl leading-relaxed font-light">
+              <p className="reveal-text text-white/80 text-lg lg:text-xl leading-relaxed font-light">
                 Designed for values-aligned cooperation, structured growth, and long-term execution across meaningful ventures.
               </p>
             </div>
