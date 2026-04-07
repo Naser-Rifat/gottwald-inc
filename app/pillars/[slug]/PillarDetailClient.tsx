@@ -287,7 +287,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           style={{ backgroundColor: BG_DARK }}
         >
           {/* Left: Text Content */}
-          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-20 lg:py-0 lg:pl-15 lg:pr-10 pt-28 lg:pt-0">
+          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-20 lg:py-0 lg:pl-15 lg:pr-14 pt-28 lg:pt-0">
             {/* Section marker — matching homepage pattern */}
             <div
               className="hero-label mb-8 flex items-center gap-3"
@@ -323,24 +323,25 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
             <div className="flex flex-col xl:flex-row gap-8 lg:gap-10 items-start w-full">
               <div
-                className="hero-desc w-full xl:max-w-105"
+                className="hero-desc w-full xl:max-w-105 flex flex-col"
                 style={{ opacity: 0 }}
               >
-                <div 
-                  className="flex-1 mb-8"
-                  style={{ 
-                    maxHeight: "clamp(200px, 35vh, 400px)",
+                {/* Scrollable description zone */}
+                <div
+                  className="allow-native-scroll overflow-y-auto mb-6"
+                  style={{
+                    maxHeight: "clamp(160px, 28vh, 340px)",
                     scrollbarWidth: "thin",
-                    scrollbarColor: "rgba(255,255,255,0.15) transparent",
+                    scrollbarColor: "rgba(255,255,255,0.12) transparent",
                   }}
                 >
                   {project.description && project.description !== project.title && (
                     <p
-                      className="mb-5 lg:mb-6"
+                      className="mb-4"
                       style={{
-                        fontSize: "clamp(14px, 1.2vw, 16px)",
-                        lineHeight: 1.5,
-                        color: "rgba(255, 255, 255, 0.85)",
+                        fontSize: "clamp(14px, 1.15vw, 16px)",
+                        lineHeight: 1.65,
+                        color: "rgba(255,255,255,0.95)",
                         fontWeight: 300,
                       }}
                     >
@@ -349,11 +350,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   )}
                   {project.details && project.details !== project.description && project.details !== project.title && (
                     <p
-                      className="text-md tracking-wide"
                       style={{
-                        fontSize: "clamp(12px, 1.1vw, 15px)",
-                        lineHeight: 1.5,
-                        color: "rgba(255, 255, 255, 0.75)",
+                        fontSize: "clamp(12px, 1vw, 15px)",
+                        lineHeight: 1.7,
+                        color: "rgba(255,255,255,0.80)",
                         fontWeight: 300,
                       }}
                     >
@@ -362,37 +362,40 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   )}
                 </div>
 
-                {/* CTA — pill with gold border, matching homepage "APPLY →" pattern */}
+                {/* CTA — separated cleanly below description */}
                 {project.launchUrl && (
-                  <a
-                    href={project.launchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hero-cta inline-flex items-center gap-3 no-underline group w-max"
-                    style={{
-                      padding: "16px 36px",
-                      borderRadius: "100px",
-                      border: `1px solid ${GOLD}`,
-                      color: GOLD,
-                      fontSize: "12px",
-                      fontWeight: 600,
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase" as const,
-                      transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
-                      opacity: 0,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = GOLD;
-                      e.currentTarget.style.color = BG_DARK;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = GOLD;
-                    }}
-                  >
-                    Visit Website
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </a>
+                  <div className="pt-2">
+                    <a
+                      href={project.launchUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hero-cta inline-flex items-center gap-4 no-underline group w-max"
+                      style={{
+                        padding: "14px 32px",
+                        border: `1px solid rgba(212,175,55,0.5)`,
+                        color: GOLD,
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        letterSpacing: "0.25em",
+                        textTransform: "uppercase" as const,
+                        transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+                        opacity: 0,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = GOLD;
+                        e.currentTarget.style.color = BG_DARK;
+                        e.currentTarget.style.borderColor = GOLD;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = GOLD;
+                        e.currentTarget.style.borderColor = "rgba(212,175,55,0.5)";
+                      }}
+                    >
+                      Visit Website
+                      <span className="transition-transform duration-300 group-hover:translate-x-1 text-sm">→</span>
+                    </a>
+                  </div>
                 )}
               </div>
 
@@ -403,11 +406,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   style={{ opacity: 0 }}
                 >
                   <h3
-                    className="mb-4"
+                    className="mb-3"
                     style={{
-                      fontSize: "12px",
-                      letterSpacing: "0.3em",
-                      fontWeight: 600,
+                      fontSize: "10px",
+                      letterSpacing: "0.45em",
+                      fontWeight: 700,
                       textTransform: "uppercase" as const,
                       color: GOLD,
                     }}
@@ -415,25 +418,27 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     Services
                   </h3>
                   <div
-                    className="w-12 h-px mb-6 opacity-60"
-                    style={{ backgroundColor: BORDER_DARK }}
+                    className="w-10 h-px mb-5"
+                    style={{ backgroundColor: "rgba(212,175,55,0.35)" }}
                   />
                   <ul
                     style={{
                       listStyle: "none",
                       padding: 0,
                       margin: 0,
-                      // fontSize: "clamp(12px, 1.1vw, 16px)",
                       lineHeight: 1.7,
-                      color: "rgba(255,255,255,0.85)",
+                      color: "rgba(255,255,255,0.75)",
                       fontWeight: 300,
                     }}
                     className="flex flex-col gap-3"
                   >
                     {project.services.map((s) => (
-                      <li key={s} className="flex items-start gap-4">
-                        <span className="text-[10px] mt-1.5" style={{ color: GOLD, opacity: 0.7 }}>■</span>
-                        <span className="tracking-wide">{s}</span>
+                      <li key={s} className="flex items-start gap-3">
+                        <span
+                          className="mt-[9px] shrink-0 rounded-full"
+                          style={{ width: "4px", height: "4px", backgroundColor: GOLD, opacity: 0.7, display: "inline-block" }}
+                        />
+                        <span style={{ fontSize: "clamp(12px, 1vw, 14px)" }} className="tracking-wide">{s}</span>
                       </li>
                     ))}
                   </ul>
@@ -443,7 +448,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           </div>
 
           {/* Right: Hero Image */}
-          <div className="w-full lg:w-[54%] h-[45vh] lg:h-full flex items-center px-6 pb-12 lg:pb-4 lg:pr-8 lg:pt-4">
+          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full flex items-stretch px-4 pb-8 lg:pb-6 lg:pr-6 lg:pt-6 lg:pl-4">
             <div
               className="hero-image relative w-full h-full rounded-xl overflow-hidden"
               style={{
