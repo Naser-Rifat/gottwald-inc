@@ -13,6 +13,25 @@ const ROUTE_LABELS: Record<string, string> = {
   "/contact": "CONTACT",
 };
 
+/**
+ * Resolve a human-readable label for the transition overlay.
+ * Static routes get a direct lookup; dynamic /pillars/[slug] routes
+ * are auto-capitalised from the slug itself.
+ */
+function resolveLabel(href: string): string {
+  // Check static map first
+  const [basePath] = href.split("#");
+  if (ROUTE_LABELS[basePath]) return ROUTE_LABELS[basePath];
+
+  // Dynamic pillar routes: "/pillars/my-slug" → "MY SLUG"
+  const pillarMatch = basePath.match(/^\/pillars\/(.+)$/);
+  if (pillarMatch) {
+    return pillarMatch[1].replace(/-/g, " ").toUpperCase();
+  }
+
+  return "LOADING";
+}
+
 // The home page keeps its existing experience — no loader
 const HOME_PATH = "/";
 
@@ -27,13 +46,15 @@ export default function GlobalPageLoader() {
   const labelTextRef = useRef<HTMLHeadingElement>(null);
   const lineProgressRef = useRef<HTMLDivElement>(null);
 
-  // Rigid State Tracking (Senior Engineering Pattern)
+  // Rigid State Tracking
   const isTransitioning = useRef(false);
   const progressObj = useRef({ val: 0 });
   const activeTimeline = useRef<gsap.core.Timeline | null>(null);
   const hasInitiallyLoaded = useRef(false);
   const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingHashRef = useRef<string | null>(null);
+  const pendingHrefRef = useRef<string | null>(null);
+  const creepTweenRef = useRef<gsap.core.Tween | null>(null);
 
   // ── Initial page load reveal ──────────────────────────────────────────
   useLayoutEffect(() => {
@@ -47,7 +68,7 @@ export default function GlobalPageLoader() {
       return;
     }
 
-    const label = ROUTE_LABELS[pathname] ?? "LOADING";
+    const label = resolveLabel(pathname);
     if (labelTextRef.current) labelTextRef.current.textContent = label;
 
     document.body.style.overflow = "hidden";
@@ -145,15 +166,16 @@ export default function GlobalPageLoader() {
       e.stopPropagation(); 
       isTransitioning.current = true;
 
-      // Track pending hash for post-navigation scroll
+      // Track pending hash and href for post-navigation scroll & fallback
       pendingHashRef.current = hash || null;
+      pendingHrefRef.current = href;
 
-      const label = ROUTE_LABELS[basePath] ?? ROUTE_LABELS[href] ?? "LOADING";
+      const label = resolveLabel(href);
       if (labelTextRef.current) labelTextRef.current.textContent = label;
 
       // Guarantee any previous timeline is eradicated to prevent object overwrites 
-      // (This fixes the 000% stuck bug).
       if (activeTimeline.current) activeTimeline.current.kill();
+      if (creepTweenRef.current) creepTweenRef.current.kill();
 
       document.body.style.overflow = "hidden";
       gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
@@ -166,10 +188,34 @@ export default function GlobalPageLoader() {
       const tl = gsap.timeline();
       activeTimeline.current = tl;
 
-      tl.to(curtainRef.current, { yPercent: 0, duration: 0.7, ease: "power4.inOut" });
+      // 1. Slide curtain in to cover screen
+      tl.to(curtainRef.current, {
+        yPercent: 0,
+        duration: 0.7,
+        ease: "power4.inOut",
+        onComplete: () => {
+          // ── KEY FIX: Fire router.push IMMEDIATELY when curtain covers screen ──
+          // Don't wait for the counter animation — start data fetch ASAP.
+          React.startTransition(() => {
+            router.push(href);
+          });
+
+          // ── Nuclear safety: hard redirect if pathname never changes after 8s ──
+          // Unlike the old 4s timer, this does NOT lift the curtain prematurely.
+          // It falls back to a full page load instead.
+          if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+          safetyTimerRef.current = setTimeout(() => {
+            if (isTransitioning.current) {
+              window.location.href = href;
+            }
+          }, 8000);
+        },
+      });
+
+      // 2. Fade in labels while curtain is settling
       tl.to([labelRef.current, counterRef.current], { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.05 }, "-=0.3");
       
-      // Emulate network progress to 90%. Holds securely until Next.js is done.
+      // 3. Animate counter 0→90 as a visual placeholder while data loads
       tl.to(progressObj.current, {
         val: 90,
         duration: 1.0,
@@ -179,21 +225,17 @@ export default function GlobalPageLoader() {
           if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
         },
         onComplete: () => {
-          // Offload the heavy router.push to a React transition so it doesn't block the main thread and freeze GSAP.
-          React.startTransition(() => {
-            router.push(href);
+          // 4. Slow creep 90→98 so the counter doesn't look frozen while waiting
+          creepTweenRef.current = gsap.to(progressObj.current, {
+            val: 98,
+            duration: 6,
+            ease: "power1.out",
+            onUpdate: () => {
+              if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
+              if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+            },
           });
-
-          // ── Safety timeout: force completion if stuck at 90% for 4s ──
-          // This handles cases where React.startTransition takes too long
-          // (heavy server components, slow data fetches, etc.).
-          if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-          safetyTimerRef.current = setTimeout(() => {
-            if (isTransitioning.current) {
-              forceComplete();
-            }
-          }, 4000);
-        }
+        },
       }, "-=0.2");
     };
 
@@ -269,6 +311,11 @@ export default function GlobalPageLoader() {
 
     // If a route change happened and we WERE tracking an Eager transition
     if (isTransitioning.current) {
+      // Kill the slow creep tween so forceComplete starts from current value
+      if (creepTweenRef.current) {
+        creepTweenRef.current.kill();
+        creepTweenRef.current = null;
+      }
       forceComplete();
     }
   }, [pathname]);
