@@ -2,6 +2,30 @@ import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { PILLARS_CACHE_TAG } from "@/lib/api/pillars";
 
+// ─── CORS helper ─────────────────────────────────────────────────────────────
+// The admin panel lives on a different origin (Vite dev / admin subdomain),
+// so we must allow cross-origin POST + OPTIONS for cache purge requests.
+
+function corsHeaders(): HeadersInit {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+}
+
+function json(data: object, status = 200) {
+  return NextResponse.json(data, { status, headers: corsHeaders() });
+}
+
+/**
+ * Preflight for CORS — browsers send OPTIONS before a cross-origin POST
+ * with JSON content-type.
+ */
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders() });
+}
+
 /**
  * On-demand revalidation endpoint.
  *
@@ -27,10 +51,7 @@ export async function POST(request: NextRequest) {
     if (secret) {
       const auth = request.headers.get("authorization");
       if (auth !== `Bearer ${secret}`) {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 },
-        );
+        return json({ error: "Unauthorized" }, 401);
       }
     }
 
@@ -39,24 +60,16 @@ export async function POST(request: NextRequest) {
     const tag = (body as { tag?: string }).tag || PILLARS_CACHE_TAG;
 
     // ── Revalidate ────────────────────────────────────────────────────────
-    // Next.js 16 experimental types require a second argument for cache life profile
     // @ts-expect-error Types in latest Next.js canary changed unexpectedly
     revalidateTag(tag);
 
     console.log(`[revalidate] Cache tag "${tag}" purged`);
 
-    return NextResponse.json({
-      revalidated: true,
-      tag,
-      now: Date.now(),
-    });
+    return json({ revalidated: true, tag, now: Date.now() });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[revalidate] Error:", message);
-    return NextResponse.json(
-      { error: "Revalidation failed", message },
-      { status: 500 },
-    );
+    return json({ error: "Revalidation failed", message }, 500);
   }
 }
 
@@ -69,18 +82,13 @@ export async function GET(request: NextRequest) {
   if (secret) {
     const param = request.nextUrl.searchParams.get("secret");
     if (param !== secret) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return json({ error: "Unauthorized" }, 401);
     }
   }
 
-  // Next.js 16 experimental types require a second argument for cache life profile
   // @ts-expect-error Types in latest Next.js canary changed unexpectedly
   revalidateTag(PILLARS_CACHE_TAG);
   console.log(`[revalidate] All pillars cache purged via GET`);
 
-  return NextResponse.json({
-    revalidated: true,
-    tag: PILLARS_CACHE_TAG,
-    now: Date.now(),
-  });
+  return json({ revalidated: true, tag: PILLARS_CACHE_TAG, now: Date.now() });
 }
