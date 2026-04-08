@@ -212,7 +212,7 @@ async function fetchAllPillars(): Promise<Pillar[]> {
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/", {
     tags: [PILLARS_CACHE_TAG],
   });
-  const items = res.data ?? res.results ?? [];
+  const items = (res.data ?? res.results ?? []).reverse();
   const pillars = items.map(mapApiToPillar);
   console.log(`[pillars] Fetched ${pillars.length} pillars from API`);
   return pillars;
