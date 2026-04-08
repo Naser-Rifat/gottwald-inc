@@ -21,6 +21,8 @@ npm-debug.log*
 .vercel
 
 # admin app (separate deployment)
+gottwald-admin
 gottwald-admin/node_modules/
 gottwald-admin/dist/
 gottwald-admin/.git/
+gottwald-admin/.env
