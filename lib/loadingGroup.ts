@@ -12,6 +12,14 @@ export default class LoadingGroup extends THREE.Group {
   letterRotation = { value: 0 };
   letterScale = { value: 1 };
   backgroundAlpha = { value: 1 };
+  
+  // Cinematic variables
+  CINEMATIC_MINIMUM_DURATION = 2.2;
+  elapsedTime = 0;
+  networkTarget = 0;
+  networkProgressValue = 0;
+  lastDisplayPercent = -1;
+
   loadingProgress = { value: 0, target: 0 };
   postLoadSequenceProgress = { value: 0 };
   isSequenceFinished = false;
@@ -40,14 +48,14 @@ export default class LoadingGroup extends THREE.Group {
 
     this.onDoneLoadSequence = onDoneLoadSequence;
 
+    // Track only the target, don't update UI directly here anymore.
     THREE.DefaultLoadingManager.onProgress = (
       _url: string,
       itemsLoaded: number,
       itemsTotal: number,
     ) => {
       const percent = itemsLoaded / itemsTotal;
-      this.countUp.update(Math.round(percent * 100));
-      this.loadingProgress.target = percent;
+      this.networkTarget = percent;
     };
 
     this.initOdometer();
@@ -59,6 +67,7 @@ export default class LoadingGroup extends THREE.Group {
     if (!this.loadingContentEl) return;
     this.countUp = new CountUp(this.loadingContentEl, 100, {
       formattingFn: (n: number) => n.toString().padStart(3, "0"),
+      duration: 0.5, // keep internal duration short, we drive the pacing in update()
     });
   };
 
@@ -115,15 +124,40 @@ export default class LoadingGroup extends THREE.Group {
       return;
     }
 
-    this.loadingProgress.value =
-      THREE.MathUtils.lerp(
-        this.loadingProgress.value,
-        this.loadingProgress.target,
-        dt * 10,
-      ) + 0.0000000001;
-    this.loadingProgress.value = Math.min(this.loadingProgress.value, 1);
+    this.elapsedTime += dt;
 
-    if (this.loadingProgress.value >= 1) {
+    // 1. Smoothly interpolate network progress to the target
+    this.networkProgressValue = THREE.MathUtils.lerp(
+      this.networkProgressValue,
+      this.networkTarget,
+      dt * 10,
+    ) + 0.0000000001; // Avoid strict 0
+
+    // Prevent network hang: if all assets were cached and itemsTotal was 0,
+    // force network target to 1 to ensure it completes.
+    if (this.elapsedTime > 0.5 && this.networkTarget === 0 && this.networkProgressValue < 0.1) {
+      this.networkTarget = 1.0; 
+    }
+
+    // 2. Guaranteed cinematic minimum duration (0.0 -> 1.0 linearly)
+    const cinematicProgress = Math.min(this.elapsedTime / this.CINEMATIC_MINIMUM_DURATION, 1.0);
+
+    // 3. Final display logic: Bottlenecked by whichever is SLOWER.
+    // If network is cached, cinematicProgress (time) slows it down.
+    // If network is slow, networkProgressValue holds it back.
+    const finalProgress = Math.min(this.networkProgressValue, cinematicProgress);
+    
+    // Safety clamp
+    this.loadingProgress.value = Math.max(0, Math.min(finalProgress, 1));
+
+    // Update the visual odometer cleanly
+    const displayPercent = Math.round(this.loadingProgress.value * 100);
+    if (displayPercent !== this.lastDisplayPercent) {
+        this.countUp?.update(displayPercent);
+        this.lastDisplayPercent = displayPercent;
+    }
+
+    if (this.loadingProgress.value >= 0.999) {
       this.postLoadSequenceProgress.value += dt * 0.6;
       this.postLoadSequenceProgress.value = Math.min(
         this.postLoadSequenceProgress.value,
@@ -157,3 +191,4 @@ export default class LoadingGroup extends THREE.Group {
     }
   };
 }
+
