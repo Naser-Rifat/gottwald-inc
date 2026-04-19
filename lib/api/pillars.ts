@@ -1,3 +1,4 @@
+import { Offer } from "../projectData";
 import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
 
 
@@ -26,6 +27,7 @@ interface ApiPillar {
   theme?: string | PillarTheme;
   content_blocks?: ApiBlock[];
   content_blocks_data?: ApiBlock[];
+  offers?: Offer[];
 }
 
 interface PillarsApiResponse {
@@ -157,6 +159,7 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     services: toArray(api.services),
     theme: toTheme(api.theme),
     contentBlocks: blocks,
+    offers: Array.isArray(api.offers) ? api.offers : undefined,
   };
 }
 

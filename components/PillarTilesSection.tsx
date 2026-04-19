@@ -76,15 +76,40 @@ export default function PillarTilesSection({
     >
       <div className="flex flex-col items-center text-center gap-10 mb-20 lg:mb-32 w-full">
         <div className="flex flex-col items-center w-full max-w-[95vw] px-4">
+          {/* Turquoise accent pill above heading */}
+          <div
+            className="flex items-center gap-2 mb-5"
+            style={{ color: "rgba(18,168,172,0.75)" }}
+          >
+            <span
+              className="inline-block w-6 h-px"
+              style={{ background: "rgba(18,168,172,0.6)" }}
+            />
+            <span className="text-[9px] tracking-[0.35em] font-bold uppercase">
+              Standards-Led Architecture
+            </span>
+            <span
+              className="inline-block w-6 h-px"
+              style={{ background: "rgba(18,168,172,0.6)" }}
+            />
+          </div>
           <h2
             ref={headlineRef}
-            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-wide uppercase mb-6 whitespace-normal md:whitespace-nowrap"
+            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-wide uppercase mb-4 whitespace-normal md:whitespace-nowrap"
           >
             BUSINESS STANDARDS.
           </h2>
+          {/* Turquoise underline accent */}
+          <div
+            className="w-full max-w-[24rem] h-[3px] mb-4 rounded-full"
+            style={{
+              background: "linear-gradient(90deg, rgba(18,168,172,0.9) 0%, rgba(0,109,132,0.5) 60%, transparent 100%)",
+            }}
+          />
           <p
             ref={subtitleRef}
-            className="text-gold text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase opacity-0"
+            className="text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase opacity-0"
+            style={{ color: "rgba(18,168,172,0.9)" }}
           >
             TRUST. STRUCTURE. PERFORMANCE.
           </p>
@@ -94,7 +119,7 @@ export default function PillarTilesSection({
           <div className="text-white/80 font-light text-[clamp(1rem,1.3vw,1.5rem)] leading-[1.7] flex flex-col gap-8 w-full">
             <p className="text-white/90">
               We build{" "}
-              <strong className="font-semibold text-white">
+              <strong className="font-semibold" style={{ color: "rgba(192,120,64,0.95)" }}>
                 operating-grade systems
               </strong>{" "}
               for people and strategic assets—when outcomes must be clear,
@@ -144,7 +169,10 @@ export default function PillarTilesSection({
                 <p>
                   At the core is a non-negotiable filter:
                   <br />
-                  <strong className="text-gold font-medium tracking-[0.05em] block mt-3">
+                  <strong
+                    className="font-medium tracking-[0.05em] block mt-3"
+                    style={{ color: "#d4af37" }}
+                  >
                     Peace. Love. Harmony — for more Humanity.
                   </strong>
                 </p>
@@ -200,12 +228,15 @@ export default function PillarTilesSection({
       {pillars.length > 4 && (
         <Link
           href="/our-work"
-          className="group mx-auto inline-flex items-center gap-4 text-white hover:text-gold transition-colors mt-12 w-fit"
+          className="group mx-auto inline-flex items-center gap-4 transition-colors mt-12 w-fit"
+          style={{ color: "rgba(18,168,172,0.9)" }}
         >
           <span className="text-[clamp(1rem,1vw,1.3rem)] tracking-[0.2em] uppercase font-bold">
             View all pillars
           </span>
-          <span className="text-2xl font-light transform transition-transform duration-500 group-hover:translate-x-3">
+          <span
+            className="text-2xl font-light transform transition-transform duration-500 group-hover:translate-x-3"
+          >
             →
           </span>
         </Link>

@@ -234,15 +234,53 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const overlayContent = (
     <div
       ref={overlayRef}
-      className={`fixed inset-0 bg-[#060606] z-9999 flex flex-col justify-between p-gutter invisible opacity-0 text-white`}
-      style={{ pointerEvents: isOpen ? "auto" : "none" }}
+      className={`fixed inset-0 z-9999 flex flex-col justify-between p-gutter invisible opacity-0 text-white overflow-hidden`}
+      style={{ 
+        pointerEvents: isOpen ? "auto" : "none",
+        background: "linear-gradient(145deg, #06101a 0%, #040d14 40%, #020c12 100%)",
+      }}
     >
+      {/* Petrol ambient glow — top left */}
+      <div
+        className="absolute top-0 left-0 w-[60vw] h-[60vh] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 20% 20%, rgba(0,109,132,0.12) 0%, transparent 65%)",
+        }}
+      />
+      {/* Turquoise glow — bottom right */}
+      <div
+        className="absolute bottom-0 right-0 w-[40vw] h-[40vh] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 80% 80%, rgba(18,168,172,0.06) 0%, transparent 60%)",
+        }}
+      />
+      {/* Left CI accent bar */}
+      <div
+        className="absolute top-0 left-0 w-[2px] h-full pointer-events-none"
+        style={{
+          background: "linear-gradient(180deg, transparent 0%, rgba(18,168,172,0.4) 30%, rgba(0,109,132,0.3) 70%, transparent 100%)",
+        }}
+      />
       {/* ── Header Area ── */}
       <div className="flex justify-between items-center menu-fade-in flex-none">
         {/* 'G' Logo Circle */}
         <button
           onClick={() => closeMenu()}
-          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-gold hover:text-gold transition-colors"
+          className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300"
+          style={{
+            borderColor: "rgba(18,168,172,0.3)",
+            color: "rgba(18,168,172,0.7)",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.8)";
+            (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,1)";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 16px rgba(18,168,172,0.2)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.3)";
+            (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,0.7)";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+          }}
         >
           <span className="text-[10px] font-bold tracking-widest mt-px">
             G
@@ -305,8 +343,8 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
 
               {/* Motto (Hidden by default, Revealed via GSAP hover) */}
               <div className="menu-motto opacity-0 -translate-x-5 pointer-events-none lg:absolute lg:left-[55vw] lg:top-1/2 lg:-translate-y-1/2 mt-2 mb-6 lg:mb-0 lg:mt-0 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 pl-2 lg:pl-0 relative z-0">
-                <span className="w-8 h-px bg-gold hidden lg:block" />
-                <span className="text-[10px] sm:text-[11px] font-medium tracking-widest text-gold uppercase whitespace-normal leading-normal max-w-[85vw] lg:max-w-md mt-1 lg:mt-0 drop-shadow-md">
+                <span className="w-8 h-px bg-[var(--color-turquoise)] hidden lg:block" />
+                <span className="text-[10px] sm:text-[11px] font-medium tracking-widest text-[var(--color-turquoise)] uppercase whitespace-normal leading-normal max-w-[85vw] lg:max-w-md mt-1 lg:mt-0 drop-shadow-md">
                   {item.motto}
                 </span>
               </div>

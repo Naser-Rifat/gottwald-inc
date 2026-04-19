@@ -19,7 +19,7 @@ export default function TermsOfUsePage() {
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-light leading-none tracking-tighter text-white mb-6 uppercase">
           TERMS OF USE
         </h1>
-        <p className=" tracking-widest uppercase text-white/50 mb-20 drop-shadow-sm">
+        <p className=" tracking-widest uppercase text-white/70 mb-20 drop-shadow-sm">
           Last updated: <span className="text-white/80">March 27, 2026</span>
         </p>
 

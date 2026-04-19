@@ -185,19 +185,25 @@ export default function StrategicInquirySection() {
     <section
       ref={sectionRef}
       aria-label="Strategic Partnership Inquiry"
-      className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5 overflow-hidden font-sans flex flex-col items-center justify-center min-h-screen"
+      className="px-gutter py-[20vh] relative z-10 border-t overflow-hidden font-sans flex flex-col items-center justify-center min-h-screen"
+      style={{
+        background: "linear-gradient(180deg, rgba(7,12,20,1) 0%, rgba(2,16,22,1) 60%, rgba(0,20,28,1) 100%)",
+        borderColor: "rgba(18,168,172,0.12)",
+      }}
     >
-      {/* Background glow — animated on scroll */}
+      {/* Background glow — petrol/turquoise animated on scroll */}
       <div
         ref={glowRef}
-        className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] bg-gold/5 blur-[150px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] blur-[140px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        style={{ background: "radial-gradient(ellipse, rgba(0,109,132,0.12) 0%, rgba(18,168,172,0.06) 40%, transparent 70%)" }}
       />
 
       <div className="w-full max-w-[95vw] lg:max-w-[85vw] mx-auto flex flex-col items-center text-center relative z-10">
         {/* Eyebrow — clip reveal */}
         <p
           ref={eyebrowRef}
-          className="text-gold text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase mb-8 opacity-0"
+          className="text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase mb-8"
+          style={{ color: "rgba(212,175,55,0.85)", opacity: 0 }}
         >
           STRATEGIC INQUIRY // PRO DIVISION
         </p>
@@ -222,7 +228,7 @@ export default function StrategicInquirySection() {
               style={{
                 transformOrigin: "bottom center",
                 backgroundImage:
-                  "linear-gradient(90deg, #ffffff 0%, #888888 25%, #ffffff 50%, #888888 75%, #ffffff 100%)",
+                  "linear-gradient(90deg, #ffffff 0%, rgba(18,168,172,0.85) 25%, #ffffff 50%, rgba(18,168,172,0.85) 75%, #ffffff 100%)",
               }}
             >
               ALIGNMENT.
@@ -281,9 +287,19 @@ export default function StrategicInquirySection() {
 
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="body-line group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-8 mb-16 w-max"
+              className="body-line group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase transition-colors mt-8 mb-16 w-max"
+              style={{ color: "rgba(18,168,172,0.8)" }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,1)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,0.8)";
+              }}
             >
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-full border border-white/50 group-hover:border-white group-hover:bg-white/5 transition-[border-color,background-color]">
+              <div
+                className="relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300"
+                style={{ border: "1px solid rgba(18,168,172,0.35)" }}
+              >
                 <span className="text-xl font-light leading-none mb-0.5">
                   {isExpanded ? "−" : "+"}
                 </span>
@@ -303,8 +319,19 @@ export default function StrategicInquirySection() {
             <Link
               ref={ctaRef}
               href="/partnerships#apply"
-              className="group relative flex items-center justify-center bg-transparent border-[1.5px] border-gold rounded-full px-10 py-5 overflow-hidden w-full sm:w-max transition-colors hover:bg-gold/10"
-              style={{ willChange: "transform" }}
+              className="group relative flex items-center justify-center bg-transparent rounded-full px-10 py-5 overflow-hidden w-full sm:w-max transition-all duration-300"
+              style={{
+                border: "1.5px solid rgba(18,168,172,0.45)",
+                willChange: "transform",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(18,168,172,0.1)";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.7)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.45)";
+              }}
             >
               <div className="relative z-10 flex items-center gap-4">
                 <span className="font-bold uppercase tracking-[0.15em] text-[13px] text-white">
@@ -330,9 +357,9 @@ export default function StrategicInquirySection() {
               ].map((pill, idx) => (
                 <span
                   key={idx}
-                  className="proof-pill px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[11px] tracking-widest uppercase text-white/80 cursor-default flex items-center gap-2 font-medium transition-colors hover:bg-white/10 hover:text-white/70"
+                  className="proof-pill px-6 py-3 rounded-full border border-[var(--color-petrol)]/30 bg-white/5 backdrop-blur-sm text-[11px] tracking-widest uppercase text-white/80 cursor-default flex items-center gap-2 font-medium transition-colors hover:bg-white/10 hover:text-white/70"
                 >
-                  <span className="text-gold font-bold mb-px opacity-70">
+                  <span className="text-[var(--color-turquoise)] font-bold mb-px opacity-70">
                     ·
                   </span>
                   {pill}

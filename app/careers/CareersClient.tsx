@@ -168,27 +168,22 @@ export default function CareersClient() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const reveals = gsap.utils.toArray(
-        ".reveal-text",
-        pageRef.current!,
-      ) as HTMLElement[];
-      reveals.forEach((el) => {
-        gsap.fromTo(
-          el,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: "power3.out",
-            force3D: true,
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
+      ScrollTrigger.batch(".reveal-text", {
+        start: "top 85%",
+        onEnter: (batch) => {
+          gsap.fromTo(
+            batch,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              ease: "power3.out",
+              stagger: 0.1,
+              force3D: true,
+            }
+          );
+        },
       });
 
       const staggerGroups = gsap.utils.toArray(
@@ -243,7 +238,7 @@ export default function CareersClient() {
           <div className="max-w-6xl z-10">
             <h1 className="reveal-text text-[clamp(4rem,9vw,10rem)] leading-[0.85] font-extrabold tracking-tighter uppercase mb-12">
               CAREERS AT <br />
-              <span className="text-white/60">GOTT WALD</span>
+              <span className="text-white/80">GOTT WALD</span>
             </h1>
 
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
@@ -277,7 +272,7 @@ export default function CareersClient() {
                 <div className="flex gap-4 items-center pl-2">
                   <div className="w-px h-12 bg-white/20" />
                   <div className="flex flex-col gap-1">
-                    <span className="text-white/50 text-md tracking-widest uppercase font-medium">
+                    <span className="text-white/80 text-md tracking-widest uppercase font-medium">
                       Global-first. Remote-friendly. Confidential.
                     </span>
                     <span className="text-gold text-md tracking-widest uppercase font-medium">
@@ -323,7 +318,7 @@ export default function CareersClient() {
               </div>
 
               <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
+                <div className="text-md tracking-[0.2em] uppercase text-gold/80 mb-6 font-bold">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
@@ -383,7 +378,7 @@ export default function CareersClient() {
         <section className="px-gutter py-[15vh]">
           <div className="max-w-5xl mx-auto">
             <div className="mb-20 reveal-text text-center">
-              <span className="text-md tracking-[0.5em] uppercase text-white/30 font-medium block mb-4">
+              <span className="text-md tracking-[0.5em] uppercase text-gold/80 font-medium block mb-4">
                 ARCHITECTURE
               </span>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
@@ -452,7 +447,7 @@ export default function CareersClient() {
                         </ul>
                       </div>
                       <div className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit">
-                        <h4 className="text-md tracking-[0.2em] text-white/40 uppercase mb-4 font-bold">
+                        <h4 className="text-md tracking-[0.2em] text-gold/80 uppercase mb-4 font-bold">
                           Impact Profile
                         </h4>
                         <p className="text-white font-medium tracking-wide">
@@ -642,7 +637,7 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="travel" className="text-md uppercase tracking-widest text-white/50 font-bold">
+                  <label htmlFor="travel" className="text-md uppercase tracking-widest text-white/80 font-bold">
                     Travel Readiness
                   </label>
                   <select id="travel" name="travel"
@@ -708,7 +703,7 @@ export default function CareersClient() {
                 <input id="cv" name="cv"
                   type="file"
                   accept=".pdf,.doc,.docx"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-lg font-medium text-white/60 file:mr-4 file:py-2 file:px-6 file:border-0 file:text-sm file:font-bold file:uppercase file:tracking-widest file:bg-white/10 file:text-white/80 file:cursor-pointer file:rounded-none hover:file:bg-gold/20 hover:file:text-gold transition-colors focus:border-gold"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-lg font-medium text-white/80 file:mr-4 file:py-2 file:px-6 file:border-0 file:text-sm file:font-bold file:uppercase file:tracking-widest file:bg-white/10 file:text-white/80 file:cursor-pointer file:rounded-none hover:file:bg-gold/20 hover:file:text-gold transition-colors focus:border-gold"
                 />
               </div>
               

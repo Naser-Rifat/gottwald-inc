@@ -37,7 +37,7 @@ export default function Header() {
             href="/partnerships#apply"
             className="hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
                        tracking-[0.02em] transition-all duration-300
-                       border border-gold/40 text-gold hover:bg-gold hover:text-black"
+                       border border-gold/40 text-gold hover:border-[#0a9396] hover:text-[#0a9396]"
             style={{ padding: "0 20px 0 22px" }}
           >
             <span>Apply</span>
@@ -49,11 +49,11 @@ export default function Header() {
             href="/contact"
             className="h-[46px] rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
                        tracking-[0.02em] transition-colors
-                       bg-white/8 text-white hover:bg-white/15"
+                       bg-white/8 text-white hover:bg-white/15 hover:shadow-[0_0_12px_rgba(10,147,150,0.3)]"
             style={{ padding: "0 18px 0 22px" }}
           >
             <span>Let&apos;s Talk</span>
-            <span className="w-[6px] h-[6px] rounded-full bg-green-400" />
+            <span className="w-[6px] h-[6px] rounded-full bg-[#0a9396] shadow-[0_0_8px_rgba(10,147,150,0.6)] animate-pulse" />
           </Link>
 
           {/* MENU pill */}

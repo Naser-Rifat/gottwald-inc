@@ -22,7 +22,20 @@ const protocolItems = [
 
 export default function FooterSection() {
   return (
-    <footer className="relative w-full bg-black text-white pt-16 lg:pt-24 pb-28 md:pb-12 px-gutter z-10 overflow-hidden">
+    <footer
+      className="relative w-full text-white pt-16 lg:pt-24 pb-28 md:pb-12 px-gutter z-10 overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, rgba(5,10,18,1) 0%, rgba(3,8,14,1) 100%)",
+        borderTop: "1px solid rgba(18,168,172,0.15)",
+      }}
+    >
+      {/* Petrol glow top-left corner */}
+      <div
+        className="absolute top-0 left-0 w-[50vw] h-[30vh] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 10% 0%, rgba(0,109,132,0.08) 0%, transparent 60%)",
+        }}
+      />
       {/* ═══════════════════════════════════════════════════════════
            MAIN GRID: 4-column layout
          ═══════════════════════════════════════════════════════════ */}
@@ -113,7 +126,7 @@ export default function FooterSection() {
 
         {/* ── COL 2: DIRECTORY ── */}
         <div className="lg:col-span-2">
-          <h4 className=" uppercase tracking-[0.3em] font-light text-white/90 mb-8">
+          <h4 className=" uppercase tracking-[0.3em] font-light text-turquoise mb-8">
             Directory
           </h4>
           <nav className="flex flex-col gap-1 w-max">
@@ -150,7 +163,7 @@ export default function FooterSection() {
 
         {/* ── COL 3: PROTOCOLS ── */}
         <div className="lg:col-span-3">
-          <h4 className=" uppercase tracking-[0.3em] font-light text-white/90 mb-8">
+          <h4 className=" uppercase tracking-[0.3em] font-light text-turquoise mb-8">
             Protocols
           </h4>
           <div className="flex flex-col gap-1 w-max">
@@ -187,7 +200,7 @@ export default function FooterSection() {
             <h4 className=" uppercase tracking-[0.3em] font-light text-white/80 mb-2">
               Registration Code
             </h4>
-            <span className="text-white tracking-[0.1em] tabular-nums font-mono">
+            <span className="text-white tracking-widest tabular-nums font-mono">
               4OO415421
             </span>
           </div>
@@ -197,7 +210,7 @@ export default function FooterSection() {
             <h4 className=" uppercase tracking-[0.3em] font-light text-white/80 mb-2">
               Build Version
             </h4>
-            <span className="text-white tracking-[0.1em] font-mono">
+            <span className="text-white tracking-widest font-mono">
               GOTT_WALD_INFRA_1.0
             </span>
           </div>

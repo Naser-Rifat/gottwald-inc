@@ -16,6 +16,13 @@ export interface ContentBlock {
   richText?: ContentBlock[];
 }
 
+export interface Offer {
+  title: string;
+  tier: "copper" | "silver" | "gold";
+  description: string;
+  deliverable: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -29,6 +36,8 @@ export interface Project {
   theme: ProjectTheme;
   /** Dynamic content panels (Panels 2–5). Falls back to hardcoded layout if empty. */
   contentBlocks?: ContentBlock[];
+  /** Service tier offers to be displayed within the pillar */
+  offers?: Offer[];
 }
 
 export const projects: Project[] = [
@@ -53,6 +62,26 @@ export const projects: Project[] = [
       text: "#F5F5F5",
       accent: "#C9A84C",
     },
+    offers: [
+      {
+        title: "Foundation Blueprint",
+        tier: "copper",
+        description: "Essential architecture for modern web presence. Lean, fast, and structured for future scalability.",
+        deliverable: "Digital presence audit + technical roadmap",
+      },
+      {
+        title: "Growth Engine",
+        tier: "silver",
+        description: "Full implementation of AI-readable architecture with automated proposal systems.",
+        deliverable: "Next.js migration + CRM integration + workflow automation",
+      },
+      {
+        title: "Market Dominance",
+        tier: "gold",
+        description: "High-end engineered platform with maximum performance, bespoke design, and ongoing strategic alignment.",
+        deliverable: "Awwwards-level custom build + dedicated strategic advisory",
+      },
+    ],
   },
   {
     slug: "solution-finder",
@@ -94,6 +123,26 @@ export const projects: Project[] = [
       text: "#F5F5F5",
       accent: "#A8B4B8",
     },
+    offers: [
+      {
+        title: "Rapid Diagnostics",
+        tier: "copper",
+        description: "A focused assessment to isolate the root causes of operational friction within 2 weeks.",
+        deliverable: "Root cause analysis report + priority matrix",
+      },
+      {
+        title: "Structured Resolution",
+        tier: "silver",
+        description: "Full diagnostic and implementation of a structured resolution blueprint.",
+        deliverable: "End-to-end resolution plan + 90-day implementation support",
+      },
+      {
+        title: "Systemic Transformation",
+        tier: "gold",
+        description: "Deep organizational redesign eliminating all recurring friction at the system level.",
+        deliverable: "Complete restructuring + ongoing advisory for 12 months",
+      },
+    ],
   },
   {
     slug: "consulting",
@@ -130,6 +179,26 @@ export const projects: Project[] = [
       text: "#F5F5F5",
       accent: "#C9A84C",
     },
+    offers: [
+      {
+        title: "Strategic Assessment",
+        tier: "copper",
+        description: "A focused strategy audit with clear recommendations for structural improvement.",
+        deliverable: "Strategic assessment report + executive summary",
+      },
+      {
+        title: "Architecture & Alignment",
+        tier: "silver",
+        description: "Full organizational strategy design with executive alignment workshops.",
+        deliverable: "Strategy blueprint + 6-month execution plan",
+      },
+      {
+        title: "Enterprise Partnership",
+        tier: "gold",
+        description: "Retained strategic advisory with hands-on organizational design and scaling systems.",
+        deliverable: "Quarterly strategic reviews + permanent advisory seat",
+      },
+    ],
   },
   {
     slug: "coaching-mentoring",
