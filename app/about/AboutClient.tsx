@@ -872,18 +872,24 @@ export default function AboutClient() {
           </div>
         </section>
 
-        {/* MINI CASES - HORIZONTAL SCROLL */}
-        <section className="cases-wrapper h-screen bg-[#050a12] overflow-hidden flex flex-col justify-center relative">
-          <div className="reveal-text absolute top-12 left-gutter z-20">
-            <p className="text-xl tracking-[0.3em] uppercase text-gold font-bold">
-              Mini Case Stories
-            </p>
-            <p className="text-xl font-serif italic text-white/80">
+        {/* MINI CASES — Section Header (OUTSIDE the pinned wrapper) */}
+        <section className="bg-[#050a12] relative pt-28 pb-16 px-gutter">
+          <div className="reveal-text max-w-5xl mx-auto">
+            <div className="flex items-center gap-6 mb-6">
+              <div className="w-12 h-px bg-gold/40" />
+              <p className="text-[11px] tracking-[0.35em] uppercase text-gold font-bold">
+                Mini Case Stories
+              </p>
+            </div>
+            <p className="text-2xl md:text-3xl font-serif italic text-white/50 max-w-md">
               (you&apos;ll recognize yourself)
             </p>
           </div>
+        </section>
 
-          <div className="cases-container flex h-[60vh] w-[500vw] items-center">
+        {/* MINI CASES — Horizontal Scroll (GSAP pins THIS element only) */}
+        <section className="cases-wrapper h-screen bg-[#050a12] overflow-hidden relative">
+          <div className="cases-container flex h-full w-[500vw] items-center">
             {[
               {
                 tag: "CEO / Founder / Entrepreneur",
@@ -941,14 +947,14 @@ export default function AboutClient() {
               return (
                 <div
                   key={i}
-                  className="w-screen px-gutter flex justify-center shrink-0"
+                  className="w-screen h-full px-gutter flex items-center justify-center shrink-0"
                 >
-                  <div className="w-full max-w-5xl bg-[#0a1526]/60 backdrop-blur-md border border-turquoise/10 p-8 sm:p-12 md:p-16 rounded-3xl relative overflow-hidden group shadow-[inset_0_1px_3px_rgba(255,255,255,0.05),0_20px_40px_-20px_rgba(0,0,0,0.5)]">
+                  <div className="w-full max-w-5xl bg-[#080e1a]/80 backdrop-blur-xl border border-white/[0.07] p-8 sm:p-10 md:p-14 rounded-3xl relative overflow-hidden group shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
                     {/* Ambient Hover Glow */}
-                    <div className="absolute -top-40 -right-40 w-96 h-96 bg-turquoise/20 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[2s]" />
+                    <div className="absolute -top-20 -right-20 w-72 h-72 bg-turquoise/10 blur-[100px] rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-[2s] pointer-events-none" />
 
                     {/* Tagline */}
-                    <div className="flex items-center gap-4 mb-12">
+                    <div className="flex items-center gap-4 mb-8">
                       <div className="w-8 h-px bg-gold/50" />
                       <p className="text-xs sm:text-sm font-mono tracking-[0.2em] uppercase text-gold/90">
                         {c.tag}
@@ -956,47 +962,45 @@ export default function AboutClient() {
                     </div>
                     
                     {/* Title */}
-                    <div className="mb-16 md:mb-24">
-                      <span className="block font-serif italic text-gold/80 text-2xl md:text-3xl mb-4 tracking-wide">{caseNum}</span>
-                      <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white leading-[1.1] max-w-4xl tracking-[-0.02em]">
+                    <div className="mb-8 md:mb-12">
+                      <span className="block font-serif italic text-gold/80 text-lg md:text-xl mb-2 tracking-wide">{caseNum}</span>
+                      <h3 className="text-3xl sm:text-4xl md:text-5xl font-light text-white leading-[1.1] max-w-4xl tracking-[-0.02em]">
                         {caseName}
                       </h3>
                     </div>
 
                     {/* Columns */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 mt-8 relative">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0 relative">
                       
                       {/* BEFORE */}
-                      <div className="space-y-6 md:pr-12 md:pb-6 relative group/col">
-                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-white/70">
+                      <div className="space-y-4 md:pr-10 relative group/col">
+                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-white/50">
                           Before
                         </p>
-                        <p className="text-xl sm:text-2xl text-white/70 font-light leading-relaxed group-hover/col:text-white/90 transition-colors duration-500">
+                        <p className="text-base sm:text-lg text-white/60 font-light leading-relaxed group-hover/col:text-white/80 transition-colors duration-500">
                           {c.before}
                         </p>
                       </div>
 
                       {/* INTERVENTION (Highlighted) */}
-                      <div className="space-y-6 md:px-12 md:pb-6 relative group/intervention md:border-l md:border-[#006d84]/40">
-                        {/* Subtle highlight inner shadow */}
-                        <div className="absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-turquoise to-transparent opacity-50 hidden md:block" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-turquoise/5 to-transparent hidden md:block z-[-1]" />
-                        <div className="md:hidden absolute inset-y-0 left-[-1rem] w-[2px] bg-turquoise/50" />
+                      <div className="space-y-4 md:px-10 relative group/intervention md:border-l md:border-white/[0.06]">
+                        <div className="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-turquoise/60 via-turquoise/20 to-transparent hidden md:block" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-turquoise/[0.04] to-transparent hidden md:block z-[-1] rounded-r-xl" />
 
-                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-gold">
+                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-turquoise/90">
                           Intervention
                         </p>
-                        <p className="text-xl sm:text-2xl text-white/95 font-light leading-relaxed">
+                        <p className="text-base sm:text-lg text-white/90 font-light leading-relaxed">
                           {c.intervention}
                         </p>
                       </div>
 
                       {/* AFTER */}
-                      <div className="space-y-6 md:border-l md:border-white/5 md:pl-12 md:pb-6 relative group/col">
-                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-white/80">
+                      <div className="space-y-4 md:border-l md:border-white/[0.06] md:pl-10 relative group/col">
+                        <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-white/50">
                           After
                         </p>
-                        <p className="text-xl sm:text-2xl text-white/80 font-light leading-relaxed group-hover/col:text-white/100 transition-colors duration-500">
+                        <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed group-hover/col:text-white/90 transition-colors duration-500">
                           {c.after}
                         </p>
                       </div>
@@ -1009,7 +1013,7 @@ export default function AboutClient() {
         </section>
 
         {/* ECOSYSTEM */}
-        <section className="pt-[10vh] pb-[20vh] px-gutter relative bg-[#03070d]">
+        <section className="pt-[15vh] pb-[20vh] px-gutter relative bg-[#03070d]">
           <div className="max-w-5xl mx-auto space-y-16">
             <div className="reveal-text">
               <h2 className="text-4xl md:text-5xl font-light text-white">
