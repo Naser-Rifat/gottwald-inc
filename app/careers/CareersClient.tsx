@@ -227,11 +227,19 @@ export default function CareersClient() {
       <main className="pt-[25vh]">
         {/* ── HERO ── */}
         <section className="px-gutter pb-[20vh] flex flex-col gap-16 relative">
+          {/* Layered ambient depth — petrol + turquoise (#4) */}
           <div
-            className="absolute right-gutter top-[-5vh] w-[40vw] h-[40vw] rounded-full pointer-events-none"
+            className="absolute right-[-5vw] top-[-15vh] w-[60vw] h-[60vw] rounded-full pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
+                "radial-gradient(circle, rgba(0,109,132,0.06) 0%, transparent 65%)",
+            }}
+          />
+          <div
+            className="absolute left-[-10vw] bottom-[-10vh] w-[50vw] h-[50vw] rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(18,168,172,0.04) 0%, transparent 60%)",
             }}
           />
 
@@ -269,7 +277,8 @@ export default function CareersClient() {
                   </a>
                 </div>
 
-                <div className="flex gap-4 items-center pl-2">
+                {/* Hero metadata — stagger entrance (#12) */}
+                <div className="flex gap-4 items-center pl-2 reveal-text">
                   <div className="w-px h-12 bg-white/20" />
                   <div className="flex flex-col gap-1">
                     <span className="text-white/80 text-md tracking-widest uppercase font-medium">
@@ -286,7 +295,7 @@ export default function CareersClient() {
         </section>
 
         {/* ── 3 WAYS TO JOIN ── */}
-        <section className="px-gutter py-[15vh] bg-white/2 border-y border-white/5">
+        <section className="px-gutter py-[15vh] bg-white/[0.02] border-y border-white/5">
           <div className="max-w-7xl mx-auto">
             <div className="mb-16 reveal-text">
               <h2 className="text-3xl lg:text-5xl font-bold tracking-tight">
@@ -295,7 +304,8 @@ export default function CareersClient() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
-              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              {/* Card hover: lift + glow (#5), stray ƒ removed (#1) */}
+              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
                 <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
                   Path 01
                 </div>
@@ -305,19 +315,17 @@ export default function CareersClient() {
                 </p>
               </div>
 
-              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
                 <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
                   Path 02
                 </div>
-                <h3 className="text-2xl font-bold mb-4">ƒ
-                  Freelancer / Interim
-                </h3>
+                <h3 className="text-2xl font-bold mb-4">Freelancer / Interim</h3>
                 <p className="text-white font-light leading-relaxed text-lg">
                   For professionals who deliver at a high level for defined scopes — clean standards, clear ownership.
                 </p>
               </div>
 
-              <div className="stagger-item border border-white/10 p-10 hover:border-white/30 hover:bg-white/5 transition-all duration-500 bg-black/40">
+              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
                 <div className="text-md tracking-[0.2em] uppercase text-gold/80 mb-6 font-bold">
                   Path 03
                 </div>
@@ -331,7 +339,7 @@ export default function CareersClient() {
         </section>
 
         {/* ── WHO WE'RE LOOKING FOR ── */}
-        <section className="px-gutter py-[15vh]">
+        <section className="px-gutter py-[15vh] border-t border-white/5">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div className="flex-1 reveal-text">
               <h2 className="text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8">
@@ -343,30 +351,31 @@ export default function CareersClient() {
               </p>
             </div>
 
-            <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/2 stagger-group">
+            {/* Turquoise bullets (#6) */}
+            <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/[0.02] stagger-group">
               <ul className="flex flex-col gap-6 text-lg md:text-xl font-light text-white/80 tracking-wide">
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   think in outcomes (not tasks)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   communicate cleanly (no fog, no ego)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   document properly (transferable, auditable)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   keep quality under pressure
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   live discretion as a reflex
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-white/30 rounded-full" />
+                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
                   can be different — without losing foundation
                 </li>
               </ul>
@@ -375,7 +384,7 @@ export default function CareersClient() {
         </section>
 
         {/* ── ROLES BY PILLAR (ACCORDION) ── */}
-        <section className="px-gutter py-[15vh]">
+        <section className="px-gutter py-[15vh] border-t border-white/5 bg-white/[0.01]">
           <div className="max-w-5xl mx-auto">
             <div className="mb-20 reveal-text text-center">
               <span className="text-md tracking-[0.5em] uppercase text-gold/80 font-medium block mb-4">
@@ -390,16 +399,20 @@ export default function CareersClient() {
               {PILLARS.map((pillar, i) => (
                 <div
                   key={i}
-                  className="stagger-item border-b border-white/10 group"
+                  className={`stagger-item border-b border-white/10 group transition-all duration-500 ${
+                    openPillar === i
+                      ? "border-l-2 border-l-gold bg-white/[0.02]"
+                      : "border-l-2 border-l-transparent"
+                  }`}
                 >
                   <button
                     onClick={() =>
                       setOpenPillar(openPillar === i ? null : i)
                     }
-                    className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none"
+                    className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none pl-4 md:pl-6"
                   >
                     <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
-                      <span className="text-2xl md:text-4xl font-light text-white/20 group-hover:text-gold transition-colors w-12 md:w-20 shrink-0">
+                      <span className={`text-2xl md:text-4xl font-light transition-colors w-12 md:w-20 shrink-0 ${openPillar === i ? "text-gold" : "text-white/20 group-hover:text-gold"}`}>
                         {pillar.letter}
                       </span>
                       <h3 className="text-xl md:text-3xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500 leading-tight">
@@ -432,7 +445,7 @@ export default function CareersClient() {
                   <div
                     className={`overflow-hidden transition-all duration-700 ease-in-out ${openPillar === i ? "max-h-250 opacity-100 mb-12" : "max-h-0 opacity-0"}`}
                   >
-                    <div className="pl-0 md:pl-20 flex flex-col md:flex-row gap-12 pt-4">
+                    <div className="pl-4 md:pl-20 flex flex-col md:flex-row gap-12 pt-4">
                       <div className="flex-1">
                         <h4 className="text-md tracking-[0.2em] text-gold uppercase mb-6 font-bold">
                           Role Profiles
@@ -440,7 +453,7 @@ export default function CareersClient() {
                         <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
                           {pillar.roles.map((role, idx) => (
                             <li key={idx} className="flex gap-3">
-                              <span className="text-white/20 mt-1.5">•</span>
+                              <span className="text-turquoise/40 mt-1.5">•</span>
                               {role}
                             </li>
                           ))}
@@ -463,15 +476,15 @@ export default function CareersClient() {
         </section>
 
         {/* ── PROCESS & WHAT YOU'LL FIND ── */}
-        <section className="px-gutter py-[15vh]">
+        <section className="px-gutter py-[15vh] border-t border-white/5">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
-            {/* What you'll find */}
+            {/* What you'll find — double space fixed (#8) */}
             <div className="reveal-text">
               <h2 className="text-4xl text-white font-bold mb-10 tracking-tight">
                 WHAT YOU&apos;LL FIND HERE
               </h2>
               <ul className="flex flex-col gap-6 font-light text-2xl text-white/90">
-                <li className="flex justify-between  border-b border-white/10 pb-4">
+                <li className="flex justify-between border-b border-white/10 pb-4">
                   <span className="font-medium">standards</span>
                   <span className="text-white/70 italic text-md">
                     instead of chaos
@@ -512,14 +525,14 @@ export default function CareersClient() {
               </ul>
             </div>
 
-            {/* Application Process */}
-            <div className="reveal-text p-10 md:p-14 bg-white text-black">
-              <h2 className="text-3xl font-bold mb-10 tracking-tight">
+            {/* Application Process — dark glassmorphic (#3) */}
+            <div className="reveal-text p-10 md:p-14 border border-white/10 bg-white/[0.04] backdrop-blur-sm rounded-sm">
+              <h2 className="text-3xl font-bold mb-10 tracking-tight text-white">
                 APPLICATION PROCESS
               </h2>
 
               <div className="flex flex-col gap-10 relative">
-                <div className="absolute left-3.75 top-6 bottom-4 w-0.5 bg-black/10" />
+                <div className="absolute left-3.75 top-6 bottom-4 w-0.5 bg-white/10" />
 
                 {[
                   { n: "1", t: "Submit", d: "Role interest + proof" },
@@ -529,14 +542,14 @@ export default function CareersClient() {
                   { n: "5", t: "Start", d: "Employee, interim, or pool" },
                 ].map((step, i) => (
                   <div key={i} className="flex gap-8 relative z-10">
-                    <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm shrink-0 mt-1">
+                    <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm shrink-0 mt-1">
                       {step.n}
                     </div>
                     <div>
-                      <h4 className="font-bold text-xl uppercase tracking-tighter">
+                      <h4 className="font-bold text-xl uppercase tracking-tighter text-white">
                         {step.t}
                       </h4>
-                      <p className="text-black/60 font-medium text-sm mt-1">
+                      <p className="text-white/50 font-medium text-sm mt-1">
                         {step.d}
                       </p>
                     </div>
@@ -547,9 +560,17 @@ export default function CareersClient() {
           </div>
         </section>
 
-        {/* ── APPLICATION FORM ── */}
-        <section id="apply" className="px-gutter py-[15vh] bg-[#050505]">
-          <div className="max-w-3xl mx-auto reveal-text">
+        {/* ── APPLICATION FORM ── (#9 — gold border + glow) */}
+        <section id="apply" className="px-gutter py-[15vh] bg-[#050505] relative border-t border-gold/20">
+          {/* Ambient glow above form */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vh] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at center top, rgba(212,175,55,0.04) 0%, transparent 70%)",
+            }}
+          />
+          <div className="max-w-3xl mx-auto reveal-text relative z-10">
             <div className="mb-16">
               <span className="text-md tracking-[0.5em] uppercase text-gold font-medium block mb-4">
                 INITIATE
@@ -570,7 +591,7 @@ export default function CareersClient() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="name" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="name" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     First &amp; Last Name *
                   </label>
                   <input required id="name" name="name"
@@ -579,7 +600,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="contact" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="contact" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Email / Phone *
                   </label>
                   <input required id="contact" name="contact"
@@ -591,7 +612,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="location" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="location" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Country / City / Time Zone
                   </label>
                   <input id="location" name="location"
@@ -600,7 +621,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="region" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="region" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Continent / Region
                   </label>
                   <input id="region" name="region"
@@ -611,7 +632,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="languages" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                <label htmlFor="languages" className="text-md uppercase tracking-wider text-white/70 font-medium">
                   Languages (Select / Free text)
                 </label>
                 <input id="languages" name="languages"
@@ -623,7 +644,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="work_model" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="work_model" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Work Model
                   </label>
                   <select id="work_model" name="work_model"
@@ -637,7 +658,7 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="travel" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="travel" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Travel Readiness
                   </label>
                   <select id="travel" name="travel"
@@ -650,7 +671,7 @@ export default function CareersClient() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="entry_path" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="entry_path" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Entry Path
                   </label>
                   <select id="entry_path" name="entry_path"
@@ -665,7 +686,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="roles" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                <label htmlFor="roles" className="text-md uppercase tracking-wider text-white/70 font-medium">
                   Pillars of Interest (Multi-select) &amp; Desired Role(s)
                 </label>
                 <input id="roles" name="roles"
@@ -677,7 +698,7 @@ export default function CareersClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="linkedin" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="linkedin" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     LinkedIn / Website
                   </label>
                   <input id="linkedin" name="linkedin"
@@ -686,7 +707,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="portfolio" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="portfolio" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Portfolio / Proof Links (Max 3)
                   </label>
                   <input id="portfolio" name="portfolio"
@@ -697,7 +718,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="cv" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                <label htmlFor="cv" className="text-md uppercase tracking-wider text-white/70 font-medium">
                   CV / Resume Upload (PDF, DOC — max 5MB)
                 </label>
                 <input id="cv" name="cv"
@@ -709,7 +730,7 @@ export default function CareersClient() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="availability" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="availability" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Availability (Start date / Hrs per week)
                   </label>
                   <input id="availability" name="availability"
@@ -718,7 +739,7 @@ export default function CareersClient() {
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <label htmlFor="salary" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                  <label htmlFor="salary" className="text-md uppercase tracking-wider text-white/70 font-medium">
                     Salary range or Day rate (Optional)
                   </label>
                   <input id="salary" name="salary"
@@ -743,7 +764,7 @@ export default function CareersClient() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="message" className="text-md uppercase tracking-widest text-white/80 font-bold">
+                <label htmlFor="message" className="text-md uppercase tracking-wider text-white/70 font-medium">
                   Short Message (Optional)
                 </label>
                 <textarea id="message" name="message"
@@ -753,6 +774,7 @@ export default function CareersClient() {
               </div>
 
               <div className="pt-8 border-t border-white/10 flex flex-col items-center justify-center sm:items-start gap-6">
+                {/* Submit button — turquoise expansion (#11) */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -762,7 +784,7 @@ export default function CareersClient() {
                   <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
                     {isSubmitting ? "Submitting..." : "Submit Application"}
                   </span>
-                  <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
+                  <span className="relative z-0 w-2 h-2 rounded-full bg-[#0a9396] group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>
                 
                 {submitStatus === "success" && (
