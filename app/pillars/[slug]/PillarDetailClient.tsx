@@ -973,8 +973,8 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
                 style={{ background: "#d4af37" }}
               />
               <span
-                className="text-[10px] tracking-[0.25em] uppercase font-semibold"
-                style={{ color: "rgba(255,255,255,0.5)" }}
+                className="text-[10px] tracking-[0.25em] uppercase font-bold"
+                style={{ color: "rgba(255,255,255,0.8)" }}
               >
                 {String(panelIdx + 1).padStart(2, "0")} — Strategic Offers
               </span>
@@ -1001,93 +1001,96 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
             </div>
           </div>
 
-          {/* Offer cards */}
-          <div className="panel-body flex flex-col lg:flex-row gap-5 lg:gap-6 w-full">
+          {/* Card Based Engagement Matrix */}
+          <div className="panel-body flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-stretch w-full max-w-[1300px] mx-auto mt-12 pb-12 lg:pb-0 pt-4">
             {project.offers.map((offer, idx) => {
               const tierKey = (offer.tier as TierKey) in TIER_CONFIG
                 ? (offer.tier as TierKey)
                 : "gold";
               const tc = TIER_CONFIG[tierKey];
+              const isCenter = idx === Math.floor(project.offers.length / 2);
+              
+              // Split description by period to fake a list of features representing the checklist
+              const features = offer.description.split(/(?<=\.)\s+/).filter(Boolean);
 
               return (
                 <div
                   key={idx}
-                  className="flex-1 flex flex-col rounded-2xl overflow-hidden group transition-all duration-500 cursor-default"
+                  className={`w-full lg:w-1/3 flex flex-col rounded-[2rem] overflow-hidden group transition-all duration-700 relative backdrop-blur-3xl ${
+                    isCenter ? "lg:-translate-y-5 lg:scale-[1.05] z-10" : "z-0 opacity-80 hover:opacity-100 lg:translate-y-2"
+                  }`}
                   style={{
-                    background: tc.gradient,
-                    border: `1px solid ${tc.border}`,
-                    boxShadow: tc.shadow,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = tc.borderHover;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = tc.border;
+                    backgroundColor: "rgba(5, 8, 12, 0.6)",
+                    border: `1px solid ${isCenter ? tc.borderHover : tc.border}`,
+                    boxShadow: isCenter ? `0 20px 80px -10px ${tc.accent}40` : `0 10px 40px -10px rgba(0,0,0,0.5)`,
                   }}
                 >
-                  {/* Metallic header bar */}
+                  {/* Editorial Glassmorphic Header Plate */}
                   <div
-                    className="w-full h-1.5"
+                    className="w-full pt-10 pb-16 flex flex-col items-center justify-center relative shadow-2xl shrink-0"
                     style={{
-                      background: `linear-gradient(90deg, transparent, ${tc.headerGlow}, transparent)`,
+                      backgroundColor: "rgba(2, 4, 8, 0.4)",
+                      clipPath: "polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%)",
                     }}
-                  />
-
-                  <div className="flex flex-col flex-1 p-7 lg:p-8">
-                    {/* Tier badge */}
-                    <div className="flex items-center justify-between mb-8">
-                      <span
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold"
-                        style={{
-                          background: tc.badgeBg,
-                          color: tc.labelColor,
-                          border: `1px solid ${tc.border}`,
-                        }}
-                      >
-                        <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: tc.accent, boxShadow: `0 0 6px ${tc.accent}` }}
-                        />
-                        {tc.label}
-                      </span>
-                      <span
-                        className="text-[10px] tracking-[0.2em] uppercase font-medium"
-                        style={{ color: "rgba(255,255,255,0.25)" }}
-                      >
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3
-                      className="text-[clamp(1.1rem,1.6vw,1.6rem)] font-serif mb-4 leading-tight"
-                      style={{ color: "rgba(255,255,255,0.95)" }}
+                  >
+                    {/* Glowing Top Edge */}
+                    <div className="absolute top-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)` }} />
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: `radial-gradient(ellipse at top, ${tc.accent}30 0%, transparent 70%)` }} />
+                    
+                    <span 
+                      className="relative z-10 text-[10px] tracking-[0.3em] font-bold uppercase mb-4 px-5 py-2 rounded-full border border-white/10 shadow-lg backdrop-blur-xl"
+                      style={{ color: tc.labelColor, backgroundColor: "rgba(0,0,0,0.5)" }}
                     >
+                      {tc.label} Pack
+                    </span>
+                    <h3 className="relative z-10 text-2xl lg:text-3xl font-serif text-white text-center px-6 leading-tight drop-shadow-lg">
                       {offer.title}
                     </h3>
+                  </div>
 
-                    {/* Description */}
-                    <p
-                      className="text-sm leading-relaxed mb-8 flex-1"
-                      style={{ color: "rgba(255,255,255,0.55)" }}
-                    >
-                      {offer.description}
-                    </p>
+                  {/* Body List */}
+                  <div className="flex flex-col flex-1 px-8 lg:px-10 py-8 relative -mt-6">
+                    {/* Glow inside edges */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${tc.accent}15 0%, transparent 60%)` }} />
+                    
+                    <ul className="flex flex-col gap-6 relative z-10 mb-10 flex-1 mt-4">
+                      {features.map((feature, fIdx) => (
+                        <li key={fIdx} className="flex gap-4 items-start">
+                          <span className="w-5 h-5 mt-0.5 rounded-full flex flex-col items-center justify-center border shrink-0 bg-black/50 shadow-inner" style={{ borderColor: `${tc.accent}50`, color: tc.accent }}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          </span>
+                          <span className="text-white/80 text-[15px] font-light leading-relaxed drop-shadow-sm">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    {/* Bottom CTA & Deliverable */}
+                    <div className="mt-auto w-full flex flex-col items-center gap-8 relative z-10">
+                      <div className="text-center w-full pt-8 border-t border-white/10">
+                        <span className="block text-[9px] uppercase tracking-[0.2em] mb-2 font-bold" style={{ color: tc.labelColor }}>Deliverable</span>
+                        <span className="text-white text-[15px] block font-medium leading-snug">
+                          {offer.deliverable}
+                        </span>
+                      </div>
 
-                    {/* Deliverable row */}
-                    <div
-                      className="pt-5 mt-auto"
-                      style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
-                    >
-                      <span
-                        className="block text-[9px] uppercase tracking-widest mb-2"
-                        style={{ color: tc.deliverableColor }}
+                      <button
+                        className="w-full py-4 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 relative overflow-hidden group/btn"
+                        style={{
+                          background: `linear-gradient(90deg, ${tc.accent}20 0%, ${tc.accent}05 100%)`,
+                          border: `1px solid ${tc.accent}40`,
+                        }}
                       >
-                        Deliverable
-                      </span>
-                      <span className="text-white text-sm block font-medium">
-                        {offer.deliverable}
-                      </span>
+                        <span className="relative z-10 transition-transform duration-300 group-hover/btn:scale-105 inline-block text-white">
+                          INITIATE
+                        </span>
+                        <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)` }} />
+                        <div className="absolute top-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)` }} />
+                      </button>
                     </div>
                   </div>
                 </div>
