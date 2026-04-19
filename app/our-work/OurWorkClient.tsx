@@ -87,7 +87,7 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                 </p>
                 <span
                   ref={counterRef}
-                  className="text-white/30 text-[clamp(1rem,1.2vw,1.4rem)] font-light opacity-0"
+                  className="text-white/80 text-[clamp(1rem,1.2vw,1.4rem)] font-light opacity-0"
                 >
                   {pillars.length}
                 </span>
@@ -102,7 +102,7 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
               </p>
 
               <div className="pt-6 mt-2 border-t border-white/20">
-                <p className="text-white/70 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed">
+                <p className="text-white/90 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed">
                   GOTT WALD is not a collection of services. It is a unified
                   architecture: modular components, one standard, one language of
                   delivery—built to turn complexity into clarity, clarity into
@@ -119,7 +119,7 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                   marginTop: isExpanded ? "1rem" : "0",
                 }}
               >
-                <div className="flex flex-col gap-5 text-white/70 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed max-w-2xl">
+                <div className="flex flex-col gap-5 text-white/90 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed max-w-2xl">
                   <p>
                     We don&apos;t market partnerships. <br />
                     <span className="text-white/90">

@@ -128,29 +128,25 @@ export default function PartnershipsClient() {
         });
       }
 
-      // 2. Reveal Up animations — fire-once, GPU-composited
-      const reveals = gsap.utils.toArray(
-        ".reveal-up",
-        pageRef.current!,
-      ) as HTMLElement[];
-      reveals.forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.4,
-            ease: "expo.out",
-            force3D: true,
-            clearProps: "transform",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 88%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
+      // 2. Reveal Up animations — Grouped Batching for High Performance
+      ScrollTrigger.batch(".reveal-up", {
+        start: "top 88%",
+        onEnter: (batch) => {
+          gsap.fromTo(
+            batch,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.2,
+              ease: "expo.out",
+              stagger: 0.1,
+              force3D: true,
+              clearProps: "transform",
+            }
+          );
+        },
+        once: true,
       });
 
       // 3. Standards Horizontal Scroll
@@ -406,7 +402,7 @@ export default function PartnershipsClient() {
                   <span className="parallax-fast inline-block whitespace-nowrap">
                     PARTNERSHIPS
                   </span>
-                  <span className="parallax-slow inline-block text-white/90">
+                  <span className="parallax-slow inline-block text-white/80 ">
                     AT GOTT WALD
                   </span>
                 </h1>
@@ -479,7 +475,7 @@ export default function PartnershipsClient() {
 
           {/* Awwwards Scroll Indicator */}
           <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-4 z-20 pointer-events-none">
-            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-medium">
               Scroll
             </span>
             <div className="w-px h-16 bg-white/10 relative overflow-hidden">
@@ -489,9 +485,9 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 2: GOTT WALD STANDARD (3 statements) ── */}
-        <section className="px-gutter py-[18vh] bg-[#0a0a0a] relative z-10 border-t border-white/5">
+        <section className="px-gutter py-[18vh] bg-[#0c0e14] relative z-10 border-t border-white/5">
           <div className="max-w-4xl mx-auto text-center space-y-12 reveal-up">
-            <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold">
+            <p className="text-sm tracking-[0.45em] uppercase text-turquoise font-bold">
               What we are
             </p>
             <div className="space-y-6">
@@ -501,7 +497,7 @@ export default function PartnershipsClient() {
               <p className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.3] tracking-tight">
                 GOTT WALD is a standard.
               </p>
-              <p className="text-2xl md:text-3xl font-serif italic text-white/55 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-2xl md:text-3xl font-serif italic text-white/70 leading-relaxed max-w-2xl mx-auto">
                 We only work with companies that have principle — and can
                 deliver. When both are true, partnership becomes inevitable.
               </p>
@@ -522,7 +518,7 @@ export default function PartnershipsClient() {
               <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
                 A 7-LINE
                 <br />
-                <span className="text-white/30">MANIFESTO</span>
+                <span className="text-white/60">MANIFESTO</span>
               </h2>
             </div>
             <div className="flex flex-col border-t border-white/10">
@@ -568,7 +564,7 @@ export default function PartnershipsClient() {
                   ALIGNMENT
                 </h2>
                 <div className="w-16 h-1 bg-white mt-8 mb-6" />
-                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white/30">
+                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white/70">
                   NOT
                   <br />
                   PROCUREMENT.
@@ -633,7 +629,7 @@ export default function PartnershipsClient() {
                   {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
                     <div
                       key={i}
-                      className={`arch-card group relative bg-[#080808] p-8 lg:p-10 rounded-2xl border border-white/8 overflow-hidden flex flex-col justify-between cursor-default transition-[border-color,box-shadow] duration-700 ${bentoClasses[i]}`}
+                      className={`arch-card group relative bg-[#0a0c12] p-8 lg:p-10 rounded-2xl border border-white/8 hover:border-[var(--color-petrol)]/40 overflow-hidden flex flex-col justify-between cursor-default transition-[border-color,box-shadow] duration-700 ${bentoClasses[i]}`}
                       onMouseMove={(e) => {
                         const el = e.currentTarget;
                         const rect = el.getBoundingClientRect();
@@ -646,7 +642,7 @@ export default function PartnershipsClient() {
                       }}
                     >
                       {/* Solid opaque bg to block fluid bg bleed */}
-                      <div className="absolute inset-0 bg-[#080808] rounded-2xl z-0" />
+                      <div className="absolute inset-0 bg-[#0a0c12] rounded-2xl z-0" />
 
                       {/* Spotlight Glow Background */}
                       <div
@@ -687,7 +683,7 @@ export default function PartnershipsClient() {
                           <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${i === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
                             {arch.title}
                           </h3>
-                          <p className="text-white/80 text-base font-light leading-relaxed group-hover:text-white/60 transition-colors duration-700">
+                          <p className="text-white/80 text-base font-light leading-relaxed group-hover:text-white/80 transition-colors duration-700">
                             {arch.desc}
                           </p>
                         </div>
@@ -713,7 +709,7 @@ export default function PartnershipsClient() {
                 <h2 className="text-[clamp(2rem,max(3.5vw,4.5vh),5.5rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
                   OUR
                   <br />
-                  <span className="text-white/30">PARTNERSHIP</span>
+                  <span className="text-white/70">PARTNERSHIP</span>
                   <br />
                   STANDARD
                 </h2>
@@ -723,7 +719,7 @@ export default function PartnershipsClient() {
                   <span className="w-8 h-px bg-white/20" />
                   <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
                 </div>
-                <p className="text-[10px] tracking-[0.45em] text-white/50 uppercase font-semibold text-right">
+                <p className="text-[10px] tracking-[0.45em] text-white/70 uppercase font-semibold text-right">
                   Scroll horizontally
                   <br />
                   to explore
@@ -762,11 +758,11 @@ export default function PartnershipsClient() {
                   </div>
 
                   {/* Multi-layer dramatic gradient overlay to ensure text readability */}
-                  <div className="absolute inset-0 z-1 bg-gradient-to-t from-black via-black/70 to-transparent" />
-                  <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
+                  <div className="absolute inset-0 z-1 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                  <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
                   
                   {/* Cinematic vignette */}
-                  <div className="absolute inset-0 z-1 opacity-60"
+                  <div className="absolute inset-0 z-1 opacity-20"
                     style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%)' }}
                   />
 
@@ -774,12 +770,12 @@ export default function PartnershipsClient() {
                   <div
                     className="absolute inset-0 z-2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
                     style={{
-                      background: `radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(212,175,55,0.12), transparent 60%)`,
+                      background: `radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(10,147,150,0.12), transparent 60%)`,
                     }}
                   />
 
                   {/* Content — Positioned relative inside the h-full flex container */}
-                  <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 border-t border-white/5 group-hover:border-gold/20 transition-colors duration-700">
+                  <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 border-t-2 border-white/5 group-hover:border-[var(--color-turquoise)]/60 group-hover:-translate-y-[2px] transition-all duration-700 group-hover:shadow-[0_-4px_30px_rgba(10,147,150,0.3),_inset_0_4px_20px_rgba(10,147,150,0.1)]">
 
                     {/* TOP: Counter + minimal HUD */}
                     <div className="flex items-start justify-between">
@@ -811,7 +807,7 @@ export default function PartnershipsClient() {
 
                       {/* Bottom meta row */}
                       <div className="flex items-center justify-between pt-3 border-t border-white/15 group-hover:border-gold/30 transition-colors duration-700">
-                        <span className="text-[9px] tracking-[0.45em] uppercase text-white/50 font-medium">
+                        <span className="text-[9px] tracking-[0.45em] uppercase text-white/70 font-medium">
                           GOTT WALD Standard
                         </span>
                         <span className="text-gold opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-sm">
@@ -831,7 +827,7 @@ export default function PartnershipsClient() {
               {/* CTA End Card */}
               <div className="relative flex flex-col items-center justify-center w-[60vw] md:w-[35vw] lg:w-[22vw] h-full shrink-0 bg-[#0a0a0a] border-t border-white/5 px-10 border-l border-white/10">
                 <div className="w-px h-16 bg-linear-to-b from-transparent via-gold to-transparent mb-6" />
-                <p className="text-center text-xs tracking-[0.4em] uppercase text-white/40 font-bold mb-3">
+                <p className="text-center text-xs tracking-[0.4em] uppercase text-white/70 font-bold mb-3">
                   All of These
                 </p>
                 <p className="text-center text-xl lg:text-2xl font-black uppercase text-white leading-tight mb-8">
@@ -937,7 +933,7 @@ export default function PartnershipsClient() {
                     >
                       <div className="flex items-center gap-6 lg:gap-8">
                         <span
-                          className={`text-base font-mono transition-colors ${isActive ? "text-gold" : "text-white/50"}`}
+                          className={`text-base font-mono transition-colors ${isActive ? "text-gold" : "text-white/70"}`}
                         >
                           {domain.id}
                         </span>
@@ -948,7 +944,7 @@ export default function PartnershipsClient() {
                         </h3>
                       </div>
                       <div className="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0">
-                        <span className="text-xl font-light text-white/50">
+                        <span className="text-xl font-light text-white/70">
                           {isActive ? "-" : "+"}
                         </span>
                       </div>
@@ -986,13 +982,13 @@ export default function PartnershipsClient() {
         <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
-              <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/80 font-bold mb-6">
                 How It Works
               </p>
               <h2 className="text-[clamp(3rem,6vw,7rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
                 SHORT. CLEAR.
                 <br />
-                <span className="text-white/30">NO THEATRE.</span>
+                <span className="text-white/60">NO THEATRE.</span>
               </h2>
             </div>
 
@@ -1026,13 +1022,13 @@ export default function PartnershipsClient() {
         >
           <div className="max-w-4xl mx-auto">
             <div className="form-reveal mb-20">
-              <p className="text-sm tracking-[0.45em] uppercase text-gold/60 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-gold/80 font-bold mb-6">
                 Partnership Application
               </p>
               <h2 className="text-[clamp(3rem,6.5vw,7rem)] font-black tracking-tighter uppercase mb-8 leading-[0.9]">
                 GOTT WALD
                 <br />
-                <span className="text-white/30">APPLICATION</span>
+                <span className="text-white/60">APPLICATION</span>
               </h2>
               <p className="text-xl lg:text-2xl text-white/80 font-light leading-relaxed max-w-2xl">
                 If foundation and proof are real — you&apos;re welcome. If not —
@@ -1117,7 +1113,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="contact"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Main Contact
                   </label>
@@ -1220,7 +1216,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="capabilities"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Top 3 capabilities
                   </label>
@@ -1236,7 +1232,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="proof"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Proof of work
                   </label>
@@ -1255,7 +1251,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="references"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     References (optional)
                   </label>
@@ -1271,7 +1267,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="capacity"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Capacity
                   </label>
@@ -1287,7 +1283,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="budget"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Typical project range
                   </label>
@@ -1306,7 +1302,7 @@ export default function PartnershipsClient() {
                 />
                 <label
                   htmlFor="values"
-                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                 >
                   Values Fit (Required)
                 </label>
@@ -1324,7 +1320,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="why"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Why GOTT WALD?
                   </label>
@@ -1339,7 +1335,7 @@ export default function PartnershipsClient() {
                   />
                   <label
                     htmlFor="constraints"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/50 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Anything we must know?
                   </label>

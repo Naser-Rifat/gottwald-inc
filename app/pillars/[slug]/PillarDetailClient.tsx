@@ -2,15 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useMemo } from "react";
 import gsap from "gsap";
-import type { Pillar, ContentBlock } from "@/lib/types/pillars";
+import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
+import { projects as mockProjects } from "@/lib/projectData";
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — matched to homepage globals.css
    ───────────────────────────────────────────────────────────── */
 const GOLD = "#d4af37";
-const BG_DARK = "#000000";
+const COPPER = "#b87333";
+const SILVER = "#c0c0c0";
+const TURQUOISE = "#0a9396";
+const BG_DARK = "#040910";
 const BG_PANEL = "#0a0a0e";
 const BG_LIGHT = "#f5f0eb";
 const TXT_LIGHT = "#f5f5f5";
@@ -19,6 +23,12 @@ const TXT_DARK = "#1c1d21";
 const TXT_DARK_MUTED = "rgba(28,29,33,0.5)";
 const BORDER_DARK = "rgba(212,175,55,0.12)";
 const BORDER_LIGHT = "rgba(28,29,33,0.08)";
+
+/** Fallback: look up mock offers by slug when the API doesn't provide them yet */
+function getOffersForPillar(slug: string): Offer[] | undefined {
+  const mock = mockProjects.find((p) => p.slug === slug);
+  return mock?.offers as Offer[] | undefined;
+}
 
 interface Props {
   project: Pillar;
@@ -31,6 +41,16 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   const panelRefs = useRef<HTMLElement[]>([]);
   const progressRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
+
+  // Merge API offers with fallback mock offers until backend supports the field
+  const enrichedProject = useMemo(() => {
+    if (project.offers && project.offers.length > 0) return project;
+    const fallbackOffers = getOffersForPillar(project.slug);
+    if (fallbackOffers) {
+      return { ...project, offers: fallbackOffers };
+    }
+    return project;
+  }, [project]);
 
   const registerPanel = useCallback((el: HTMLElement | null, idx: number) => {
     if (el) panelRefs.current[idx] = el;
@@ -225,7 +245,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     return () => mm.revert();
   }, []);
 
-  const totalPanels = 2 + (project.contentBlocks?.length || 0);
+  const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
+  const totalPanels = 2 + (enrichedProject.contentBlocks?.length || 0) + (hasOffers ? 1 : 0);
 
   return (
     <div
@@ -528,9 +549,19 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           </div>
         </section>
 
+        {/* ═══════ OFFERS PANEL ═══════ */}
+        {enrichedProject.offers && enrichedProject.offers.length > 0 && (
+          <OffersBlock
+            project={enrichedProject}
+            panelIdx={1}
+            ref={(el) => registerPanel(el, 1)}
+          />
+        )}
+
         {/* ═══════ DYNAMIC CMS PANELS ═══════ */}
-        {project.contentBlocks?.map((block, i) => {
-          const panelIdx = i + 1;
+        {enrichedProject.contentBlocks?.map((block, i) => {
+          const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
+          const panelIdx = i + (hasOffers ? 2 : 1);
           switch (block.type) {
             case "showcase":
               return (
@@ -874,6 +905,201 @@ function SectionLabel({ idx, text, light }: { idx: number; text: string; light?:
     </div>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   OFFERS BLOCK COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+
+const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number }>(
+  function OffersBlock({ project, panelIdx }, ref) {
+    if (!project.offers || project.offers.length === 0) return null;
+
+    /* ── Tier config — each metal has its own colour language ── */
+    const TIER_CONFIG = {
+      copper: {
+        gradient: "linear-gradient(135deg, rgba(192,120,64,0.18) 0%, rgba(192,120,64,0.06) 60%, transparent 100%)",
+        headerGlow: "rgba(192,120,64,0.55)",
+        border: "rgba(192,120,64,0.35)",
+        borderHover: "rgba(192,120,64,0.7)",
+        accent: "#c07840",
+        shadow: "0 12px 48px rgba(192,120,64,0.2), 0 0 0 1px rgba(192,120,64,0.12)",
+        badgeBg: "rgba(192,120,64,0.12)",
+        label: "Copper",
+        labelColor: "#c07840",
+        deliverableColor: "rgba(192,120,64,0.8)",
+      },
+      silver: {
+        gradient: "linear-gradient(135deg, rgba(184,192,204,0.15) 0%, rgba(184,192,204,0.05) 60%, transparent 100%)",
+        headerGlow: "rgba(184,192,204,0.55)",
+        border: "rgba(184,192,204,0.30)",
+        borderHover: "rgba(184,192,204,0.65)",
+        accent: "#b8c0cc",
+        shadow: "0 12px 48px rgba(184,192,204,0.15), 0 0 0 1px rgba(184,192,204,0.1)",
+        badgeBg: "rgba(184,192,204,0.1)",
+        label: "Silver",
+        labelColor: "#b8c0cc",
+        deliverableColor: "rgba(184,192,204,0.8)",
+      },
+      gold: {
+        gradient: "linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.07) 60%, transparent 100%)",
+        headerGlow: "rgba(212,175,55,0.65)",
+        border: "rgba(212,175,55,0.40)",
+        borderHover: "rgba(212,175,55,0.80)",
+        accent: "#d4af37",
+        shadow: "0 12px 48px rgba(212,175,55,0.25), 0 0 0 1px rgba(212,175,55,0.15)",
+        badgeBg: "rgba(212,175,55,0.12)",
+        label: "Gold",
+        labelColor: "#d4af37",
+        deliverableColor: "rgba(212,175,55,0.85)",
+      },
+    } as const;
+
+    type TierKey = keyof typeof TIER_CONFIG;
+
+    return (
+      <section
+        ref={ref}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15"
+        style={{
+          background: "linear-gradient(180deg, rgba(7,12,20,1) 0%, rgba(2,14,20,1) 100%)",
+        }}
+      >
+        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0">
+          {/* Section header */}
+          <div className="panel-label flex flex-col gap-2 mb-12">
+            <div className="flex items-center gap-3 mb-2">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: "#d4af37" }}
+              />
+              <span
+                className="text-[10px] tracking-[0.25em] uppercase font-semibold"
+                style={{ color: "rgba(255,255,255,0.5)" }}
+              >
+                {String(panelIdx + 1).padStart(2, "0")} — Strategic Offers
+              </span>
+            </div>
+            <h3 className="panel-heading text-[clamp(1.5rem,3vw,2.5rem)] font-serif italic mt-1 opacity-90 text-white">
+              Engagement Matrix
+            </h3>
+            {/* Copper · Silver · Gold legend strip */}
+            <div className="flex items-center gap-6 mt-4">
+              {(["copper", "silver", "gold"] as TierKey[]).map((t) => (
+                <div key={t} className="flex items-center gap-2">
+                  <span
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: TIER_CONFIG[t].accent, boxShadow: `0 0 8px ${TIER_CONFIG[t].accent}` }}
+                  />
+                  <span
+                    className="text-[9px] tracking-[0.25em] uppercase font-bold"
+                    style={{ color: TIER_CONFIG[t].labelColor }}
+                  >
+                    {TIER_CONFIG[t].label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Offer cards */}
+          <div className="panel-body flex flex-col lg:flex-row gap-5 lg:gap-6 w-full">
+            {project.offers.map((offer, idx) => {
+              const tierKey = (offer.tier as TierKey) in TIER_CONFIG
+                ? (offer.tier as TierKey)
+                : "gold";
+              const tc = TIER_CONFIG[tierKey];
+
+              return (
+                <div
+                  key={idx}
+                  className="flex-1 flex flex-col rounded-2xl overflow-hidden group transition-all duration-500 cursor-default"
+                  style={{
+                    background: tc.gradient,
+                    border: `1px solid ${tc.border}`,
+                    boxShadow: tc.shadow,
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = tc.borderHover;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = tc.border;
+                  }}
+                >
+                  {/* Metallic header bar */}
+                  <div
+                    className="w-full h-1.5"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${tc.headerGlow}, transparent)`,
+                    }}
+                  />
+
+                  <div className="flex flex-col flex-1 p-7 lg:p-8">
+                    {/* Tier badge */}
+                    <div className="flex items-center justify-between mb-8">
+                      <span
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold"
+                        style={{
+                          background: tc.badgeBg,
+                          color: tc.labelColor,
+                          border: `1px solid ${tc.border}`,
+                        }}
+                      >
+                        <span
+                          className="w-1.5 h-1.5 rounded-full"
+                          style={{ background: tc.accent, boxShadow: `0 0 6px ${tc.accent}` }}
+                        />
+                        {tc.label}
+                      </span>
+                      <span
+                        className="text-[10px] tracking-[0.2em] uppercase font-medium"
+                        style={{ color: "rgba(255,255,255,0.25)" }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3
+                      className="text-[clamp(1.1rem,1.6vw,1.6rem)] font-serif mb-4 leading-tight"
+                      style={{ color: "rgba(255,255,255,0.95)" }}
+                    >
+                      {offer.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p
+                      className="text-sm leading-relaxed mb-8 flex-1"
+                      style={{ color: "rgba(255,255,255,0.55)" }}
+                    >
+                      {offer.description}
+                    </p>
+
+                    {/* Deliverable row */}
+                    <div
+                      className="pt-5 mt-auto"
+                      style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+                    >
+                      <span
+                        className="block text-[9px] uppercase tracking-widest mb-2"
+                        style={{ color: tc.deliverableColor }}
+                      >
+                        Deliverable
+                      </span>
+                      <span className="text-white text-sm block font-medium">
+                        {offer.deliverable}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    );
+  }
+);
+
 
 /* ═══════════════════════════════════════════════════════════════
    CMS BLOCK COMPONENTS

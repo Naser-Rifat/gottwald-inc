@@ -19,6 +19,13 @@ export interface PillarTheme {
   accent: string;
 }
 
+export interface Offer {
+  title: string;
+  tier: "copper" | "silver" | "gold";
+  description: string;
+  deliverable: string;
+}
+
 export interface Pillar {
   slug: string;
   title: string;
@@ -31,4 +38,5 @@ export interface Pillar {
   launchUrl?: string;
   theme: PillarTheme;
   contentBlocks?: ContentBlock[];
+  offers?: Offer[];
 }

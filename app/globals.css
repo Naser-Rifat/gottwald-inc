@@ -1,16 +1,17 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @theme {
-  --color-base: #000000;
-  --color-text-primary: #1c1d21;
-  --color-text-secondary: rgba(255, 255, 255, 0.5);
+  /* Base — deep navy, not pure black — gives breathing room */
+  --color-base: #070c14;
+  --color-text-primary: #f0f2f5;
+  --color-text-secondary: rgba(240, 242, 245, 0.65);
 
-  /* Lusion Journey Palette */
-  --color-petrol: #005f73;
-  --color-turquoise: #0a9396;
-  --color-gold: #d4af37;
-  --color-silver: #c0c0c0;
-  --color-copper: #b87333;
+  /* CI Palette — Petrol · Turquoise · Copper · Silver · Gold */
+  --color-petrol: #006d84;      /* Petrol: vibrant teal-blue */
+  --color-turquoise: #12a8ac;   /* Turquoise: bright CI accent */
+  --color-gold: #d4af37;        /* Gold: premium highlight */
+  --color-silver: #b8c0cc;      /* Silver: cool metallic */
+  --color-copper: #c07840;      /* Copper: warm metallic */
 
   --spacing-gutter: 5vw;
   --font-sans: var(--font-sans);
@@ -49,6 +50,10 @@
     opacity: 1;
     transition: opacity 0.1s;
     overscroll-behavior-y: none;
+    /* Subtle petrol-turquoise noise on the body itself */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 30%, rgba(0,109,132,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 70%, rgba(18,168,172,0.03) 0%, transparent 60%);
   }
 
   body.no-scroll {
@@ -81,17 +86,19 @@
 a.button {
   padding: 16px 26px;
   border-radius: 26px;
-  background-color: #2b2e3a;
+  background-color: rgba(0,109,132,0.15);
+  border: 1px solid rgba(18,168,172,0.25);
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
   color: white;
   cursor: pointer;
   display: inline-block;
 }
 
 a.button:hover {
-  background-color: #0016ec;
+  background-color: rgba(18,168,172,0.25);
+  border-color: rgba(18,168,172,0.5);
 }
 
 /* ===== Project Tile Modal ===== */
@@ -195,8 +202,8 @@ button,
 
 [data-magnetic]:hover {
   transform: scale(1.02);
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 30px rgba(18, 168, 172, 0.12), 0 0 60px rgba(212, 175, 55, 0.08);
+  border-color: rgba(18, 168, 172, 0.35);
 }
 
 /* Form inputs: refined focus state */
@@ -204,8 +211,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 1px 0 0 rgba(212, 175, 55, 0.3);
+  border-color: rgba(10, 147, 150, 0.5); /* Turquoise focus ring */
+  box-shadow: 0 1px 0 0 rgba(10, 147, 150, 0.3);
 }
 
 /* ===== GPU Layer Promotion for GSAP-Animated Elements ===== */

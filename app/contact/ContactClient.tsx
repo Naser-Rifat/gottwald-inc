@@ -168,7 +168,7 @@ export default function ContactClient() {
               <h2 className="text-3xl lg:text-5xl font-bold tracking-tighter uppercase">
                 Send us a message
               </h2>
-              <p className="mt-4 text-white/50 text-lg max-w-md">
+              <p className="mt-4 text-white/80 text-lg max-w-md">
                 We review all inquiries. If there is alignment, our team will
                 coordinate a secure briefing.
               </p>

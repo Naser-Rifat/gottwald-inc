@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Pillar } from "@/lib/types/pillars";
@@ -30,6 +30,8 @@ export default function PillarCard({
   const titleRef = useRef<HTMLHeadingElement>(null);
   const tagsRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [offersExpanded, setOffersExpanded] = useState(false);
+  const offersWrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -92,16 +94,6 @@ export default function PillarCard({
         "-=0.4",
       );
 
-      gsap.to(image, {
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: card,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.6,
-        },
-      });
     }, card);
 
     return () => ctx.revert();
@@ -168,7 +160,7 @@ export default function PillarCard({
     >
       <div
         ref={imageWrapRef}
-        className={`relative overflow-hidden rounded-xl ${imageClassName}`}
+        className={`relative overflow-hidden rounded-xl ${imageClassName} shadow-[0_4px_25px_rgba(10,147,150,0.1)] transition-shadow duration-500 group-hover:shadow-[0_8px_30px_rgba(10,147,150,0.25)] ring-1 ring-white/5 ring-inset`}
         style={{ clipPath: "inset(100% 0 0 0)", minHeight: "180px" }}
       >
         <div
@@ -217,15 +209,29 @@ export default function PillarCard({
                   img.style.display = "none";
                 }}
               />
+              {/* Metallic Tint Overlay for Visual Pop */}
+              <div 
+                className="absolute inset-0 pointer-events-none mix-blend-color"
+                style={{
+                  background: "linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(192,120,64,0.15) 50%, rgba(160,165,170,0.15) 100%)"
+                }}
+              />
+              <div 
+                className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-40"
+                style={{
+                  background: "linear-gradient(45deg, rgba(18,168,172,0.4) 0%, transparent 100%)"
+                }}
+              />
               {/* Optional: Add a dark gradient at bottom for text readability if image exists */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent pointer-events-none mix-blend-multiply" />
+              <div className="absolute inset-x-0 top-0 h-[2px] bg-turquoise/30 pointer-events-none group-hover:bg-turquoise/60 transition-colors" />
             </div>
           )}
 
           {/* 3. Foreground Text / Accents (Sits above background and image) */}
           <div className="absolute inset-0 pointer-events-none select-none z-20">
             {/* Left accent bar */}
-            <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-gold/40 via-gold/10 to-transparent" />
+            <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-turquoise/40 via-petrol/20 to-transparent" />
 
             {/* Large index number — editorial hero */}
             <div className="absolute top-6 right-6 sm:top-8 sm:right-8 mix-blend-screen">
@@ -240,8 +246,8 @@ export default function PillarCard({
             {/* Bottom content — title integrated into the card */}
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 drop-shadow-lg">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-gold/50" />
-                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/60 uppercase font-medium">
+                <div className="w-1.5 h-1.5 rounded-full bg-turquoise group-hover:shadow-[0_0_8px_rgba(10,147,150,0.8)] transition-shadow" />
+                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/80 uppercase font-bold drop-shadow-md">
                   Pillar {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -268,7 +274,7 @@ export default function PillarCard({
       >
         {pillar.tags.map((tag, i) => (
           <span key={tag} className="flex items-center">
-            <span className="text-[10px] tracking-[0.15em] text-white/35 uppercase font-normal">
+            <span className="text-[10px] tracking-[0.15em] text-white/70 uppercase font-normal">
               {tag}
             </span>
             {i < pillar.tags.length - 1 && (
@@ -286,6 +292,89 @@ export default function PillarCard({
           {pillar.title}
         </h3>
       </div>
+
+      {/* Strategic Offers Accordion */}
+      {pillar.offers && pillar.offers.length > 0 && (
+        <div className="mt-4 flex flex-col w-full">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setOffersExpanded((prev) => !prev);
+            }}
+            className="flex items-center gap-3 w-fit text-[10px] tracking-[0.2em] font-bold uppercase transition-colors"
+            style={{ color: offersExpanded ? "rgba(18,168,172,1)" : "rgba(255,255,255,0.5)" }}
+          >
+            <span
+              className="w-4 h-4 rounded-full border flex items-center justify-center transition-all duration-300"
+              style={{
+                borderColor: offersExpanded ? "rgba(18,168,172,0.5)" : "rgba(255,255,255,0.2)",
+              }}
+            >
+              <span className="font-light text-[10px] leading-none -mt-[1px]">
+                {offersExpanded ? "−" : "+"}
+              </span>
+            </span>
+            {offersExpanded ? "HIDE STRATEGIC OFFERS" : "VIEW STRATEGIC OFFERS"}
+          </button>
+
+          <div
+            ref={offersWrapRef}
+            className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] w-full"
+            style={{
+              maxHeight: offersExpanded ? "600px" : "0px",
+              opacity: offersExpanded ? 1 : 0,
+              marginTop: offersExpanded ? "1rem" : "0px",
+            }}
+          >
+            <div className="flex flex-col gap-2 w-full pr-4 pb-2">
+              {pillar.offers.map((offer, i) => {
+                const isCopper = offer.tier === "copper";
+                const isSilver = offer.tier === "silver";
+                const color = isCopper
+                  ? "#c07840"
+                  : isSilver
+                    ? "#a0a5aa"
+                    : "#d4af37";
+                const bgColors = isCopper
+                  ? "rgba(192,120,64,0.05)"
+                  : isSilver
+                    ? "rgba(160,165,170,0.05)"
+                    : "rgba(212,175,55,0.05)";
+
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3.5 rounded-lg border border-white/5 transition-colors group/offer cursor-default"
+                    style={{ backgroundColor: bgColors }}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <div className="flex items-center gap-2 min-w-[70px]">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: color, boxShadow: `0 0 6px ${color}` }}
+                      />
+                      <span
+                        className="text-[9px] uppercase tracking-[0.2em] font-bold"
+                        style={{ color }}
+                      >
+                        {offer.tier}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-1 sm:gap-4">
+                      <span className="text-white/90 text-sm font-medium">
+                        {offer.title}
+                      </span>
+                      <span className="text-[10px] tracking-wider uppercase text-white/40">
+                        {offer.deliverable}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </Link>
   );
 }

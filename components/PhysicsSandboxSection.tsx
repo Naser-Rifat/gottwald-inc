@@ -223,7 +223,16 @@ export default function PhysicsSandboxSection() {
           {/* Left: Label + Title */}
           <div className="hero-title-block flex flex-col gap-6 lg:gap-8 w-full lg:w-auto">
             <div className="hero-top-label flex items-center gap-3 opacity-0">
-              <span className="text-[10px] tracking-[0.2em] font-bold uppercase text-white/50">
+              {/* CI pill */}
+              <span
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[9px] tracking-[0.2em] font-bold uppercase"
+                style={{
+                  borderColor: "rgba(18,168,172,0.35)",
+                  color: "rgba(18,168,172,0.9)",
+                  backgroundColor: "rgba(18,168,172,0.06)",
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-turquoise/80 animate-pulse" />
                 Gott Wald Area
               </span>
             </div>
@@ -249,9 +258,12 @@ export default function PhysicsSandboxSection() {
               </span>
             </h1>
 
-            {/* Accent line under heading */}
+            {/* Accent line under heading — petrol → turquoise → gold */}
             <div
-              className="accent-line h-px w-full max-w-[300px] bg-linear-to-r from-gold/60 to-transparent origin-left"
+              className="accent-line h-[2px] w-full max-w-[320px] origin-left"
+              style={{
+                background: "linear-gradient(90deg, rgba(18,168,172,0.8) 0%, rgba(0,109,132,0.6) 40%, rgba(212,175,55,0.4) 80%, transparent 100%)",
+              }}
             />
           </div>
 
@@ -262,10 +274,14 @@ export default function PhysicsSandboxSection() {
               ref={orbRef}
               className="hidden lg:flex w-32 h-32 relative items-center justify-center mix-blend-screen pointer-events-none mb-4 scale-0 opacity-0"
             >
-              <div className="orb-ring-1 absolute inset-0 border border-gold/30 rounded-full" />
-              <div className="orb-ring-2 absolute inset-2 border border-white/10 rounded-full" />
-              <div className="orb-glow absolute inset-8 bg-gold/5 blur-xl rounded-full" />
-              <div className="w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_15px_rgba(201,168,76,0.8)]" />
+              {/* Petrol outer ring */}
+              <div className="orb-ring-1 absolute inset-0 rounded-full" style={{ border: "1px solid rgba(0,109,132,0.5)" }} />
+              {/* Turquoise inner ring */}
+              <div className="orb-ring-2 absolute inset-3 rounded-full" style={{ border: "1px solid rgba(18,168,172,0.3)" }} />
+              {/* Petrol core glow */}
+              <div className="orb-glow absolute inset-6 blur-xl rounded-full" style={{ background: "rgba(18,168,172,0.12)" }} />
+              {/* Gold center dot */}
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#d4af37", boxShadow: "0 0 12px rgba(212,175,55,0.9), 0 0 30px rgba(18,168,172,0.4)" }} />
             </div>
 
             {/* Scroll indicator */}
