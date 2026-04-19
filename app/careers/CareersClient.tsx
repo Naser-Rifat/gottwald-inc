@@ -8,6 +8,18 @@ import FooterSection from "@/components/FooterSection";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ── Floating Particles Data (CSS-only, no JS overhead) ──
+const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
+  id: i,
+  size: 2 + Math.random() * 3,
+  left: Math.random() * 100,
+  delay: Math.random() * 20,
+  duration: 30 + Math.random() * 30,
+  opacity: 0.08 + Math.random() * 0.15,
+  color: i % 3 === 0 ? "turquoise" : i % 3 === 1 ? "gold" : "white",
+  sway: 20 + Math.random() * 40,
+}));
+
 const PILLARS = [
   {
     letter: "A",
@@ -130,6 +142,8 @@ const PILLARS = [
 export default function CareersClient() {
   const pageRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const heroRef = useRef<HTMLHeadingElement>(null);
+  const separatorRef = useRef<HTMLDivElement>(null);
   const [openPillar, setOpenPillar] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -210,6 +224,48 @@ export default function CareersClient() {
           },
         );
       });
+
+      // #5 — Hero breathing pulse
+      if (heroRef.current) {
+        gsap.to(heroRef.current, {
+          scale: 1.008,
+          duration: 4,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          transformOrigin: "left center",
+        });
+      }
+
+      // #9 — Animated separator line
+      if (separatorRef.current) {
+        gsap.fromTo(
+          separatorRef.current,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 1.5,
+            ease: "power4.inOut",
+            scrollTrigger: {
+              trigger: separatorRef.current,
+              start: "top 85%",
+            },
+          },
+        );
+      }
+
+      // Eyebrow reveal
+      gsap.fromTo(
+        ".careers-eyebrow",
+        { clipPath: "inset(0 50% 0 50%)", opacity: 0 },
+        {
+          clipPath: "inset(0 0% 0 0%)",
+          opacity: 1,
+          duration: 1,
+          ease: "power4.inOut",
+          delay: 0.3,
+        },
+      );
     }, pageRef);
 
     return () => ctx.revert();
@@ -218,8 +274,47 @@ export default function CareersClient() {
   return (
     <div
       ref={pageRef}
-      className="bg-[#0a0a0a] min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black"
+      className="min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black relative"
     >
+      {/* #1 — Dark overlay for content readability — lets fluid bleed through edges */}
+      <div
+        className="fixed inset-0 pointer-events-none -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(6,6,6,0.88) 0%, rgba(6,6,6,0.7) 50%, rgba(6,6,6,0.5) 100%)",
+        }}
+      />
+
+      {/* #2 — CSS Floating Particles */}
+      <div className="fixed inset-0 pointer-events-none -z-[5] overflow-hidden" aria-hidden="true">
+        {PARTICLES.map((p) => (
+          <div
+            key={p.id}
+            className="absolute rounded-full"
+            style={{
+              width: p.size,
+              height: p.size,
+              left: `${p.left}%`,
+              bottom: "-5%",
+              opacity: p.opacity,
+              backgroundColor:
+                p.color === "turquoise"
+                  ? "rgba(18,168,172,0.6)"
+                  : p.color === "gold"
+                    ? "rgba(212,175,55,0.5)"
+                    : "rgba(255,255,255,0.4)",
+              boxShadow:
+                p.color === "turquoise"
+                  ? "0 0 6px rgba(18,168,172,0.3)"
+                  : p.color === "gold"
+                    ? "0 0 6px rgba(212,175,55,0.2)"
+                    : "none",
+              animation: `floatUp ${p.duration}s linear ${p.delay}s infinite, sway${p.id % 3} ${p.duration * 0.6}s ease-in-out ${p.delay}s infinite alternate`,
+            }}
+          />
+        ))}
+      </div>
+
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
@@ -244,9 +339,29 @@ export default function CareersClient() {
           />
 
           <div className="max-w-6xl z-10">
-            <h1 className="reveal-text text-[clamp(4rem,9vw,10rem)] leading-[0.85] font-extrabold tracking-tighter uppercase mb-12">
+            {/* #4 — Gold Eyebrow */}
+            <p
+              className="careers-eyebrow text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase mb-8"
+              style={{ color: "rgba(212,175,55,0.85)", opacity: 0 }}
+            >
+              PEOPLE &amp; CULTURE // GLOBAL TALENT
+            </p>
+
+            {/* #3 + #5 + #6 — Gradient text + breathing ref + full opacity */}
+            <h1
+              ref={heroRef}
+              className="reveal-text text-[clamp(4rem,9vw,10rem)] leading-[0.85] font-extrabold tracking-tighter uppercase mb-12"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.7) 50%, #ffffff 100%)",
+                backgroundSize: "200% 100%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               CAREERS AT <br />
-              <span className="text-white/80">GOTT WALD</span>
+              GOTT WALD
             </h1>
 
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
@@ -262,16 +377,17 @@ export default function CareersClient() {
               </div>
 
               <div className="flex-1 flex flex-col items-start gap-8 justify-center reveal-text">
+                {/* #10 — CTA buttons with turquoise hover glow */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="#apply"
-                    className="h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 transition-colors uppercase text-xs tracking-widest font-bold"
+                    className="h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
                   >
                     Apply Now
                   </a>
                   <a
                     href="#apply"
-                    className="h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-white/40 transition-colors uppercase text-xs tracking-widest font-bold"
+                    className="h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
                   >
                     Specialist Pool
                   </a>
@@ -293,6 +409,18 @@ export default function CareersClient() {
             </div>
           </div>
         </section>
+
+        {/* #9 — Animated Separator */}
+        <div className="px-gutter mb-4">
+          <div
+            ref={separatorRef}
+            className="h-px w-full origin-left"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(18,168,172,0.4) 0%, rgba(212,175,55,0.3) 50%, rgba(18,168,172,0.1) 100%)",
+            }}
+          />
+        </div>
 
         {/* ── 3 WAYS TO JOIN ── */}
         <section className="px-gutter py-[15vh] bg-white/[0.02] border-y border-white/5">
@@ -479,7 +607,15 @@ export default function CareersClient() {
         <section className="px-gutter py-[15vh] border-t border-white/5">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             {/* What you'll find — double space fixed (#8) */}
-            <div className="reveal-text">
+            {/* #8 — Glassmorphic "What You'll Find" wrapper */}
+            <div className="reveal-text p-10 md:p-14 border border-white/10 bg-white/[0.03] backdrop-blur-sm rounded-sm relative overflow-hidden">
+              {/* Subtle turquoise edge glow */}
+              <div
+                className="absolute top-0 left-0 w-full h-px pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(18,168,172,0.3), transparent)",
+                }}
+              />
               <h2 className="text-4xl text-white font-bold mb-10 tracking-tight">
                 WHAT YOU&apos;LL FIND HERE
               </h2>
@@ -561,13 +697,14 @@ export default function CareersClient() {
         </section>
 
         {/* ── APPLICATION FORM ── (#9 — gold border + glow) */}
-        <section id="apply" className="px-gutter py-[15vh] bg-[#050505] relative border-t border-gold/20">
+        {/* #7 — Application form — transparent bg, let fluid show through */}
+        <section id="apply" className="px-gutter py-[15vh] relative border-t border-gold/20">
           {/* Ambient glow above form */}
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vh] pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at center top, rgba(212,175,55,0.04) 0%, transparent 70%)",
+                "radial-gradient(ellipse at center top, rgba(212,175,55,0.06) 0%, transparent 70%)",
             }}
           />
           <div className="max-w-3xl mx-auto reveal-text relative z-10">
@@ -809,6 +946,38 @@ export default function CareersClient() {
       </main>
 
       <FooterSection />
+
+      {/* ── Particle Keyframes (injected once) ── */}
+      <style jsx>{`
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          5% {
+            opacity: var(--particle-opacity, 0.12);
+          }
+          90% {
+            opacity: var(--particle-opacity, 0.12);
+          }
+          100% {
+            transform: translateY(-110vh) translateX(0);
+            opacity: 0;
+          }
+        }
+        @keyframes sway0 {
+          0% { transform: translateX(-20px); }
+          100% { transform: translateX(20px); }
+        }
+        @keyframes sway1 {
+          0% { transform: translateX(-30px); }
+          100% { transform: translateX(35px); }
+        }
+        @keyframes sway2 {
+          0% { transform: translateX(-15px); }
+          100% { transform: translateX(25px); }
+        }
+      `}</style>
     </div>
   );
 }
