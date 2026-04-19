@@ -194,7 +194,7 @@ export default function BrutalistContactForm({
           <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
             {isSubmitting ? "Sending..." : submitLabel}
           </span>
-          <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none " />
+          <span className="relative z-0 w-2 h-2 rounded-full bg-[#0a9396] group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
         </button>
 
         {submitStatus === "success" && (
