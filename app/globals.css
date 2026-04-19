@@ -81,6 +81,20 @@
   opacity: 0;
 }
 
+/* ===== Initial Loading Screen (CSS-only, pre-JS) ===== */
+/* This ensures the loading overlay covers the viewport from the
+   very first paint, BEFORE the WebGL LoadingGroup JS initializes.
+   LoadingGroup.update() calls loadingContentEl.remove() on completion. */
+
+#loading-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  padding: 1rem;
+  pointer-events: none;
+}
+
 /* ===== Button Styles ===== */
 
 a.button {

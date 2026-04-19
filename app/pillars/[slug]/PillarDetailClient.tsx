@@ -6,7 +6,7 @@ import { useEffect, useRef, useCallback, useMemo } from "react";
 import gsap from "gsap";
 import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
 import { projects as mockProjects } from "@/lib/projectData";
-
+import { useRouter } from "next/navigation";
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — matched to homepage globals.css
    ───────────────────────────────────────────────────────────── */
@@ -912,6 +912,7 @@ function SectionLabel({ idx, text, light }: { idx: number; text: string; light?:
 
 const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number }>(
   function OffersBlock({ project, panelIdx }, ref) {
+    const router = useRouter();
     if (!project.offers || project.offers.length === 0) return null;
 
     /* ── Tier config — each metal has its own colour language ── */
@@ -1079,6 +1080,9 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
                       </div>
 
                       <button
+                      onClick={() => {
+                        router.push("/contact");
+                      }}
                         className="w-full py-4 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 relative overflow-hidden group/btn"
                         style={{
                           background: `linear-gradient(90deg, ${tc.accent}20 0%, ${tc.accent}05 100%)`,
@@ -1086,7 +1090,7 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
                         }}
                       >
                         <span className="relative z-10 transition-transform duration-300 group-hover/btn:scale-105 inline-block text-white">
-                          INITIATE
+                          GET STARTED
                         </span>
                         <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)` }} />
                         <div className="absolute top-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)` }} />
