@@ -1003,12 +1003,12 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
 
           {/* Card Based Engagement Matrix */}
           <div className="panel-body flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-stretch w-full max-w-[1300px] mx-auto mt-12 pb-12 lg:pb-0 pt-4">
-            {project.offers.map((offer, idx) => {
+            {project.offers.map((offer, idx, arr) => {
               const tierKey = (offer.tier as TierKey) in TIER_CONFIG
                 ? (offer.tier as TierKey)
                 : "gold";
               const tc = TIER_CONFIG[tierKey];
-              const isCenter = idx === Math.floor(project.offers.length / 2);
+              const isCenter = idx === Math.floor(arr.length / 2);
               
               // Split description by period to fake a list of features representing the checklist
               const features = offer.description.split(/(?<=\.)\s+/).filter(Boolean);
