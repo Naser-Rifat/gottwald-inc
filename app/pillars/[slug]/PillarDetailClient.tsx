@@ -1004,7 +1004,7 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
         }}
       >
         <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)` }} />
-        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0 relative z-10">
+        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
           {/* Section header */}
           <div className="panel-label flex flex-col gap-2 mb-12">
             <div className="flex items-center gap-3 mb-2">
