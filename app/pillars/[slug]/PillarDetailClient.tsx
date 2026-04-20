@@ -14,9 +14,11 @@ const GOLD = "#d4af37";
 const COPPER = "#b87333";
 const SILVER = "#c0c0c0";
 const TURQUOISE = "#0a9396";
-const BG_DARK = "#040910";
-const BG_PANEL = "#0a0a0e";
-const BG_LIGHT = "#f5f0eb";
+const BG_DARK = "rgba(4, 9, 16, 0.02)";
+const BG_PANEL = "rgba(10, 10, 14, 0.05)";
+const BG_LIGHT = "rgba(245, 240, 235, 0.03)";
+const GLASS_DARK = "rgba(4, 9, 16, 0.3)";
+const GLASS_LIGHT = "rgba(245, 240, 235, 0.1)";
 const TXT_LIGHT = "#f5f5f5";
 const TXT_MUTED = "rgba(255,255,255,0.8)";
 const TXT_DARK = "#1c1d21";
@@ -252,8 +254,15 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     <div
       ref={outerRef}
       className="relative lg:fixed lg:inset-0 overflow-y-auto lg:overflow-hidden"
-      style={{ backgroundColor: BG_DARK, color: TXT_LIGHT }}
+      style={{ backgroundColor: "transparent", color: TXT_LIGHT }}
     >
+      {/* ─── Global Atmosphere Overlay ─── */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0" 
+        style={{ 
+          background: "radial-gradient(circle at center, rgba(6,6,6,0.7) 0%, rgba(6,6,6,0.3) 100%)" 
+        }} 
+      />
       {/* ─── Top Navigation ─── */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
         <Link
@@ -267,7 +276,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         {project.tags && project.tags.length > 0 && (
           <span
             className="hidden sm:inline text-sm tracking-[0.25em] uppercase font-medium"
-            style={{ color: GOLD, opacity: 0.8 }}
+            style={{ color: project.theme.accent, opacity: 0.8 }}
           >
             {project.tags?.join(" · ")}
           </span>
@@ -277,12 +286,12 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       {/* ─── Progress Bar ─── */}
       <div
         className="fixed bottom-0 left-0 w-full h-px z-50"
-        style={{ backgroundColor: "rgba(212,175,55,0.1)" }}
+        style={{ backgroundColor: hexToRgba(project.theme.accent, 0.1) }}
       >
         <div
           ref={progressRef}
           className="h-full"
-          style={{ backgroundColor: GOLD, width: 0, willChange: "width" }}
+          style={{ backgroundColor: project.theme.accent, width: 0, willChange: "width" }}
         />
       </div>
 
@@ -291,7 +300,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         className="fixed bottom-10 right-8 z-50 text-sm tracking-[0.25em] uppercase font-medium hidden lg:block"
         style={{ color: TXT_MUTED }}
       >
-        <span ref={counterRef} style={{ color: GOLD }}>01</span>
+        <span ref={counterRef} style={{ color: project.theme.accent }}>01</span>
         <span className="mx-1 opacity-30">/</span>
         {String(totalPanels).padStart(2, "0")}
       </div>
@@ -299,16 +308,16 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       {/* ─── Scroll Track ─── */}
       <div
         ref={trackRef}
-        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-0 will-change-transform"
+        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-0 will-change-transform relative z-10"
       >
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
           ref={(el) => registerPanel(el, 0)}
           className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
-          style={{ backgroundColor: BG_DARK }}
+          style={{ backgroundColor: "transparent" }}
         >
           {/* Left: Text Content */}
-          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-20 lg:py-0 lg:pl-15 lg:pr-14 pt-28 lg:pt-0">
+          <div className="w-full lg:w-[46%] h-auto lg:h-full flex flex-col justify-center px-6 py-20 lg:py-0 lg:pl-15 lg:pr-14 pt-28 lg:pt-0 relative z-10">
             {/* Section marker — matching homepage pattern */}
             <div
               className="hero-label mb-8 flex items-center gap-3"
@@ -316,7 +325,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: GOLD }}
+                style={{ backgroundColor: project.theme.accent, boxShadow: `0 0 8px ${hexToRgba(project.theme.accent, 0.6)}` }}
               />
               <span
                 className="text-xs tracking-[0.25em] uppercase font-semibold"
@@ -393,8 +402,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       className="hero-cta inline-flex items-center gap-4 no-underline group w-max"
                       style={{
                         padding: "14px 32px",
-                        border: `1px solid rgba(212,175,55,0.5)`,
-                        color: GOLD,
+                        border: `1px solid ${hexToRgba(project.theme.accent, 0.5)}`,
+                        color: project.theme.accent,
                         fontSize: "11px",
                         fontWeight: 700,
                         letterSpacing: "0.25em",
@@ -403,14 +412,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                         opacity: 0,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = GOLD;
-                        e.currentTarget.style.color = BG_DARK;
-                        e.currentTarget.style.borderColor = GOLD;
+                        e.currentTarget.style.backgroundColor = project.theme.accent;
+                        e.currentTarget.style.color = project.theme.background;
+                        e.currentTarget.style.borderColor = project.theme.accent;
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = GOLD;
-                        e.currentTarget.style.borderColor = "rgba(212,175,55,0.5)";
+                        e.currentTarget.style.color = project.theme.accent;
+                        e.currentTarget.style.borderColor = hexToRgba(project.theme.accent, 0.5);
                       }}
                     >
                       Visit Website
@@ -433,14 +442,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       letterSpacing: "0.45em",
                       fontWeight: 700,
                       textTransform: "uppercase" as const,
-                      color: GOLD,
+                      color: project.theme.accent,
                     }}
                   >
                     Services
                   </h3>
                   <div
                     className="w-10 h-px mb-5"
-                    style={{ backgroundColor: "rgba(212,175,55,0.35)" }}
+                    style={{ backgroundColor: hexToRgba(project.theme.accent, 0.35) }}
                   />
                   <ul
                     style={{
@@ -457,7 +466,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       <li key={s} className="flex items-start gap-3">
                         <span
                           className="mt-[9px] shrink-0 rounded-full"
-                          style={{ width: "4px", height: "4px", backgroundColor: GOLD, opacity: 0.7, display: "inline-block" }}
+                          style={{ width: "4px", height: "4px", backgroundColor: project.theme.accent, opacity: 0.7, display: "inline-block" }}
                         />
                         <span style={{ fontSize: "clamp(12px, 1vw, 14px)" }} className="tracking-wide">{s}</span>
                       </li>
@@ -474,7 +483,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               className="hero-image relative w-full h-full rounded-xl overflow-hidden"
               style={{
                 clipPath: "inset(0 0 100% 0)",
-                boxShadow: "0 20px 80px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.04)",
+                boxShadow: `0 20px 80px rgba(0,0,0,0.5), 0 0 40px ${hexToRgba(project.theme.accent, 0.04)}`,
               }}
             >
               {/* Premium abstract fallback — consistent dark palette (z-0 behind the image) */}
@@ -491,7 +500,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   className="absolute inset-0 opacity-[0.025]"
                   style={{
                     backgroundImage:
-                      "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(212,175,55,.15) 2px, rgba(212,175,55,.15) 3px)",
+                      `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(project.theme.accent, 0.15)} 2px, ${hexToRgba(project.theme.accent, 0.15)} 3px)`,
                     backgroundSize: "8px 8px",
                   }}
                 />
@@ -500,8 +509,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   <div
                     className="w-[min(50vw,280px)] h-[min(50vw,280px)] rounded-full opacity-[0.03]"
                     style={{
-                      border: `1px solid ${GOLD}`,
-                      boxShadow: `inset 0 0 80px rgba(212,175,55,0.03)`,
+                      border: `1px solid ${project.theme.accent}`,
+                      boxShadow: `inset 0 0 80px ${hexToRgba(project.theme.accent, 0.03)}`,
                     }}
                   />
                 </div>
@@ -541,7 +550,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               <div
                 className="absolute inset-0 pointer-events-none z-20"
                 style={{
-                  border: "1px solid rgba(212,175,55,0.06)",
+                  border: `1px solid ${hexToRgba(project.theme.accent, 0.06)}`,
                   borderRadius: "12px",
                 }}
               />
@@ -633,9 +642,12 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           ref={(el) =>
             registerPanel(el, (project.contentBlocks?.length || 0) + 1)
           }
-          className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden"
+          className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden relative"
           style={{
-            backgroundColor: BG_LIGHT,
+            backgroundColor: GLASS_DARK,
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            borderLeft: "1px solid rgba(255,255,255,0.03)"
           }}
         >
           {/* Guard: only show "Next Chapter" when a different pillar exists */}
@@ -647,7 +659,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               >
                 <span
                   className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
-                  style={{ color: "rgba(28,29,33,0.6)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   Next Chapter
                 </span>
@@ -660,15 +672,15 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     letterSpacing: "-0.04em",
                     lineHeight: 0.9,
                     paddingBottom: "12px",
-                    color: "rgba(28,29,33,0.45)",
+                    color: "rgba(255,255,255,0.3)",
                     whiteSpace: "pre-line" as const,
                     transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#1c1d21")
+                    (e.currentTarget.style.color = "#ffffff")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
+                    (e.currentTarget.style.color = "rgba(255,255,255,0.3)")
                   }
                 >
                   {nextProject.title}
@@ -680,17 +692,17 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               >
                 <span
                   className="text-[10px] font-semibold tracking-[0.25em] uppercase transition-colors duration-300"
-                  style={{ color: "rgba(28,29,33,0.7)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   Next Project
                 </span>
                 <span
                   className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
-                  style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
+                  style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
                 />
                 <span
                   className="text-lg transition-all duration-300 group-hover:translate-x-1"
-                  style={{ color: "rgba(28,29,33,0.7)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   →
                 </span>
@@ -702,7 +714,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               <Link href="/" className="no-underline group">
                 <span
                   className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
-                  style={{ color: "rgba(28,29,33,0.6)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   Return
                 </span>
@@ -715,15 +727,15 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     letterSpacing: "-0.04em",
                     lineHeight: 0.9,
                     paddingBottom: "12px",
-                    color: "rgba(28,29,33,0.45)",
+                    color: "rgba(255,255,255,0.3)",
                     whiteSpace: "pre-line" as const,
                     transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#1c1d21")
+                    (e.currentTarget.style.color = "#ffffff")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "rgba(28,29,33,0.45)")
+                    (e.currentTarget.style.color = "rgba(255,255,255,0.3)")
                   }
                 >
                   GOTT WALD
@@ -735,17 +747,17 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               >
                 <span
                   className="text-[10px] font-semibold tracking-[0.25em] uppercase"
-                  style={{ color: "rgba(28,29,33,0.7)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   Back to Home
                 </span>
                 <span
                   className="block w-10 lg:w-16 h-px transition-all duration-300 group-hover:w-20"
-                  style={{ backgroundColor: "rgba(28,29,33,0.4)" }}
+                  style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
                 />
                 <span
                   className="text-lg transition-all duration-300 group-hover:translate-x-1"
-                  style={{ color: "rgba(28,29,33,0.7)" }}
+                  style={{ color: "rgba(255,255,255,0.5)" }}
                 >
                   →
                 </span>
@@ -839,10 +851,19 @@ function revealPanel(panel: HTMLElement) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SHARED UI COMPONENTS
+   SHARED UI COMPONENTS & UTILS
    ═══════════════════════════════════════════════════════════════ */
 
 import { forwardRef } from "react";
+
+/** Convert hex to rgba to easily mix dynamic API colors with glass effects */
+function hexToRgba(hex: string, alpha: number): string {
+  const cleanHex = hex.replace("#", "");
+  const r = parseInt(cleanHex.length === 3 ? cleanHex[0] + cleanHex[0] : cleanHex.substring(0, 2), 16) || 0;
+  const g = parseInt(cleanHex.length === 3 ? cleanHex[1] + cleanHex[1] : cleanHex.substring(2, 4), 16) || 0;
+  const b = parseInt(cleanHex.length === 3 ? cleanHex[2] + cleanHex[2] : cleanHex.substring(4, 6), 16) || 0;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 interface BlockProps {
   block: ContentBlock;
@@ -889,16 +910,16 @@ function ImageFallback({ idx }: { idx: number }) {
 }
 
 /** Section label — "• 02 — HEADING" matching homepage style */
-function SectionLabel({ idx, text, light }: { idx: number; text: string; light?: boolean }) {
+function SectionLabel({ idx, text, color, dotColor }: { idx: number; text: string; color: string; dotColor: string }) {
   return (
-    <div className="panel-label flex items-center gap-3 mb-6" style={{ opacity: 0 }}>
+    <div className="panel-label flex items-center gap-3 mb-10 opacity-0">
       <span
-        className="w-1.5 h-1.5 rounded-full"
-        style={{ backgroundColor: light ? TXT_DARK : GOLD }}
+        className="w-1.5 h-1.5 rounded-full shadow-lg"
+        style={{ backgroundColor: dotColor, boxShadow: `0 0 8px ${hexToRgba(dotColor, 0.6)}` }}
       />
       <span
-        className="text-[10px] tracking-[0.25em] uppercase font-semibold"
-        style={{ color: light ? TXT_DARK_MUTED : TXT_MUTED }}
+        className="text-[10px] tracking-[0.3em] uppercase font-bold"
+        style={{ color: hexToRgba(color, 0.7) }}
       >
         {String(idx + 1).padStart(2, "0")} — {text}
       </span>
@@ -960,12 +981,13 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
     return (
       <section
         ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15"
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15 relative"
         style={{
-          background: "linear-gradient(180deg, rgba(7,12,20,1) 0%, rgba(2,14,20,1) 100%)",
+          background: "transparent",
         }}
       >
-        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top, rgba(212,175,55,0.03) 0%, transparent 60%)" }} />
+        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0 relative z-10">
           {/* Section header */}
           <div className="panel-label flex flex-col gap-2 mb-12">
             <div className="flex items-center gap-3 mb-2">
@@ -1114,108 +1136,41 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
 
 const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
   function ShowcaseBlock({ block, project, panelIdx }, ref) {
+    const isLight = block.theme === "light";
+    const bgHex = isLight ? project.theme.text : project.theme.background;
+    const txtHex = isLight ? project.theme.background : project.theme.text;
+    const accentHex = project.theme.accent;
+
     return (
       <section
         ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col items-center justify-center px-6 py-16 lg:py-0 lg:px-15 gap-6"
-        style={{
-          backgroundColor: block.theme === "light" ? BG_LIGHT : BG_PANEL,
-        }}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
-        <SectionLabel idx={panelIdx} text="Showcase" light={block.theme === "light"} />
         <div
-          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/10] rounded-xl overflow-hidden"
+          className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            clipPath: "inset(0 100% 0 0)",
-            boxShadow: "0 24px 80px rgba(0,0,0,0.4)",
+            backgroundColor: hexToRgba(bgHex, 0.9),
+            color: txtHex,
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
           }}
         >
-          {(block.image || project.image) ? (
-            <Image
-              src={block.image || project.image}
-              alt={`${project.title} showcase`}
-              fill
-              sizes="100vw"
-              className="object-cover z-10"
-              unoptimized
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.style.display = "none";
-              }}
-            />
-          ) : null}
-          <ImageFallback idx={panelIdx} />
+          <SectionLabel idx={panelIdx} text="Showcase" color={txtHex} dotColor={accentHex} />
           <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to top, rgba(0,0,0,0.35), transparent 60%)",
-            }}
-          />
-        </div>
-      </section>
-    );
-  }
-);
-
-const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
-  function CaseStudyBlock({ block, project, panelIdx }, ref) {
-    const isLight = block.theme !== "dark";
-    const bgColor = isLight ? BG_LIGHT : BG_PANEL;
-    const txtColor = isLight ? TXT_DARK : TXT_LIGHT;
-    const muted = isLight ? TXT_DARK_MUTED : TXT_MUTED;
-    const border = isLight ? BORDER_LIGHT : BORDER_DARK;
-
-    return (
-      <section
-        ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
-        style={{ backgroundColor: bgColor, color: txtColor }}
-      >
-        <div className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:py-0 lg:pl-15 lg:pr-10 opacity-0">
-          <SectionLabel idx={panelIdx} text="Case Study" light={isLight} />
-          <h3
-            className="panel-heading"
-            style={{
-              fontFamily: "var(--font-serif), Georgia, serif",
-              fontSize: "clamp(2rem, 4vw, 3.2rem)",
-              fontWeight: 400,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              marginBottom: "24px",
-            }}
-          >
-            {block.heading || "Case Study"}
-          </h3>
-          <p
-            className="panel-body"
-            style={{
-              fontSize: "clamp(16px, 1.2vw, 19px)",
-              color: muted,
-              lineHeight: 1.9,
-              maxWidth: "520px",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {block.body}
-          </p>
-        </div>
-        <div
-          className="w-full lg:w-[38%] flex flex-col justify-center px-6 pb-16 pt-16 lg:pt-0 lg:pb-0 lg:p-10 border-t lg:border-t-0 lg:border-l"
-          style={{ borderColor: border }}
-        >
-          <div
-            className="panel-image relative w-full aspect-square lg:aspect-4/5 rounded-xl overflow-hidden"
+            className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
               clipPath: "inset(0 100% 0 0)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
             {(block.image || project.image) ? (
               <Image
                 src={block.image || project.image}
-                alt="Case Study"
+                alt={`${project.title} showcase`}
                 fill
-                sizes="(max-width: 1024px) 100vw, 38vw"
+                sizes="100vw"
                 className="object-cover z-10"
                 unoptimized
                 onError={(e) => {
@@ -1225,6 +1180,99 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
               />
             ) : null}
             <ImageFallback idx={panelIdx} />
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(to top, ${hexToRgba(bgHex, 0.4)}, transparent 60%)`,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  }
+);
+
+const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
+  function CaseStudyBlock({ block, project, panelIdx }, ref) {
+    const isLight = block.theme === "light";
+    const bgHex = isLight ? project.theme.text : project.theme.background;
+    const txtHex = isLight ? project.theme.background : project.theme.text;
+    const accentHex = project.theme.accent;
+
+    return (
+      <section
+        ref={ref}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
+      >
+        <div
+          className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
+          style={{
+            backgroundColor: hexToRgba(bgHex, 0.9),
+            color: txtHex,
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+          }}
+        >
+          <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+            <div className="flex flex-col justify-center min-h-full py-4">
+              <SectionLabel idx={panelIdx} text="Case Study" color={txtHex} dotColor={accentHex} />
+              <h3
+                className="panel-heading"
+                style={{
+                  fontFamily: "var(--font-serif), Georgia, serif",
+                  fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                  fontWeight: 600,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.1,
+                  marginBottom: "24px",
+                  // Editorial Hollow Typography
+                  WebkitTextStroke: `1px ${hexToRgba(txtHex, 0.9)}`,
+                  color: "transparent",
+                }}
+              >
+                {block.heading || "Case Study"}
+              </h3>
+              <p
+                className="panel-body"
+                style={{
+                  fontSize: "clamp(16px, 1.2vw, 19px)",
+                  color: hexToRgba(txtHex, 0.8),
+                  lineHeight: 1.9,
+                  maxWidth: "520px",
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {block.body}
+              </p>
+            </div>
+          </div>
+          <div className="w-full lg:w-1/2 p-4 lg:p-8 flex items-stretch">
+            <div
+              className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
+              style={{
+                clipPath: "inset(0 100% 0 0)",
+                boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
+              }}
+            >
+              {(block.image || project.image) ? (
+                <Image
+                  src={block.image || project.image}
+                  alt="Case Study"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover z-10"
+                  unoptimized
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                  }}
+                />
+              ) : null}
+              <ImageFallback idx={panelIdx} />
+            </div>
           </div>
         </div>
       </section>
@@ -1236,88 +1284,92 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
   { block, project, panelIdx },
   ref
 ) {
-  const isLight = block.theme !== "dark";
-  const bgColor = isLight ? BG_LIGHT : BG_PANEL;
-  const txtColor = isLight ? TXT_DARK : TXT_LIGHT;
-  const muted = isLight ? TXT_DARK_MUTED : TXT_MUTED;
-  const border = isLight ? BORDER_LIGHT : BORDER_DARK;
+  const isLight = block.theme === "light";
+  const bgHex = isLight ? project.theme.text : project.theme.background;
+  const txtHex = isLight ? project.theme.background : project.theme.text;
+  const accentHex = project.theme.accent;
 
   return (
     <section
       ref={ref}
-      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
-      style={{ backgroundColor: bgColor, color: txtColor }}
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
     >
-      <div className="panel-content flex-1 flex flex-col justify-center px-6 py-16 lg:py-0 lg:pl-15 lg:pr-10 opacity-0">
-        <SectionLabel idx={panelIdx} text="Key Metrics" light={isLight} />
-        <p
-          className="panel-body"
-          style={{
-            fontSize: "clamp(16px, 1.2vw, 19px)",
-            color: muted,
-            lineHeight: 1.85,
-            marginBottom: "48px",
-            maxWidth: "420px",
-          }}
-        >
-          {block.body}
-        </p>
-        <div className="flex gap-10 lg:gap-16 flex-wrap">
-          {block.stats?.map((stat, idx) => (
-            <div key={idx} className="panel-stat">
-              <span
-                style={{
-                  fontFamily: "var(--font-serif), Georgia, serif",
-                  fontSize: "3.5rem",
-                  fontWeight: 400,
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1,
-                  color: GOLD,
-                }}
-              >
-                {stat.value}
-              </span>
-              <p
-                className="mt-2"
-                style={{
-                  fontSize: "12px",
-                  color: muted,
-                  letterSpacing: "0.25em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
       <div
-        className="w-full lg:w-[32%] flex flex-col justify-center px-6 pb-16 pt-16 lg:pt-0 lg:pb-0 lg:p-10 border-t lg:border-t-0 lg:border-l"
-        style={{ borderColor: border }}
+        className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
+        style={{
+          backgroundColor: hexToRgba(bgHex, 0.9),
+          color: txtHex,
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+          boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+        }}
       >
-        <div
-          className="panel-image relative w-full aspect-square rounded-xl overflow-hidden"
-          style={{
-            clipPath: "inset(0 100% 0 0)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-          }}
-        >
-          {(block.image || project.image) ? (
-            <Image
-              src={block.image || project.image}
-              alt="Stats"
-              fill
-              sizes="(max-width: 1024px) 100vw, 32vw"
-              className="object-cover z-10"
-              unoptimized
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.style.display = "none";
+        <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="flex flex-col justify-center min-h-full py-4">
+            <SectionLabel idx={panelIdx} text="Key Metrics" color={txtHex} dotColor={accentHex} />
+            <p
+              className="panel-body"
+              style={{
+                fontSize: "clamp(16px, 1.2vw, 19px)",
+                color: hexToRgba(txtHex, 0.8),
+                lineHeight: 1.85,
+                marginBottom: "48px",
+                maxWidth: "420px",
               }}
-            />
-          ) : null}
-          <ImageFallback idx={panelIdx} />
+            >
+              {block.body}
+            </p>
+            <div className="flex gap-10 lg:gap-16 flex-wrap">
+              {block.stats?.map((stat, idx) => (
+                <div key={idx} className="panel-stat">
+                  <span
+                    style={{
+                      fontFamily: "var(--font-serif), Georgia, serif",
+                      fontSize: "3.5rem",
+                      fontWeight: 600,
+                      letterSpacing: "-0.03em",
+                      lineHeight: 1,
+                      color: accentHex,
+                    }}
+                  >
+                    {stat.value}
+                  </span>
+                  <p
+                    className="mt-2 text-[12px] uppercase font-bold tracking-[0.25em]"
+                    style={{ color: hexToRgba(txtHex, 0.7) }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="w-full lg:w-1/2 p-4 lg:p-8 flex items-stretch">
+          <div
+            className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
+            style={{
+              clipPath: "inset(0 100% 0 0)",
+              boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
+            }}
+          >
+            {(block.image || project.image) ? (
+              <Image
+                src={block.image || project.image}
+                alt="Stats"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover z-10"
+                unoptimized
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                }}
+              />
+            ) : null}
+            <ImageFallback idx={panelIdx} />
+          </div>
         </div>
       </div>
     </section>
@@ -1329,65 +1381,85 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
   ref
 ) {
   const isLight = block.theme === "light";
+  const bgHex = isLight ? project.theme.text : project.theme.background;
+  const txtHex = isLight ? project.theme.background : project.theme.text;
+  const accentHex = project.theme.accent;
+
   return (
     <section
       ref={ref}
-      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-6 py-16 lg:py-0 lg:px-15"
-      style={{
-        backgroundColor: isLight ? BG_LIGHT : BG_PANEL,
-        color: isLight ? TXT_DARK : TXT_LIGHT,
-      }}
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
     >
       <div
-        className="panel-image relative w-full lg:w-[45vw] max-w-[560px] aspect-[4/3] rounded-xl overflow-hidden"
+        className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
         style={{
-          clipPath: "inset(0 100% 0 0)",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          backgroundColor: hexToRgba(bgHex, 0.9),
+          color: txtHex,
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+          boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
         }}
       >
-        {(block.image || project.image) ? (
-          <Image
-            src={block.image || project.image}
-            alt="Feature"
-            fill
-            sizes="(max-width: 1024px) 100vw, 45vw"
-            className="object-cover z-10"
-            unoptimized
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
-              img.style.display = "none";
+        {/* Image on left for feature block */}
+        <div className="w-full lg:w-1/2 p-4 lg:p-8 flex items-stretch">
+          <div
+            className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
+            style={{
+              clipPath: "inset(0 100% 0 0)",
+              boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
             }}
-          />
-        ) : null}
-        <ImageFallback idx={panelIdx} />
-      </div>
-      <div className="panel-content w-full lg:max-w-[320px] opacity-0">
-        <SectionLabel idx={panelIdx} text="Feature Focus" light={isLight} />
-        <h3
-          className="panel-heading"
-          style={{
-            fontFamily: "var(--font-serif), Georgia, serif",
-            fontSize: "clamp(2rem, 4vw, 3.2rem)",
-            fontWeight: 400,
-            lineHeight: 1.1,
-            marginBottom: "20px",
-            letterSpacing: "-0.02em",
-            whiteSpace: "pre-line",
-          }}
-        >
-          {block.heading}
-        </h3>
-        <p
-          className="panel-body"
-          style={{
-            color: "currentColor",
-            opacity: 0.75,
-            fontSize: "clamp(16px, 1.2vw, 19px)",
-            lineHeight: 1.85,
-          }}
-        >
-          {block.body}
-        </p>
+          >
+            {(block.image || project.image) ? (
+              <Image
+                src={block.image || project.image}
+                alt="Feature"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover z-10"
+                unoptimized
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                }}
+              />
+            ) : null}
+            <ImageFallback idx={panelIdx} />
+          </div>
+        </div>
+
+        <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="flex flex-col justify-center min-h-full py-4">
+            <SectionLabel idx={panelIdx} text="Feature Focus" color={txtHex} dotColor={accentHex} />
+            <h3
+              className="panel-heading"
+              style={{
+                fontFamily: "var(--font-serif), Georgia, serif",
+                fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                fontWeight: 600,
+                lineHeight: 1.1,
+                marginBottom: "24px",
+                letterSpacing: "-0.02em",
+                whiteSpace: "pre-line",
+                WebkitTextStroke: `1px ${hexToRgba(txtHex, 0.9)}`,
+                color: "transparent",
+              }}
+            >
+              {block.heading}
+            </h3>
+            <p
+              className="panel-body"
+              style={{
+                color: hexToRgba(txtHex, 0.8),
+                fontSize: "clamp(16px, 1.2vw, 19px)",
+                lineHeight: 1.85,
+                maxWidth: "520px",
+              }}
+            >
+              {block.body}
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1395,52 +1467,68 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
 
 const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
   function FullbleedBlock({ block, project, panelIdx }, ref) {
+    const isLight = block.theme === "light";
+    const bgHex = isLight ? project.theme.text : project.theme.background;
+    const txtHex = isLight ? project.theme.background : project.theme.text;
+    const accentHex = project.theme.accent;
+
     return (
       <section
         ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col items-center justify-center px-6 py-16 lg:py-0 lg:px-15 gap-6"
-        style={{ backgroundColor: BG_PANEL }}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
-        <SectionLabel idx={panelIdx} text="Visual" />
         <div
-          className="panel-image relative w-full lg:max-w-[1050px] aspect-[16/9] rounded-xl overflow-hidden"
+          className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            clipPath: "inset(0 100% 0 0)",
-            boxShadow: "0 24px 80px rgba(0,0,0,0.5)",
+            backgroundColor: hexToRgba(bgHex, 0.9),
+            color: txtHex,
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
           }}
         >
-          {(block.image || project.image) ? (
-            <Image
-              src={block.image || project.image}
-              alt="Visual"
-              fill
-              sizes="100vw"
-              className="object-cover z-10"
-              unoptimized
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.style.display = "none";
-              }}
-            />
-          ) : null}
-          <ImageFallback idx={panelIdx} />
+          <SectionLabel idx={panelIdx} text="Visual" color={txtHex} dotColor={accentHex} />
           <div
-            className="absolute inset-0"
+            className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
-              background: "linear-gradient(to top, rgba(0,0,0,0.45), transparent 50%)",
-            }}
-          />
-          <p
-            className="absolute bottom-5 left-6"
-            style={{
-              color: TXT_MUTED,
-              fontSize: "11px",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
+              clipPath: "inset(0 100% 0 0)",
+              boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
-            {block.body || "Pillar Highlight"}
-          </p>
+            {(block.image || project.image) ? (
+              <Image
+                src={block.image || project.image}
+                alt="Visual"
+                fill
+                sizes="100vw"
+                className="object-cover z-10"
+                unoptimized
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                }}
+              />
+            ) : null}
+            <ImageFallback idx={panelIdx} />
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(to top, ${hexToRgba(bgHex, 0.45)}, transparent 50%)`,
+              }}
+            />
+            <p
+              className="absolute bottom-6 left-8 font-bold"
+              style={{
+                color: txtHex,
+                fontSize: "11px",
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+              }}
+            >
+              {block.body || "Pillar Highlight"}
+            </p>
+          </div>
         </div>
       </section>
     );
@@ -1448,65 +1536,106 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
 );
 
 const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
-  function RichTextBlock({ block, panelIdx }, ref) {
+  function RichTextBlock({ block, project, panelIdx }, ref) {
     const isLight = block.theme === "light";
+    const bgHex = isLight ? project.theme.text : project.theme.background;
+    const txtHex = isLight ? project.theme.background : project.theme.text;
+    const accentHex = project.theme.accent;
+
     return (
       <section
         ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row items-center justify-center px-6 py-16 lg:py-0 lg:px-[120px] gap-12 lg:gap-16"
-        style={{
-          backgroundColor: isLight ? BG_LIGHT : BG_PANEL,
-          color: isLight ? TXT_DARK : TXT_LIGHT,
-        }}
+        className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
-        <div className="panel-content flex-1 w-full lg:max-w-[600px] opacity-0">
-          <SectionLabel idx={panelIdx} text="System Specifications" light={isLight} />
-          <h3
-            className="panel-heading"
-            style={{
-              fontFamily: "var(--font-serif), Georgia, serif",
-              fontSize: "clamp(2rem, 4vw, 3.2rem)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-              marginBottom: "32px",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {block.heading}
-          </h3>
+        <div
+          className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
+          style={{
+            backgroundColor: hexToRgba(bgHex, 0.9),
+            color: txtHex,
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+          }}
+        >
+          <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+            <div className="flex flex-col justify-center min-h-full py-4">
+              <SectionLabel idx={panelIdx} text="System Specifications" color={txtHex} dotColor={accentHex} />
+              <h3
+                className="panel-heading"
+                style={{
+                  fontFamily: "var(--font-serif), Georgia, serif",
+                  fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                  fontWeight: 600,
+                  lineHeight: 1.1,
+                  marginBottom: "32px",
+                  letterSpacing: "-0.02em",
+                  // Editorial Hollow Typography
+                  WebkitTextStroke: `1px ${hexToRgba(txtHex, 0.9)}`,
+                  color: "transparent",
+                }}
+              >
+                {block.heading}
+              </h3>
 
-          {block.body && (
-            <div
-              className={`panel-body prose max-w-none ${isLight ? "prose-zinc" : "prose-invert prose-zinc"} prose-headings:font-normal prose-a:text-gold [&_form]:flex [&_form]:flex-col [&_form]:gap-5 [&_input]:w-full [&_input]:bg-current/5 [&_input]:border [&_input]:border-current/10 [&_input]:rounded-md [&_input]:px-4 [&_input]:py-3 [&_input]:text-[13px] [&_input]:outline-none focus:[&_input]:border-gold focus:[&_input]:ring-1 focus:[&_input]:ring-gold [&_textarea]:w-full [&_textarea]:bg-current/5 [&_textarea]:border [&_textarea]:border-current/10 [&_textarea]:rounded-md [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:text-[13px] [&_textarea]:outline-none focus:[&_textarea]:border-gold focus:[&_textarea]:ring-1 focus:[&_textarea]:ring-gold [&_label]:block [&_label]:text-[10px] [&_label]:tracking-[0.2em] [&_label]:uppercase [&_label]:mb-1.5 [&_label]:opacity-60 [&_button]:mt-4 [&_button]:bg-gold [&_button]:text-black [&_button]:px-8 [&_button]:py-4 [&_button]:rounded-full [&_button]:font-semibold [&_button]:text-[11px] [&_button]:tracking-[0.2em] [&_button]:uppercase [&_button]:transition-transform hover:[&_button]:scale-105 active:[&_button]:scale-95`}
-              style={{ fontSize: "clamp(16px, 1.2vw, 19px)", lineHeight: 1.85 }}
-              dangerouslySetInnerHTML={{ __html: block.body }}
-            />
-          )}
-        </div>
-
-        {block.image ? (
-          <div
-            className="panel-image relative w-full lg:w-[40%] aspect-square lg:aspect-4/5 rounded-xl overflow-hidden"
-            style={{
-              clipPath: "inset(0 100% 0 0)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-            }}
-          >
-            <Image
-              src={block.image}
-              alt={block.heading || "Detail"}
-              fill
-              sizes="(max-width: 1024px) 100vw, 40vw"
-              className="object-cover z-10"
-              unoptimized
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.style.display = "none";
-              }}
-            />
-            <ImageFallback idx={panelIdx} />
+              {block.body && (
+                <div
+                  className="panel-body prose max-w-none prose-headings:font-normal"
+                  style={{ 
+                    fontSize: "clamp(16px, 1.2vw, 19px)", 
+                    lineHeight: 1.85,
+                    color: hexToRgba(txtHex, 0.8),
+                    "--tw-prose-body": hexToRgba(txtHex, 0.8),
+                    "--tw-prose-headings": txtHex,
+                    "--tw-prose-lead": hexToRgba(txtHex, 0.8),
+                    "--tw-prose-links": accentHex,
+                    "--tw-prose-bold": txtHex,
+                    "--tw-prose-counters": hexToRgba(txtHex, 0.6),
+                    "--tw-prose-bullets": hexToRgba(accentHex, 0.7),
+                    "--tw-prose-hr": hexToRgba(txtHex, 0.1),
+                    "--tw-prose-quotes": txtHex,
+                    "--tw-prose-quote-borders": hexToRgba(txtHex, 0.2),
+                    "--tw-prose-captions": hexToRgba(txtHex, 0.5),
+                    "--tw-prose-code": txtHex,
+                    "--tw-prose-pre-code": txtHex,
+                    "--tw-prose-pre-bg": hexToRgba(bgHex, 0.5),
+                  } as any}
+                >
+                  <div 
+                    className="[&_a]:font-semibold [&_a:hover]:opacity-80 transition-opacity"
+                    dangerouslySetInnerHTML={{ __html: block.body }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        ) : null}
+
+          <div className="w-full lg:w-1/2 p-4 lg:p-8 flex items-stretch">
+            {block.image ? (
+              <div
+                className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
+                style={{
+                  clipPath: "inset(0 100% 0 0)",
+                  boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
+                }}
+              >
+                <Image
+                  src={block.image}
+                  alt={block.heading || "Detail"}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover z-10"
+                  unoptimized
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                  }}
+                />
+                <ImageFallback idx={panelIdx} />
+              </div>
+            ) : null}
+          </div>
+        </div>
       </section>
     );
   }
