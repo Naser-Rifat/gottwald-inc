@@ -587,7 +587,7 @@ export default function CareersClient() {
                           ))}
                         </ul>
                       </div>
-                      <div className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit">
+                      <div className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4">
                         <h4 className="text-md tracking-[0.2em] text-gold/80 uppercase mb-4 font-bold">
                           Impact Profile
                         </h4>
