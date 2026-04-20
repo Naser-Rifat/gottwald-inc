@@ -263,6 +263,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           background: "radial-gradient(circle at center, rgba(6,6,6,0.7) 0%, rgba(6,6,6,0.3) 100%)" 
         }} 
       />
+      {/* ─── Top Fade Protection ─── */}
+      <div 
+        className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#060606]/90 via-[#060606]/50 to-transparent pointer-events-none" 
+      />
+
       {/* ─── Top Navigation ─── */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
         <Link
@@ -275,8 +280,12 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         </Link>
         {project.tags && project.tags.length > 0 && (
           <span
-            className="hidden sm:inline text-sm tracking-[0.25em] uppercase font-medium"
-            style={{ color: project.theme.accent, opacity: 0.8 }}
+            className="hidden sm:inline-flex items-center px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold backdrop-blur-md pointer-events-auto"
+            style={{ 
+              color: project.theme.accent,
+              backgroundColor: hexToRgba(project.theme.accent, 0.1),
+              border: `1px solid ${hexToRgba(project.theme.accent, 0.2)}`
+            }}
           >
             {project.tags?.join(" · ")}
           </span>
