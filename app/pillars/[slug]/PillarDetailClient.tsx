@@ -672,16 +672,20 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     letterSpacing: "-0.04em",
                     lineHeight: 0.9,
                     paddingBottom: "12px",
-                    color: "rgba(255,255,255,0.3)",
+                    color: "transparent",
+                    WebkitTextStroke: "1px rgba(255, 255, 255, 0.3)",
                     whiteSpace: "pre-line" as const,
-                    transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
+                    transition: "all 0.8s cubic-bezier(0.22,1,0.36,1)",
+                    transform: "translateX(0px)",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#ffffff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "rgba(255,255,255,0.3)")
-                  }
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.transform = "translateX(20px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "transparent";
+                    e.currentTarget.style.transform = "translateX(0px)";
+                  }}
                 >
                   {nextProject.title}
                 </h2>
@@ -727,16 +731,20 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     letterSpacing: "-0.04em",
                     lineHeight: 0.9,
                     paddingBottom: "12px",
-                    color: "rgba(255,255,255,0.3)",
+                    color: "transparent",
+                    WebkitTextStroke: "1px rgba(255, 255, 255, 0.3)",
                     whiteSpace: "pre-line" as const,
-                    transition: "color 0.6s cubic-bezier(0.22,1,0.36,1)",
+                    transition: "all 0.8s cubic-bezier(0.22,1,0.36,1)",
+                    transform: "translateX(0px)",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#ffffff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "rgba(255,255,255,0.3)")
-                  }
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.transform = "translateX(20px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "transparent";
+                    e.currentTarget.style.transform = "translateX(0px)";
+                  }}
                 >
                   GOTT WALD
                 </h2>
@@ -872,7 +880,7 @@ interface BlockProps {
 }
 
 /** Reusable premium fallback for images (dark gradient + gold accents) */
-function ImageFallback({ idx }: { idx: number }) {
+function ImageFallback({ idx, accentHex }: { idx: number; accentHex: string }) {
   return (
     <div className="absolute inset-0 pointer-events-none select-none">
       <div
@@ -886,7 +894,7 @@ function ImageFallback({ idx }: { idx: number }) {
         className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(212,175,55,.12) 2px, rgba(212,175,55,.12) 3px)",
+            `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(accentHex, 0.12)} 2px, ${hexToRgba(accentHex, 0.12)} 3px)`,
           backgroundSize: "8px 8px",
         }}
       />
@@ -903,7 +911,7 @@ function ImageFallback({ idx }: { idx: number }) {
       </div>
       <div
         className="absolute inset-0"
-        style={{ border: "1px solid rgba(212,175,55,0.05)", borderRadius: "12px" }}
+        style={{ border: `1px solid ${hexToRgba(accentHex, 0.05)}`, borderRadius: "12px" }}
       />
     </div>
   );
@@ -986,14 +994,14 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
           background: "transparent",
         }}
       >
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top, rgba(212,175,55,0.03) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)` }} />
         <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0 relative z-10">
           {/* Section header */}
           <div className="panel-label flex flex-col gap-2 mb-12">
             <div className="flex items-center gap-3 mb-2">
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "#d4af37" }}
+                style={{ background: project.theme.accent }}
               />
               <span
                 className="text-[10px] tracking-[0.25em] uppercase font-bold"
@@ -1080,12 +1088,12 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
                     <ul className="flex flex-col gap-6 relative z-10 mb-10 flex-1 mt-4">
                       {features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex gap-4 items-start">
-                          <span className="w-5 h-5 mt-0.5 rounded-full flex flex-col items-center justify-center border shrink-0 bg-black/50 shadow-inner" style={{ borderColor: `${tc.accent}50`, color: tc.accent }}>
+                          <span className="w-5 h-5 mt-0.5 rounded-full flex flex-col items-center justify-center border shrink-0 bg-black/20 shadow-inner" style={{ borderColor: `${tc.accent}80`, color: tc.accent }}>
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                           </span>
-                          <span className="text-white/80 text-[15px] font-light leading-relaxed drop-shadow-sm">
+                          <span className="text-white text-[15px] font-normal leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                             {feature}
                           </span>
                         </li>
@@ -1107,8 +1115,8 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
                       }}
                         className="w-full py-4 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 relative overflow-hidden group/btn"
                         style={{
-                          background: `linear-gradient(90deg, ${tc.accent}20 0%, ${tc.accent}05 100%)`,
-                          border: `1px solid ${tc.accent}40`,
+                          background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)`,
+                          border: `1px solid ${tc.accent}60`,
                         }}
                       >
                         <span className="relative z-10 transition-transform duration-300 group-hover/btn:scale-105 inline-block text-white">
@@ -1149,12 +1157,12 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            backgroundColor: hexToRgba(bgHex, 0.9),
+            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
-            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
           <SectionLabel idx={panelIdx} text="Showcase" color={txtHex} dotColor={accentHex} />
@@ -1179,7 +1187,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
                 }}
               />
             ) : null}
-            <ImageFallback idx={panelIdx} />
+            <ImageFallback idx={panelIdx} accentHex={accentHex} />
             <div
               className="absolute inset-0"
               style={{
@@ -1208,15 +1216,15 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
           style={{
-            backgroundColor: hexToRgba(bgHex, 0.9),
+            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
-            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
               <SectionLabel idx={panelIdx} text="Case Study" color={txtHex} dotColor={accentHex} />
               <h3
@@ -1228,9 +1236,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                   letterSpacing: "-0.02em",
                   lineHeight: 1.1,
                   marginBottom: "24px",
-                  // Editorial Hollow Typography
-                  WebkitTextStroke: `1px ${hexToRgba(txtHex, 0.9)}`,
-                  color: "transparent",
+                  color: txtHex,
                 }}
               >
                 {block.heading || "Case Study"}
@@ -1239,7 +1245,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                 className="panel-body"
                 style={{
                   fontSize: "clamp(16px, 1.2vw, 19px)",
-                  color: hexToRgba(txtHex, 0.8),
+                  color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
                   lineHeight: 1.9,
                   maxWidth: "520px",
                   whiteSpace: "pre-line",
@@ -1271,7 +1277,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                   }}
                 />
               ) : null}
-              <ImageFallback idx={panelIdx} />
+              <ImageFallback idx={panelIdx} accentHex={accentHex} />
             </div>
           </div>
         </div>
@@ -1297,7 +1303,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
       <div
         className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
         style={{
-          backgroundColor: hexToRgba(bgHex, 0.9),
+          backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
           color: txtHex,
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
@@ -1305,14 +1311,14 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
           boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
         }}
       >
-        <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
             <SectionLabel idx={panelIdx} text="Key Metrics" color={txtHex} dotColor={accentHex} />
             <p
               className="panel-body"
               style={{
                 fontSize: "clamp(16px, 1.2vw, 19px)",
-                color: hexToRgba(txtHex, 0.8),
+                color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
                 lineHeight: 1.85,
                 marginBottom: "48px",
                 maxWidth: "420px",
@@ -1368,7 +1374,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
                 }}
               />
             ) : null}
-            <ImageFallback idx={panelIdx} />
+            <ImageFallback idx={panelIdx} accentHex={accentHex} />
           </div>
         </div>
       </div>
@@ -1393,7 +1399,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
       <div
         className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
         style={{
-          backgroundColor: hexToRgba(bgHex, 0.9),
+          backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
           color: txtHex,
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
@@ -1424,11 +1430,11 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
                 }}
               />
             ) : null}
-            <ImageFallback idx={panelIdx} />
+            <ImageFallback idx={panelIdx} accentHex={accentHex} />
           </div>
         </div>
 
-        <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-0 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
             <SectionLabel idx={panelIdx} text="Feature Focus" color={txtHex} dotColor={accentHex} />
             <h3
@@ -1450,7 +1456,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
             <p
               className="panel-body"
               style={{
-                color: hexToRgba(txtHex, 0.8),
+                color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
                 fontSize: "clamp(16px, 1.2vw, 19px)",
                 lineHeight: 1.85,
                 maxWidth: "520px",
@@ -1480,12 +1486,12 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            backgroundColor: hexToRgba(bgHex, 0.9),
+            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
-            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
           <SectionLabel idx={panelIdx} text="Visual" color={txtHex} dotColor={accentHex} />
@@ -1510,7 +1516,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
                 }}
               />
             ) : null}
-            <ImageFallback idx={panelIdx} />
+            <ImageFallback idx={panelIdx} accentHex={accentHex} />
             <div
               className="absolute inset-0"
               style={{
@@ -1550,15 +1556,15 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
           style={{
-            backgroundColor: hexToRgba(bgHex, 0.9),
+            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
-            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
+            boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <div className="panel-content flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
               <SectionLabel idx={panelIdx} text="System Specifications" color={txtHex} dotColor={accentHex} />
               <h3
@@ -1570,9 +1576,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                   lineHeight: 1.1,
                   marginBottom: "32px",
                   letterSpacing: "-0.02em",
-                  // Editorial Hollow Typography
-                  WebkitTextStroke: `1px ${hexToRgba(txtHex, 0.9)}`,
-                  color: "transparent",
+                  color: txtHex,
                 }}
               >
                 {block.heading}
@@ -1584,10 +1588,10 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                   style={{ 
                     fontSize: "clamp(16px, 1.2vw, 19px)", 
                     lineHeight: 1.85,
-                    color: hexToRgba(txtHex, 0.8),
-                    "--tw-prose-body": hexToRgba(txtHex, 0.8),
+                    color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
+                    "--tw-prose-body": isLight ? txtHex : hexToRgba(txtHex, 0.8),
                     "--tw-prose-headings": txtHex,
-                    "--tw-prose-lead": hexToRgba(txtHex, 0.8),
+                    "--tw-prose-lead": isLight ? txtHex : hexToRgba(txtHex, 0.8),
                     "--tw-prose-links": accentHex,
                     "--tw-prose-bold": txtHex,
                     "--tw-prose-counters": hexToRgba(txtHex, 0.6),
@@ -1631,7 +1635,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                     img.style.display = "none";
                   }}
                 />
-                <ImageFallback idx={panelIdx} />
+                <ImageFallback idx={panelIdx} accentHex={accentHex} />
               </div>
             ) : null}
           </div>
