@@ -1,5 +1,4 @@
-import { Offer } from "../projectData";
-import type { ContentBlock, Pillar, PillarTheme } from "../types/pillars";
+import type { ContentBlock, Offer, Pillar, PillarTheme } from "../types/pillars";
 
 
 
@@ -27,7 +26,8 @@ interface ApiPillar {
   theme?: string | PillarTheme;
   content_blocks?: ApiBlock[];
   content_blocks_data?: ApiBlock[];
-  offers?: Offer[];
+  offers?: Offer[] | string;
+  offers_data?: Offer[] | string;
 }
 
 interface PillarsApiResponse {
@@ -149,6 +149,7 @@ function mapApiToPillar(api: ApiPillar): Pillar {
   const finalTitle = title.toLowerCase() === "string" ? "Pillar Details" : title;
 
   return {
+    id: api.id,
     slug: api.slug,
     title: finalTitle,
     description: api.description ?? "",
@@ -159,8 +160,21 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     services: toArray(api.services),
     theme: toTheme(api.theme),
     contentBlocks: blocks,
-    offers: Array.isArray(api.offers) ? api.offers : undefined,
+    offers: parseOffers(api.offers ?? api.offers_data),
   };
+}
+
+function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
+  if (!value) return undefined;
+  if (Array.isArray(value)) return value.length ? value : undefined;
+
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return undefined;
+    return parsed.length ? (parsed as Offer[]) : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 // ─── Resilient fetch with AbortController timeout ─────────────────────────────
@@ -211,11 +225,15 @@ async function apiFetch<T>(
 // ISR keeps the last valid cached page and retries on the next request.
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function fetchAllPillars(): Promise<Pillar[]> {
+async function fetchAllApiPillars(): Promise<ApiPillar[]> {
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/", {
     tags: [PILLARS_CACHE_TAG],
   });
-  const items = (res.data ?? res.results ?? []).reverse();
+  return (res.data ?? res.results ?? []).reverse();
+}
+
+async function fetchAllPillars(): Promise<Pillar[]> {
+  const items = await fetchAllApiPillars();
   const pillars = items.map(mapApiToPillar);
   console.log(`[pillars] Fetched ${pillars.length} pillars from API`);
   return pillars;
