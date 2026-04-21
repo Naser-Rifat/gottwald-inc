@@ -1613,7 +1613,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                     "--tw-prose-code": txtHex,
                     "--tw-prose-pre-code": txtHex,
                     "--tw-prose-pre-bg": hexToRgba(bgHex, 0.5),
-                  } as any}
+                  } as React.CSSProperties}
                 >
                   <div 
                     className="[&_a]:font-semibold [&_a:hover]:opacity-80 transition-opacity"
