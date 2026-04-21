@@ -18,6 +18,13 @@ function json(data: object, status = 200) {
   return NextResponse.json(data, { status, headers: corsHeaders() });
 }
 
+function getRevalidationSecret(): string | null {
+  const secret = process.env.REVALIDATION_SECRET;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") return null;
+  return "";
+}
+
 /**
  * Preflight for CORS — browsers send OPTIONS before a cross-origin POST
  * with JSON content-type.
@@ -47,12 +54,13 @@ export function OPTIONS() {
 export async function POST(request: NextRequest) {
   try {
     // ── Auth check ────────────────────────────────────────────────────────
-    const secret = process.env.REVALIDATION_SECRET;
-    if (secret) {
+    const secret = getRevalidationSecret();
+    if (secret === null) {
+      return json({ error: "REVALIDATION_SECRET is required in production." }, 500);
+    }
+    if (secret !== "") {
       const auth = request.headers.get("authorization");
-      if (auth !== `Bearer ${secret}`) {
-        return json({ error: "Unauthorized" }, 401);
-      }
+      if (auth !== `Bearer ${secret}`) return json({ error: "Unauthorized" }, 401);
     }
 
     // ── Parse body ────────────────────────────────────────────────────────
@@ -78,8 +86,11 @@ export async function POST(request: NextRequest) {
  * e.g. curl https://gottwald.world/api/revalidate?secret=xxx
  */
 export async function GET(request: NextRequest) {
-  const secret = process.env.REVALIDATION_SECRET;
-  if (secret) {
+  const secret = getRevalidationSecret();
+  if (secret === null) {
+    return json({ error: "REVALIDATION_SECRET is required in production." }, 500);
+  }
+  if (secret !== "") {
     const param = request.nextUrl.searchParams.get("secret");
     if (param !== secret) {
       return json({ error: "Unauthorized" }, 401);
