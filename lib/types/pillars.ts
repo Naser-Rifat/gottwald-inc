@@ -27,6 +27,7 @@ export interface Offer {
 }
 
 export interface Pillar {
+  id?: string;
   slug: string;
   title: string;
   tags: string[];

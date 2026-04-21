@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect, useRef, useCallback, useMemo } from "react";
 import gsap from "gsap";
 import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
-import { projects as mockProjects } from "@/lib/projectData";
 import { useRouter } from "next/navigation";
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — matched to homepage globals.css
@@ -26,15 +25,22 @@ const TXT_DARK_MUTED = "rgba(28,29,33,0.5)";
 const BORDER_DARK = "rgba(212,175,55,0.12)";
 const BORDER_LIGHT = "rgba(28,29,33,0.08)";
 
-/** Fallback: look up mock offers by slug when the API doesn't provide them yet */
-function getOffersForPillar(slug: string): Offer[] | undefined {
-  const mock = mockProjects.find((p) => p.slug === slug);
-  return mock?.offers as Offer[] | undefined;
-}
-
 interface Props {
   project: Pillar;
   nextProject: Pillar;
+}
+
+function normalizeOffers(input: unknown): Offer[] {
+  if (Array.isArray(input)) return input as Offer[];
+  if (typeof input === "string") {
+    try {
+      const parsed = JSON.parse(input);
+      return Array.isArray(parsed) ? (parsed as Offer[]) : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
 }
 
 export default function PillarDetailClient({ project, nextProject }: Props) {
@@ -44,15 +50,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   const progressRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
 
-  // Merge API offers with fallback mock offers until backend supports the field
+  // API-only offers (no mock fallback on details page)
   const enrichedProject = useMemo(() => {
-    if (project.offers && project.offers.length > 0) return project;
-    const fallbackOffers = getOffersForPillar(project.slug);
-    if (fallbackOffers) {
-      return { ...project, offers: fallbackOffers };
-    }
-    return project;
+    const normalizedOffers = normalizeOffers(project.offers);
+    return { ...project, offers: normalizedOffers };
   }, [project]);
+
+  console.log(enrichedProject);
 
   const registerPanel = useCallback((el: HTMLElement | null, idx: number) => {
     if (el) panelRefs.current[idx] = el;
@@ -194,38 +198,49 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     const heroPanel = panelRefs.current[0];
     if (heroPanel) {
       const tl = gsap.timeline({ delay: 0.2 });
-      tl.fromTo(
-        heroPanel.querySelector(".hero-label"),
+      const animateIfPresent = (
+        selector: string,
+        fromVars: gsap.TweenVars,
+        toVars: gsap.TweenVars,
+        at: number
+      ) => {
+        const target = heroPanel.querySelector(selector);
+        if (!target) return;
+        tl.fromTo(target, fromVars, toVars, at);
+      };
+
+      animateIfPresent(
+        ".hero-label",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         0
       );
-      tl.fromTo(
-        heroPanel.querySelector(".hero-title"),
+      animateIfPresent(
+        ".hero-title",
         { y: 80, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" },
         0.1
       );
-      tl.fromTo(
-        heroPanel.querySelector(".hero-desc"),
+      animateIfPresent(
+        ".hero-desc",
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
         0.4
       );
-      tl.fromTo(
-        heroPanel.querySelector(".hero-services"),
+      animateIfPresent(
+        ".hero-services",
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
         0.5
       );
-      tl.fromTo(
-        heroPanel.querySelector(".hero-cta"),
+      animateIfPresent(
+        ".hero-cta",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         0.6
       );
-      tl.fromTo(
-        heroPanel.querySelector(".hero-image"),
+      animateIfPresent(
+        ".hero-image",
         { clipPath: "inset(0 0 100% 0)", scale: 1.08 },
         {
           clipPath: "inset(0 0 0% 0)",
@@ -282,9 +297,9 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           <span
             className="hidden sm:inline-flex items-center px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold backdrop-blur-md pointer-events-auto"
             style={{ 
-              color: project.theme.background,
-              backgroundColor: hexToRgba(project.theme.background, 0.1),
-              border: `1px solid ${hexToRgba(project.theme.background, 0.2)}`
+              color: project.theme.text,
+              backgroundColor: hexToRgba(project.theme.text, 0.1),
+              border: `1px solid ${hexToRgba(project.theme.text, 0.2)}`
             }}
           >
             {project.tags?.join(" · ")}
@@ -317,7 +332,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       {/* ─── Scroll Track ─── */}
       <div
         ref={trackRef}
-        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-0 will-change-transform relative z-10"
+        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10"
       >
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
@@ -330,11 +345,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             {/* Section marker — matching homepage pattern */}
             <div
               className="hero-label mb-8 flex items-center gap-3"
-              style={{ opacity: 0 }}
+              style={{ opacity: 1 }}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: project.theme.accent, boxShadow: `0 0 8px ${hexToRgba(project.theme.accent, 0.6)}` }}
+                style={{ backgroundColor: project.theme.background, boxShadow: `0 0 8px ${hexToRgba(project.theme.accent, 0.6)}` }}
               />
               <span
                 className="text-xs tracking-[0.25em] uppercase font-semibold"
@@ -354,7 +369,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 letterSpacing: "-0.01em",
                 marginBottom: "40px",
                 color: TXT_LIGHT,
-                opacity: 0,
+                opacity: 1,
               }}
             >
               {project.title}
@@ -363,7 +378,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             <div className="flex flex-col xl:flex-row gap-8 lg:gap-10 items-start w-full">
               <div
                 className="hero-desc w-full xl:max-w-105 flex flex-col"
-                style={{ opacity: 0 }}
+                style={{ opacity: 1 }}
               >
                 {/* Scrollable description zone */}
                 <div
@@ -418,7 +433,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                         letterSpacing: "0.25em",
                         textTransform: "uppercase" as const,
                         transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
-                        opacity: 0,
+                        opacity: 1,
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = project.theme.accent;
@@ -442,7 +457,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
               {project.services && project.services.length > 0 && (
                 <div
                   className="hero-services w-full xl:w-60 shrink-0 xl:pt-1"
-                  style={{ opacity: 0 }}
+                  style={{ opacity: 1 }}
                 >
                   <h3
                     className="mb-3"
@@ -491,7 +506,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             <div
               className="hero-image relative w-full h-full rounded-xl overflow-hidden"
               style={{
-                clipPath: "inset(0 0 100% 0)",
+                clipPath: "inset(0 0 0% 0)",
                 boxShadow: `0 20px 80px rgba(0,0,0,0.5), 0 0 40px ${hexToRgba(project.theme.accent, 0.04)}`,
               }}
             >
@@ -949,9 +964,11 @@ function SectionLabel({ idx, text, color, dotColor }: { idx: number; text: strin
    ═══════════════════════════════════════════════════════════════ */
 
 const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number }>(
+  
   function OffersBlock({ project, panelIdx }, ref) {
     const router = useRouter();
     if (!project.offers || project.offers.length === 0) return null;
+
 
     /* ── Tier config — each metal has its own colour language ── */
     const TIER_CONFIG = {
@@ -1004,9 +1021,12 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
         }}
       >
         <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)` }} />
-        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-0 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
+        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
           {/* Section header */}
-          <div className="panel-label flex flex-col gap-2 mb-12">
+          <div
+            className="panel-label relative z-20 flex flex-col gap-2 mb-12"
+            style={{ opacity: 1 }}
+          >
             <div className="flex items-center gap-3 mb-2">
               <span
                 className="w-1.5 h-1.5 rounded-full"
@@ -1050,9 +1070,10 @@ const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number 
               const tc = TIER_CONFIG[tierKey];
               const isCenter = idx === Math.floor(arr.length / 2);
               
-              const features = offer.description.includes("\n")
-                ? offer.description.split("\n").map(s => s.trim()).filter(Boolean)
-                : offer.description.split(". ").map(s => s.trim()).filter(Boolean).map(s => s.endsWith(".") ? s : s + ".");
+              const desc = offer.description || "";
+              const features = desc.includes("\n")
+                ? desc.split("\n").map(s => s.trim()).filter(Boolean)
+                : desc.split(". ").map(s => s.trim()).filter(Boolean).map(s => s.endsWith(".") ? s : s + ".");
 
               return (
                 <div
