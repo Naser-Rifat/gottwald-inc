@@ -29,8 +29,8 @@ export default function NextPageTransition() {
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: "power3.out",
+          duration: 1.05,
+          ease: "power4.out",
           scrollTrigger: {
             trigger: container,
             start: "top 85%",
@@ -52,10 +52,10 @@ export default function NextPageTransition() {
           if (p >= 1 && !navigatedRef.current) {
             navigatedRef.current = true;
             setNavigating(true);
-            // Brief delay for visual feedback then navigate
+            // Brief delay for visual feedback then navigate.
             setTimeout(() => {
               router.push("/about");
-            }, 600);
+            }, 520);
           }
         },
       });
@@ -67,28 +67,30 @@ export default function NextPageTransition() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-[#0a0a0a] border-t border-white/8 opacity-0"
+      className="relative w-full bg-[#0a0a0a] border-t border-white/8 opacity-0 overflow-hidden"
       style={{ minHeight: "60vh" }}
     >
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_70%_35%,rgba(201,168,76,0.08),transparent_52%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(255,255,255,0.015),transparent_28%,rgba(0,0,0,0.55))]" />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.018] [background-image:radial-gradient(rgba(255,255,255,0.5)_0.5px,transparent_0.5px)] [background-size:3px_3px]" />
+
       {/* ── "KEEP SCROLLING" nudge ── */}
-      <div className="px-[5vw] pt-[15vh] pb-8">
-        <p className="text-[9px] tracking-[0.4em] uppercase text-white/25 font-medium leading-relaxed">
-          Keep scrolling
-          <br />
-          to learn more
-        </p>
+      <div className="relative px-[5vw] pt-[14vh] pb-8">
+        <div className="inline-flex items-center gap-3">
+          <span className="h-px w-10 bg-[#C9A84C]/80" />
+          <p className="text-[9px] tracking-[0.5em] uppercase text-white/35 font-medium">
+            Next Chapter
+          </p>
+        </div>
       </div>
 
       {/* ── Main panel ── */}
-      <div className="px-[5vw] pb-20 flex flex-col sm:flex-row items-end justify-between gap-8">
+      <div className="relative px-[5vw] pb-20 flex flex-col sm:flex-row items-end justify-between gap-10">
         {/* Left: Big label */}
-        <div>
-          <p className="text-[9px] tracking-[0.35em] uppercase text-white/20 mb-4">
-            Next Chapter
-          </p>
+        <div className="max-w-[900px]">
           <Link href="/about">
             <h2
-              className="font-bold tracking-[-0.04em] leading-[0.85] text-white hover:text-white/80 transition-colors cursor-pointer"
+              className="font-black tracking-[-0.05em] leading-[0.82] text-white/92 hover:text-white transition-colors duration-300 cursor-pointer"
               style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)" }}
             >
               ABOUT
@@ -96,32 +98,44 @@ export default function NextPageTransition() {
               US
             </h2>
           </Link>
+          <p className="mt-6 text-[10px] tracking-[0.32em] uppercase text-white/32">
+            Strategic Profile · Leadership Vision
+          </p>
         </div>
 
         {/* Right: NEXT PAGE label + animated progress bar */}
-        <div className="flex flex-col items-end gap-4 min-w-[180px]">
-          <div className="flex items-center gap-3 text-white/40">
+        <div className="flex flex-col items-end gap-3 min-w-[240px] border-t border-white/15 pt-3">
+          <div className="flex items-center gap-3 text-white/60">
             <span className="text-[9px] tracking-[0.35em] uppercase font-medium">
               Next Page
             </span>
-            <span className="text-sm">→</span>
+            <span className="text-[15px] text-[#C9A84C] animate-[arrow-nudge_1.1s_ease-in-out_infinite]">
+              →
+            </span>
           </div>
 
           {/* Progress track */}
           <div
             ref={progressTrackRef}
-            className="w-full h-[1px] bg-white/10 relative overflow-hidden"
-            style={{ minWidth: "160px" }}
+            className="w-full h-px bg-white/12 relative overflow-hidden"
+            style={{ minWidth: "220px" }}
           >
             <div
               ref={progressBarRef}
-              className="absolute left-0 top-0 h-full bg-white transition-none"
+              className="absolute left-0 top-0 h-full bg-linear-to-r from-[#C9A84C] via-[#d6bf7a] to-white/80 transition-none"
               style={{ width: `${progress * 100}%` }}
+            />
+            <div
+              className="absolute top-1/2 h-1.5 w-1.5 rounded-full bg-[#C9A84C] shadow-[0_0_12px_rgba(201,168,76,0.8)]"
+              style={{
+                left: `calc(${Math.round(progress * 100)}% - 3px)`,
+                transform: "translateY(-50%)",
+              }}
             />
           </div>
 
-          <span className="text-[10px] font-mono text-white/25">
-            {Math.round(progress * 100)}%
+          <span className="text-[10px] font-mono text-white/45 tabular-nums tracking-[0.18em]">
+            {String(Math.round(progress * 100)).padStart(2, "0")}%
           </span>
         </div>
       </div>
@@ -129,10 +143,17 @@ export default function NextPageTransition() {
       {/* ── Full-screen flash overlay on navigation ── */}
       {navigating && (
         <div
-          className="fixed inset-0 bg-white z-[9999] pointer-events-none"
-          style={{ animation: "flash-out 0.6s ease-in forwards" }}
+          className="fixed inset-0 bg-white z-9999 pointer-events-none"
+          style={{ animation: "flash-out 0.7s cubic-bezier(0.22,1,0.36,1) forwards" }}
         />
       )}
+
+      <style>{`
+        @keyframes arrow-nudge {
+          0%, 100% { transform: translateX(0); opacity: 0.72; }
+          50% { transform: translateX(3px); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
