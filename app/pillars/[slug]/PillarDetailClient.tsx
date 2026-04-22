@@ -47,8 +47,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<HTMLElement[]>([]);
+  const progressWrapRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
+  const isLeavingRef = useRef(false);
+  const router = useRouter();
 
   // API-only offers (no mock fallback on details page)
   const enrichedProject = useMemo(() => {
@@ -65,6 +68,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   useEffect(() => {
     const outer = outerRef.current;
     const track = trackRef.current;
+    const progressWrap = progressWrapRef.current;
     const progress = progressRef.current;
     if (!outer || !track) return;
 
@@ -81,13 +85,40 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       const ease = 0.07;
       let raf: number;
       let maxScroll = 0;
+      let backIntent = 0;
+      let lastBackWheelAt = 0;
+      const BACK_INTENT_WINDOW_MS = 420;
+      const BACK_THRESHOLD_TRACKPAD = 95;
+      const BACK_THRESHOLD_WHEEL = 140;
 
       const recalc = () => {
         maxScroll = track.scrollWidth - window.innerWidth;
       };
       recalc();
 
+      const goToPreviousPage = () => {
+        if (isLeavingRef.current) return;
+        isLeavingRef.current = true;
+        if (progressWrap) {
+          gsap.to(progressWrap, { opacity: 0, duration: 0.2, ease: "power2.out" });
+        }
+        gsap.to(track, {
+          opacity: 0,
+          duration: 0.25,
+          ease: "power2.out",
+          onComplete: () => {
+            if (window.history.length > 1) router.back();
+            else router.push("/our-work");
+          },
+        });
+      };
+
       const onWheel = (e: WheelEvent) => {
+        if (isLeavingRef.current) {
+          e.preventDefault();
+          return;
+        }
+
         // Check if the user is hovering over an internal scrollable zone
         const target = e.target as HTMLElement;
         const scrollableNode = target.closest(".allow-native-scroll");
@@ -110,6 +141,35 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         e.preventDefault();
         const delta =
           Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        const normalizedDelta =
+          e.deltaMode === 1
+            ? delta * 20 // wheel lines -> px-like value
+            : e.deltaMode === 2
+              ? delta * window.innerHeight // page units -> px-like value
+              : delta;
+
+        // Overscroll-left gesture on the first panel goes back to previous page.
+        if (normalizedDelta < 0 && xTo <= 0.5 && currentX <= 1) {
+          const now = performance.now();
+          if (now - lastBackWheelAt > BACK_INTENT_WINDOW_MS) {
+            backIntent = 0;
+          }
+          lastBackWheelAt = now;
+
+          backIntent += Math.abs(normalizedDelta);
+          const threshold =
+            Math.abs(normalizedDelta) < 16
+              ? BACK_THRESHOLD_TRACKPAD
+              : BACK_THRESHOLD_WHEEL;
+
+          if (backIntent >= threshold) {
+            goToPreviousPage();
+          }
+          return;
+        }
+
+        backIntent = 0;
+        lastBackWheelAt = 0;
         xTo = Math.max(0, Math.min(xTo + delta, maxScroll));
       };
 
@@ -260,7 +320,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     );
 
     return () => mm.revert();
-  }, []);
+  }, [router]);
 
   const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
   const totalPanels = 2 + (enrichedProject.contentBlocks?.length || 0) + (hasOffers ? 1 : 0);
@@ -310,6 +370,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
       {/* ─── Progress Bar ─── */}
       <div
+        ref={progressWrapRef}
         className="fixed bottom-0 left-0 w-full h-px z-50"
         style={{ backgroundColor: hexToRgba(project.theme.accent, 0.1) }}
       >
