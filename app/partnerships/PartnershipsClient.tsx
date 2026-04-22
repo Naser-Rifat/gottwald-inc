@@ -1405,17 +1405,17 @@ export default function PartnershipsClient() {
           </div>
         </section>
 
+        {/* ── FOOTER ── */}
+        <section className="relative z-10 bg-[#0a0a0a]">
+          <FooterSection />
+        </section>
+
         {/* ── NEXT CHAPTER ── */}
         <NextChapterTransition
           nextTitle="CAREERS"
           nextHref="/careers"
           prevHref="/about"
         />
-
-        {/* ── FOOTER ── */}
-        <section className="relative z-10 bg-[#0a0a0a]">
-          <FooterSection />
-        </section>
       </main>
     </div>
   );

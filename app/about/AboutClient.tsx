@@ -1248,12 +1248,12 @@ export default function AboutClient() {
         </section>
       </main>
 
+      <FooterSection />
       <NextChapterTransition
         nextTitle="PARTNERSHIP"
         nextHref="/partnerships"
         prevHref="/"
       />
-      <FooterSection />
     </div>
   );
 }
