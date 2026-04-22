@@ -676,7 +676,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         >
           {/* Guard: only show "Next Chapter" when a different pillar exists */}
           {nextProject.slug !== project.slug ? (
-            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
+            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-100">
               <Link
                 href={`/pillars/${nextProject.slug}`}
                 className="no-underline group"
@@ -738,7 +738,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </div>
           ) : (
             /* Fallback when only 1 pillar exists — elegant return-to-home CTA */
-            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-0">
+            <div className="panel-content w-full flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 pb-20 lg:px-15 lg:pb-24 opacity-100">
               <Link href="/" className="no-underline group">
                 <span
                   className="block text-[10px] tracking-[0.3em] uppercase font-semibold mb-4"
@@ -944,7 +944,7 @@ function ImageFallback({ idx, accentHex }: { idx: number; accentHex: string }) {
 /** Section label — "• 02 — HEADING" matching homepage style */
 function SectionLabel({ idx, text, color, dotColor }: { idx: number; text: string; color: string; dotColor: string }) {
   return (
-    <div className="panel-label flex items-center gap-3 mb-10 opacity-0">
+    <div className="panel-label flex items-center gap-3 mb-10 opacity-100">
       <span
         className="w-1.5 h-1.5 rounded-full shadow-lg"
         style={{ backgroundColor: dotColor, boxShadow: `0 0 8px ${hexToRgba(dotColor, 0.6)}` }}
@@ -1255,7 +1255,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
+          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
               <SectionLabel idx={panelIdx} text="Case Study" color={txtHex} dotColor={accentHex} />
               <h3
@@ -1342,7 +1342,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
           boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
         }}
       >
-        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
+        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
             <SectionLabel idx={panelIdx} text="Key Metrics" color={txtHex} dotColor={accentHex} />
             <p
@@ -1465,7 +1465,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           </div>
         </div>
 
-        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-0 [&::-webkit-scrollbar]:w-0">
+        <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-100 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
             <SectionLabel idx={panelIdx} text="Feature Focus" color={txtHex} dotColor={accentHex} />
             <h3
@@ -1595,7 +1595,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-0 [&::-webkit-scrollbar]:w-0">
+          <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
               <SectionLabel idx={panelIdx} text="System Specifications" color={txtHex} dotColor={accentHex} />
               <h3
