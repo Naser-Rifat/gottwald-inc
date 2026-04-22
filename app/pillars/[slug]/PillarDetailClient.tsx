@@ -908,6 +908,13 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+function normalizeRichTextHtml(html: string): string {
+  const raw = (html || "").trim();
+  if (!raw) return raw;
+  // Some records store literal "\n" sequences in HTML strings; convert to <br/>.
+  return raw.includes("\\n") ? raw.replaceAll("\\n", "<br/>") : raw;
+}
+
 interface BlockProps {
   block: ContentBlock;
   project: Pillar;
@@ -1626,7 +1633,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
 
               {block.body && (
                 <div
-                  className="panel-body prose max-w-none prose-headings:font-normal"
+                  className="panel-body prose max-w-none prose-headings:font-normal prose-ul:my-0 prose-ul:list-none prose-ul:pl-0 prose-li:my-0 prose-li:pl-0"
                   style={{ 
                     fontSize: "clamp(16px, 1.2vw, 19px)", 
                     lineHeight: 1.85,
@@ -1648,8 +1655,9 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                   } as React.CSSProperties}
                 >
                   <div 
-                    className="[&_a]:font-semibold [&_a:hover]:opacity-80 transition-opacity"
-                    dangerouslySetInnerHTML={{ __html: block.body }}
+                    className="[&_a]:font-semibold [&_a:hover]:opacity-80 transition-opacity [&_ul]:space-y-4 [&_li]:relative [&_li]:border-b [&_li]:border-(--stage-divider) [&_li]:pb-4 [&_li]:pl-7 [&_li:last-child]:border-b-0 [&_li:last-child]:pb-0 [&_li::before]:absolute [&_li::before]:left-0 [&_li::before]:top-[0.72em] [&_li::before]:h-1.5 [&_li::before]:w-1.5 [&_li::before]:rounded-full [&_li::before]:bg-(--stage-bullet)"
+                    style={{ ["--stage-bullet" as string]: hexToRgba(accentHex, 0.85), ["--stage-divider" as string]: hexToRgba(txtHex, 0.12) }}
+                    dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(block.body) }}
                   />
                 </div>
               )}
