@@ -155,51 +155,79 @@ export default function NextChapterTransition({
     lastScrollYRef.current = window.scrollY;
     maxScrollYRef.current = Math.max(maxScrollYRef.current, window.scrollY);
     let touchStartY = 0;
+    let touchLastY = 0;
+
+    // Hidden reverse-scroll progress (0..1). User must keep overscrolling
+    // upward at the top edge to fill this before navigation fires.
+    let backCharge = 0;
+    const BACK_NAV_DISTANCE = 1200; // px of aggregate upward delta needed
+    const BACK_RESET_DISTANCE = 400; // forward drain rate
+    let drainTimer: number | null = null;
+
+    const scheduleDrain = () => {
+      if (drainTimer !== null) return;
+      drainTimer = window.setInterval(() => {
+        backCharge = Math.max(0, backCharge - 0.04);
+        if (backCharge === 0 && drainTimer !== null) {
+          clearInterval(drainTimer);
+          drainTimer = null;
+        }
+      }, 80);
+    };
+
+    const addCharge = (deltaPx: number) => {
+      if (hasNavigatedRef.current) return;
+      backCharge = Math.min(1, backCharge + deltaPx / BACK_NAV_DISTANCE);
+      scheduleDrain();
+      if (backCharge >= 1) {
+        backCharge = 0;
+        navigate(prevHref);
+      }
+    };
+
+    const drainCharge = (deltaPx: number) => {
+      backCharge = Math.max(0, backCharge - deltaPx / BACK_RESET_DISTANCE);
+    };
 
     const onScroll = () => {
       const currentY = window.scrollY;
-      const scrollingUp = currentY < lastScrollYRef.current;
       maxScrollYRef.current = Math.max(maxScrollYRef.current, currentY);
-
-      if (
-        maxScrollYRef.current >= 240 &&
-        !hasNavigatedRef.current &&
-        scrollingUp &&
-        currentY <= 8
-      ) {
-        navigate(prevHref);
-      }
-
       lastScrollYRef.current = currentY;
     };
 
     const onWheel = (e: WheelEvent) => {
-      // If user scrolls UP while already at top, go to previous page immediately.
       if (hasNavigatedRef.current) return;
-      if (e.deltaY >= 0) return;
       if (window.scrollY > 2) return;
-      navigate(prevHref);
+      if (e.deltaY < 0) {
+        addCharge(Math.abs(e.deltaY));
+      } else if (e.deltaY > 0 && backCharge > 0) {
+        drainCharge(e.deltaY);
+      }
     };
 
     const onTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0]?.clientY ?? 0;
+      touchLastY = touchStartY;
     };
 
     const onTouchMove = (e: TouchEvent) => {
-      // If user swipes DOWN while already at top, go to previous page.
       if (hasNavigatedRef.current) return;
       if (window.scrollY > 2) return;
       const y = e.touches[0]?.clientY ?? 0;
-      const delta = y - touchStartY;
-      if (delta <= 18) return;
-      navigate(prevHref);
+      const frameDelta = y - touchLastY;
+      touchLastY = y;
+      if (frameDelta > 0) {
+        addCharge(frameDelta);
+      } else if (frameDelta < 0 && backCharge > 0) {
+        drainCharge(Math.abs(frameDelta));
+      }
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (hasNavigatedRef.current) return;
       if (window.scrollY > 2) return;
       if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") {
-        navigate(prevHref);
+        addCharge(120);
       }
     };
 
@@ -214,6 +242,7 @@ export default function NextChapterTransition({
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("keydown", onKeyDown);
+      if (drainTimer !== null) clearInterval(drainTimer);
     };
   }, [navigate, prevHref]);
 
