@@ -297,9 +297,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           <span
             className="hidden sm:inline-flex items-center px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold backdrop-blur-md pointer-events-auto"
             style={{ 
-              color: project.theme.text,
-              backgroundColor: hexToRgba(project.theme.text, 0.1),
-              border: `1px solid ${hexToRgba(project.theme.text, 0.2)}`
+              color: TXT_LIGHT,
+              backgroundColor: hexToRgba(project.theme.accent, 0.12),
+              border: `1px solid ${hexToRgba(project.theme.accent, 0.25)}`,
+              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
             }}
           >
             {project.tags?.join(" · ")}
@@ -460,20 +461,23 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   style={{ opacity: 1 }}
                 >
                   <h3
-                    className="mb-3"
+                    className="mb-3 inline-flex items-center self-start px-3 py-2 backdrop-blur-md"
                     style={{
                       fontSize: "10px",
                       letterSpacing: "0.45em",
                       fontWeight: 700,
                       textTransform: "uppercase" as const,
-                      color: project.theme.text,
+                      color: TXT_LIGHT,
+                      backgroundColor: "rgba(0,0,0,0.42)",
+                      border: `1px solid ${hexToRgba(project.theme.accent, 0.22)}`,
+                      boxShadow: `0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05)`,
                     }}
                   >
                     Services
                   </h3>
                   <div
                     className="w-10 h-px mb-5"
-                    style={{ backgroundColor: hexToRgba(project.theme.text, 0.35) }}
+                    style={{ backgroundColor: hexToRgba(project.theme.accent, 0.35) }}
                   />
                   <ul
                     style={{
@@ -490,7 +494,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       <li key={s} className="flex items-start gap-3">
                         <span
                           className="mt-[9px] shrink-0 rounded-full"
-                          style={{ width: "4px", height: "4px", backgroundColor: project.theme.text, opacity: 0.7, display: "inline-block" }}
+                          style={{
+                            width: "4px",
+                            height: "4px",
+                            backgroundColor: project.theme.accent,
+                            opacity: 0.75,
+                            display: "inline-block",
+                            boxShadow: `0 0 10px ${hexToRgba(project.theme.accent, 0.35)}`,
+                          }}
                         />
                         <span style={{ fontSize: "clamp(12px, 1vw, 14px)" }} className="tracking-wide">{s}</span>
                       </li>
