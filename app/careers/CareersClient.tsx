@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
+import NextChapterTransition from "@/components/NextChapterTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -946,6 +947,12 @@ export default function CareersClient() {
       </main>
 
       <FooterSection />
+
+      <NextChapterTransition
+        nextTitle="CONTACT"
+        nextHref="/contact"
+        prevHref="/partnerships"
+      />
 
       {/* ── Particle Keyframes (injected once) ── */}
       <style jsx>{`

@@ -327,7 +327,9 @@ export default function ContactClient() {
                     block G
                   </address>
                   <a
-                    href="#"
+                    href="https://maps.app.goo.gl/HG8uekt8zZF4CWgWA"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     data-magnetic
                     className="inline-block mt-4 text-[10px] uppercase font-bold tracking-[0.2em] text-gold border-b border-gold/30 pb-1 hover:border-gold transition-colors px-4 pt-4 -mx-4"
                   >

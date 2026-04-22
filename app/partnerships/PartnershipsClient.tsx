@@ -1406,7 +1406,11 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── NEXT CHAPTER ── */}
-        <NextChapterTransition nextTitle="CAREERS" nextHref="/careers" />
+        <NextChapterTransition
+          nextTitle="CAREERS"
+          nextHref="/careers"
+          prevHref="/about"
+        />
 
         {/* ── FOOTER ── */}
         <section className="relative z-10 bg-[#0a0a0a]">

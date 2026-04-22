@@ -12,6 +12,7 @@ if (typeof window !== "undefined") {
 interface NextChapterProps {
   nextTitle: string;
   nextHref: string;
+  prevHref?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ interface NextChapterProps {
 export default function NextChapterTransition({
   nextTitle,
   nextHref,
+  prevHref,
 }: NextChapterProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -42,6 +44,8 @@ export default function NextChapterTransition({
   const router = useRouter();
   const hasNavigatedRef = useRef(false);
   const lastProgressRef = useRef(0);
+  const lastScrollYRef = useRef(0);
+  const maxScrollYRef = useRef(0);
 
   // Disable transition if any link is clicked on the page
   // This prevents the DOM collapse unmount from triggering a false scroll completion
@@ -59,7 +63,7 @@ export default function NextChapterTransition({
       window.removeEventListener("click", handleGlobalClick, { capture: true });
   }, []);
 
-  const navigate = useCallback(() => {
+  const navigate = useCallback((href: string) => {
     if (hasNavigatedRef.current) return;
     hasNavigatedRef.current = true;
 
@@ -86,7 +90,7 @@ export default function NextChapterTransition({
 
     // 4. Navigate after the overlay fades in
     setTimeout(() => {
-      router.push(nextHref);
+      router.push(href);
 
       // 5. Remove overlay after the new page has time to render
       setTimeout(() => {
@@ -98,7 +102,7 @@ export default function NextChapterTransition({
         }
       }, 500);
     }, 350);
-  }, [nextHref, router]);
+  }, [router]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -113,6 +117,7 @@ export default function NextChapterTransition({
       scrub: 0,
       onUpdate: (self) => {
         const p = Math.min(1, Math.max(0, self.progress));
+        const scrollingForward = self.direction > 0;
 
         // Direct DOM updates — no setState, no React reconciliation
         if (titleRef.current) {
@@ -123,16 +128,18 @@ export default function NextChapterTransition({
           barRef.current.style.transform = `scaleX(${p})`;
         }
         if (pctRef.current) {
-          pctRef.current.textContent = `${Math.floor(p * 100)}%`;
+          pctRef.current.textContent = `${String(Math.floor(p * 100)).padStart(2, "0")}%`;
         }
 
-        if (p >= 0.98 && !hasNavigatedRef.current) {
-          // Guard against instant 0 -> 1 jumps caused by DOM collapsing
-          // during route transitions when another link is clicked.
-          if (lastProgressRef.current > 0.2) {
-            navigate();
-          }
+        if (
+          scrollingForward &&
+          p >= 0.995 &&
+          !hasNavigatedRef.current &&
+          lastProgressRef.current > 0.2
+        ) {
+          navigate(nextHref);
         }
+
         lastProgressRef.current = p;
       },
     });
@@ -140,46 +147,116 @@ export default function NextChapterTransition({
     return () => {
       trigger.kill();
     };
-  }, [navigate]);
+  }, [navigate, nextHref, prevHref]);
+
+  useEffect(() => {
+    if (!prevHref) return;
+
+    lastScrollYRef.current = window.scrollY;
+    maxScrollYRef.current = Math.max(maxScrollYRef.current, window.scrollY);
+    let touchStartY = 0;
+
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      const scrollingUp = currentY < lastScrollYRef.current;
+      maxScrollYRef.current = Math.max(maxScrollYRef.current, currentY);
+
+      if (
+        maxScrollYRef.current >= 240 &&
+        !hasNavigatedRef.current &&
+        scrollingUp &&
+        currentY <= 8
+      ) {
+        navigate(prevHref);
+      }
+
+      lastScrollYRef.current = currentY;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      // If user scrolls UP while already at top, go to previous page immediately.
+      if (hasNavigatedRef.current) return;
+      if (e.deltaY >= 0) return;
+      if (window.scrollY > 2) return;
+      navigate(prevHref);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0]?.clientY ?? 0;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      // If user swipes DOWN while already at top, go to previous page.
+      if (hasNavigatedRef.current) return;
+      if (window.scrollY > 2) return;
+      const y = e.touches[0]?.clientY ?? 0;
+      const delta = y - touchStartY;
+      if (delta <= 18) return;
+      navigate(prevHref);
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (hasNavigatedRef.current) return;
+      if (window.scrollY > 2) return;
+      if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") {
+        navigate(prevHref);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [navigate, prevHref]);
 
   return (
     <div
       ref={wrapperRef}
-      className="relative w-full h-[150vh] bg-[#050505] -mt-1"
+      className="relative w-full h-[150vh] bg-[#050505] -mt-1 overflow-hidden"
     >
       <section className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-20">
         {/* Massive Interactive Title Container */}
         <div className="relative w-full h-full flex flex-col justify-center items-center">
           <div className="absolute top-[20vh] text-center w-full">
-            <span className="text-[10px] tracking-[0.4em] uppercase font-bold text-white/80">
+            <span className="text-[10px] tracking-[0.5em] uppercase font-semibold text-white/58">
               Next Chapter
             </span>
           </div>
 
           <h2
             ref={titleRef}
-            className="text-[15vw] leading-none font-black tracking-tighter uppercase text-center will-change-transform whitespace-nowrap"
+            className="text-[15vw] leading-[0.92] font-black tracking-[-0.04em] uppercase text-center will-change-transform whitespace-nowrap text-white/88"
             style={{ opacity: 0.3 }}
           >
             {nextTitle}
           </h2>
 
           {/* Bottom Progress UI */}
-          <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-48 sm:w-64">
-            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.3em] font-bold text-white/80 mb-1">
+          <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-52 sm:w-64">
+            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.34em] font-semibold text-white/52 mb-1">
               <span>Next Page</span>
-              <span>→</span>
+              <span className="text-white/55">
+                →
+              </span>
             </div>
             {/* Progress Bar */}
-            <div className="w-full h-px bg-white/10 relative origin-left">
+            <div className="w-full h-px bg-white/14 relative origin-left">
               <div
                 ref={barRef}
-                className="absolute top-0 left-0 w-full h-full bg-gold origin-left will-change-transform"
+                className="absolute top-0 left-0 w-full h-full bg-white/80 origin-left will-change-transform"
                 style={{ transform: "scaleX(0)" }}
               />
             </div>
             {/* Percentage */}
-            <span ref={pctRef} className="text-[10px] font-mono text-white/30">
+            <span ref={pctRef} className="text-[10px] font-mono text-white/44 tracking-[0.18em] tabular-nums">
               0%
             </span>
           </div>
