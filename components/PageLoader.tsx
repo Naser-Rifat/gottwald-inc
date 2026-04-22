@@ -179,7 +179,8 @@ export default function GlobalPageLoader() {
 
       document.body.style.overflow = "hidden";
       gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
-      gsap.set(curtainRef.current, { yPercent: -100 });
+      // Instantly cover viewport to avoid old-page flash during route start.
+      gsap.set(curtainRef.current, { yPercent: 0 });
       gsap.set([counterRef.current, labelRef.current], { opacity: 0, y: 20 });
       gsap.set(lineProgressRef.current, { scaleX: 0, transformOrigin: "left center" });
 
@@ -188,29 +189,22 @@ export default function GlobalPageLoader() {
       const tl = gsap.timeline();
       activeTimeline.current = tl;
 
-      // 1. Slide curtain in to cover screen
-      tl.to(curtainRef.current, {
-        yPercent: 0,
-        duration: 0.7,
-        ease: "power4.inOut",
-        onComplete: () => {
-          // ── KEY FIX: Fire router.push IMMEDIATELY when curtain covers screen ──
-          // Don't wait for the counter animation — start data fetch ASAP.
-          React.startTransition(() => {
-            router.push(href);
-          });
-
-          // ── Nuclear safety: hard redirect if pathname never changes after 8s ──
-          // Unlike the old 4s timer, this does NOT lift the curtain prematurely.
-          // It falls back to a full page load instead.
-          if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-          safetyTimerRef.current = setTimeout(() => {
-            if (isTransitioning.current) {
-              window.location.href = href;
-            }
-          }, 8000);
-        },
+      // 1. Wait one frame so the covered state is painted, then route.
+      requestAnimationFrame(() => {
+        React.startTransition(() => {
+          router.push(href);
+        });
       });
+
+      // ── Nuclear safety: hard redirect if pathname never changes after 8s ──
+      // Unlike the old 4s timer, this does NOT lift the curtain prematurely.
+      // It falls back to a full page load instead.
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = setTimeout(() => {
+        if (isTransitioning.current) {
+          window.location.href = href;
+        }
+      }, 8000);
 
       // 2. Fade in labels while curtain is settling
       tl.to([labelRef.current, counterRef.current], { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.05 }, "-=0.3");
