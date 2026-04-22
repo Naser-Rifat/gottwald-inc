@@ -466,14 +466,14 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       letterSpacing: "0.45em",
                       fontWeight: 700,
                       textTransform: "uppercase" as const,
-                      color: project.theme.background,
+                      color: project.theme.text,
                     }}
                   >
                     Services
                   </h3>
                   <div
                     className="w-10 h-px mb-5"
-                    style={{ backgroundColor: hexToRgba(project.theme.background, 0.35) }}
+                    style={{ backgroundColor: hexToRgba(project.theme.text, 0.35) }}
                   />
                   <ul
                     style={{
@@ -490,7 +490,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       <li key={s} className="flex items-start gap-3">
                         <span
                           className="mt-[9px] shrink-0 rounded-full"
-                          style={{ width: "4px", height: "4px", backgroundColor: project.theme.background, opacity: 0.7, display: "inline-block" }}
+                          style={{ width: "4px", height: "4px", backgroundColor: project.theme.text, opacity: 0.7, display: "inline-block" }}
                         />
                         <span style={{ fontSize: "clamp(12px, 1vw, 14px)" }} className="tracking-wide">{s}</span>
                       </li>
