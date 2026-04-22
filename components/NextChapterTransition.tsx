@@ -43,9 +43,6 @@ export default function NextChapterTransition({
   const pctRef = useRef<HTMLSpanElement>(null);
   const router = useRouter();
   const hasNavigatedRef = useRef(false);
-  const lastProgressRef = useRef(0);
-  const lastScrollYRef = useRef(0);
-  const maxScrollYRef = useRef(0);
 
   // Disable transition if any link is clicked on the page
   // This prevents the DOM collapse unmount from triggering a false scroll completion
@@ -108,100 +105,102 @@ export default function NextChapterTransition({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    // ScrollTrigger with NO pin — just reads scroll position
-    // Updates DOM directly via refs — zero React re-renders
-    const trigger = ScrollTrigger.create({
-      trigger: wrapper,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0,
-      onUpdate: (self) => {
-        const p = Math.min(1, Math.max(0, self.progress));
-        const scrollingForward = self.direction > 0;
+    // Virtual progress (0..1). Advances ONLY via wheel/touch input while
+    // the section is visible, so forward navigation requires a deliberate
+    // sustained scroll — and the page takes no extra vertical space.
+    let forwardCharge = 0;
+    const FORWARD_NAV_DISTANCE = 3000; // px of aggregate downward delta
+    const FORWARD_DRAIN_DISTANCE = 800; // upward drain rate inside section
 
-        // Direct DOM updates — no setState, no React reconciliation
-        if (titleRef.current) {
-          titleRef.current.style.transform = `scale(${1 + p * 0.15})`;
-          titleRef.current.style.opacity = String(0.3 + p * 0.7);
-        }
-        if (barRef.current) {
-          barRef.current.style.transform = `scaleX(${p})`;
-        }
-        if (pctRef.current) {
-          pctRef.current.textContent = `${String(Math.floor(p * 100)).padStart(2, "0")}%`;
-        }
+    // Back-to-previous charge (hidden).
+    let backCharge = 0;
+    const BACK_NAV_DISTANCE = 1200;
+    const BACK_RESET_DISTANCE = 400;
+    let backDrainTimer: number | null = null;
 
-        if (
-          scrollingForward &&
-          p >= 0.995 &&
-          !hasNavigatedRef.current &&
-          lastProgressRef.current > 0.2
-        ) {
-          navigate(nextHref);
-        }
-
-        lastProgressRef.current = p;
-      },
-    });
-
-    return () => {
-      trigger.kill();
-    };
-  }, [navigate, nextHref, prevHref]);
-
-  useEffect(() => {
-    if (!prevHref) return;
-
-    lastScrollYRef.current = window.scrollY;
-    maxScrollYRef.current = Math.max(maxScrollYRef.current, window.scrollY);
     let touchStartY = 0;
     let touchLastY = 0;
 
-    // Hidden reverse-scroll progress (0..1). User must keep overscrolling
-    // upward at the top edge to fill this before navigation fires.
-    let backCharge = 0;
-    const BACK_NAV_DISTANCE = 1200; // px of aggregate upward delta needed
-    const BACK_RESET_DISTANCE = 400; // forward drain rate
-    let drainTimer: number | null = null;
+    const updateForwardUI = () => {
+      const p = forwardCharge;
+      if (titleRef.current) {
+        titleRef.current.style.transform = `scale(${1 + p * 0.15})`;
+        titleRef.current.style.opacity = String(0.3 + p * 0.7);
+      }
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${p})`;
+      }
+      if (pctRef.current) {
+        pctRef.current.textContent = `${String(Math.floor(p * 100)).padStart(2, "0")}%`;
+      }
+    };
 
-    const scheduleDrain = () => {
-      if (drainTimer !== null) return;
-      drainTimer = window.setInterval(() => {
+    const isSectionActive = () => {
+      const rect = wrapper.getBoundingClientRect();
+      // Active once the section has scrolled into view by more than half.
+      return rect.top <= 1 && rect.bottom > window.innerHeight * 0.5;
+    };
+
+    const scheduleBackDrain = () => {
+      if (backDrainTimer !== null) return;
+      backDrainTimer = window.setInterval(() => {
         backCharge = Math.max(0, backCharge - 0.04);
-        if (backCharge === 0 && drainTimer !== null) {
-          clearInterval(drainTimer);
-          drainTimer = null;
+        if (backCharge === 0 && backDrainTimer !== null) {
+          clearInterval(backDrainTimer);
+          backDrainTimer = null;
         }
       }, 80);
     };
 
-    const addCharge = (deltaPx: number) => {
+    const addBackCharge = (deltaPx: number) => {
       if (hasNavigatedRef.current) return;
       backCharge = Math.min(1, backCharge + deltaPx / BACK_NAV_DISTANCE);
-      scheduleDrain();
+      scheduleBackDrain();
       if (backCharge >= 1) {
         backCharge = 0;
-        navigate(prevHref);
+        if (prevHref) navigate(prevHref);
       }
     };
 
-    const drainCharge = (deltaPx: number) => {
+    const drainBackCharge = (deltaPx: number) => {
       backCharge = Math.max(0, backCharge - deltaPx / BACK_RESET_DISTANCE);
-    };
-
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      maxScrollYRef.current = Math.max(maxScrollYRef.current, currentY);
-      lastScrollYRef.current = currentY;
     };
 
     const onWheel = (e: WheelEvent) => {
       if (hasNavigatedRef.current) return;
+      const active = isSectionActive();
+
+      // Forward charge: hijack wheel while the section is pinned so native
+      // scroll cannot race past the section.
+      if (active) {
+        if (e.deltaY > 0) {
+          e.preventDefault();
+          forwardCharge = Math.min(
+            1,
+            forwardCharge + e.deltaY / FORWARD_NAV_DISTANCE
+          );
+          updateForwardUI();
+          if (forwardCharge >= 1) navigate(nextHref);
+          return;
+        }
+        if (e.deltaY < 0 && forwardCharge > 0) {
+          e.preventDefault();
+          forwardCharge = Math.max(
+            0,
+            forwardCharge - Math.abs(e.deltaY) / FORWARD_DRAIN_DISTANCE
+          );
+          updateForwardUI();
+          return;
+        }
+      }
+
+      // Back charge: only when at the very top of the page.
+      if (!prevHref) return;
       if (window.scrollY > 2) return;
       if (e.deltaY < 0) {
-        addCharge(Math.abs(e.deltaY));
+        addBackCharge(Math.abs(e.deltaY));
       } else if (e.deltaY > 0 && backCharge > 0) {
-        drainCharge(e.deltaY);
+        drainBackCharge(e.deltaY);
       }
     };
 
@@ -212,44 +211,69 @@ export default function NextChapterTransition({
 
     const onTouchMove = (e: TouchEvent) => {
       if (hasNavigatedRef.current) return;
-      if (window.scrollY > 2) return;
       const y = e.touches[0]?.clientY ?? 0;
       const frameDelta = y - touchLastY;
       touchLastY = y;
+      const active = isSectionActive();
+
+      if (active) {
+        // Swipe up (finger moves up, frameDelta < 0) → advance forward charge.
+        if (frameDelta < 0) {
+          e.preventDefault();
+          forwardCharge = Math.min(
+            1,
+            forwardCharge + Math.abs(frameDelta) / FORWARD_NAV_DISTANCE
+          );
+          updateForwardUI();
+          if (forwardCharge >= 1) navigate(nextHref);
+          return;
+        }
+        if (frameDelta > 0 && forwardCharge > 0) {
+          e.preventDefault();
+          forwardCharge = Math.max(
+            0,
+            forwardCharge - frameDelta / FORWARD_DRAIN_DISTANCE
+          );
+          updateForwardUI();
+          return;
+        }
+      }
+
+      if (!prevHref) return;
+      if (window.scrollY > 2) return;
       if (frameDelta > 0) {
-        addCharge(frameDelta);
+        addBackCharge(frameDelta);
       } else if (frameDelta < 0 && backCharge > 0) {
-        drainCharge(Math.abs(frameDelta));
+        drainBackCharge(Math.abs(frameDelta));
       }
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (hasNavigatedRef.current) return;
+      if (!prevHref) return;
       if (window.scrollY > 2) return;
       if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") {
-        addCharge(120);
+        addBackCharge(120);
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("keydown", onKeyDown);
-      if (drainTimer !== null) clearInterval(drainTimer);
+      if (backDrainTimer !== null) clearInterval(backDrainTimer);
     };
-  }, [navigate, prevHref]);
+  }, [navigate, nextHref, prevHref]);
 
   return (
     <div
       ref={wrapperRef}
-      className="relative w-full h-[150vh] bg-[#050505] -mt-1 overflow-hidden"
+      className="relative w-full h-screen bg-[#050505] -mt-1 overflow-hidden"
     >
       <section className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-20">
         {/* Massive Interactive Title Container */}

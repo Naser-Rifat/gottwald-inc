@@ -100,7 +100,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         if (isLeavingRef.current) return;
         isLeavingRef.current = true;
         if (progressWrap) {
-          gsap.to(progressWrap, { opacity: 0, duration: 0.2, ease: "power2.out" });
+          gsap.to(progressWrap, {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power2.out",
+          });
         }
         gsap.to(track, {
           opacity: 0,
@@ -122,18 +126,19 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         // Check if the user is hovering over an internal scrollable zone
         const target = e.target as HTMLElement;
         const scrollableNode = target.closest(".allow-native-scroll");
-        
+
         if (scrollableNode) {
           const el = scrollableNode as HTMLElement;
           const isScrollable = el.scrollHeight > el.clientHeight;
-          
+
           if (isScrollable) {
             const isAtTop = el.scrollTop === 0;
             // +1px variance for fractional pixel rendering differences
-            const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 1;
-            
+            const isAtBottom =
+              el.scrollHeight - el.scrollTop <= el.clientHeight + 1;
+
             // Bypass GSAP hijack if internal native scrolling is possible
-            if (e.deltaY < 0 && !isAtTop) return; 
+            if (e.deltaY < 0 && !isAtTop) return;
             if (e.deltaY > 0 && !isAtBottom) return;
           }
         }
@@ -196,7 +201,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           }
         });
         if (counterRef.current) {
-          counterRef.current.textContent = String(activeIdx + 1).padStart(2, "0");
+          counterRef.current.textContent = String(activeIdx + 1).padStart(
+            2,
+            "0",
+          );
         }
 
         raf = requestAnimationFrame(animate);
@@ -230,7 +238,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         panels.forEach((panel) => {
           if (!panel) return;
           const rect = panel.getBoundingClientRect();
-          const visible = rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
+          const visible =
+            rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
           if (visible && !panel.dataset.revealed) {
             panel.dataset.revealed = "1";
             revealPanel(panel);
@@ -239,7 +248,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
         if (progress) {
           const scrollY = window.scrollY;
-          const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+          const maxScrollY =
+            document.documentElement.scrollHeight - window.innerHeight;
           const pct = maxScrollY > 0 ? (scrollY / maxScrollY) * 100 : 0;
           gsap.set(progress, { width: `${pct}%` });
         }
@@ -262,7 +272,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         selector: string,
         fromVars: gsap.TweenVars,
         toVars: gsap.TweenVars,
-        at: number
+        at: number,
       ) => {
         const target = heroPanel.querySelector(selector);
         if (!target) return;
@@ -273,31 +283,31 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         ".hero-label",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-        0
+        0,
       );
       animateIfPresent(
         ".hero-title",
         { y: 80, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" },
-        0.1
+        0.1,
       );
       animateIfPresent(
         ".hero-desc",
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-        0.4
+        0.4,
       );
       animateIfPresent(
         ".hero-services",
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-        0.5
+        0.5,
       );
       animateIfPresent(
         ".hero-cta",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-        0.6
+        0.6,
       );
       animateIfPresent(
         ".hero-image",
@@ -308,7 +318,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           duration: 1.6,
           ease: "power4.inOut",
         },
-        0.1
+        0.1,
       );
       heroPanel.dataset.revealed = "1";
     }
@@ -316,14 +326,15 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     gsap.fromTo(
       track,
       { opacity: 0 },
-      { opacity: 1, duration: 0.6, ease: "power2.out" }
+      { opacity: 1, duration: 0.6, ease: "power2.out" },
     );
 
     return () => mm.revert();
   }, [router]);
 
   const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
-  const totalPanels = 2 + (enrichedProject.contentBlocks?.length || 0) + (hasOffers ? 1 : 0);
+  const totalPanels =
+    2 + (enrichedProject.contentBlocks?.length || 0) + (hasOffers ? 1 : 0);
 
   return (
     <div
@@ -332,16 +343,15 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       style={{ backgroundColor: "transparent", color: TXT_LIGHT }}
     >
       {/* ─── Global Atmosphere Overlay ─── */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0" 
-        style={{ 
-          background: "radial-gradient(circle at center, rgba(6,6,6,0.7) 0%, rgba(6,6,6,0.3) 100%)" 
-        }} 
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(circle at center, rgba(6,6,6,0.7) 0%, rgba(6,6,6,0.3) 100%)",
+        }}
       />
       {/* ─── Top Fade Protection ─── */}
-      <div 
-        className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#060606]/90 via-[#060606]/50 to-transparent pointer-events-none" 
-      />
+      <div className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#060606]/90 via-[#060606]/50 to-transparent pointer-events-none" />
 
       {/* ─── Top Navigation ─── */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
@@ -356,7 +366,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         {project.tags && project.tags.length > 0 && (
           <span
             className="hidden sm:inline-flex items-center px-4 py-1.5 rounded-full text-[10px] tracking-[0.25em] uppercase font-bold backdrop-blur-md pointer-events-auto"
-            style={{ 
+            style={{
               color: TXT_LIGHT,
               backgroundColor: hexToRgba(project.theme.accent, 0.12),
               border: `1px solid ${hexToRgba(project.theme.accent, 0.25)}`,
@@ -377,7 +387,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         <div
           ref={progressRef}
           className="h-full"
-          style={{ backgroundColor: project.theme.accent, width: 0, willChange: "width" }}
+          style={{
+            backgroundColor: project.theme.accent,
+            width: 0,
+            willChange: "width",
+          }}
         />
       </div>
 
@@ -386,7 +400,9 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         className="fixed bottom-10 right-8 z-50 text-sm tracking-[0.25em] uppercase font-medium hidden lg:block"
         style={{ color: TXT_MUTED }}
       >
-        <span ref={counterRef} style={{ color: project.theme.accent }}>01</span>
+        <span ref={counterRef} style={{ color: project.theme.accent }}>
+          01
+        </span>
         <span className="mx-1 opacity-30">/</span>
         {String(totalPanels).padStart(2, "0")}
       </div>
@@ -411,7 +427,10 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: project.theme.background, boxShadow: `0 0 8px ${hexToRgba(project.theme.accent, 0.6)}` }}
+                style={{
+                  backgroundColor: project.theme.background,
+                  boxShadow: `0 0 8px ${hexToRgba(project.theme.accent, 0.6)}`,
+                }}
               />
               <span
                 className="text-xs tracking-[0.25em] uppercase font-semibold"
@@ -451,31 +470,34 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                     scrollbarColor: "rgba(255,255,255,0.12) transparent",
                   }}
                 >
-                  {project.description && project.description !== project.title && (
-                    <p
-                      className="mb-4"
-                      style={{
-                        fontSize: "clamp(14px, 1.15vw, 16px)",
-                        lineHeight: 1.65,
-                        color: "rgba(255,255,255, 1)",
-                        fontWeight: 300,
-                      }}
-                    >
-                      {project.description}
-                    </p>
-                  )}
-                  {project.details && project.details !== project.description && project.details !== project.title && (
-                    <p
-                      style={{
-                        fontSize: "clamp(12px, 1vw, 15px)",
-                        lineHeight: 1.7,
-                        color: "rgba(255,255,255,0.80)",
-                        fontWeight: 300,
-                      }}
-                    >
-                      {project.details}
-                    </p>
-                  )}
+                  {project.description &&
+                    project.description !== project.title && (
+                      <p
+                        className="mb-4"
+                        style={{
+                          fontSize: "clamp(14px, 1.15vw, 16px)",
+                          lineHeight: 1.65,
+                          color: "rgba(255,255,255, 1)",
+                          fontWeight: 300,
+                        }}
+                      >
+                        {project.description}
+                      </p>
+                    )}
+                  {project.details &&
+                    project.details !== project.description &&
+                    project.details !== project.title && (
+                      <p
+                        style={{
+                          fontSize: "clamp(12px, 1vw, 15px)",
+                          lineHeight: 1.7,
+                          color: "rgba(255,255,255,0.80)",
+                          fontWeight: 300,
+                        }}
+                      >
+                        {project.details}
+                      </p>
+                    )}
                 </div>
 
                 {/* CTA — separated cleanly below description */}
@@ -498,18 +520,25 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                         opacity: 1,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = project.theme.accent;
+                        e.currentTarget.style.backgroundColor =
+                          project.theme.accent;
                         e.currentTarget.style.color = project.theme.background;
-                        e.currentTarget.style.borderColor = project.theme.accent;
+                        e.currentTarget.style.borderColor =
+                          project.theme.accent;
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "transparent";
                         e.currentTarget.style.color = project.theme.accent;
-                        e.currentTarget.style.borderColor = hexToRgba(project.theme.accent, 0.5);
+                        e.currentTarget.style.borderColor = hexToRgba(
+                          project.theme.accent,
+                          0.5,
+                        );
                       }}
                     >
                       Visit Website
-                      <span className="transition-transform duration-300 group-hover:translate-x-1 text-sm">→</span>
+                      <span className="transition-transform duration-300 group-hover:translate-x-1 text-sm">
+                        →
+                      </span>
                     </a>
                   </div>
                 )}
@@ -538,7 +567,9 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   </h3>
                   <div
                     className="w-10 h-px mb-5"
-                    style={{ backgroundColor: hexToRgba(project.theme.accent, 0.35) }}
+                    style={{
+                      backgroundColor: hexToRgba(project.theme.accent, 0.35),
+                    }}
                   />
                   <ul
                     style={{
@@ -564,7 +595,12 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                             boxShadow: `0 0 10px ${hexToRgba(project.theme.accent, 0.35)}`,
                           }}
                         />
-                        <span style={{ fontSize: "clamp(12px, 1vw, 14px)" }} className="tracking-wide">{s}</span>
+                        <span
+                          style={{ fontSize: "clamp(12px, 1vw, 14px)" }}
+                          className="tracking-wide"
+                        >
+                          {s}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -595,8 +631,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 <div
                   className="absolute inset-0 opacity-[0.025]"
                   style={{
-                    backgroundImage:
-                      `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(project.theme.accent, 0.15)} 2px, ${hexToRgba(project.theme.accent, 0.15)} 3px)`,
+                    backgroundImage: `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(project.theme.accent, 0.15)} 2px, ${hexToRgba(project.theme.accent, 0.15)} 3px)`,
                     backgroundSize: "8px 8px",
                   }}
                 />
@@ -665,7 +700,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
         {/* ═══════ DYNAMIC CMS PANELS ═══════ */}
         {enrichedProject.contentBlocks?.map((block, i) => {
-          const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
+          const hasOffers =
+            enrichedProject.offers && enrichedProject.offers.length > 0;
           const panelIdx = i + (hasOffers ? 2 : 1);
           switch (block.type) {
             case "showcase":
@@ -743,7 +779,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             backgroundColor: GLASS_DARK,
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
-            borderLeft: "1px solid rgba(255,255,255,0.03)"
+            borderLeft: "1px solid rgba(255,255,255,0.03)",
           }}
         >
           {/* Guard: only show "Next Chapter" when a different pillar exists */}
@@ -893,7 +929,7 @@ function revealPanel(panel: HTMLElement) {
       label,
       { y: 15, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-      0
+      0,
     );
   }
 
@@ -907,7 +943,7 @@ function revealPanel(panel: HTMLElement) {
         duration: 1.4,
         ease: "power4.inOut",
       },
-      0
+      0,
     );
   }
 
@@ -916,7 +952,7 @@ function revealPanel(panel: HTMLElement) {
       heading,
       { y: 50, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-      0.25
+      0.25,
     );
   }
 
@@ -925,7 +961,7 @@ function revealPanel(panel: HTMLElement) {
       body,
       { y: 30, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-      0.4
+      0.4,
     );
   }
 
@@ -934,7 +970,7 @@ function revealPanel(panel: HTMLElement) {
       content,
       { opacity: 0 },
       { opacity: 1, duration: 0.6, ease: "power2.out" },
-      0.1
+      0.1,
     );
   }
 
@@ -949,7 +985,7 @@ function revealPanel(panel: HTMLElement) {
         stagger: 0.12,
         ease: "power3.out",
       },
-      0.5
+      0.5,
     );
   }
 }
@@ -963,9 +999,27 @@ import { forwardRef } from "react";
 /** Convert hex to rgba to easily mix dynamic API colors with glass effects */
 function hexToRgba(hex: string, alpha: number): string {
   const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.length === 3 ? cleanHex[0] + cleanHex[0] : cleanHex.substring(0, 2), 16) || 0;
-  const g = parseInt(cleanHex.length === 3 ? cleanHex[1] + cleanHex[1] : cleanHex.substring(2, 4), 16) || 0;
-  const b = parseInt(cleanHex.length === 3 ? cleanHex[2] + cleanHex[2] : cleanHex.substring(4, 6), 16) || 0;
+  const r =
+    parseInt(
+      cleanHex.length === 3
+        ? cleanHex[0] + cleanHex[0]
+        : cleanHex.substring(0, 2),
+      16,
+    ) || 0;
+  const g =
+    parseInt(
+      cleanHex.length === 3
+        ? cleanHex[1] + cleanHex[1]
+        : cleanHex.substring(2, 4),
+      16,
+    ) || 0;
+  const b =
+    parseInt(
+      cleanHex.length === 3
+        ? cleanHex[2] + cleanHex[2]
+        : cleanHex.substring(4, 6),
+      16,
+    ) || 0;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
@@ -996,8 +1050,7 @@ function ImageFallback({ idx, accentHex }: { idx: number; accentHex: string }) {
       <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
-          backgroundImage:
-            `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(accentHex, 0.12)} 2px, ${hexToRgba(accentHex, 0.12)} 3px)`,
+          backgroundImage: `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(accentHex, 0.12)} 2px, ${hexToRgba(accentHex, 0.12)} 3px)`,
           backgroundSize: "8px 8px",
         }}
       />
@@ -1014,19 +1067,35 @@ function ImageFallback({ idx, accentHex }: { idx: number; accentHex: string }) {
       </div>
       <div
         className="absolute inset-0"
-        style={{ border: `1px solid ${hexToRgba(accentHex, 0.05)}`, borderRadius: "12px" }}
+        style={{
+          border: `1px solid ${hexToRgba(accentHex, 0.05)}`,
+          borderRadius: "12px",
+        }}
       />
     </div>
   );
 }
 
 /** Section label — "• 02 — HEADING" matching homepage style */
-function SectionLabel({ idx, text, color, dotColor }: { idx: number; text: string; color: string; dotColor: string }) {
+function SectionLabel({
+  idx,
+  text,
+  color,
+  dotColor,
+}: {
+  idx: number;
+  text: string;
+  color: string;
+  dotColor: string;
+}) {
   return (
     <div className="panel-label flex items-center gap-3 mb-10 opacity-100">
       <span
         className="w-1.5 h-1.5 rounded-full shadow-lg"
-        style={{ backgroundColor: dotColor, boxShadow: `0 0 8px ${hexToRgba(dotColor, 0.6)}` }}
+        style={{
+          backgroundColor: dotColor,
+          boxShadow: `0 0 8px ${hexToRgba(dotColor, 0.6)}`,
+        }}
       />
       <span
         className="text-[10px] tracking-[0.3em] uppercase font-bold"
@@ -1042,211 +1111,283 @@ function SectionLabel({ idx, text, color, dotColor }: { idx: number; text: strin
    OFFERS BLOCK COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
-const OffersBlock = forwardRef<HTMLElement, { project: Pillar; panelIdx: number }>(
-  
-  function OffersBlock({ project, panelIdx }, ref) {
-    const router = useRouter();
-    if (!project.offers || project.offers.length === 0) return null;
+const OffersBlock = forwardRef<
+  HTMLElement,
+  { project: Pillar; panelIdx: number }
+>(function OffersBlock({ project, panelIdx }, ref) {
+  const router = useRouter();
+  if (!project.offers || project.offers.length === 0) return null;
 
+  /* ── Tier config — each metal has its own colour language ── */
+  const TIER_CONFIG = {
+    copper: {
+      gradient:
+        "linear-gradient(135deg, rgba(192,120,64,0.18) 0%, rgba(192,120,64,0.06) 60%, transparent 100%)",
+      headerGlow: "rgba(192,120,64,0.55)",
+      border: "rgba(192,120,64,0.35)",
+      borderHover: "rgba(192,120,64,0.7)",
+      accent: "#c07840",
+      shadow:
+        "0 12px 48px rgba(192,120,64,0.2), 0 0 0 1px rgba(192,120,64,0.12)",
+      badgeBg: "rgba(192,120,64,0.12)",
+      label: "Copper",
+      labelColor: "#c07840",
+      deliverableColor: "rgba(192,120,64,0.8)",
+    },
+    silver: {
+      gradient:
+        "linear-gradient(135deg, rgba(184,192,204,0.15) 0%, rgba(184,192,204,0.05) 60%, transparent 100%)",
+      headerGlow: "rgba(184,192,204,0.55)",
+      border: "rgba(184,192,204,0.30)",
+      borderHover: "rgba(184,192,204,0.65)",
+      accent: "#b8c0cc",
+      shadow:
+        "0 12px 48px rgba(184,192,204,0.15), 0 0 0 1px rgba(184,192,204,0.1)",
+      badgeBg: "rgba(184,192,204,0.1)",
+      label: "Silver",
+      labelColor: "#b8c0cc",
+      deliverableColor: "rgba(184,192,204,0.8)",
+    },
+    gold: {
+      gradient:
+        "linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.07) 60%, transparent 100%)",
+      headerGlow: "rgba(212,175,55,0.65)",
+      border: "rgba(212,175,55,0.40)",
+      borderHover: "rgba(212,175,55,0.80)",
+      accent: "#d4af37",
+      shadow:
+        "0 12px 48px rgba(212,175,55,0.25), 0 0 0 1px rgba(212,175,55,0.15)",
+      badgeBg: "rgba(212,175,55,0.12)",
+      label: "Gold",
+      labelColor: "#d4af37",
+      deliverableColor: "rgba(212,175,55,0.85)",
+    },
+  } as const;
 
-    /* ── Tier config — each metal has its own colour language ── */
-    const TIER_CONFIG = {
-      copper: {
-        gradient: "linear-gradient(135deg, rgba(192,120,64,0.18) 0%, rgba(192,120,64,0.06) 60%, transparent 100%)",
-        headerGlow: "rgba(192,120,64,0.55)",
-        border: "rgba(192,120,64,0.35)",
-        borderHover: "rgba(192,120,64,0.7)",
-        accent: "#c07840",
-        shadow: "0 12px 48px rgba(192,120,64,0.2), 0 0 0 1px rgba(192,120,64,0.12)",
-        badgeBg: "rgba(192,120,64,0.12)",
-        label: "Copper",
-        labelColor: "#c07840",
-        deliverableColor: "rgba(192,120,64,0.8)",
-      },
-      silver: {
-        gradient: "linear-gradient(135deg, rgba(184,192,204,0.15) 0%, rgba(184,192,204,0.05) 60%, transparent 100%)",
-        headerGlow: "rgba(184,192,204,0.55)",
-        border: "rgba(184,192,204,0.30)",
-        borderHover: "rgba(184,192,204,0.65)",
-        accent: "#b8c0cc",
-        shadow: "0 12px 48px rgba(184,192,204,0.15), 0 0 0 1px rgba(184,192,204,0.1)",
-        badgeBg: "rgba(184,192,204,0.1)",
-        label: "Silver",
-        labelColor: "#b8c0cc",
-        deliverableColor: "rgba(184,192,204,0.8)",
-      },
-      gold: {
-        gradient: "linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.07) 60%, transparent 100%)",
-        headerGlow: "rgba(212,175,55,0.65)",
-        border: "rgba(212,175,55,0.40)",
-        borderHover: "rgba(212,175,55,0.80)",
-        accent: "#d4af37",
-        shadow: "0 12px 48px rgba(212,175,55,0.25), 0 0 0 1px rgba(212,175,55,0.15)",
-        badgeBg: "rgba(212,175,55,0.12)",
-        label: "Gold",
-        labelColor: "#d4af37",
-        deliverableColor: "rgba(212,175,55,0.85)",
-      },
-    } as const;
+  type TierKey = keyof typeof TIER_CONFIG;
 
-    type TierKey = keyof typeof TIER_CONFIG;
-
-    return (
-      <section
-        ref={ref}
-        className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15 relative"
+  return (
+    <section
+      ref={ref}
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15 relative"
+      style={{
+        background: "transparent",
+      }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "transparent",
+          background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)`,
         }}
-      >
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)` }} />
-        <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
-          {/* Section header */}
-          <div
-            className="panel-label relative z-20 flex flex-col gap-2 mb-12"
-            style={{ opacity: 1 }}
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: project.theme.accent }}
-              />
-              <span
-                className="text-[10px] tracking-[0.25em] uppercase font-bold"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
-                {String(panelIdx + 1).padStart(2, "0")} — Strategic Offers
-              </span>
-            </div>
-            <h3 className="panel-heading text-[clamp(1.5rem,3vw,2.5rem)] font-serif italic mt-1 opacity-90 text-white">
-              Engagement Matrix
-            </h3>
-            {/* Copper · Silver · Gold legend strip */}
-            <div className="flex items-center gap-6 mt-4">
-              {(["copper", "silver", "gold"] as TierKey[]).map((t) => (
-                <div key={t} className="flex items-center gap-2">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: TIER_CONFIG[t].accent, boxShadow: `0 0 8px ${TIER_CONFIG[t].accent}` }}
-                  />
-                  <span
-                    className="text-[9px] tracking-[0.25em] uppercase font-bold"
-                    style={{ color: TIER_CONFIG[t].labelColor }}
-                  >
-                    {TIER_CONFIG[t].label}
-                  </span>
-                </div>
-              ))}
-            </div>
+      />
+      <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
+        {/* Section header */}
+        <div
+          className="panel-label relative z-20 flex flex-col gap-2 mb-12"
+          style={{ opacity: 1 }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: project.theme.accent }}
+            />
+            <span
+              className="text-[10px] tracking-[0.25em] uppercase font-bold"
+              style={{ color: "rgba(255,255,255,0.8)" }}
+            >
+              {String(panelIdx + 1).padStart(2, "0")} — Strategic Offers
+            </span>
           </div>
+          <h3 className="panel-heading text-[clamp(1.5rem,3vw,2.5rem)] font-serif italic mt-1 opacity-90 text-white">
+            Engagement Matrix
+          </h3>
+          {/* Copper · Silver · Gold legend strip */}
+          <div className="flex items-center gap-6 mt-4">
+            {(["copper", "silver", "gold"] as TierKey[]).map((t) => (
+              <div key={t} className="flex items-center gap-2">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: TIER_CONFIG[t].accent,
+                    boxShadow: `0 0 8px ${TIER_CONFIG[t].accent}`,
+                  }}
+                />
+                <span
+                  className="text-[9px] tracking-[0.25em] uppercase font-bold"
+                  style={{ color: TIER_CONFIG[t].labelColor }}
+                >
+                  {TIER_CONFIG[t].label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {/* Card Based Engagement Matrix */}
-          <div className="panel-body flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-stretch w-full max-w-[1300px] mx-auto mt-12 pb-12 lg:pb-0 pt-4">
-            {project.offers.map((offer, idx, arr) => {
-              const tierKey = (offer.tier as TierKey) in TIER_CONFIG
+        {/* Card Based Engagement Matrix */}
+        <div className="panel-body flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-stretch w-full max-w-[1300px] mx-auto mt-12 pb-12 lg:pb-0 pt-4">
+          {project.offers.map((offer, idx, arr) => {
+            const tierKey =
+              (offer.tier as TierKey) in TIER_CONFIG
                 ? (offer.tier as TierKey)
                 : "gold";
-              const tc = TIER_CONFIG[tierKey];
-              const isCenter = idx === Math.floor(arr.length / 2);
-              
-              const desc = offer.description || "";
-              const features = desc.includes("\n")
-                ? desc.split("\n").map(s => s.trim()).filter(Boolean)
-                : desc.split(". ").map(s => s.trim()).filter(Boolean).map(s => s.endsWith(".") ? s : s + ".");
+            const tc = TIER_CONFIG[tierKey];
+            const isCenter = idx === Math.floor(arr.length / 2);
 
-              return (
+            const desc = offer.description || "";
+            const features = desc.includes("\n")
+              ? desc
+                  .split("\n")
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+              : desc
+                  .split(". ")
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                  .map((s) => (s.endsWith(".") ? s : s + "."));
+
+            return (
+              <div
+                key={idx}
+                className={`w-full lg:w-1/3 flex flex-col rounded-[2rem] overflow-hidden group transition-all duration-700 relative backdrop-blur-3xl ${
+                  isCenter
+                    ? "lg:-translate-y-5 lg:scale-[1.05] z-10"
+                    : "z-0 opacity-80 hover:opacity-100 lg:translate-y-2"
+                }`}
+                style={{
+                  backgroundColor: "rgba(5, 8, 12, 0.6)",
+                  border: `1px solid ${isCenter ? tc.borderHover : tc.border}`,
+                  boxShadow: isCenter
+                    ? `0 20px 80px -10px ${tc.accent}40`
+                    : `0 10px 40px -10px rgba(0,0,0,0.5)`,
+                }}
+              >
+                {/* Editorial Glassmorphic Header Plate */}
                 <div
-                  key={idx}
-                  className={`w-full lg:w-1/3 flex flex-col rounded-[2rem] overflow-hidden group transition-all duration-700 relative backdrop-blur-3xl ${
-                    isCenter ? "lg:-translate-y-5 lg:scale-[1.05] z-10" : "z-0 opacity-80 hover:opacity-100 lg:translate-y-2"
-                  }`}
+                  className="w-full pt-10 pb-16 flex flex-col items-center justify-center relative shadow-2xl shrink-0"
                   style={{
-                    backgroundColor: "rgba(5, 8, 12, 0.6)",
-                    border: `1px solid ${isCenter ? tc.borderHover : tc.border}`,
-                    boxShadow: isCenter ? `0 20px 80px -10px ${tc.accent}40` : `0 10px 40px -10px rgba(0,0,0,0.5)`,
+                    backgroundColor: "rgba(2, 4, 8, 0.4)",
+                    clipPath: "polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%)",
                   }}
                 >
-                  {/* Editorial Glassmorphic Header Plate */}
+                  {/* Glowing Top Edge */}
                   <div
-                    className="w-full pt-10 pb-16 flex flex-col items-center justify-center relative shadow-2xl shrink-0"
+                    className="absolute top-0 w-full h-[1px]"
                     style={{
-                      backgroundColor: "rgba(2, 4, 8, 0.4)",
-                      clipPath: "polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%)",
+                      background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)`,
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
+                  <div
+                    className="absolute inset-0 opacity-40 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(ellipse at top, ${tc.accent}30 0%, transparent 70%)`,
+                    }}
+                  />
+
+                  <span
+                    className="relative z-10 text-[10px] tracking-[0.3em] font-bold uppercase mb-4 px-5 py-2 rounded-full border border-white/10 shadow-lg backdrop-blur-xl"
+                    style={{
+                      color: tc.labelColor,
+                      backgroundColor: "rgba(0,0,0,0.5)",
                     }}
                   >
-                    {/* Glowing Top Edge */}
-                    <div className="absolute top-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)` }} />
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
-                    <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: `radial-gradient(ellipse at top, ${tc.accent}30 0%, transparent 70%)` }} />
-                    
-                    <span 
-                      className="relative z-10 text-[10px] tracking-[0.3em] font-bold uppercase mb-4 px-5 py-2 rounded-full border border-white/10 shadow-lg backdrop-blur-xl"
-                      style={{ color: tc.labelColor, backgroundColor: "rgba(0,0,0,0.5)" }}
-                    >
-                      {tc.label} Pack
-                    </span>
-                    <h3 className="relative z-10 text-2xl lg:text-3xl font-serif text-white text-center px-6 leading-tight drop-shadow-lg">
-                      {offer.title}
-                    </h3>
-                  </div>
+                    {tc.label} Pack
+                  </span>
+                  <h3 className="relative z-10 text-2xl lg:text-3xl font-serif text-white text-center px-6 leading-tight drop-shadow-lg">
+                    {offer.title}
+                  </h3>
+                </div>
 
-                  {/* Body List */}
-                  <div className="flex flex-col flex-1 px-8 lg:px-10 py-8 relative -mt-6">
-                    {/* Glow inside edges */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${tc.accent}15 0%, transparent 60%)` }} />
-                    
-                    <ul className="flex flex-col gap-6 relative z-10 mb-10 flex-1 mt-4">
-                      {features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex gap-4 items-start">
-                          <span className="w-5 h-5 mt-0.5 rounded-full flex flex-col items-center justify-center border shrink-0 bg-black/20 shadow-inner" style={{ borderColor: `${tc.accent}80`, color: tc.accent }}>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </span>
-                          <span className="text-white text-[15px] font-normal leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    {/* Bottom CTA & Deliverable */}
-                    <div className="mt-auto w-full flex flex-col items-center gap-8 relative z-10">
-                      <div className="text-center w-full pt-8 border-t border-white/10">
-                        <span className="block text-[9px] uppercase tracking-[0.2em] mb-2 font-bold" style={{ color: tc.labelColor }}>Deliverable</span>
-                        <span className="text-white text-[15px] block font-medium leading-snug">
-                          {offer.deliverable}
+                {/* Body List */}
+                <div className="flex flex-col flex-1 px-8 lg:px-10 py-8 relative -mt-6">
+                  {/* Glow inside edges */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at top, ${tc.accent}15 0%, transparent 60%)`,
+                    }}
+                  />
+
+                  <ul className="flex flex-col gap-6 relative z-10 mb-10 flex-1 mt-4">
+                    {features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex gap-4 items-start">
+                        <span
+                          className="w-5 h-5 mt-0.5 rounded-full flex flex-col items-center justify-center border shrink-0 bg-black/20 shadow-inner"
+                          style={{
+                            borderColor: `${tc.accent}80`,
+                            color: tc.accent,
+                          }}
+                        >
+                          <svg
+                            width="10"
+                            height="10"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
                         </span>
-                      </div>
+                        <span className="text-white text-[15px] font-normal leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
 
-                      <button
+                  {/* Bottom CTA & Deliverable */}
+                  <div className="mt-auto w-full flex flex-col items-center gap-8 relative z-10">
+                    <div className="text-center w-full pt-8 border-t border-white/10">
+                      <span
+                        className="block text-[9px] uppercase tracking-[0.2em] mb-2 font-bold"
+                        style={{ color: tc.labelColor }}
+                      >
+                        Deliverable
+                      </span>
+                      <span className="text-white text-[15px] block font-medium leading-snug">
+                        {offer.deliverable}
+                      </span>
+                    </div>
+
+                    <button
                       onClick={() => {
                         router.push("/contact");
                       }}
-                        className="w-full py-4 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 relative overflow-hidden group/btn"
+                      className="w-full py-4 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 relative overflow-hidden group/btn"
+                      style={{
+                        background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)`,
+                        border: `1px solid ${tc.accent}60`,
+                      }}
+                    >
+                      <span className="relative z-10 transition-transform duration-300 group-hover/btn:scale-105 inline-block text-white">
+                        GET STARTED
+                      </span>
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 pointer-events-none"
                         style={{
                           background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)`,
-                          border: `1px solid ${tc.accent}60`,
                         }}
-                      >
-                        <span className="relative z-10 transition-transform duration-300 group-hover/btn:scale-105 inline-block text-white">
-                          GET STARTED
-                        </span>
-                        <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(90deg, ${tc.accent}40 0%, ${tc.accent}15 100%)` }} />
-                        <div className="absolute top-0 w-full h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)` }} />
-                      </button>
-                    </div>
+                      />
+                      <div
+                        className="absolute top-0 w-full h-[1px]"
+                        style={{
+                          background: `linear-gradient(90deg, transparent, ${tc.accent}80, transparent)`,
+                        }}
+                      />
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
-      </section>
-    );
-  }
-);
-
+      </div>
+    </section>
+  );
+});
 
 /* ═══════════════════════════════════════════════════════════════
    CMS BLOCK COMPONENTS
@@ -1275,7 +1416,12 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <SectionLabel idx={panelIdx} text="Showcase" color={txtHex} dotColor={accentHex} />
+          <SectionLabel
+            idx={panelIdx}
+            text="Showcase"
+            color={txtHex}
+            dotColor={accentHex}
+          />
           <div
             className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
@@ -1283,7 +1429,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
               boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
-            {(block.image || project.image) ? (
+            {block.image || project.image ? (
               <Image
                 src={block.image || project.image}
                 alt={`${project.title} showcase`}
@@ -1308,7 +1454,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
@@ -1336,7 +1482,12 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
         >
           <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
-              <SectionLabel idx={panelIdx} text="Case Study" color={txtHex} dotColor={accentHex} />
+              <SectionLabel
+                idx={panelIdx}
+                text="Case Study"
+                color={txtHex}
+                dotColor={accentHex}
+              />
               <h3
                 className="panel-heading"
                 style={{
@@ -1373,7 +1524,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                 boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
               }}
             >
-              {(block.image || project.image) ? (
+              {block.image || project.image ? (
                 <Image
                   src={block.image || project.image}
                   alt="Case Study"
@@ -1393,12 +1544,12 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
   { block, project, panelIdx },
-  ref
+  ref,
 ) {
   const isLight = block.theme === "light";
   const bgHex = isLight ? project.theme.text : project.theme.background;
@@ -1423,7 +1574,12 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
       >
         <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
-            <SectionLabel idx={panelIdx} text="Key Metrics" color={txtHex} dotColor={accentHex} />
+            <SectionLabel
+              idx={panelIdx}
+              text="Key Metrics"
+              color={txtHex}
+              dotColor={accentHex}
+            />
             <p
               className="panel-body"
               style={{
@@ -1470,7 +1626,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
               boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
             }}
           >
-            {(block.image || project.image) ? (
+            {block.image || project.image ? (
               <Image
                 src={block.image || project.image}
                 alt="Stats"
@@ -1494,7 +1650,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
 
 const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
   { block, project, panelIdx },
-  ref
+  ref,
 ) {
   const isLight = block.theme === "light";
   const bgHex = isLight ? project.theme.text : project.theme.background;
@@ -1526,7 +1682,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
               boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
             }}
           >
-            {(block.image || project.image) ? (
+            {block.image || project.image ? (
               <Image
                 src={block.image || project.image}
                 alt="Feature"
@@ -1546,7 +1702,12 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
 
         <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pl-12 opacity-100 [&::-webkit-scrollbar]:w-0">
           <div className="flex flex-col justify-center min-h-full py-4">
-            <SectionLabel idx={panelIdx} text="Feature Focus" color={txtHex} dotColor={accentHex} />
+            <SectionLabel
+              idx={panelIdx}
+              text="Feature Focus"
+              color={txtHex}
+              dotColor={accentHex}
+            />
             <h3
               className="panel-heading"
               style={{
@@ -1604,7 +1765,12 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
-          <SectionLabel idx={panelIdx} text="Visual" color={txtHex} dotColor={accentHex} />
+          <SectionLabel
+            idx={panelIdx}
+            text="Visual"
+            color={txtHex}
+            dotColor={accentHex}
+          />
           <div
             className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
@@ -1612,7 +1778,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
               boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
-            {(block.image || project.image) ? (
+            {block.image || project.image ? (
               <Image
                 src={block.image || project.image}
                 alt="Visual"
@@ -1648,7 +1814,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
@@ -1676,7 +1842,12 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         >
           <div className="panel-content allow-native-scroll flex-1 min-h-0 overflow-y-auto p-10 lg:p-16 lg:pr-12 opacity-100 [&::-webkit-scrollbar]:w-0">
             <div className="flex flex-col justify-center min-h-full py-4">
-              <SectionLabel idx={panelIdx} text="System Specifications" color={txtHex} dotColor={accentHex} />
+              <SectionLabel
+                idx={panelIdx}
+                text="System Specifications"
+                color={txtHex}
+                dotColor={accentHex}
+              />
               <h3
                 className="panel-heading"
                 style={{
@@ -1695,30 +1866,41 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
               {block.body && (
                 <div
                   className="panel-body prose max-w-none prose-headings:font-normal prose-ul:my-0 prose-ul:list-none prose-ul:pl-0 prose-li:my-0 prose-li:pl-0"
-                  style={{ 
-                    fontSize: "clamp(16px, 1.2vw, 19px)", 
-                    lineHeight: 1.85,
-                    color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
-                    "--tw-prose-body": isLight ? txtHex : hexToRgba(txtHex, 0.8),
-                    "--tw-prose-headings": txtHex,
-                    "--tw-prose-lead": isLight ? txtHex : hexToRgba(txtHex, 0.8),
-                    "--tw-prose-links": accentHex,
-                    "--tw-prose-bold": txtHex,
-                    "--tw-prose-counters": hexToRgba(txtHex, 0.6),
-                    "--tw-prose-bullets": hexToRgba(accentHex, 0.7),
-                    "--tw-prose-hr": hexToRgba(txtHex, 0.1),
-                    "--tw-prose-quotes": txtHex,
-                    "--tw-prose-quote-borders": hexToRgba(txtHex, 0.2),
-                    "--tw-prose-captions": hexToRgba(txtHex, 0.5),
-                    "--tw-prose-code": txtHex,
-                    "--tw-prose-pre-code": txtHex,
-                    "--tw-prose-pre-bg": hexToRgba(bgHex, 0.5),
-                  } as React.CSSProperties}
+                  style={
+                    {
+                      fontSize: "clamp(16px, 1.2vw, 19px)",
+                      lineHeight: 1.85,
+                      color: isLight ? txtHex : hexToRgba(txtHex, 0.8),
+                      "--tw-prose-body": isLight
+                        ? txtHex
+                        : hexToRgba(txtHex, 0.8),
+                      "--tw-prose-headings": txtHex,
+                      "--tw-prose-lead": isLight
+                        ? txtHex
+                        : hexToRgba(txtHex, 0.8),
+                      "--tw-prose-links": accentHex,
+                      "--tw-prose-bold": txtHex,
+                      "--tw-prose-counters": hexToRgba(txtHex, 0.6),
+                      "--tw-prose-bullets": hexToRgba(accentHex, 0.7),
+                      "--tw-prose-hr": hexToRgba(txtHex, 0.1),
+                      "--tw-prose-quotes": txtHex,
+                      "--tw-prose-quote-borders": hexToRgba(txtHex, 0.2),
+                      "--tw-prose-captions": hexToRgba(txtHex, 0.5),
+                      "--tw-prose-code": txtHex,
+                      "--tw-prose-pre-code": txtHex,
+                      "--tw-prose-pre-bg": hexToRgba(bgHex, 0.5),
+                    } as React.CSSProperties
+                  }
                 >
-                  <div 
+                  <div
                     className="[&_a]:font-semibold [&_a:hover]:opacity-80 transition-opacity [&_ul]:space-y-4 [&_li]:relative [&_li]:border-b [&_li]:border-(--stage-divider) [&_li]:pb-4 [&_li]:pl-7 [&_li:last-child]:border-b-0 [&_li:last-child]:pb-0 [&_li::before]:absolute [&_li::before]:left-0 [&_li::before]:top-[0.72em] [&_li::before]:h-1.5 [&_li::before]:w-1.5 [&_li::before]:rounded-full [&_li::before]:bg-(--stage-bullet)"
-                    style={{ ["--stage-bullet" as string]: hexToRgba(accentHex, 0.85), ["--stage-divider" as string]: hexToRgba(txtHex, 0.12) }}
-                    dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(block.body) }}
+                    style={{
+                      ["--stage-bullet" as string]: hexToRgba(accentHex, 0.85),
+                      ["--stage-divider" as string]: hexToRgba(txtHex, 0.12),
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: normalizeRichTextHtml(block.body),
+                    }}
                   />
                 </div>
               )}
@@ -1753,5 +1935,5 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
