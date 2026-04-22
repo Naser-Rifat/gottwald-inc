@@ -396,7 +396,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       style={{
                         fontSize: "clamp(14px, 1.15vw, 16px)",
                         lineHeight: 1.65,
-                        color: "rgba(255,255,255,0.95)",
+                        color: "rgba(255,255,255, 1)",
                         fontWeight: 300,
                       }}
                     >
@@ -485,7 +485,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                       padding: 0,
                       margin: 0,
                       lineHeight: 1.7,
-                      color: "rgba(255,255,255,0.75)",
+                      color: "rgba(255,255,255,1)",
                       fontWeight: 300,
                     }}
                     className="flex flex-col gap-3"
