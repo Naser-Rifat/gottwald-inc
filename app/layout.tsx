@@ -17,6 +17,7 @@ import {
   webSiteJsonLd,
   speakableJsonLd,
 } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const satoshi = localFont({
   src: [
@@ -116,6 +117,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
+    // Single-locale site today. `hreflangAlternates("/")` emits x-default +
+    // en self-reference; when /de/ ships, the helper automatically adds it.
+    languages: hreflangAlternates("/"),
   },
 };
 
@@ -139,6 +143,18 @@ export default function RootLayout({
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
+        />
+        {/* Image CDN — most page images are Cloudinary-served. */}
+        <link
+          rel="preconnect"
+          href="https://res.cloudinary.com"
+          crossOrigin="anonymous"
+        />
+        {/* Backend API — pillar/content fetches. DNS prefetch is enough; */}
+        {/* opening a real TCP connection on every page load is wasteful. */}
+        <link
+          rel="dns-prefetch"
+          href="https://gottwald-backend.onrender.com"
         />
         <link
           rel="stylesheet"
