@@ -74,7 +74,7 @@ export default function FooterSection() {
               <a
                 href="https://gottwald.world"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer me"
                 className="hover:text-gold transition-colors duration-300"
               >
                 gottwald.world
@@ -83,7 +83,7 @@ export default function FooterSection() {
               <a
                 href="https://plhh.world"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer me"
                 className="hover:text-gold transition-colors duration-300"
               >
                 plhh.world
@@ -92,7 +92,7 @@ export default function FooterSection() {
               <a
                 href="https://yig.care"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer me"
                 className="hover:text-gold transition-colors duration-300"
               >
                 yig.care
@@ -108,7 +108,8 @@ export default function FooterSection() {
             <a
               href="https://www.youtube.com/channel/UCvcWaJx2dcqiLAfrPkspYiw"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer me"
+              aria-label="GOTT WALD on YouTube (@GOTT_WALD)"
               className="inline-flex items-center gap-2.5 text-md text-white/70 hover:text-gold transition-colors duration-300 group/yt"
             >
               <svg

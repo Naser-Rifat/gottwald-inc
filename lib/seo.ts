@@ -10,7 +10,16 @@ const DEFAULT_OG_IMAGE = `${SITE_URL}/images/about_horizontal_2.png`;
 const CONTACT_EMAIL = "office@gottwald.world";
 const CONTACT_PHONE = "+995 591 086 578";
 // Populate as public profiles go live — drives AI knowledge-panel matching.
-const SOCIAL_PROFILES: string[] = [];
+// Each entry is a URL that represents THIS entity on another platform.
+const SOCIAL_PROFILES: string[] = [
+  // YouTube — owned, already live
+  "https://www.youtube.com/channel/UCvcWaJx2dcqiLAfrPkspYiw",
+  // Add when live:
+  // "https://www.linkedin.com/company/<slug>",
+  // "https://www.crunchbase.com/organization/<slug>",
+  // "https://x.com/<handle>",
+  // "https://www.wikidata.org/wiki/<Q-id>",
+];
 
 export {
   SITE_URL,
@@ -378,3 +387,4 @@ export function howToJsonLd(howTo: {
     })),
   };
 }
+

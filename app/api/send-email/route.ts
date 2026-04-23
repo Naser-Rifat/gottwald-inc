@@ -61,6 +61,7 @@ function buildHtml(type: string, fields: Record<string, string>): string {
 ───────────────────────────────────────────────────────────────── */
 
 import { sendVarificationEmail } from "@/lib/resend/sendVarificationEmail";
+import { sendAcknowledgementEmail } from "@/lib/resend/sendAcknowledgement";
 
 // ─── POST Handler ───────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
@@ -112,9 +113,11 @@ export async function POST(req: NextRequest) {
     const replyToEmail = fields.email ? extractEmail(fields.email) : (fields.contact ? extractEmail(fields.contact) : undefined);
 
     // ─── Resend Implementation ────────────────────────────────────────────────
-    
+
+    const formType = type as "partnership" | "careers" | "contact";
+
     const response = await sendVarificationEmail({
-      type: type as "partnership" | "careers" | "contact",
+      type: formType,
       fields,
       replyToEmail,
       attachments
@@ -122,6 +125,20 @@ export async function POST(req: NextRequest) {
 
     if (!response.success) {
       return NextResponse.json({ error: "Failed to send email via Resend." }, { status: 500 });
+    }
+
+    // Best-effort auto-acknowledgement to the submitter. If it fails (invalid
+    // address, Resend outage), the submission is still successful — the office
+    // has already received the primary notification above.
+    if (replyToEmail) {
+      const senderName = fields.name || fields.contact;
+      sendAcknowledgementEmail({
+        type: formType,
+        toEmail: replyToEmail,
+        senderName,
+      }).catch((err) => {
+        console.error("[send-email] acknowledgement dispatch rejected:", err);
+      });
     }
 
     return NextResponse.json({ success: true, data: response });
