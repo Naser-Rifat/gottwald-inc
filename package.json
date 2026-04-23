@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@dimforge/rapier3d-compat": "^0.19.3",
     "@react-email/components": "^1.0.10",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
