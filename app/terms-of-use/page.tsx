@@ -2,15 +2,32 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import CustomScrollbar from "@/components/CustomScrollbar";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
   description: "Terms and conditions governing access to and use of the GOTT WALD Holding LLC website.",
+  alternates: { canonical: "/terms-of-use" },
 };
 
 export default function TermsOfUsePage() {
   return (
     <div className="bg-[#030303] flex flex-col min-h-screen text-white/80 font-sans selection:bg-gold/20 selection:text-white">
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            path: "/terms-of-use",
+            name: "Terms of Use — GOTT WALD Holding",
+            description:
+              "Terms and conditions governing access to and use of the GOTT WALD Holding LLC website, including acceptable use, IP, and liability.",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", url: "/" },
+            { name: "Terms of Use", url: "/terms-of-use" },
+          ]),
+        ]}
+      />
       <div className="fixed top-0 left-0 w-full z-100 px-gutter pointer-events-auto">
         <Header />
       </div>

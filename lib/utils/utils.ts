@@ -183,6 +183,9 @@ export function createVideoTexture(src: string): THREE.VideoTexture {
   video.muted = true;
   video.playsInline = true;
   video.preload = "metadata"; // Don't buffer the full 31MB — just header
+  video.addEventListener("error", () => {
+    console.warn(`[VideoPanel] Failed to load ${src}`, video.error);
+  });
 
   // Defer play until the video section is actually in view
   const startAnchor = document.getElementById("video-panel-start");

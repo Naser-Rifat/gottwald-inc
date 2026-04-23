@@ -1,32 +1,24 @@
 import type { Metadata } from "next";
 import ContactClient from "./ContactClient";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, contactPageJsonLd, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { breadcrumbJsonLd, contactPageJsonLd } from "@/lib/seo";
+
+const CONTACT_DESCRIPTION =
+  "Contact GOTT WALD Holding LLC for strategic inquiries, partnership requests, and general communication. Head office in Tbilisi, Georgia.";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Contact GOTT WALD Holding LLC for strategic inquiries, partnership requests, and general communication. Head office in Tbilisi, Georgia.",
+  description: CONTACT_DESCRIPTION,
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact",
-    description:
-      "Contact GOTT WALD Holding LLC for strategic inquiries, partnership requests, and general communication. Head office in Tbilisi, Georgia.",
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Contact — GOTT WALD",
-      },
-    ],
+    description: CONTACT_DESCRIPTION,
+    // og:image resolved from app/contact/opengraph-image.tsx convention file
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact",
-    description:
-      "Contact GOTT WALD Holding LLC for strategic inquiries, partnership requests, and general communication. Head office in Tbilisi, Georgia.",
-    images: [DEFAULT_OG_IMAGE],
+    description: CONTACT_DESCRIPTION,
   },
 };
 

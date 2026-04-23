@@ -2,15 +2,32 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import CustomScrollbar from "@/components/CustomScrollbar";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy and data protection guidelines for GOTT WALD Holding LLC.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="bg-[#030303] flex flex-col min-h-screen text-white/80 font-sans selection:bg-gold/20 selection:text-white">
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            path: "/privacy-policy",
+            name: "Privacy Policy — GOTT WALD Holding",
+            description:
+              "Privacy Policy and data protection guidelines for GOTT WALD Holding LLC, covering GDPR-aligned processing, user rights, and data controller information.",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", url: "/" },
+            { name: "Privacy Policy", url: "/privacy-policy" },
+          ]),
+        ]}
+      />
       <div className="fixed top-0 left-0 w-full z-100 px-gutter pointer-events-auto">
         <Header />
       </div>

@@ -5,33 +5,24 @@ import {
   breadcrumbJsonLd,
   aboutPageJsonLd,
   faqJsonLd,
-  DEFAULT_OG_IMAGE,
 } from "@/lib/seo";
+
+const ABOUT_DESCRIPTION =
+  "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description:
-    "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
+  description: ABOUT_DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About Us",
-    description:
-      "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "About Us — GOTT WALD",
-      },
-    ],
+    description: ABOUT_DESCRIPTION,
+    // og:image resolved from app/about/opengraph-image.tsx convention file
   },
   twitter: {
     card: "summary_large_image",
     title: "About Us",
-    description:
-      "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.",
-    images: [DEFAULT_OG_IMAGE],
+    description: ABOUT_DESCRIPTION,
   },
 };
 

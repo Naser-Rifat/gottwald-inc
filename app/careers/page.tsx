@@ -5,33 +5,24 @@ import {
   breadcrumbJsonLd,
   faqJsonLd,
   jobPostingJsonLd,
-  DEFAULT_OG_IMAGE,
 } from "@/lib/seo";
+
+const CAREERS_DESCRIPTION =
+  "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.";
 
 export const metadata: Metadata = {
   title: "Careers",
-  description:
-    "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
+  description: CAREERS_DESCRIPTION,
   alternates: { canonical: "/careers" },
   openGraph: {
     title: "Careers",
-    description:
-      "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Careers — GOTT WALD",
-      },
-    ],
+    description: CAREERS_DESCRIPTION,
+    // og:image resolved from app/careers/opengraph-image.tsx convention file
   },
   twitter: {
     card: "summary_large_image",
     title: "Careers",
-    description:
-      "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.",
-    images: [DEFAULT_OG_IMAGE],
+    description: CAREERS_DESCRIPTION,
   },
 };
 

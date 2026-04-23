@@ -7,7 +7,12 @@ import {
 } from "@/lib/api/pillars";
 import PillarsDetailClient from "./PillarDetailClient";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbJsonLd, pillarServiceJsonLd, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  pillarServiceJsonLd,
+  faqJsonLd,
+} from "@/lib/seo";
+import { getPillarFaqs } from "@/lib/pillarFaqs";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -18,21 +23,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pillar = await getPillar(slug);
   if (!pillar) return { title: "GOTT WALD — Pillar" };
 
-  const socialImage = pillar.image || DEFAULT_OG_IMAGE;
+  const metaDescription = pillar.description?.trim()
+    ? pillar.description.trim()
+    : `${pillar.title} — GOTT WALD Holding.`;
   return {
     title: pillar.title,
-    description: `${pillar.description} ${pillar.details}`.slice(0, 160),
+    description: metaDescription,
     alternates: { canonical: `/pillars/${slug}` },
     openGraph: {
       title: `${pillar.title} — GOTT WALD`,
-      description: pillar.description,
-      images: [{ url: socialImage, alt: pillar.title }],
+      description: metaDescription,
+      // og:image resolved from app/pillars/[slug]/opengraph-image.tsx convention file
     },
     twitter: {
       card: "summary_large_image",
       title: `${pillar.title} — GOTT WALD`,
-      description: pillar.description,
-      images: [socialImage],
+      description: metaDescription,
     },
   };
 }
@@ -62,6 +68,8 @@ export default async function PillarPage({ params }: Props) {
     notFound();
   }
 
+  const faqs = getPillarFaqs(slug);
+
   return (
     <>
       <JsonLd
@@ -72,6 +80,7 @@ export default async function PillarPage({ params }: Props) {
             { name: pillar.title, url: `/pillars/${slug}` },
           ]),
           pillarServiceJsonLd(pillar),
+          ...(faqs.length > 0 ? [faqJsonLd(faqs)] : []),
         ]}
       />
       <PillarsDetailClient project={pillar} nextProject={nextPillar} />
