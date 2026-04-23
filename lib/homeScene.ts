@@ -1,11 +1,8 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { getDeviceTier } from "@/lib/deviceTier";
-// import { AnimatedTube } from "./animatedTube";
-// import CosmicDust from "./cosmicDust";
 import { initDebugGui } from "./debugGui";
 import LoadingGroup from "./loadingGroup";
-import PhysicsSandbox from "./physicsSandbox";
 import ProjectTiles from "./pillarTiles/pillarTiles";
 import { updateCameraIntrisics } from "./utils/utils";
 import VideoPanelShader from "./videoPanelShader";
@@ -17,9 +14,6 @@ export default class HomeScene {
   camera!: THREE.OrthographicCamera;
   scene!: THREE.Scene;
   loadingGroup?: LoadingGroup;
-  physicsSandbox?: PhysicsSandbox;
-  // animatedTube?: AnimatedTube;
-  // cosmicDust?: CosmicDust;
   videoPanel?: VideoPanelShader;
   projectTiles?: ProjectTiles;
   stats?: { dom: HTMLElement; update: () => void };
@@ -98,15 +92,6 @@ export default class HomeScene {
     });
     this.scene.add(this.loadingGroup);
 
-    // this.cosmicDust = new CosmicDust();
-    // this.scene.add(this.cosmicDust);
-
-    // this.physicsSandbox = new PhysicsSandbox(this.camera);
-    // this.scene.add(this.physicsSandbox);
-
-    // this.animatedTube = new AnimatedTube(this.camera);
-    // this.scene.add(this.animatedTube);
-
     // Video panel skipped on mobile — the 90s 1080p webm isn't worth the
     // bandwidth or decode cost on small screens. Desktop mounts synchronously
     // so scroll-position math runs before the user has a chance to scroll.
@@ -144,9 +129,6 @@ export default class HomeScene {
     // Explicitly update the global matrix so child component unproject math uses the precise coordinate system
     this.camera.updateMatrixWorld(true);
 
-    // this.cosmicDust?.resize();
-    // this.physicsSandbox?.resize();
-    // this.animatedTube?.resize();
     this.videoPanel?.resize();
     this.projectTiles?.resize();
   };
@@ -163,9 +145,6 @@ export default class HomeScene {
     const dt = this.clock.getDelta();
 
     this.loadingGroup?.update(dt);
-    // this.cosmicDust?.update(dt);
-    // this.physicsSandbox?.update(dt);
-    // this.animatedTube?.update(dt);
     this.videoPanel?.update();
     this.projectTiles?.update(dt, this.renderer);
 
