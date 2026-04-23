@@ -23,6 +23,7 @@ export default class LoadingGroup extends THREE.Group {
   loadingProgress = { value: 0, target: 0 };
   postLoadSequenceProgress = { value: 0 };
   isSequenceFinished = false;
+  private shaderReadyFlagged = false;
   loadingContentEl: HTMLElement | null;
   homeContentEl: HTMLElement | null;
   onDoneLoadSequence?: () => void;
@@ -122,6 +123,14 @@ export default class LoadingGroup extends THREE.Group {
   update = (dt: number) => {
     if (this.isSequenceFinished) {
       return;
+    }
+
+    // First time we tick, the WebGL loading mesh has rendered at least one
+    // frame — drop the CSS-only solid-black cover on #loading-content so the
+    // shader becomes visible while the "000" counter stays as an overlay.
+    if (!this.shaderReadyFlagged) {
+      this.loadingContentEl?.classList.add("shader-ready");
+      this.shaderReadyFlagged = true;
     }
 
     this.elapsedTime += dt;
