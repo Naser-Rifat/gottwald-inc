@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+import { getDeviceTier } from "@/lib/deviceTier";
 import { getDebugGui } from "../debugGui";
 import { projectTileFrag } from "../shaders/projectTileFrag";
 import { projectTileVert } from "../shaders/projectTileVert";
@@ -73,6 +74,11 @@ export default class ProjectTile extends THREE.Group {
 
     this.portalCamera.position.copy(DEFAULT_CAM_POS);
     this.portalCamera.lookAt(CAMERA_LOOKAT);
+
+    // Skip the 1.4MB HDRI on mobile — environment reflections are barely
+    // perceptible on small screens and the portal still renders correctly
+    // without a scene.environment (materials fall back to unlit shading).
+    if (getDeviceTier() === "mobile") return;
 
     const texture = await new RGBELoader().loadAsync(
       "/assets/hdri/studio_small_08_1k.hdr",

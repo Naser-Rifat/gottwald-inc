@@ -75,7 +75,17 @@ export async function POST(req: NextRequest) {
     // 2. Parse FormData (supports file uploads out of the box)
     const formData = await req.formData();
     const type = formData.get("type")?.toString() || "contact";
-    
+
+    // Honeypot: a hidden `company_fax` field lives in each form. Humans never
+    // see it; blind form-filling bots populate it. Return a fake 200 so the
+    // bot records the submission as successful and doesn't retry under a new
+    // signature.
+    const honeypot = formData.get("company_fax")?.toString();
+    if (honeypot && honeypot.trim().length > 0) {
+      console.warn("[send-email] honeypot triggered", { ip, type, value: honeypot.slice(0, 64) });
+      return NextResponse.json({ success: true });
+    }
+
     const fields: Record<string, string> = {};
     interface Attachment {
       filename: string;
