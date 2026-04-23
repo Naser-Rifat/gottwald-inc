@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+import { getDeviceTier } from "@/lib/deviceTier";
 // import { AnimatedTube } from "./animatedTube";
 // import CosmicDust from "./cosmicDust";
 import { initDebugGui } from "./debugGui";
@@ -70,7 +71,10 @@ export default class HomeScene {
     this.scene = new THREE.Scene();
     // this.scene.background = new THREE.Color(0x000000);
 
-    // Defer HDR loading so it doesn't block first paint
+    // Defer HDR loading so it doesn't block first paint. Skip entirely on
+    // mobile — the 1.4MB environment map produces subtle reflections that
+    // aren't worth the bandwidth on small screens or low-core devices.
+    if (getDeviceTier() === "mobile") return;
     const loadHDR = () => {
       if (this.isDisposed) return;
       new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
@@ -103,8 +107,13 @@ export default class HomeScene {
     // this.animatedTube = new AnimatedTube(this.camera);
     // this.scene.add(this.animatedTube);
 
-    this.videoPanel = new VideoPanelShader(this.camera);
-    this.scene.add(this.videoPanel);
+    // Video panel skipped on mobile — the 90s 1080p webm isn't worth the
+    // bandwidth or decode cost on small screens. Desktop mounts synchronously
+    // so scroll-position math runs before the user has a chance to scroll.
+    if (getDeviceTier() !== "mobile") {
+      this.videoPanel = new VideoPanelShader(this.camera);
+      this.scene.add(this.videoPanel);
+    }
 
     this.projectTiles = new ProjectTiles(this);
     this.scene.add(this.projectTiles);

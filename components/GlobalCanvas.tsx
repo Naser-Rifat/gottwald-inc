@@ -3,6 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, useEffect, useState, useCallback } from "react";
 import * as THREE from "three";
+import { getDeviceTier } from "@/lib/deviceTier";
 
 // -------------------------------------------------------------
 // The "Dark Fluid" / Ink Shader — Enhanced for liquid feel
@@ -214,17 +215,6 @@ void main() {
     gl_FragColor = vec4(color, 1.0);
 }
 `;
-
-// ── Detect device tier once at module level ──
-const getDeviceTier = (): "mobile" | "desktop" => {
-  if (typeof navigator === "undefined") return "desktop";
-  const isMobile =
-    /Mobi|Android/i.test(navigator.userAgent) ||
-    (typeof window !== "undefined" && "ontouchstart" in window);
-  const cores = navigator.hardwareConcurrency || 4;
-  if (isMobile || cores <= 4) return "mobile";
-  return "desktop";
-};
 
 // ── Throttled Render Controller ──
 // Drives R3F in "demand" mode at a capped framerate.

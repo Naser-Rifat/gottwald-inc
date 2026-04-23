@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
+import Honeypot from "@/components/Honeypot";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -727,6 +728,8 @@ export default function CareersClient() {
               className="flex flex-col gap-10"
               onSubmit={handleFormSubmit}
             >
+              <Honeypot />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-3">
                   <label htmlFor="name" className="text-md uppercase tracking-wider text-white/70 font-medium">

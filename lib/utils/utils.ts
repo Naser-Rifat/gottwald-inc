@@ -178,14 +178,30 @@ export function elementToLocalRectPoints(
 
 export function createVideoTexture(src: string): THREE.VideoTexture {
   const video = document.createElement("video");
-  video.src = src;
+  // All config MUST be set before assigning src — src is what triggers the
+  // network fetch and any preload behavior. crossOrigin must precede src for
+  // WebGL to sample a cross-origin video without tainting the canvas.
+  video.crossOrigin = "anonymous";
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
-  video.preload = "metadata"; // Don't buffer the full 31MB — just header
+  // "auto" lets the browser progressively buffer via range requests so
+  // THREE.VideoTexture has frames to sample the moment play() succeeds.
+  // "metadata" leaves the texture empty until play() forces data load,
+  // producing a black panel during the gap.
+  video.preload = "auto";
+  video.src = src;
   video.addEventListener("error", () => {
-    console.warn(`[VideoPanel] Failed to load ${src}`, video.error);
+    console.warn(`[VideoPanel] load error for ${src}`, video.error);
   });
+
+  const tryPlay = () => {
+    video.play().catch((err) => {
+      // Surface autoplay/CORS/network failures so they're debuggable.
+      // Without this, a broken video looks identical to a working one.
+      console.warn(`[VideoPanel] play() rejected:`, err?.name, err?.message);
+    });
+  };
 
   // Defer play until the video section is actually in view
   const startAnchor = document.getElementById("video-panel-start");
@@ -193,7 +209,7 @@ export function createVideoTexture(src: string): THREE.VideoTexture {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => {});
+          tryPlay();
         } else {
           video.pause();
         }
@@ -202,12 +218,8 @@ export function createVideoTexture(src: string): THREE.VideoTexture {
     );
     observer.observe(startAnchor);
   } else {
-    // Fallback: play after idle
-    if (typeof requestIdleCallback !== "undefined") {
-      requestIdleCallback(() => video.play().catch(() => {}));
-    } else {
-      setTimeout(() => video.play().catch(() => {}), 2000);
-    }
+    // Fallback: play as soon as the browser reports data is ready
+    video.addEventListener("canplay", tryPlay, { once: true });
   }
 
   const texture = new THREE.VideoTexture(video);

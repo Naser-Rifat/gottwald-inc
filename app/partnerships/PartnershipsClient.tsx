@@ -7,6 +7,7 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
+import Honeypot from "@/components/Honeypot";
 import {
   NON_NEGOTIABLES,
   PARTNERSHIP_DOMAINS,
@@ -1048,6 +1049,8 @@ export default function PartnershipsClient() {
               className="form-reveal flex flex-col gap-12"
               onSubmit={handleFormSubmit}
             >
+              <Honeypot />
+
               {/* Group 1: Company + Website */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="relative">

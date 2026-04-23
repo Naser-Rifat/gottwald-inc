@@ -16,6 +16,11 @@ const PANEL_END_PARENT_ID = "video-panel-end-parent";
 const SIZE = 1;
 const SUBDIVISIONS = 16;
 
+// Hero video. Hosted on Cloudinary for proper streaming/range-request support —
+// self-hosting the 31MB webm on Vercel returned intermittent 503s.
+export const VIDEO_PANEL_SRC =
+  "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1776960831/Gott_Wald_Hero_Flim_1_e4ert0.webm";
+
 /**
  * Get the scroll position (in px) at which an element's TOP
  * reaches the CENTER of the viewport — matching ScrollTrigger's
@@ -54,7 +59,7 @@ export default class VideoPanelShader extends THREE.Group {
     const startWorldRect = elementToWorldRect(PANEL_START_ID, camera);
     this.position.copy(startWorldRect.position);
 
-    const videoTexture = createVideoTexture("/assets/about-gott-wald.webm");
+    const videoTexture = createVideoTexture(VIDEO_PANEL_SRC);
     const startRectLocal = elementToLocalRect(PANEL_START_ID, this, camera);
     const endRectLocal = elementToLocalRect(PANEL_END_ID, this, camera);
 

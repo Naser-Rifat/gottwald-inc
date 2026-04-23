@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
+import Honeypot from "@/components/Honeypot";
 
 interface BrutalistContactFormProps {
   /** Optional subject injected into the hidden field to identify the source */
@@ -108,6 +109,8 @@ export default function BrutalistContactForm({
       onSubmit={handleFormSubmit}
     >
       <input type="hidden" name="subject" value={subject} />
+
+      <Honeypot />
 
       <div className="relative group/input">
         <input
