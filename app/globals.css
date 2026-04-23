@@ -82,17 +82,28 @@
 }
 
 /* ===== Initial Loading Screen (CSS-only, pre-JS) ===== */
-/* This ensures the loading overlay covers the viewport from the
-   very first paint, BEFORE the WebGL LoadingGroup JS initializes.
-   LoadingGroup.update() calls loadingContentEl.remove() on completion. */
+/* Covers the viewport with solid black from the first paint so there is
+   no "000 floating in corner on bare black page" window while the three.js
+   LoadingGroup boots (dynamic import + construction can take ~200–600ms
+   on cold load). LoadingGroup toggles `.shader-ready` on its first frame
+   to drop the solid fill — the shader then becomes visible and the "000"
+   stays as an overlay counter. Removed from DOM on load completion. */
 
 #loading-content {
   position: fixed;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: 50;
+  background: #000;
   padding: 1rem;
   pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  transition: background 0.3s ease;
+}
+
+#loading-content.shader-ready {
+  background: transparent;
 }
 
 /* ===== Button Styles ===== */
