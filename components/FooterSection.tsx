@@ -75,7 +75,7 @@ export default function FooterSection() {
                 href="https://gottwald.world"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-300"
+                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 gottwald.world
               </a>
@@ -84,7 +84,7 @@ export default function FooterSection() {
                 href="https://plhh.world"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-300"
+                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 plhh.world
               </a>
@@ -93,7 +93,7 @@ export default function FooterSection() {
                 href="https://yig.care"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-300"
+                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 yig.care
               </a>
@@ -110,10 +110,10 @@ export default function FooterSection() {
               target="_blank"
               rel="noopener noreferrer me"
               aria-label="GOTT WALD on YouTube (@GOTT_WALD)"
-              className="inline-flex items-center gap-2.5 text-md text-white/70 hover:text-gold transition-colors duration-300 group/yt"
+              className="inline-flex items-center gap-2.5 text-md text-white/70 hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group/yt"
             >
               <svg
-                className="w-5 h-5 shrink-0 opacity-70 group-hover/yt:opacity-100 transition-opacity duration-300"
+                className="w-5 h-5 shrink-0 opacity-70 group-hover/yt:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
@@ -126,34 +126,34 @@ export default function FooterSection() {
         </div>
 
         {/* ── COL 2: DIRECTORY ── */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-w-0">
           <h4 className=" uppercase tracking-[0.3em] font-light text-turquoise mb-8">
             Directory
           </h4>
-          <nav className="flex flex-col gap-1 w-max">
+          <nav className="flex flex-col gap-1">
             {directoryLinks.map((link, i) => (
               <Link
                 href={link.href}
                 key={i}
-                className="group flex flex-row items-center py-2 text-left cursor-pointer w-max"
+                className="group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
               >
                 {/* Left Side Arrow Reveal */}
-                <span className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2">
+                <span className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
                   ↗
                 </span>
 
                 {/* Masking Text Scroller */}
-                <div className="relative overflow-hidden flex items-center h-[1.5em]">
+                <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
                   {/* Invisible spacer to define intrinsic width */}
-                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none">
+                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
                     {link.label}
                   </span>
-                  
+
                   {/* Visible text layers */}
-                  <span className="absolute top-1/2 -translate-y-1/2 left-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[150%] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] whitespace-nowrap">
+                  <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                     {link.label}
                   </span>
-                  <span className="absolute top-1/2 translate-y-[150%] left-0 block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:-translate-y-1/2 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] whitespace-nowrap">
+                  <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                     {link.label}
                   </span>
                 </div>
@@ -163,29 +163,29 @@ export default function FooterSection() {
         </div>
 
         {/* ── COL 3: PROTOCOLS ── */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3 min-w-0">
           <h4 className=" uppercase tracking-[0.3em] font-light text-turquoise mb-8">
             Protocols
           </h4>
-          <div className="flex flex-col gap-1 w-max">
+          <div className="flex flex-col gap-1">
             {protocolItems.map((item, i) => (
               <Link
                 href={item.href}
                 key={i}
-                className="group flex flex-row items-center py-2 text-left cursor-pointer w-max"
+                className="group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
               >
                 {/* Masking Text Scroller */}
-                <div className="relative overflow-hidden flex items-center h-[1.5em]">
+                <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
                   {/* Invisible spacer to define intrinsic width */}
-                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none">
+                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
                     {item.label}
                   </span>
-                  
+
                   {/* Visible text layers */}
-                  <span className="absolute top-1/2 -translate-y-1/2 left-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[150%] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] whitespace-nowrap">
+                  <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                     {item.label}
                   </span>
-                  <span className="absolute top-1/2 translate-y-[150%] left-0 block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:-translate-y-1/2 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] whitespace-nowrap">
+                  <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                     {item.label}
                   </span>
                 </div>
@@ -256,14 +256,14 @@ export default function FooterSection() {
         <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-x-4 gap-y-4 w-full xl:w-auto mt-2 xl:mt-0">
           <Link
             href="/imprint"
-            className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
+            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
             Imprint / Legal Notice
           </Link>
           <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/privacy-policy"
-            className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
+            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
             Privacy Policy
           </Link>
@@ -272,7 +272,7 @@ export default function FooterSection() {
           <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/terms-of-use"
-            className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px]"
+            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
             Terms of Use
           </Link>

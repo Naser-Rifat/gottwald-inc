@@ -11,7 +11,7 @@ export default function CookieSettingsTrigger() {
   return (
     <button
       onClick={openCookieManager}
-      className="text-white/90 hover:text-white transition-colors tracking-wider font-light text-[13px] bg-transparent outline-none border-none p-0 cursor-pointer text-left"
+      className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px] bg-transparent outline-none border-none p-0 cursor-pointer text-left"
     >
       Cookie Settings
     </button>
