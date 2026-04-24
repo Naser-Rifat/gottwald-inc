@@ -33,12 +33,12 @@ const securityHeaders = [
       // 'unsafe-inline' + 'unsafe-eval' required by Next.js runtime / React DevTools. No external scripts.
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       // Inline styles are emitted by RSC; we accept the trade-off.
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "style-src 'self' 'unsafe-inline'",
       // Cloudinary CDN + backend media + data URIs (noise SVG) + blob (for runtime-generated imagery).
       "img-src 'self' data: blob: https://res.cloudinary.com https://gottwald-backend.onrender.com",
       // Video/audio assets served locally; blob for decoded streams.
       "media-src 'self' blob: https://res.cloudinary.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
+      "font-src 'self' data:",
       // Backend API + same-origin form submissions.
       "connect-src 'self' https://gottwald-backend.onrender.com",
       "frame-ancestors 'none'",
@@ -54,6 +54,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: true,
+
   async headers() {
     return [
       {
