@@ -131,8 +131,8 @@ export default function PrivacyPolicyPage() {
               <span className="text-white text-md tracking-widest">07</span> COOKIES & CONSENT
             </h2>
             <div className="space-y-6 text-[19px]">
-              <p>We deploy a proprietary, self-contained Cookie Manager. We issue only strictly necessary operational cookies required for platform security and navigation. Optional performance cookies are only utilized upon your explicit opt-in.</p>
-              <p>Your exact consent parameters are saved directly to your Browser&apos;s local storage (identified as <code>gottwald_cookie_consent</code>). This architecture ensures no consent data is broadcasted to external ad networks. You maintain the absolute right to revoke or modify your choices at any given moment via the &quot;Cookie Settings&quot; trigger permanently accessible in the footer of this website.</p>
+              <p>We deploy a proprietary, self-contained Cookie Manager. We issue only a single strictly necessary cookie, used to record your acknowledgment of this notice. We do not set performance, analytics, advertising, or behavioral tracking cookies of any kind.</p>
+              <p>Your acknowledgment is saved as a first-party cookie named <code>gottwald_consent</code>, scoped to this site, with a one-year lifespan and <code>SameSite=Lax</code>. No consent data is broadcast to external ad networks. You may review this cookie at any time via the &quot;Cookie Settings&quot; trigger in the footer.</p>
             </div>
           </section>
 
