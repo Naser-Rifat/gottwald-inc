@@ -6,6 +6,7 @@ import MenuOverlay from "./MenuOverlay";
 import Image from "next/image";
 import logo from "@/public/logo.png";
 import AudioToggle from "./AudioToggle";
+import GoogleTranslate from "./GoogleTranslate";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,6 +34,9 @@ export default function Header() {
         <div className="flex items-center gap-3">
           {/* Audio Toggle — animated equalizer */}
           <AudioToggle />
+
+          {/* Language picker — Google Translate */}
+          <GoogleTranslate />
           <Link
             href="/partnerships#apply"
             className="hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium

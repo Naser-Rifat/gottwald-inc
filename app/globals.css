@@ -251,3 +251,49 @@ select:focus {
   will-change: transform;
 }
 
+/* ===== Google Translate widget ===== */
+/* We drive translation programmatically via the hidden .goog-te-combo
+   select; every piece of GT's visible chrome is suppressed so the custom
+   pill in the header is the only locale UI. */
+
+/* Hard-hide the mount container and anything GT renders inside it. */
+#google_translate_element {
+  position: fixed !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Banner, tooltip, balloon, logo link, body-level skiptranslate wrappers,
+   and GT's newer obfuscated `VIpgJd-*` chrome. */
+.goog-te-banner-frame,
+iframe.skiptranslate,
+.goog-tooltip,
+.goog-tooltip:hover,
+.goog-te-balloon-frame,
+.goog-te-ftab,
+.goog-te-gadget-icon,
+.goog-logo-link,
+#goog-gt-tt,
+body > .skiptranslate,
+[class^="VIpgJd-"],
+[class*=" VIpgJd-"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* GT pushes <body> down to make room for the banner — undo that. */
+body {
+  top: 0 !important;
+}
+
+/* GT highlights translated spans with a yellow background — kill it. */
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+

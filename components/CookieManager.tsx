@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useAudio } from "@/components/AudioProvider";
 
 // Storage uses document.cookie (not localStorage) so Next.js
 // Middleware/SSR can read the acknowledgment before rendering HTML.
@@ -41,6 +42,7 @@ function setConsentCookie() {
 export default function CookieManager() {
   const [showBar, setShowBar] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+  const { playSfx } = useAudio();
 
   // Delay is 4000ms so the bar appears after the PageLoader animation
   // (~2–3s) finishes, preventing z-index overlap.
@@ -54,7 +56,13 @@ export default function CookieManager() {
   const openPanel = useCallback(() => {
     setShowBar(false);
     setShowPanel(true);
-  }, []);
+    playSfx("thud");
+  }, [playSfx]);
+
+  const closePanel = useCallback(() => {
+    setShowPanel(false);
+    playSfx("whisper");
+  }, [playSfx]);
 
   useEffect(() => {
     window.addEventListener("open-cookie-manager", openPanel);
@@ -63,17 +71,22 @@ export default function CookieManager() {
 
   useEffect(() => {
     if (!showPanel) return;
-    const h = (e: KeyboardEvent) => { if (e.key === "Escape") setShowPanel(false); };
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") closePanel(); };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [showPanel]);
+  }, [showPanel, closePanel]);
 
   useEffect(() => {
     if (showPanel) document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, [showPanel]);
 
-  const acknowledge = () => { setConsentCookie(); setShowBar(false); setShowPanel(false); };
+  const acknowledge = () => {
+    setConsentCookie();
+    setShowBar(false);
+    setShowPanel(false);
+    playSfx("chime");
+  };
 
   return (
     <>
@@ -126,7 +139,7 @@ export default function CookieManager() {
         <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 md:p-8 pointer-events-none">
           <div
             className="absolute inset-0 bg-[#000000]/80 backdrop-blur-md pointer-events-auto transition-opacity duration-500"
-            onClick={() => setShowPanel(false)}
+            onClick={closePanel}
             aria-hidden="true"
           />
 
@@ -150,7 +163,7 @@ export default function CookieManager() {
                   </h2>
                 </div>
                 <button
-                  onClick={() => setShowPanel(false)}
+                  onClick={closePanel}
                   className="p-3 -mr-3 -mt-3 text-white/30 hover:text-white transition-colors duration-300 rounded-full hover:bg-white/5"
                   aria-label="Close"
                 >

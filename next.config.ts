@@ -30,17 +30,22 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // 'unsafe-inline' + 'unsafe-eval' required by Next.js runtime / React DevTools. No external scripts.
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      // Inline styles are emitted by RSC; we accept the trade-off.
-      "style-src 'self' 'unsafe-inline'",
-      // Cloudinary CDN + backend media + data URIs (noise SVG) + blob (for runtime-generated imagery).
-      "img-src 'self' data: blob: https://res.cloudinary.com https://gottwald-backend.onrender.com",
+      // 'unsafe-inline' + 'unsafe-eval' required by Next.js runtime / React DevTools.
+      // Google Translate loads widget + supportedLanguages from multiple Google hosts;
+      // translate-pa.googleapis.com is the newer GT API endpoint.
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com",
+      "script-src-elem 'self' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com",
+      // Inline styles are emitted by RSC; we accept the trade-off. GT injects a stylesheet from translate.googleapis.com.
+      "style-src 'self' 'unsafe-inline' https://translate.googleapis.com https://www.gstatic.com https://fonts.googleapis.com",
+      // Cloudinary CDN + backend media + data URIs (noise SVG) + blob (for runtime-generated imagery) + GT icons/SVG.
+      "img-src 'self' data: blob: https://res.cloudinary.com https://gottwald-backend.onrender.com https://translate.googleapis.com https://www.gstatic.com https://fonts.gstatic.com https://www.google.com",
       // Video/audio assets served locally; blob for decoded streams.
       "media-src 'self' blob: https://res.cloudinary.com",
-      "font-src 'self' data:",
-      // Backend API + same-origin form submissions.
-      "connect-src 'self' https://gottwald-backend.onrender.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      // Backend API + same-origin form submissions + GT translation API endpoints.
+      "connect-src 'self' https://gottwald-backend.onrender.com https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com",
+      // GT falls back to an iframe on www.google.com for some UI chrome.
+      "frame-src https://www.google.com https://translate.google.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
