@@ -125,7 +125,7 @@ export default function ImprintPage() {
               <h2 className="text-md font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
                 REPRESENTED BY
               </h2>
-              <p className="text-[19px] text-white">Mathias Gott Wald, Patron</p>
+              <p className="text-[19px] text-white">Mathias Gottwald, Patron</p>
             </section>
 
             <section>
