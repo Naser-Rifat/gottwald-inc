@@ -9,6 +9,7 @@ import DomSafetyPatch from "@/components/DomSafetyPatch";
 import PageLoader from "@/components/PageLoader";
 import AudioProvider from "@/components/AudioProvider";
 import CookieManager from "@/components/CookieManager";
+import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
 import {
   SITE_URL,
   SITE_NAME,
@@ -144,6 +145,19 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Sync <html lang> with the `googtrans` cookie BEFORE first paint.
+            Chrome evaluates <html lang> once on page load to decide whether
+            to offer translation; if we waited for React hydration to set
+            it, Chrome would already have shown its "Translated to: German"
+            banner for returning DE visitors. Running this inline in <head>
+            wins that race. Safe no-op for first-time visitors (no cookie =
+            lang stays "en"). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var m=document.cookie.match(/googtrans=\\/[^\\/]+\\/([^;]+)/);if(m&&m[1]){document.documentElement.lang=m[1];}}catch(e){}})();",
+          }}
+        />
         {/* Image CDN — most page images are Cloudinary-served. */}
         <link
           rel="preconnect"
@@ -187,6 +201,7 @@ export default function RootLayout({
         <GlobalCanvas />
         <NoiseOverlay />
         <CookieManager />
+        <GoogleTranslateRoot />
         <AudioProvider>
           {children}
         </AudioProvider>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import Honeypot from "@/components/Honeypot";
+import { useAudio } from "@/components/AudioProvider";
 
 interface BrutalistContactFormProps {
   /** Optional subject injected into the hidden field to identify the source */
@@ -21,6 +22,7 @@ export default function BrutalistContactForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const { playSfx } = useAudio();
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -44,11 +46,13 @@ export default function BrutalistContactForm({
       }
 
       setSubmitStatus("success");
+      playSfx("chime");
       formRef.current.reset();
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
       console.error("Contact form submission failed:", error);
       setSubmitStatus("error");
+      playSfx("whisper");
     } finally {
       setIsSubmitting(false);
     }
