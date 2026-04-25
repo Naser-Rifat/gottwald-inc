@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
@@ -142,6 +143,8 @@ const PILLARS = [
 ];
 
 export default function CareersClient() {
+  const t = useTranslations("careers.hero");
+  const tNav = useTranslations("nav");
   const pageRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const heroRef = useRef<HTMLHeadingElement>(null);
@@ -184,11 +187,19 @@ export default function CareersClient() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // WeakSet guards against re-firing: Google Translate mutates text nodes
+      // when the user switches language, which can trigger ScrollTrigger
+      // re-evaluation and re-run `onEnter` for elements already animated,
+      // snapping them back to opacity: 0 and causing a flicker.
+      const animated = new WeakSet<Element>();
       ScrollTrigger.batch(".reveal-text", {
         start: "top 85%",
         onEnter: (batch) => {
+          const fresh = batch.filter((el) => !animated.has(el));
+          if (fresh.length === 0) return;
+          fresh.forEach((el) => animated.add(el));
           gsap.fromTo(
-            batch,
+            fresh,
             { y: 50, opacity: 0 },
             {
               y: 0,
@@ -349,11 +360,17 @@ export default function CareersClient() {
               PEOPLE &amp; CULTURE // GLOBAL TALENT
             </p>
 
-            {/* #3 + #5 + #6 — Gradient text + breathing ref + full opacity */}
+            {/* Hero text is owned by next-intl (see messages/*.json).
+                translate="no" tells Google Translate to skip this element so
+                it doesn't double-translate and doesn't break the
+                background-clip: text gradient by wrapping text in <font> tags. */}
             <h1
               ref={heroRef}
-              className="reveal-text text-[clamp(4rem,9vw,10rem)] leading-[0.85] font-extrabold tracking-tighter uppercase mb-12"
+              translate="no"
+              className="notranslate reveal-text leading-[0.85] font-extrabold tracking-tighter uppercase mb-12"
               style={{
+                fontSize:
+                  "calc(clamp(4rem, 9vw, 10rem) * var(--heading-scale))",
                 backgroundImage:
                   "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.7) 50%, #ffffff 100%)",
                 backgroundSize: "200% 100%",
@@ -362,8 +379,8 @@ export default function CareersClient() {
                 backgroundClip: "text",
               }}
             >
-              CAREERS AT <br />
-              GOTT WALD
+              {t("line1")} <br />
+              {t("line2")}
             </h1>
 
             <div className="flex flex-col md:flex-row gap-12 md:gap-24">
@@ -952,7 +969,7 @@ export default function CareersClient() {
       <FooterSection />
 
       <NextChapterTransition
-        nextTitle="CONTACT"
+        nextTitle={tNav("contact")}
         nextHref="/contact"
         prevHref="/partnerships"
       />

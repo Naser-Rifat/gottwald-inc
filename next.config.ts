@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+// next-intl without URL-based locale routing. Locale is resolved in
+// i18n/request.ts from the googtrans cookie so hero copy (owned by
+// next-intl) stays in sync with the Google Translate pill (owns body copy).
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 // Security headers applied to every route. CSP is intentionally
 // permissive on `style-src` ('unsafe-inline') because Next.js App Router
@@ -93,4 +99,4 @@ const nextConfig: NextConfig = {
 
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

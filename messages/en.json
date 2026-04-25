@@ -1,0 +1,56 @@
+{
+  "common": {
+    "nextChapter": "Next Chapter"
+  },
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT US",
+    "partnerships": "PARTNERSHIP",
+    "careers": "CAREERS",
+    "contact": "CONTACT"
+  },
+  "home": {
+    "hero": {
+      "line1": "TURNING COMPLEXITY",
+      "line2": "INTO CLARITY, AND DECISIONS",
+      "line3": "INTO MEASURABLE IMPACT"
+    },
+    "videoPanel": {
+      "topline": "Peace. Love. Harmony",
+      "tagline": "for more Humanity."
+    }
+  },
+  "about": {
+    "hero": {
+      "line1": "WE TURN",
+      "line2": "COMPLEXITY",
+      "line3": "into inevitability."
+    },
+    "manifesto": {
+      "title": "GOTT WALD HOLDING is not a traditional service provider.",
+      "body": "We are an execution standard: strategy, structure, technology, communication, and human performance — built as one integrated system that reduces complexity and makes outcomes inevitable.",
+      "axisLead": "And we carry an axis you don't debate — you feel it:",
+      "nature": "NATURE",
+      "animals": "ANIMALS",
+      "humans": "HUMANS"
+    }
+  },
+  "partnerships": {
+    "hero": {
+      "line1": "PARTNERSHIPS",
+      "line2": "AT GOTT WALD"
+    }
+  },
+  "careers": {
+    "hero": {
+      "line1": "CAREERS AT",
+      "line2": "GOTT WALD"
+    }
+  },
+  "contact": {
+    "hero": {
+      "line1": "LET'S",
+      "line2": "TALK"
+    }
+  }
+}

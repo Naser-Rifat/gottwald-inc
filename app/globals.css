@@ -297,3 +297,41 @@ body {
   box-shadow: none !important;
 }
 
+/* Language-aware heading scale.
+   German runs ~25-30% longer than English for the same phrase. Oversized
+   hero headings that look balanced in EN become cramped against sidebars
+   (see PARTNERSCHAFTEN hitting the HUD) and feel visually imposing in DE.
+   Heroes opt in by multiplying their clamp() by var(--heading-scale) in a
+   calc() inline style, e.g.
+       style={{ fontSize: 'calc(clamp(4rem, 9vw, 10rem) * var(--heading-scale))' }}
+   Scale is 1 everywhere except under html[lang="de"]. Tunable centrally. */
+:root {
+  --heading-scale: 1;
+}
+html[lang="de"] {
+  --heading-scale: 0.82;
+}
+
+/* Gradient-clip text that survives Google Translate.
+   GT wraps every translated text node in <font> tags. Because
+   background-clip: text paints the gradient on the element's OWN box and
+   clips to the glyphs it renders, once the text moves into a <font> child
+   the parent's clip region goes empty for a frame during the DOM rewrite
+   and the hero flashes invisible. Re-applying the chain to <font>
+   descendants (with background-image: inherit) gives them their own
+   painted-and-clipped gradient so the text stays visible through the
+   mutation. Hero titles opt in by adding .gradient-clip-text and setting
+   background-image + background-size inline (or via another class). */
+.gradient-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gradient-clip-text font {
+  background-image: inherit;
+  background-size: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+

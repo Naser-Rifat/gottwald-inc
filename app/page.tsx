@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { getTranslations } from "next-intl/server";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
@@ -39,6 +40,7 @@ const NextChapterTransition = dynamic(
 
 export default async function Home() {
   const pillars = await getPillars();
+  const tNav = await getTranslations("nav");
   return (
     <>
       <JsonLd
@@ -54,7 +56,7 @@ export default async function Home() {
         <GlobalAuthoritySection />
         <StrategicInquirySection />
         <FooterSection />
-        <NextChapterTransition nextTitle="ABOUT US" nextHref="/about" />
+        <NextChapterTransition nextTitle={tNav("about")} nextHref="/about" />
       </div>
 
       <CustomScrollbar />
