@@ -1,0 +1,56 @@
+{
+  "common": {
+    "nextChapter": "Nächstes Kapitel"
+  },
+  "nav": {
+    "home": "STARTSEITE",
+    "about": "ÜBER UNS",
+    "partnerships": "PARTNERSCHAFT",
+    "careers": "KARRIERE",
+    "contact": "KONTAKT"
+  },
+  "home": {
+    "hero": {
+      "line1": "KOMPLEXITÄT VERWANDELN",
+      "line2": "IN KLARHEIT UND ENTSCHEIDUNGEN",
+      "line3": "IN MESSBARE WIRKUNG"
+    },
+    "videoPanel": {
+      "topline": "Frieden. Liebe. Harmonie",
+      "tagline": "für mehr Menschlichkeit."
+    }
+  },
+  "about": {
+    "hero": {
+      "line1": "WIR VERWANDELN",
+      "line2": "KOMPLEXITÄT",
+      "line3": "in Unvermeidlichkeit."
+    },
+    "manifesto": {
+      "title": "GOTT WALD HOLDING ist kein traditioneller Dienstleister.",
+      "body": "Wir sind ein Umsetzungsstandard: Strategie, Struktur, Technologie, Kommunikation und menschliche Leistung — als integriertes System aufgebaut, das Komplexität reduziert und Ergebnisse unvermeidlich macht.",
+      "axisLead": "Und wir tragen eine Achse, die man nicht diskutiert — die man spürt:",
+      "nature": "NATUR",
+      "animals": "TIERE",
+      "humans": "MENSCHEN"
+    }
+  },
+  "partnerships": {
+    "hero": {
+      "line1": "PARTNERSCHAFTEN",
+      "line2": "BEI GOTT WALD"
+    }
+  },
+  "careers": {
+    "hero": {
+      "line1": "KARRIERE BEI",
+      "line2": "GOTT WALD"
+    }
+  },
+  "contact": {
+    "hero": {
+      "line1": "LASS UNS",
+      "line2": "REDEN"
+    }
+  }
+}

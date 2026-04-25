@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import {
   GT_COOKIE,
   readGtLocale,
@@ -51,6 +52,7 @@ function bumpCookieVersion() {
 
 export default function GoogleTranslate() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const snapshot = useSyncExternalStore(
     subscribeCookie,
     getCookieSnapshot,
@@ -90,6 +92,10 @@ export default function GoogleTranslate() {
       window.location.reload();
     } else {
       triggerGtCombo(code);
+      // next-intl resolves locale on the server from the googtrans cookie.
+      // router.refresh() re-runs the server layout so hero strings re-render
+      // in the new language without losing client state (scroll, GSAP, etc).
+      router.refresh();
     }
   }
 

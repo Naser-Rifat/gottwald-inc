@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +9,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function VideoPanelSection() {
+  const t = useTranslations("home.videoPanel");
+  const topline = t("topline");
+  const tagline = t("tagline");
   const sectionRef = useRef<HTMLElement>(null);
   const toplineRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLHeadingElement>(null);
@@ -19,10 +23,12 @@ export default function VideoPanelSection() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Topline: character-by-character reveal
+      // Topline: character-by-character reveal.
+      // Source the text from i18n (not textContent) so re-running this effect
+      // on locale change rebuilds the split spans from fresh strings instead
+      // of whatever the previous animation left in the DOM.
       if (toplineRef.current) {
-        const text = toplineRef.current.textContent || "";
-        toplineRef.current.innerHTML = text
+        toplineRef.current.innerHTML = topline
           .split("")
           .map(
             (char) =>
@@ -43,9 +49,9 @@ export default function VideoPanelSection() {
         });
       }
 
-      // Tagline: word-level 3D flip
+      // Tagline: word-level 3D flip. Same i18n-sourced approach as topline.
       if (taglineRef.current) {
-        const words = taglineRef.current.textContent?.split(" ") || [];
+        const words = tagline.split(" ");
         taglineRef.current.innerHTML = words
           .map(
             (word) =>
@@ -132,7 +138,10 @@ export default function VideoPanelSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+    // Re-run on locale change so the topline/tagline get re-split with the
+    // newly translated strings. ScrollTrigger contexts are reverted in the
+    // cleanup so old triggers don't accumulate.
+  }, [topline, tagline]);
 
   return (
     <section
@@ -143,12 +152,17 @@ export default function VideoPanelSection() {
     >
       <div className="about-headers pb-[6vh] md:pb-[8vh]">
         <div className="overflow-hidden w-full">
+          {/* translate="no": GT was wrapping each char-mask span in <font> tags
+              and translating individual letters, producing garbage like
+              "PEACEDIE LOVEDIE HARMONY". i18n owns the text now; the useEffect
+              re-splits when locale changes. */}
           <h2
             ref={toplineRef}
             id="h1-topline"
-            className="text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white uppercase tracking-tight leading-[0.95]"
+            translate="no"
+            className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white uppercase tracking-tight leading-[0.95]"
           >
-            Peace. Love. Harmony
+            {topline}
           </h2>
         </div>
         {/* Petrol → turquoise underline accent */}
@@ -162,9 +176,10 @@ export default function VideoPanelSection() {
           <h2
             ref={taglineRef}
             id="h1-tagline"
-            className="text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white tracking-tight uppercase leading-[0.95]"
+            translate="no"
+            className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white tracking-tight uppercase leading-[0.95]"
           >
-            for more Humanity.
+            {tagline}
           </h2>
         </div>
       </div>

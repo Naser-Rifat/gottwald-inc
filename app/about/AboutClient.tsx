@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,9 @@ import NextChapterTransition from "@/components/NextChapterTransition";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AboutClient() {
+  // Page-scoped namespace: t("hero.line1"), t("manifesto.title"), etc.
+  const t = useTranslations("about");
+  const tNav = useTranslations("nav");
   const router = useRouter();
   const pageRef = useRef<HTMLDivElement>(null);
 
@@ -409,33 +413,37 @@ export default function AboutClient() {
 
             {/* HEADLINE — full-viewport-width cascade */}
             <div className="px-gutter mt-8">
+              {/* Hero text is owned by next-intl (messages/hero.about.*).
+                  translate="no" keeps GT from double-translating or
+                  wrapping the spans in <font> tags. */}
               <h1
-                className="hero-manifest-text"
+                translate="no"
+                className="hero-manifest-text notranslate"
                 aria-label="We Turn Complexity into Inevitability"
               >
                 <div className="overflow-hidden">
                   <span
                     className="block font-black uppercase text-white leading-[0.82] tracking-[-0.04em] parallax-fast"
-                    style={{ fontSize: "clamp(4rem, 12.5vw, 160px)" }}
+                    style={{ fontSize: "calc(clamp(4rem, 12.5vw, 160px) * var(--heading-scale))" }}
                   >
-                    WE TURN
+                    {t("hero.line1")}
                   </span>
                 </div>
                 <div className="overflow-hidden">
                   <span
                     className="block font-black uppercase text-white leading-[0.82] tracking-[-0.04em] parallax-fast"
-                    style={{ fontSize: "clamp(4rem, 12.5vw, 160px)" }}
+                    style={{ fontSize: "calc(clamp(4rem, 12.5vw, 160px) * var(--heading-scale))" }}
                   >
-                    COMPLEXITY
+                    {t("hero.line2")}
                   </span>
                 </div>
                 {/* Serif italic — offset right to break left-column monotony */}
                 <div className="overflow-hidden flex justify-end pr-4 lg:pr-16 mt-2">
                   <span
                     className="block font-serif italic text-gold leading-[1.0] tracking-[-0.01em] parallax-slow"
-                    style={{ fontSize: "clamp(2.8rem, 9vw, 118px)" }}
+                    style={{ fontSize: "calc(clamp(2.8rem, 9vw, 118px) * var(--heading-scale))" }}
                   >
-                    into inevitability.
+                    {t("hero.line3")}
                   </span>
                 </div>
               </h1>
@@ -540,25 +548,40 @@ export default function AboutClient() {
             <div className="absolute inset-0 mix-blend-color opacity-30 bg-gradient-to-tr from-turquoise to-petrol" />
           </div>
 
-          <div className="max-w-4xl mx-auto text-center space-y-32 relative z-10">
+          {/* translate="no" on the manifesto + axis block: the German copy is
+              owned by next-intl (about.manifesto.*) so GT must skip these
+              elements to avoid double-translation. */}
+          <div translate="no" className="notranslate max-w-4xl mx-auto text-center space-y-32 relative z-10">
             <div className="reveal-text space-y-12">
               <h2 className="text-3xl md:text-5xl font-light text-white leading-tight">
-                GOTT WALD HOLDING is not a traditional service provider.
+                {t("manifesto.title")}
               </h2>
               <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light">
-                We are an execution standard: strategy, structure, technology,
-                communication, and human performance — built as one integrated
-                system that reduces complexity and makes outcomes inevitable.
+                {t("manifesto.body")}
               </p>
             </div>
 
             <div className="axis-trigger reveal-text">
               <p className="text-lg md:text-xl text-white/80 mb-6">
-                And we carry an axis you don&apos;t debate — you feel it:
+                {t("manifesto.axisLead")}
               </p>
-              <p className="text-3xl md:text-5xl font-black tracking-widest text-gold opacity-90 drop-shadow-2xl">
-                NATURE<span className="text-white/80 mx-4">–</span>ANIMALS
-                <span className="text-white/80 mx-4">–</span>HUMANS
+              {/* Axis line — responsive via clamp(), shrinks 18% in DE via
+                  --heading-scale. text-balance avoids orphaned-word wraps if
+                  the viewport is narrow. Each word is wrapped in
+                  whitespace-nowrap so a break can only land between segments,
+                  never inside "MENSCHEN" or "NATURE". */}
+              <p
+                className="font-black tracking-widest text-gold opacity-90 drop-shadow-2xl text-balance"
+                style={{
+                  fontSize:
+                    "calc(clamp(1.875rem, 4vw, 3rem) * var(--heading-scale))",
+                }}
+              >
+                <span className="whitespace-nowrap">{t("manifesto.nature")}</span>
+                <span className="text-white/80 mx-4">–</span>
+                <span className="whitespace-nowrap">{t("manifesto.animals")}</span>
+                <span className="text-white/80 mx-4">–</span>
+                <span className="whitespace-nowrap">{t("manifesto.humans")}</span>
               </p>
             </div>
 
@@ -1250,7 +1273,7 @@ export default function AboutClient() {
 
       <FooterSection />
       <NextChapterTransition
-        nextTitle="PARTNERSHIP"
+        nextTitle={tNav("partnerships")}
         nextHref="/partnerships"
         prevHref="/"
       />

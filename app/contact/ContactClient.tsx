@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
@@ -22,6 +23,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 }));
 
 export default function ContactClient() {
+  const t = useTranslations("contact.hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const separatorRef = useRef<HTMLDivElement>(null);
@@ -184,10 +186,17 @@ export default function ContactClient() {
             STRATEGIC INQUIRY // CONFIDENTIAL CHANNEL
           </p>
 
-          {/* Hero heading with gradient text (#3) */}
+          {/* Hero text is owned by next-intl. translate="no" keeps GT
+              from double-translating and from breaking the gradient-clip
+              via <font> wrappers. */}
           <h1
             ref={heroTextRef}
-            className="text-[clamp(4rem,14vw,16rem)] leading-[0.8] font-black uppercase tracking-tighter flex flex-col"
+            translate="no"
+            className="notranslate leading-[0.8] font-black uppercase tracking-tighter flex flex-col"
+            style={{
+              fontSize:
+                "calc(clamp(4rem, 14vw, 16rem) * var(--heading-scale))",
+            }}
           >
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
               <span
@@ -201,7 +210,7 @@ export default function ContactClient() {
                   backgroundClip: "text",
                 }}
               >
-                LET&apos;S
+                {t("line1")}
               </span>
             </span>
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
@@ -216,7 +225,7 @@ export default function ContactClient() {
                   backgroundClip: "text",
                 }}
               >
-                TALK
+                {t("line2")}
               </span>
             </span>
           </h1>

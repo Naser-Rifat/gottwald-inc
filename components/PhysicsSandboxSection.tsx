@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import Header from "./Header";
 
 export default function PhysicsSandboxSection() {
+  const t = useTranslations("home.hero");
   const heroRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -237,23 +239,30 @@ export default function PhysicsSandboxSection() {
               </span>
             </div>
 
+            {/* Hero text owned by next-intl. translate="no" keeps Google
+                Translate from wrapping the .hero-word spans in <font> tags,
+                which would break the GSAP word-flip reveal. */}
             <h1
-              className="font-light tracking-[-0.03em] leading-[0.95] uppercase mix-blend-screen shrink-0"
-              style={{ fontSize: "clamp(1.6rem, 5.5vw, 8rem)", transformStyle: "preserve-3d" }}
+              translate="no"
+              className="notranslate font-light tracking-[-0.03em] leading-[0.95] uppercase mix-blend-screen shrink-0"
+              style={{
+                fontSize: "calc(clamp(1.6rem, 5.5vw, 8rem) * var(--heading-scale))",
+                transformStyle: "preserve-3d",
+              }}
             >
               <span className="block overflow-hidden py-1">
                 <span className="hero-word block" style={{ transformOrigin: "bottom center" }}>
-                  TURNING COMPLEXITY
+                  {t("line1")}
                 </span>
               </span>
               <span className="block overflow-hidden py-1">
                 <span className="hero-word block text-white/90" style={{ transformOrigin: "bottom center" }}>
-                  INTO CLARITY, AND DECISIONS
+                  {t("line2")}
                 </span>
               </span>
               <span className="block overflow-hidden py-1">
                 <span className="hero-word block" style={{ transformOrigin: "bottom center" }}>
-                  INTO MEASURABLE IMPACT
+                  {t("line3")}
                 </span>
               </span>
             </h1>

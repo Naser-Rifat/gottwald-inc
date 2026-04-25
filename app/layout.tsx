@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import GlobalCanvas from "@/components/GlobalCanvas";
 import NoiseOverlay from "@/components/NoiseOverlay";
@@ -133,14 +135,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Resolve locale + messages server-side from the googtrans cookie
+  // (see i18n/request.ts). Setting <html lang> from the resolved locale
+  // keeps screen readers, Chrome's translate-banner heuristic, and
+  // next-intl's provider all aligned without needing the inline cookie-
+  // reading script we used for GT alone.
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${satoshi.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
@@ -202,9 +212,11 @@ export default function RootLayout({
         <NoiseOverlay />
         <CookieManager />
         <GoogleTranslateRoot />
-        <AudioProvider>
-          {children}
-        </AudioProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <AudioProvider>
+            {children}
+          </AudioProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

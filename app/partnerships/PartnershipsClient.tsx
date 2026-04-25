@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -22,6 +23,8 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 export default function PartnershipsClient() {
+  const t = useTranslations("partnerships.hero");
+  const tNav = useTranslations("nav");
   const pageRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
@@ -398,13 +401,18 @@ export default function PartnershipsClient() {
                   </span>
                 </div>
 
-                {/* Adjusted clamp sizes for better fit next to HUD on 1024-1280px screens */}
-                <h1 className="text-[clamp(1.8rem,9vw,9rem)] sm:text-[clamp(2.5rem,11vw,9rem)] lg:text-[clamp(2.5rem,5.5vw,9rem)] xl:text-[clamp(3.5rem,7vw,9rem)] leading-[0.85] font-black tracking-[-0.04em] uppercase text-white flex flex-col">
-                  <span className="parallax-fast inline-block whitespace-nowrap">
-                    PARTNERSHIPS
+                {/* Hero text owned by next-intl. translate="no" keeps GT
+                    out so the parallax + scroll-trigger animations don't
+                    fight <font> wrapping during language change. */}
+                <h1
+                  translate="no"
+                  className="notranslate text-[clamp(1.6rem,8vw,5rem)] sm:text-[clamp(2.25rem,9vw,5.5rem)] lg:text-[clamp(2.25rem,4.5vw,5.5rem)] xl:text-[clamp(3rem,5.5vw,6.5rem)] leading-[0.9] font-black tracking-[-0.04em] uppercase text-white flex flex-col max-w-full [overflow-wrap:anywhere] [hyphens:auto]"
+                >
+                  <span className="parallax-fast inline-block">
+                    {t("line1")}
                   </span>
-                  <span className="parallax-slow inline-block text-white/80 ">
-                    AT GOTT WALD
+                  <span className="parallax-slow inline-block text-white/80">
+                    {t("line2")}
                   </span>
                 </h1>
 
@@ -1415,7 +1423,7 @@ export default function PartnershipsClient() {
 
         {/* ── NEXT CHAPTER ── */}
         <NextChapterTransition
-          nextTitle="CAREERS"
+          nextTitle={tNav("careers")}
           nextHref="/careers"
           prevHref="/about"
         />

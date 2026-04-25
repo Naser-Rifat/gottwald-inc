@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -37,6 +38,7 @@ export default function NextChapterTransition({
   nextHref,
   prevHref,
 }: NextChapterProps) {
+  const t = useTranslations("common");
   const wrapperRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
@@ -279,14 +281,24 @@ export default function NextChapterTransition({
         {/* Massive Interactive Title Container */}
         <div className="relative w-full h-full flex flex-col justify-center items-center">
           <div className="absolute top-[20vh] text-center w-full">
-            <span className="text-[10px] tracking-[0.5em] uppercase font-semibold text-white/58">
-              Next Chapter
+            {/* Eyebrow owned by next-intl. translate="no" keeps GT out so
+                "Next Chapter" doesn't get double-translated by both i18n and
+                GT during a language switch. */}
+            <span
+              translate="no"
+              className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold text-white/58"
+            >
+              {t("nextChapter")}
             </span>
           </div>
 
+          {/* Title comes pre-translated from the parent page's nav namespace
+              (e.g. tNav("about") → "ABOUT US"/"ÜBER UNS"). translate="no"
+              prevents GT from translating it again. */}
           <h2
             ref={titleRef}
-            className="text-[15vw] leading-[0.92] font-black tracking-[-0.04em] uppercase text-center will-change-transform whitespace-nowrap text-white/88"
+            translate="no"
+            className="notranslate text-[15vw] leading-[0.92] font-black tracking-[-0.04em] uppercase text-center will-change-transform whitespace-nowrap text-white/88"
             style={{ opacity: 0.3 }}
           >
             {nextTitle}
