@@ -176,7 +176,11 @@ export function elementToLocalRectPoints(
   return { tl, tr, br, bl, center };
 }
 
-export function createVideoTexture(src: string): THREE.VideoTexture {
+export type VideoSource = { src: string; type: string };
+
+export function createVideoTexture(
+  sources: VideoSource[],
+): THREE.VideoTexture {
   const video = document.createElement("video");
   // All config MUST be set before assigning src — src is what triggers the
   // network fetch and any preload behavior. crossOrigin must precede src for
@@ -190,6 +194,14 @@ export function createVideoTexture(src: string): THREE.VideoTexture {
   // "metadata" leaves the texture empty until play() forces data load,
   // producing a black panel during the gap.
   video.preload = "auto";
+
+  // Pick the first source the browser claims it can play. canPlayType returns
+  // "probably" / "maybe" / "" — anything non-empty is good enough to attempt.
+  // Safari can't decode WebM/VP9 reliably, so the MP4 fallback is what keeps
+  // the panel working on iOS and older macOS.
+  const chosen =
+    sources.find((s) => video.canPlayType(s.type) !== "") ?? sources[0];
+  const src = chosen.src;
   video.src = src;
   video.addEventListener("error", () => {
     console.warn(`[VideoPanel] load error for ${src}`, video.error);

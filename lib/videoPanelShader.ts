@@ -18,8 +18,21 @@ const SUBDIVISIONS = 16;
 
 // Hero video. Hosted on Cloudinary for proper streaming/range-request support —
 // self-hosting the 31MB webm on Vercel returned intermittent 503s.
-export const VIDEO_PANEL_SRC =
-  "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1776960831/Gott_Wald_Hero_Flim_1_e4ert0.webm";
+// Order matters: the browser picks the first playable entry, so put the
+// smaller/preferred webm first and the universally-supported mp4 last.
+// Bare container types (no codec hint) — Cloudinary's transcoded codec/profile
+// isn't pinned, and a too-strict codec query risks canPlayType("") on a file
+// the browser would actually decode fine.
+export const VIDEO_PANEL_SOURCES = [
+  {
+    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1776960831/Gott_Wald_Hero_Flim_1_e4ert0.webm",
+    type: "video/webm",
+  },
+  {
+    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1777091331/Gott_Wald_Hero_Flim_1_1_1_k4ae0t.mp4",
+    type: "video/mp4",
+  },
+];
 
 /**
  * Get the scroll position (in px) at which an element's TOP
@@ -59,7 +72,7 @@ export default class VideoPanelShader extends THREE.Group {
     const startWorldRect = elementToWorldRect(PANEL_START_ID, camera);
     this.position.copy(startWorldRect.position);
 
-    const videoTexture = createVideoTexture(VIDEO_PANEL_SRC);
+    const videoTexture = createVideoTexture(VIDEO_PANEL_SOURCES);
     const startRectLocal = elementToLocalRect(PANEL_START_ID, this, camera);
     const endRectLocal = elementToLocalRect(PANEL_END_ID, this, camera);
 
