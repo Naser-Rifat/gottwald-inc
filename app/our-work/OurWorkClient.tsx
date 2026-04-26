@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
 import PillarCard from "@/components/PillarCard";
 import FooterSection from "@/components/FooterSection";
@@ -15,6 +16,7 @@ interface OurWorkClientProps {
 }
 
 export default function OurWorkClient({ pillars }: OurWorkClientProps) {
+  const tCommon = useTranslations("common");
   const [isExpanded, setIsExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -173,7 +175,8 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                 onClick={() => setIsExpanded(!isExpanded)}
                 aria-expanded={isExpanded}
                 aria-controls="our-work-more"
-                className="group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-4 w-max"
+                translate="no"
+                className="notranslate group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-4 w-max"
               >
                 <span className="relative overflow-hidden w-8 h-8 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white/50 group-hover:bg-white/5 transition-all">
                   <span className="block w-3 h-px bg-current transition-transform duration-500 absolute" />
@@ -183,7 +186,7 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                     }`}
                   />
                 </span>
-                <span>{isExpanded ? "Show less" : "Show more"}</span>
+                <span>{isExpanded ? tCommon("showLess") : tCommon("showMore")}</span>
               </button>
             </div>
           </div>

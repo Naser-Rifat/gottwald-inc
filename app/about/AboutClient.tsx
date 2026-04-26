@@ -1221,7 +1221,7 @@ export default function AboutClient() {
         </section>
 
         {/* DECISION / CTA */}
-        <section className="cta-section h-screen px-gutter relative flex items-center justify-center bg-[#03070d] overflow-hidden">
+        <section className="cta-section min-h-screen py-[15vh] px-gutter relative flex items-center justify-center bg-[#03070d] overflow-hidden">
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
             <div
               className="w-[60vw] h-[60vw] rounded-full opacity-10 blur-[100px]"
@@ -1250,14 +1250,15 @@ export default function AboutClient() {
             <div className="cta-reveal pt-16 pb-8">
               <button
                 onClick={handleStrategicClick}
-                className="cta-btn-glow group relative cursor-pointer px-10 md:px-14 py-5 md:py-6 rounded-full overflow-hidden bg-[#0A0A0A] border border-gold/30 hover:border-gold transition-colors duration-700 shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:shadow-[0_0_60px_rgba(212,175,55,0.4)]"
+                translate="no"
+                className="notranslate cta-btn-glow group relative cursor-pointer px-10 md:px-14 py-5 md:py-6 rounded-full overflow-hidden bg-[#0A0A0A] border border-gold/30 hover:border-gold transition-colors duration-700 shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:shadow-[0_0_60px_rgba(212,175,55,0.4)]"
               >
                 {/* Sweep animation background */}
                 <div className="absolute inset-0 bg-gold translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
                 {/* Button text */}
                 <span className="relative z-10 text-[11px] md:text-sm tracking-[0.3em] uppercase font-bold text-gold group-hover:text-[#030303] transition-colors duration-500">
-                  Request a Strategic Conversation
+                  {t("ctas.strategicConversation")}
                 </span>
               </button>
             </div>

@@ -1,26 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import CookieSettingsTrigger from "./CookieSettingsTrigger";
 import logo from "@/public/logo.png";
 
-const directoryLinks = [
-  { label: "Entity Grid", href: "/entity-grid" },
-  { label: "Manifesto", href: "/partnerships#manifesto" },
-  { label: "Cooperation Hub", href: "/cooperation-hub" },
-  { label: "Strategic Assets", href: "/strategic-assets" },
-  { label: "Strategic Inquiry.", href: "/contact" },
-  { label: "Press / Media Kit", href: "/press-media-kit" },
-  { label: "Careers", href: "/careers" },
-];
+// Labels are sourced from `footer.directory.*` and `footer.protocols.*` —
+// hrefs stay route-stable. Keep these in sync with the message keys.
+const DIRECTORY_LINKS = [
+  { key: "entityGrid", href: "/entity-grid" },
+  { key: "manifesto", href: "/partnerships#manifesto" },
+  { key: "cooperationHub", href: "/cooperation-hub" },
+  { key: "strategicAssets", href: "/strategic-assets" },
+  { key: "strategicInquiry", href: "/contact" },
+  { key: "pressMediaKit", href: "/press-media-kit" },
+  { key: "careers", href: "/careers" },
+] as const;
 
-const protocolItems = [
-  { label: "Confidential by default", href: "/protocols#confidential-by-default" },
-  { label: "Values-first selection", href: "/protocols#values-first-selection" },
-  { label: "Standards-led governance", href: "/protocols#standards-led-governance" },
-  { label: "Execution over exposure", href: "/protocols#execution-over-exposure" },
-];
+const PROTOCOL_ITEMS = [
+  { key: "confidentialByDefault", href: "/protocols#confidential-by-default" },
+  { key: "valuesFirstSelection", href: "/protocols#values-first-selection" },
+  { key: "standardsLedGovernance", href: "/protocols#standards-led-governance" },
+  { key: "executionOverExposure", href: "/protocols#execution-over-exposure" },
+] as const;
 
 export default function FooterSection() {
+  const tDirectory = useTranslations("footer.directory");
+  const tProtocols = useTranslations("footer.protocols");
+  const tLegal = useTranslations("footer.legal");
   return (
     <footer
       className="relative w-full text-white pt-16 lg:pt-24 pb-28 md:pb-12 px-gutter z-10 overflow-hidden"
@@ -131,34 +139,38 @@ export default function FooterSection() {
             Directory
           </h4>
           <nav className="flex flex-col gap-1">
-            {directoryLinks.map((link, i) => (
-              <Link
-                href={link.href}
-                key={i}
-                className="group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
-              >
-                {/* Left Side Arrow Reveal */}
-                <span className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
-                  ↗
-                </span>
-
-                {/* Masking Text Scroller */}
-                <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
-                  {/* Invisible spacer to define intrinsic width */}
-                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
-                    {link.label}
+            {DIRECTORY_LINKS.map((link) => {
+              const label = tDirectory(link.key);
+              return (
+                <Link
+                  href={link.href}
+                  key={link.key}
+                  translate="no"
+                  className="notranslate group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
+                >
+                  {/* Left Side Arrow Reveal */}
+                  <span className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
+                    ↗
                   </span>
 
-                  {/* Visible text layers */}
-                  <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
-                    {link.label}
-                  </span>
-                  <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
-                    {link.label}
-                  </span>
-                </div>
-              </Link>
-            ))}
+                  {/* Masking Text Scroller */}
+                  <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
+                    {/* Invisible spacer to define intrinsic width */}
+                    <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
+                      {label}
+                    </span>
+
+                    {/* Visible text layers */}
+                    <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                      {label}
+                    </span>
+                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                      {label}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -168,29 +180,33 @@ export default function FooterSection() {
             Protocols
           </h4>
           <div className="flex flex-col gap-1">
-            {protocolItems.map((item, i) => (
-              <Link
-                href={item.href}
-                key={i}
-                className="group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
-              >
-                {/* Masking Text Scroller */}
-                <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
-                  {/* Invisible spacer to define intrinsic width */}
-                  <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
-                    {item.label}
-                  </span>
+            {PROTOCOL_ITEMS.map((item) => {
+              const label = tProtocols(item.key);
+              return (
+                <Link
+                  href={item.href}
+                  key={item.key}
+                  translate="no"
+                  className="notranslate group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
+                >
+                  {/* Masking Text Scroller */}
+                  <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
+                    {/* Invisible spacer to define intrinsic width */}
+                    <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
+                      {label}
+                    </span>
 
-                  {/* Visible text layers */}
-                  <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
-                    {item.label}
-                  </span>
-                  <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
-                    {item.label}
-                  </span>
-                </div>
-              </Link>
-            ))}
+                    {/* Visible text layers */}
+                    <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                      {label}
+                    </span>
+                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                      {label}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -256,25 +272,28 @@ export default function FooterSection() {
         <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-x-4 gap-y-4 w-full xl:w-auto mt-2 xl:mt-0">
           <Link
             href="/imprint"
-            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
+            translate="no"
+            className="notranslate text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
-            Imprint / Legal Notice
+            {tLegal("imprint")}
           </Link>
           <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/privacy-policy"
-            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
+            translate="no"
+            className="notranslate text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
-            Privacy Policy
+            {tLegal("privacyPolicy")}
           </Link>
           <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <CookieSettingsTrigger />
           <span className="text-white/10 hidden sm:inline text-[13px]">·</span>
           <Link
             href="/terms-of-use"
-            className="text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
+            translate="no"
+            className="notranslate text-white/90 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] tracking-wider font-light text-[13px]"
           >
-            Terms of Use
+            {tLegal("termsOfUse")}
           </Link>
         </div>
       </div>

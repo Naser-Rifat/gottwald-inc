@@ -206,7 +206,8 @@ export default function VideoPanelSection() {
         >
           <Link href="/about">
             <button
-              className="h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
+              translate="no"
+              className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
                          tracking-[0.02em] transition-all duration-300 mt-4"
               style={{
                 padding: "0 18px 0 22px",
@@ -223,7 +224,7 @@ export default function VideoPanelSection() {
                 (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.35)";
               }}
             >
-              <span>About Us</span>
+              <span>{t("aboutCta")}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
             </button>
           </Link>

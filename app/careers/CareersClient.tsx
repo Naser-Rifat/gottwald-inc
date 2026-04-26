@@ -144,6 +144,7 @@ const PILLARS = [
 
 export default function CareersClient() {
   const t = useTranslations("careers.hero");
+  const tCtas = useTranslations("careers.ctas");
   const tNav = useTranslations("nav");
   const pageRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -400,15 +401,17 @@ export default function CareersClient() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="#apply"
-                    className="h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
+                    translate="no"
+                    className="notranslate h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
                   >
-                    Apply Now
+                    {tCtas("applyNow")}
                   </a>
                   <a
                     href="#apply"
-                    className="h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
+                    translate="no"
+                    className="notranslate h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
                   >
-                    Specialist Pool
+                    {tCtas("specialistPool")}
                   </a>
                 </div>
 
@@ -937,10 +940,11 @@ export default function CareersClient() {
                   type="submit"
                   disabled={isSubmitting}
                   data-magnetic
-                  className="group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                  translate="no"
+                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
-                    {isSubmitting ? "Submitting..." : "Submit Application"}
+                    {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
                   </span>
                   <span className="relative z-0 w-2 h-2 rounded-full bg-[#0a9396] group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
                 </button>

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLocale, useTranslations } from "next-intl";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -15,32 +16,15 @@ interface MenuOverlayProps {
   onClose: () => void;
 }
 
-const MENU_ITEMS = [
-  {
-    title: "OUR WORK",
-    href: "/our-work",
-    motto: "Case-level execution. Systems delivered—never promised.",
-  },
-  {
-    title: "ABOUT US",
-    href: "/about",
-    motto: "The Central Node behind the system. Tbilisi HQ.",
-  },
-  {
-    title: "PARTNERSHIPS",
-    href: "/partnerships",
-    motto: "Values-first selection. Confidential by default.",
-  },
-  {
-    title: "CAREERS",
-    href: "/careers",
-    motto: "Join the standard. Character + capability.",
-  },
-  {
-    title: "CONTACT US",
-    href: "/contact",
-    motto: "Strategic inquiry (confidential). Start the dialogue.",
-  },
+// Title + motto translations live in messages/{locale}.json under
+// `nav.*` and `menu.*Motto` respectively. Hrefs stay route-stable.
+type MenuKey = "ourWork" | "about" | "partnerships" | "careers" | "contact";
+const MENU_ROUTES: Array<{ key: MenuKey; href: string; mottoKey: string }> = [
+  { key: "ourWork", href: "/our-work", mottoKey: "ourWorkMotto" },
+  { key: "about", href: "/about", mottoKey: "aboutMotto" },
+  { key: "partnerships", href: "/partnerships", mottoKey: "partnershipsMotto" },
+  { key: "careers", href: "/careers", mottoKey: "careersMotto" },
+  { key: "contact", href: "/contact", mottoKey: "contactMotto" },
 ];
 
 export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
@@ -50,6 +34,16 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   const closingRef = useRef(false);
   const pathname = usePathname();
   const router = useRouter();
+  const tNav = useTranslations("nav");
+  const tMenu = useTranslations("menu");
+  const locale = useLocale();
+  // German labels are noticeably longer ("PARTNERSCHAFTEN" vs "PARTNERSHIPS").
+  // Drop the scale slightly for de so the longest word never reaches the
+  // motto column on hover.
+  const titleSizeClass =
+    locale === "de"
+      ? "text-[clamp(2rem,5.5vw,6.5rem)]"
+      : "text-[clamp(2.5rem,7vw,8rem)]";
 
   // SSR-safe mount flag — avoids calling setState synchronously inside an effect
   // useSyncExternalStore is the React-recommended approach to detect client-side hydration
@@ -129,6 +123,16 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
   // ── Build the GSAP open-animation timeline (reusable after kill) ──
   const buildTimeline = () => {
     if (!overlayRef.current || !menuListRef.current) return;
+
+    // Reset hover-driven elements to their resting state. GSAP's hover handlers
+    // write inline opacity/x onto the motto + text-group; without this reset,
+    // a previously-hovered item stays visible the next time the menu opens.
+    const mottos = menuListRef.current.querySelectorAll(".menu-motto");
+    const textGroups = menuListRef.current.querySelectorAll(".menu-item-text-group");
+    const items = menuListRef.current.querySelectorAll("li.group");
+    gsap.set(mottos, { opacity: 0, x: -20 });
+    gsap.set(textGroups, { x: 0, color: "rgba(255, 255, 255, 1)" });
+    gsap.set(items, { opacity: 1 });
 
     tl.current = gsap.timeline({ paused: true });
 
@@ -290,9 +294,10 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
         {/* CLOSE Button */}
         <button
           onClick={() => closeMenu()}
-          className="flex items-center gap-3 text-[10px] uppercase font-bold tracking-[0.2em] text-white/50 hover:text-white transition-colors"
+          translate="no"
+          className="notranslate flex items-center gap-3 text-[10px] uppercase font-bold tracking-[0.2em] text-white/50 hover:text-white transition-colors"
         >
-          <span>CLOSE</span>
+          <span>{tMenu("close")}</span>
           <svg
             width="14"
             height="14"
@@ -320,10 +325,11 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           ref={menuListRef}
           className="flex flex-col gap-[1vh] lg:gap-[2vh] w-full"
         >
-          {MENU_ITEMS.map((item) => (
+          {MENU_ROUTES.map((item) => (
             <li
-              key={item.title}
-              className="group w-full flex flex-col lg:flex-row lg:items-center relative"
+              key={item.key}
+              translate="no"
+              className="notranslate group w-full flex flex-col lg:flex-row lg:items-center relative"
             >
               <a
                 href={item.href}
@@ -331,11 +337,11 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
                 className="block relative z-10 w-max"
               >
                 <div className="menu-item-text-group will-change-transform">
-                  {/* Overflow hidden mask now inside the group so hover x: 20 moves the mask too. 
+                  {/* Overflow hidden mask now inside the group so hover x: 20 moves the mask too.
                       Added generous padding and negative margins to prevent tracking-tighter and tight leading text from clipping on any edge. */}
                   <div className="overflow-hidden pt-4 pb-8 pr-12 pl-2 -mt-4 -mb-8 -mr-12 -ml-2">
-                    <span className="menu-item-text block text-[clamp(2.5rem,7vw,8rem)] leading-[0.85] font-black uppercase tracking-tighter will-change-transform origin-left text-white">
-                      {item.title}
+                    <span className={`menu-item-text block whitespace-nowrap ${titleSizeClass} leading-[0.85] font-black uppercase tracking-tighter will-change-transform origin-left text-white`}>
+                      {tNav(item.key)}
                     </span>
                   </div>
                 </div>
@@ -345,7 +351,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
               <div className="menu-motto opacity-0 -translate-x-5 pointer-events-none lg:absolute lg:left-[55vw] lg:top-1/2 lg:-translate-y-1/2 mt-2 mb-6 lg:mb-0 lg:mt-0 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 pl-2 lg:pl-0 relative z-0">
                 <span className="w-8 h-px bg-[var(--color-turquoise)] hidden lg:block" />
                 <span className="text-[10px] sm:text-[11px] font-medium tracking-widest text-[var(--color-turquoise)] uppercase whitespace-normal leading-normal max-w-[85vw] lg:max-w-md mt-1 lg:mt-0 drop-shadow-md">
-                  {item.motto}
+                  {tMenu(item.mottoKey)}
                 </span>
               </div>
             </li>

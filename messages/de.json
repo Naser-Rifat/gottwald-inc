@@ -1,13 +1,54 @@
 {
   "common": {
-    "nextChapter": "Nächstes Kapitel"
+    "nextChapter": "Nächstes Kapitel",
+    "nextPage": "Nächste Seite",
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen",
+    "scrollDown": "Nach unten scrollen"
   },
   "nav": {
     "home": "STARTSEITE",
+    "ourWork": "UNSERE ARBEIT",
     "about": "ÜBER UNS",
-    "partnerships": "PARTNERSCHAFT",
+    "partnerships": "PARTNERSCHAFTEN",
     "careers": "KARRIERE",
     "contact": "KONTAKT"
+  },
+  "header": {
+    "apply": "Bewerben",
+    "letsTalk": "Sprechen wir",
+    "menu": "Menü"
+  },
+  "menu": {
+    "close": "Schließen",
+    "ourWorkMotto": "Umsetzung auf Fall-Ebene. Systeme geliefert — nie versprochen.",
+    "aboutMotto": "Der zentrale Knotenpunkt hinter dem System. Hauptsitz Tbilisi.",
+    "partnershipsMotto": "Werte-orientierte Auswahl. Vertraulich von Grund auf.",
+    "careersMotto": "Werde Teil des Standards. Charakter + Fähigkeit.",
+    "contactMotto": "Strategische Anfrage (vertraulich). Beginnen Sie den Dialog."
+  },
+  "footer": {
+    "directory": {
+      "entityGrid": "Entity Grid",
+      "manifesto": "Manifest",
+      "cooperationHub": "Kooperations-Hub",
+      "strategicAssets": "Strategische Vermögenswerte",
+      "strategicInquiry": "Strategische Anfrage.",
+      "pressMediaKit": "Presse / Medien-Kit",
+      "careers": "Karriere"
+    },
+    "protocols": {
+      "confidentialByDefault": "Vertraulich von Grund auf",
+      "valuesFirstSelection": "Werte-orientierte Auswahl",
+      "standardsLedGovernance": "Standardgeführte Governance",
+      "executionOverExposure": "Umsetzung vor Sichtbarkeit"
+    },
+    "legal": {
+      "imprint": "Impressum / Rechtliche Hinweise",
+      "privacyPolicy": "Datenschutzerklärung",
+      "termsOfUse": "Nutzungsbedingungen",
+      "cookieSettings": "Cookie-Einstellungen"
+    }
   },
   "home": {
     "hero": {
@@ -17,7 +58,16 @@
     },
     "videoPanel": {
       "topline": "Frieden. Liebe. Harmonie",
-      "tagline": "für mehr Menschlichkeit."
+      "tagline": "für mehr Menschlichkeit.",
+      "aboutCta": "Über uns"
+    },
+    "pillars": {
+      "viewAll": "Alle Säulen anzeigen"
+    },
+    "strategicInquiry": {
+      "discoverMore": "MEHR ENTDECKEN",
+      "discoverLess": "WENIGER ENTDECKEN",
+      "requestCall": "STRATEGISCHEN ANRUF ANFRAGEN"
     }
   },
   "about": {
@@ -33,24 +83,49 @@
       "nature": "NATUR",
       "animals": "TIERE",
       "humans": "MENSCHEN"
+    },
+    "ctas": {
+      "strategicConversation": "Strategisches Gespräch anfragen"
     }
   },
   "partnerships": {
     "hero": {
       "line1": "PARTNERSCHAFTEN",
       "line2": "BEI GOTT WALD"
+    },
+    "ctas": {
+      "applyForPartnership": "Für Partnerschaft bewerben",
+      "requestIntroCall": "Einführungsgespräch anfragen",
+      "applyNow": "Jetzt bewerben",
+      "submitApplication": "Bewerbung einreichen",
+      "submitting": "Wird gesendet..."
     }
   },
   "careers": {
     "hero": {
       "line1": "KARRIERE BEI",
       "line2": "GOTT WALD"
+    },
+    "ctas": {
+      "applyNow": "Jetzt bewerben",
+      "specialistPool": "Spezialisten-Pool",
+      "submitApplication": "Bewerbung einreichen",
+      "submitting": "Wird gesendet..."
     }
   },
   "contact": {
     "hero": {
       "line1": "LASS UNS",
       "line2": "REDEN"
+    },
+    "ctas": {
+      "viewOnMap": "Auf Karte anzeigen"
     }
+  },
+  "contactForm": {
+    "submit": "Anfrage senden",
+    "submitting": "Wird gesendet...",
+    "success": "Nachricht sicher übermittelt. Wir prüfen Ihre Anfrage und melden uns in Kürze.",
+    "error": "Übertragung fehlgeschlagen. Bitte erneut versuchen."
   }
 }

@@ -2,12 +2,14 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function StrategicInquirySection() {
+  const t = useTranslations("home.strategicInquiry");
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
@@ -287,7 +289,8 @@ export default function StrategicInquirySection() {
 
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="body-line group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase transition-colors mt-8 mb-16 w-max"
+              translate="no"
+              className="notranslate body-line group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase transition-colors mt-8 mb-16 w-max"
               style={{ color: "rgba(18,168,172,0.8)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,1)";
@@ -304,7 +307,7 @@ export default function StrategicInquirySection() {
                   {isExpanded ? "−" : "+"}
                 </span>
               </div>
-              <span>{isExpanded ? "DISCOVER LESS" : "DISCOVER MORE"}</span>
+              <span>{isExpanded ? t("discoverLess") : t("discoverMore")}</span>
             </button>
           </div>
         </div>
@@ -319,7 +322,8 @@ export default function StrategicInquirySection() {
             <Link
               ref={ctaRef}
               href="/partnerships#apply"
-              className="group relative flex items-center justify-center bg-transparent rounded-full px-10 py-5 overflow-hidden w-full sm:w-max transition-all duration-300"
+              translate="no"
+              className="notranslate group relative flex items-center justify-center bg-transparent rounded-full px-10 py-5 overflow-hidden w-full sm:w-max transition-all duration-300"
               style={{
                 border: "1.5px solid rgba(18,168,172,0.45)",
                 willChange: "transform",
@@ -335,7 +339,7 @@ export default function StrategicInquirySection() {
             >
               <div className="relative z-10 flex items-center gap-4">
                 <span className="font-bold uppercase tracking-[0.15em] text-[13px] text-white">
-                  REQUEST STRATEGIC CALL
+                  {t("requestCall")}
                 </span>
                 <span className="text-white font-light text-xl transition-transform duration-300 group-hover:translate-x-2">
                   →
