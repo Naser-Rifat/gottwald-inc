@@ -24,6 +24,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 
 export default function ContactClient() {
   const t = useTranslations("contact.hero");
+  const tCtas = useTranslations("contact.ctas");
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const separatorRef = useRef<HTMLDivElement>(null);
@@ -340,9 +341,10 @@ export default function ContactClient() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-magnetic
-                    className="inline-block mt-4 text-[10px] uppercase font-bold tracking-[0.2em] text-gold border-b border-gold/30 pb-1 hover:border-gold transition-colors px-4 pt-4 -mx-4"
+                    translate="no"
+                    className="notranslate inline-block mt-4 text-[10px] uppercase font-bold tracking-[0.2em] text-gold border-b border-gold/30 pb-1 hover:border-gold transition-colors px-4 pt-4 -mx-4"
                   >
-                    View on Map
+                    {tCtas("viewOnMap")}
                   </a>
                 </div>
               </div>

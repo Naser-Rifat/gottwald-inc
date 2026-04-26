@@ -24,6 +24,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function PartnershipsClient() {
   const t = useTranslations("partnerships.hero");
+  const tCtas = useTranslations("partnerships.ctas");
   const tNav = useTranslations("nav");
   const pageRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
@@ -459,10 +460,11 @@ export default function PartnershipsClient() {
                   <a
                     href="#apply"
                     data-magnetic
-                    className="group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
+                    translate="no"
+                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
                   >
                     <span className="text-sm lg:text-sm tracking-[0.3em] uppercase font-bold">
-                      Apply for Partnership
+                      {tCtas("applyForPartnership")}
                     </span>
                     <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
                       →
@@ -471,10 +473,11 @@ export default function PartnershipsClient() {
                   <a
                     href="#apply"
                     data-magnetic
-                    className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-white hover:text-white transition-colors duration-300 w-full"
+                    translate="no"
+                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-3 text-white hover:text-white transition-colors duration-300 w-full"
                   >
                     <span className="text-[11px] tracking-[0.3em] uppercase font-medium">
-                      Request an Intro Call
+                      {tCtas("requestIntroCall")}
                     </span>
                   </a>
                 </div>
@@ -844,9 +847,10 @@ export default function PartnershipsClient() {
                 </p>
                 <a
                   href="#apply"
-                  className="inline-flex items-center gap-3 px-6 py-3 border border-gold/40 text-gold text-xs tracking-[0.35em] uppercase font-bold hover:bg-gold hover:text-black transition-all duration-300"
+                  translate="no"
+                  className="notranslate inline-flex items-center gap-3 px-6 py-3 border border-gold/40 text-gold text-xs tracking-[0.35em] uppercase font-bold hover:bg-gold hover:text-black transition-all duration-300"
                 >
-                  Apply Now
+                  {tCtas("applyNow")}
                 </a>
                 <div className="w-px h-16 bg-linear-to-b from-transparent via-gold/30 to-transparent mt-8" />
               </div>
@@ -1386,10 +1390,11 @@ export default function PartnershipsClient() {
                 type="submit"
                 disabled={isSubmitting}
                 data-magnetic
-                className="group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                translate="no"
+                className="notranslate group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
-                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                  {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
                 </span>
                 <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
               </button>

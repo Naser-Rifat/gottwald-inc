@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import Honeypot from "@/components/Honeypot";
 import { useAudio } from "@/components/AudioProvider";
@@ -8,17 +9,20 @@ import { useAudio } from "@/components/AudioProvider";
 interface BrutalistContactFormProps {
   /** Optional subject injected into the hidden field to identify the source */
   subject?: string;
-  /** Label for the submit button */
+  /** Override the submit-button label. Falls back to the translated default. */
   submitLabel?: string;
-  /** Optional custom success message */
+  /** Override the success message. Falls back to the translated default. */
   successMessage?: string;
 }
 
 export default function BrutalistContactForm({
   subject = "Website Inquiry",
-  submitLabel = "Submit Inquiry",
-  successMessage = "Message securely transmitted. We will review and follow up shortly.",
+  submitLabel,
+  successMessage,
 }: BrutalistContactFormProps) {
+  const t = useTranslations("contactForm");
+  const resolvedSubmit = submitLabel ?? t("submit");
+  const resolvedSuccess = successMessage ?? t("success");
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -196,22 +200,29 @@ export default function BrutalistContactForm({
           type="submit"
           disabled={isSubmitting}
           data-magnetic
-          className="group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max disabled:opacity-50 disabled:cursor-not-allowed"
+          translate="no"
+          className="notranslate group relative flex items-center gap-4 bg-white px-10 py-5 rounded-full overflow-hidden w-max disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="relative z-10 font-bold uppercase tracking-widest text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
-            {isSubmitting ? "Sending..." : submitLabel}
+            {isSubmitting ? t("submitting") : resolvedSubmit}
           </span>
           <span className="relative z-0 w-2 h-2 rounded-full bg-[#0a9396] group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
         </button>
 
         {submitStatus === "success" && (
-          <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">
-            {successMessage}
+          <p
+            translate="no"
+            className="notranslate text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm"
+          >
+            {resolvedSuccess}
           </p>
         )}
         {submitStatus === "error" && (
-          <p className="text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm">
-            Transmission failed. Please attempt again.
+          <p
+            translate="no"
+            className="notranslate text-red-500/90 text-lg font-light mt-2 border border-red-500/20 bg-red-500/10 p-4 rounded-sm"
+          >
+            {t("error")}
           </p>
         )}
       </div>

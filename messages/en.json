@@ -1,13 +1,54 @@
 {
   "common": {
-    "nextChapter": "Next Chapter"
+    "nextChapter": "Next Chapter",
+    "nextPage": "Next Page",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "scrollDown": "Scroll Down"
   },
   "nav": {
     "home": "HOME",
+    "ourWork": "OUR WORK",
     "about": "ABOUT US",
-    "partnerships": "PARTNERSHIP",
+    "partnerships": "PARTNERSHIPS",
     "careers": "CAREERS",
     "contact": "CONTACT"
+  },
+  "header": {
+    "apply": "Apply",
+    "letsTalk": "Let's Talk",
+    "menu": "Menu"
+  },
+  "menu": {
+    "close": "Close",
+    "ourWorkMotto": "Case-level execution. Systems delivered—never promised.",
+    "aboutMotto": "The Central Node behind the system. Tbilisi HQ.",
+    "partnershipsMotto": "Values-first selection. Confidential by default.",
+    "careersMotto": "Join the standard. Character + capability.",
+    "contactMotto": "Strategic inquiry (confidential). Start the dialogue."
+  },
+  "footer": {
+    "directory": {
+      "entityGrid": "Entity Grid",
+      "manifesto": "Manifesto",
+      "cooperationHub": "Cooperation Hub",
+      "strategicAssets": "Strategic Assets",
+      "strategicInquiry": "Strategic Inquiry.",
+      "pressMediaKit": "Press / Media Kit",
+      "careers": "Careers"
+    },
+    "protocols": {
+      "confidentialByDefault": "Confidential by default",
+      "valuesFirstSelection": "Values-first selection",
+      "standardsLedGovernance": "Standards-led governance",
+      "executionOverExposure": "Execution over exposure"
+    },
+    "legal": {
+      "imprint": "Imprint / Legal Notice",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms of Use",
+      "cookieSettings": "Cookie Settings"
+    }
   },
   "home": {
     "hero": {
@@ -17,7 +58,16 @@
     },
     "videoPanel": {
       "topline": "Peace. Love. Harmony",
-      "tagline": "for more Humanity."
+      "tagline": "for more Humanity.",
+      "aboutCta": "About Us"
+    },
+    "pillars": {
+      "viewAll": "View all pillars"
+    },
+    "strategicInquiry": {
+      "discoverMore": "DISCOVER MORE",
+      "discoverLess": "DISCOVER LESS",
+      "requestCall": "REQUEST STRATEGIC CALL"
     }
   },
   "about": {
@@ -33,24 +83,49 @@
       "nature": "NATURE",
       "animals": "ANIMALS",
       "humans": "HUMANS"
+    },
+    "ctas": {
+      "strategicConversation": "Request a Strategic Conversation"
     }
   },
   "partnerships": {
     "hero": {
       "line1": "PARTNERSHIPS",
       "line2": "AT GOTT WALD"
+    },
+    "ctas": {
+      "applyForPartnership": "Apply for Partnership",
+      "requestIntroCall": "Request an Intro Call",
+      "applyNow": "Apply Now",
+      "submitApplication": "Submit Application",
+      "submitting": "Submitting..."
     }
   },
   "careers": {
     "hero": {
       "line1": "CAREERS AT",
       "line2": "GOTT WALD"
+    },
+    "ctas": {
+      "applyNow": "Apply Now",
+      "specialistPool": "Specialist Pool",
+      "submitApplication": "Submit Application",
+      "submitting": "Submitting..."
     }
   },
   "contact": {
     "hero": {
       "line1": "LET'S",
       "line2": "TALK"
+    },
+    "ctas": {
+      "viewOnMap": "View on Map"
     }
+  },
+  "contactForm": {
+    "submit": "Submit Inquiry",
+    "submitting": "Sending...",
+    "success": "Message securely transmitted. We will review and follow up shortly.",
+    "error": "Transmission failed. Please attempt again."
   }
 }

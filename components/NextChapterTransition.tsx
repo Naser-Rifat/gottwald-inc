@@ -307,7 +307,7 @@ export default function NextChapterTransition({
           {/* Bottom Progress UI */}
           <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-52 sm:w-64">
             <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.34em] font-semibold text-white/52 mb-1">
-              <span>Next Page</span>
+              <span>{t("nextPage")}</span>
               <span className="text-white/55">
                 →
               </span>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { Pillar } from "@/lib/types/pillars";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,6 +17,8 @@ interface PillarTilesSectionProps {
 export default function PillarTilesSection({
   pillars,
 }: PillarTilesSectionProps) {
+  const tCommon = useTranslations("common");
+  const tPillars = useTranslations("home.pillars");
   const [isExpanded, setIsExpanded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -200,7 +203,8 @@ export default function PillarTilesSection({
               onClick={() => setIsExpanded(!isExpanded)}
               aria-expanded={isExpanded}
               aria-controls="pillar-details-more"
-              className="group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-6 w-max"
+              translate="no"
+              className="notranslate group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-6 w-max"
             >
               <span className="relative overflow-hidden w-8 h-8 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white/50 group-hover:bg-white/5 transition-all">
                 <span className="block w-3 h-px bg-current transition-transform duration-500 absolute" />
@@ -210,7 +214,7 @@ export default function PillarTilesSection({
                   }`}
                 />
               </span>
-              <span>{isExpanded ? "Show less" : "Show more"}</span>
+              <span>{isExpanded ? tCommon("showLess") : tCommon("showMore")}</span>
             </button>
           </div>
         </div>
@@ -228,11 +232,12 @@ export default function PillarTilesSection({
       {pillars.length > 4 && (
         <Link
           href="/our-work"
-          className="group mx-auto inline-flex items-center gap-4 transition-colors mt-12 w-fit"
+          translate="no"
+          className="notranslate group mx-auto inline-flex items-center gap-4 transition-colors mt-12 w-fit"
           style={{ color: "rgba(18,168,172,0.9)" }}
         >
           <span className="text-[clamp(1rem,1vw,1.3rem)] tracking-[0.2em] uppercase font-bold">
-            View all pillars
+            {tPillars("viewAll")}
           </span>
           <span
             className="text-2xl font-light transform transition-transform duration-500 group-hover:translate-x-3"
