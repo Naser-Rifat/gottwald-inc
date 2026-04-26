@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lighthouse": "bunx lighthouse https://gottwald.world --preset=desktop --output=html --output=json --output-path=./lighthouse/baseline --chrome-flags=\"--headless\" --view"
   },
   "dependencies": {
     "@react-email/components": "^1.0.10",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@sentry/nextjs": "^10.50.0",
     "@tailwindcss/typography": "^0.5.19",
     "countup.js": "^2.9.0",
     "framer-motion": "12.35.2",

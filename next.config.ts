@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { withSentryConfig } from "@sentry/nextjs";
 
 // next-intl without URL-based locale routing. Locale is resolved in
 // i18n/request.ts from the googtrans cookie so hero copy (owned by
@@ -49,7 +50,9 @@ const securityHeaders = [
       "media-src 'self' blob: https://res.cloudinary.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       // Backend API + same-origin form submissions + GT translation API endpoints.
-      "connect-src 'self' https://gottwald-backend.onrender.com https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com",
+      // Sentry EU ingest (the project lives in the .de region —
+      // sentry.client.config.ts uses the matching DSN).
+      "connect-src 'self' https://gottwald-backend.onrender.com https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com https://*.ingest.de.sentry.io",
       // GT falls back to an iframe on www.google.com for some UI chrome.
       "frame-src https://www.google.com https://translate.google.com",
       "frame-ancestors 'none'",
@@ -99,4 +102,23 @@ const nextConfig: NextConfig = {
 
 };
 
-export default withNextIntl(nextConfig);
+// Sentry build-time wrapper. Uploads source maps when SENTRY_AUTH_TOKEN is
+// set in CI/Vercel; otherwise it's a near-no-op that still wires up the
+// runtime tunnel route. `silent: !process.env.CI` keeps local builds quiet.
+const sentryWebpackOptions = {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  // Tunnel client errors through /monitoring to dodge ad-blockers that
+  // block direct requests to *.ingest.sentry.io. Same-origin → no extra CSP.
+  tunnelRoute: "/monitoring",
+  disableLogger: true,
+  // Don't fail the production build if Sentry's release-creation step
+  // hits a transient error — error reporting will still work at runtime.
+  errorHandler: (err: Error) => {
+    console.warn("[sentry] non-fatal build error:", err.message);
+  },
+};
+
+export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackOptions);

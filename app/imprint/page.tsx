@@ -132,7 +132,7 @@ export default function ImprintPage() {
               <h2 className="text-sm font-medium text-gold tracking-widest uppercase mb-6 drop-shadow-md">
                 RESPONSIBLE FOR CONTENT
               </h2>
-              <p className="text-[19px] text-white">Mathias Gottwald</p>
+              <p className="text-[19px] text-white">Mathias Gottwald, Patron</p>
             </section>
           </div>
 
