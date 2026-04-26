@@ -126,6 +126,14 @@ export function organizationJsonLd() {
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "PLHH Coin", description: "Real-world-asset governance layer — Peace, Love & Harmony for more Humanity", url: `${SITE_URL}/pillars/plhhcoin` } },
       ],
     },
+    // Patron reference — minimal Person object per the audit Section 5
+    // instruction: name only, no @id, no url, no sameAs, no biography, no
+    // jobTitle, no credentials. The Holding stays the subject; the Patron
+    // is one small, correctly-named property of the Organization.
+    patron: {
+      "@type": "Person",
+      name: "Mathias Gottwald",
+    },
     sameAs: SOCIAL_PROFILES,
   };
 }
