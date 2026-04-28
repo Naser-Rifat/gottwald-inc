@@ -2,10 +2,22 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import PressMediaKitClient from "./PressMediaKitClient";
 
+const PRESS_MEDIA_KIT_DESCRIPTION =
+  "A structured point of access for media inquiries, official materials, and selected brand information.";
+
 export const metadata = {
   title: "Press & Media Kit | GOTT WALD Holding LLC",
-  description: "A structured point of access for media inquiries, official materials, and selected brand information.",
+  description: PRESS_MEDIA_KIT_DESCRIPTION,
   alternates: { canonical: "/press-media-kit" },
+  openGraph: {
+    title: "Press & Media Kit",
+    description: PRESS_MEDIA_KIT_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Press & Media Kit",
+    description: PRESS_MEDIA_KIT_DESCRIPTION,
+  },
 };
 
 export default function PressMediaKitPage() {
