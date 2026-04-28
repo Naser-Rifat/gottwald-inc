@@ -178,7 +178,7 @@ export default async function RootLayout({
         {/* opening a real TCP connection on every page load is wasteful. */}
         <link
           rel="dns-prefetch"
-          href="https://gottwald-backend.onrender.com"
+          href="https://gottwald-admin.vercel.app"
         />
         <script
           type="application/ld+json"

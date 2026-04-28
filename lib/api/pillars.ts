@@ -178,8 +178,9 @@ function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
 }
 
 // ─── Resilient fetch with AbortController timeout ─────────────────────────────
-// AWS EC2 / Render cold starts can stall for 30+ seconds.
-// We abort after 12s so Next.js always responds — even if the API is sleeping.
+// API runs on AWS EC2 behind a Vercel HTTPS proxy. EC2 cold starts can stall
+// for 30+ seconds; we abort after 12s so Next.js always responds — even if
+// the API is sleeping.
 const FETCH_TIMEOUT_MS = 12_000;
 
 // ─── ISR Revalidation interval (seconds) ────────────────────────────────────
