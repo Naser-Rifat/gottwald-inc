@@ -5,10 +5,22 @@ import CustomScrollbar from "@/components/CustomScrollbar";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
+const PRIVACY_POLICY_DESCRIPTION =
+  "Privacy Policy and data protection guidelines for GOTT WALD Holding LLC.";
+
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy Policy and data protection guidelines for GOTT WALD Holding LLC.",
+  description: PRIVACY_POLICY_DESCRIPTION,
   alternates: { canonical: "/privacy-policy" },
+  openGraph: {
+    title: "Privacy Policy",
+    description: PRIVACY_POLICY_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy",
+    description: PRIVACY_POLICY_DESCRIPTION,
+  },
 };
 
 export default function PrivacyPolicyPage() {

@@ -5,10 +5,22 @@ import CustomScrollbar from "@/components/CustomScrollbar";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
+const TERMS_OF_USE_DESCRIPTION =
+  "Terms and conditions governing access to and use of the GOTT WALD Holding LLC website.";
+
 export const metadata: Metadata = {
   title: "Terms of Use",
-  description: "Terms and conditions governing access to and use of the GOTT WALD Holding LLC website.",
+  description: TERMS_OF_USE_DESCRIPTION,
   alternates: { canonical: "/terms-of-use" },
+  openGraph: {
+    title: "Terms of Use",
+    description: TERMS_OF_USE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Use",
+    description: TERMS_OF_USE_DESCRIPTION,
+  },
 };
 
 export default function TermsOfUsePage() {

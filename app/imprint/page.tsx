@@ -5,10 +5,22 @@ import CustomScrollbar from "@/components/CustomScrollbar";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
+const IMPRINT_DESCRIPTION =
+  "Legal and corporate information for GOTT WALD Holding LLC.";
+
 export const metadata: Metadata = {
   title: "Imprint / Legal Notice",
-  description: "Legal and corporate information for GOTT WALD Holding LLC.",
+  description: IMPRINT_DESCRIPTION,
   alternates: { canonical: "/imprint" },
+  openGraph: {
+    title: "Imprint",
+    description: IMPRINT_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Imprint",
+    description: IMPRINT_DESCRIPTION,
+  },
 };
 
 export default function ImprintPage() {

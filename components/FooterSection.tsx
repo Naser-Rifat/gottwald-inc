@@ -146,15 +146,20 @@ export default function FooterSection() {
                   href={link.href}
                   key={link.key}
                   translate="no"
+                  aria-label={label}
                   className="notranslate group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
                 >
+                  {/* All inner spans are decorative — they implement the
+                      hover scroller animation. The accessible name comes
+                      from aria-label on the Link, so screen readers read
+                      each entry once instead of three times. Audit Section 7. */}
                   {/* Left Side Arrow Reveal */}
-                  <span className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
+                  <span aria-hidden="true" className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
                     ↗
                   </span>
 
                   {/* Masking Text Scroller */}
-                  <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
+                  <div aria-hidden="true" className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
                     {/* Invisible spacer to define intrinsic width */}
                     <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
                       {label}
@@ -187,10 +192,13 @@ export default function FooterSection() {
                   href={item.href}
                   key={item.key}
                   translate="no"
+                  aria-label={label}
                   className="notranslate group flex flex-row items-start py-2 text-left cursor-pointer w-max max-w-full"
                 >
+                  {/* Inner spans are decorative — see DIRECTORY block above
+                      for the same pattern and rationale. */}
                   {/* Masking Text Scroller */}
-                  <div className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
+                  <div aria-hidden="true" className="relative overflow-hidden flex items-start min-h-[1.5em] flex-1 min-w-0">
                     {/* Invisible spacer to define intrinsic width */}
                     <span className="block text-base font-medium uppercase tracking-[0.15em] opacity-0 pointer-events-none leading-normal">
                       {label}

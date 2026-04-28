@@ -5,11 +5,22 @@ import CustomScrollbar from "@/components/CustomScrollbar";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
+const PROTOCOLS_DESCRIPTION =
+  "GOTT WALD Holding LLC Protocols. We treat trust, information, and access with discretion. Values come first.";
+
 export const metadata: Metadata = {
   title: "Protocols",
-  description:
-    "GOTT WALD Holding LLC Protocols. We treat trust, information, and access with discretion. Values come first.",
+  description: PROTOCOLS_DESCRIPTION,
   alternates: { canonical: "/protocols" },
+  openGraph: {
+    title: "Protocols",
+    description: PROTOCOLS_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Protocols",
+    description: PROTOCOLS_DESCRIPTION,
+  },
 };
 
 const protocolsData = [
