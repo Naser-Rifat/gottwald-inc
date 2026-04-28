@@ -318,9 +318,16 @@ export default function GlobalPageLoader() {
     <div
       ref={overlayRef}
       // Start in a hidden state via invisible/opacity-0 to prevent unstyled flashes!
+      // role="status" + aria-live="polite" announces the loading pause to screen
+      // readers without interrupting other content. The visible counter, route
+      // label, and brand mark remain decorative; the sr-only text below is the
+      // accessible status string.
       className="fixed inset-0 z-9999 pointer-events-none invisible"
-      aria-hidden="true"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
+      <span className="sr-only">Loading new page content, please wait.</span>
       <div
         ref={curtainRef}
         className="absolute inset-0 bg-[#040404] flex flex-col pointer-events-auto will-change-transform"
