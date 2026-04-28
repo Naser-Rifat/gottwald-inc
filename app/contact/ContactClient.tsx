@@ -190,9 +190,14 @@ export default function ContactClient() {
           {/* Hero text is owned by next-intl. translate="no" keeps GT
               from double-translating and from breaking the gradient-clip
               via <font> wrappers. */}
+          {/* aria-label provides the full phrase to screen readers + SEO
+              crawlers. The two block-level spans below stack visually but
+              concatenate their text nodes (LET'S + TALK = LET'STALK) without
+              the aria-label override. Mathias flagged this in Section 4. */}
           <h1
             ref={heroTextRef}
             translate="no"
+            aria-label={`${t("line1")} ${t("line2")}`}
             className="notranslate leading-[0.8] font-black uppercase tracking-tighter flex flex-col"
             style={{
               fontSize:

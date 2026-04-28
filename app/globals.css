@@ -335,3 +335,22 @@ html[lang="de"] {
   -webkit-text-fill-color: transparent;
 }
 
+
+/* ===== prefers-reduced-motion (Accessibility) =====
+   Users with vestibular sensitivity or who've set the OS preference get
+   shortened or instant animations across the site. We don't disable
+   animations entirely — that would break some essential transitions —
+   we cap them at near-instant durations so the UX is still coherent.
+   Mathias flagged this in audit Section 7. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* GSAP/Framer Motion timelines respect this via their own reduced-motion
+     APIs; this CSS rule covers vanilla CSS animations and transitions. */
+}

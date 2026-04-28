@@ -205,6 +205,16 @@ export default async function RootLayout({
         className="bg-black text-text-primary font-sans antialiased"
         suppressHydrationWarning
       >
+        {/* Skip-link: first focusable element on every page. Hidden by
+            default, becomes visible on keyboard focus. Lets keyboard and
+            screen-reader users jump past the loader, canvas, cookie banner,
+            and Google Translate widget directly to the page content. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-10000 focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded focus:outline-2 focus:outline-gold focus:font-medium focus:text-sm focus:tracking-wider focus:uppercase"
+        >
+          Skip to main content
+        </a>
         <DomSafetyPatch />
         <RouteCleanup />
         <PageLoader />
@@ -214,7 +224,9 @@ export default async function RootLayout({
         <GoogleTranslateRoot />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AudioProvider>
-            {children}
+            <main id="main-content" tabIndex={-1} className="outline-none">
+              {children}
+            </main>
           </AudioProvider>
         </NextIntlClientProvider>
       </body>
