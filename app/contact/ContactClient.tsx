@@ -190,10 +190,6 @@ export default function ContactClient() {
           {/* Hero text is owned by next-intl. translate="no" keeps GT
               from double-translating and from breaking the gradient-clip
               via <font> wrappers. */}
-          {/* aria-label provides the full phrase to screen readers + SEO
-              crawlers. The two block-level spans below stack visually but
-              concatenate their text nodes (LET'S + TALK = LET'STALK) without
-              the aria-label override. Mathias flagged this in Section 4. */}
           <h1
             ref={heroTextRef}
             translate="no"
@@ -219,6 +215,7 @@ export default function ContactClient() {
                 {t("line1")}
               </span>
             </span>
+            {' '}
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
               <span
                 className="hero-line block will-change-transform origin-left drop-shadow-lg"

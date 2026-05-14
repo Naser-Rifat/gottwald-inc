@@ -20,8 +20,16 @@ lighthouse/
 .DS_Store
 *.pem
 
+# claude code developer tooling
+.agents/
+.claude/
+skills-lock.json
+
 # debug
 npm-debug.log*
+
+# docs
+docs/
 
 # vercel
 .vercel
@@ -32,4 +40,5 @@ gottwald-admin/node_modules/
 gottwald-admin/dist/
 gottwald-admin/.git/
 gottwald-admin/.env
-gottwald-backend
+gottwald-backend/
+
