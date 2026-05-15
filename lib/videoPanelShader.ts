@@ -25,11 +25,11 @@ const SUBDIVISIONS = 16;
 // the browser would actually decode fine.
 export const VIDEO_PANEL_SOURCES = [
   {
-    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1776960831/Gott_Wald_Hero_Flim_1_e4ert0.webm",
+    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839558/gottwald_cohfeq.webm",
     type: "video/webm",
   },
   {
-    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1777091331/Gott_Wald_Hero_Flim_1_1_1_k4ae0t.mp4",
+    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
     type: "video/mp4",
   },
 ];
