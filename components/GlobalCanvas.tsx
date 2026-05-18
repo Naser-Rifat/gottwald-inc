@@ -220,10 +220,23 @@ void main() {
 // Drives R3F in "demand" mode at a capped framerate.
 // The fluid animation moves at uTime * 0.12 — 30fps is
 // visually identical to 60fps for this effect, cutting GPU work in half.
-const ThrottledRenderer = ({ fps }: { fps: number }) => {
+// When reducedMotion is true, paint exactly one frame so the fluid is
+// visible as a still image, then stop ticking.
+const ThrottledRenderer = ({
+  fps,
+  reducedMotion,
+}: {
+  fps: number;
+  reducedMotion: boolean;
+}) => {
   const { invalidate } = useThree();
 
   useEffect(() => {
+    if (reducedMotion) {
+      invalidate();
+      return;
+    }
+
     let rafId: number;
     let lastTime = 0;
     const interval = 1000 / fps;
@@ -238,7 +251,7 @@ const ThrottledRenderer = ({ fps }: { fps: number }) => {
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [fps, invalidate]);
+  }, [fps, invalidate, reducedMotion]);
 
   return null;
 };
@@ -309,12 +322,25 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
 export default function GlobalCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTabVisible, setIsTabVisible] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   // Pause R3F when tab is hidden
   useEffect(() => {
     const handler = () => setIsTabVisible(!document.hidden);
     document.addEventListener("visibilitychange", handler);
     return () => document.removeEventListener("visibilitychange", handler);
+  }, []);
+
+  // Freeze canvas when user prefers reduced motion
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   // Compute device profile once
@@ -353,7 +379,7 @@ export default function GlobalCanvas() {
         dpr={deviceProfile.dpr}
         style={{ outline: "none", display: "block" }}
       >
-        <ThrottledRenderer fps={deviceProfile.fps} />
+        <ThrottledRenderer fps={deviceProfile.fps} reducedMotion={reducedMotion} />
         <FluidPlane isMobile={deviceProfile.isMobile} />
       </Canvas>
     </div>
