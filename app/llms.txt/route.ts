@@ -5,6 +5,17 @@ import {
   DEFAULT_DESCRIPTION,
   CONTACT_EMAIL,
 } from "@/lib/seo";
+import { aboutFaqs } from "@/lib/faqs";
+
+// Top-tier highest-value Q&As only — the full set lives in /llms-full.txt.
+// Pick the identity-defining questions explicitly (what / where / services)
+// so reordering aboutFaqs in lib/faqs.ts can't silently change this set.
+const KEY_QUESTIONS = new Set([
+  "What is GOTT WALD Holding?",
+  "Where is GOTT WALD headquartered?",
+  "What services does GOTT WALD provide?",
+]);
+const KEY_FAQS = aboutFaqs.filter((f) => KEY_QUESTIONS.has(f.question));
 
 // llms.txt — curated index for AI crawlers (ChatGPT, Claude, Perplexity,
 // Gemini). Spec: https://llmstxt.org. Served at /llms.txt as text/plain.
@@ -65,6 +76,12 @@ Contact: ${CONTACT_EMAIL}.
 
 ## Structural pillars
 ${pillarLines || "- (Pillar registry temporarily unavailable — see /our-work for the live list.)"}
+
+## Common questions
+
+${KEY_FAQS.map((f) => `**Q: ${f.question}**\n\n${f.answer}`).join("\n\n")}
+
+Full Q&A surface (including per-pillar questions) is at ${SITE_URL}/llms-full.txt.
 
 ## Governance and legal
 

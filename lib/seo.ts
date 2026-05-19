@@ -36,10 +36,16 @@ export {
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    // Dual-type adds "Corporation" semantics without pulling in LocalBusiness
+    // requirements (openingHoursSpecification, etc.) that ProfessionalService
+    // would have triggered.
+    "@type": ["Organization", "Corporation"],
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
     legalName: "GOTT WALD Holding LLC",
+    // Slogan is a citable, AI-quotable claim. Mirrors the site-wide hero copy
+    // verbatim so retrieval-grounded answers can quote it accurately.
+    slogan: "Turning complexity into clarity, decisions into measurable impact",
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
@@ -112,6 +118,14 @@ export function organizationJsonLd() {
       "AI-Readable Web Architecture",
       "Frequency & Wellness Technology",
     ],
+    // Audience signal lets AI engines match GOTT WALD against intent queries
+    // ("a holding company for SME owners", "executive coaching for principals").
+    audience: {
+      "@type": "BusinessAudience",
+      audienceType:
+        "SME owners, executive leadership, principals, strategic investors, values-aligned operators",
+      geographicArea: { "@type": "Continent", name: "Europe" },
+    },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "GOTT WALD Structural Pillars",

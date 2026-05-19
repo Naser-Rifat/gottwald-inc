@@ -23,6 +23,14 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Google-Extended", allow: "/" },
       { userAgent: "Applebot-Extended", allow: "/" },
       { userAgent: "CCBot", allow: "/" },
+      { userAgent: "Bytespider", allow: "/" },
+      { userAgent: "Amazonbot", allow: "/" },
+      { userAgent: "Meta-ExternalAgent", allow: "/" },
+      // facebookexternalhit fetches OG cards when links are shared in
+      // Messenger, WhatsApp, Instagram, and Facebook — explicit allow so
+      // share previews never silently break on a robots ambiguity.
+      { userAgent: "facebookexternalhit", allow: "/" },
+      { userAgent: "Diffbot", allow: "/" },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,

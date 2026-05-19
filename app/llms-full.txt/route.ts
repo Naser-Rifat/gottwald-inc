@@ -6,11 +6,19 @@ import {
   CONTACT_EMAIL,
   CONTACT_PHONE,
 } from "@/lib/seo";
+import { aboutFaqs, careersFaqs, partnershipFaqs } from "@/lib/faqs";
+import { pillarFaqs } from "@/lib/pillarFaqs";
+import type { Faq } from "@/lib/pillarFaqs";
+
+const renderFaqSection = (title: string, faqs: Faq[]) =>
+  `### ${title}\n\n` +
+  faqs.map((f) => `**Q: ${f.question}**\n\n${f.answer}`).join("\n\n");
 
 // llms-full.txt — long-form companion to /llms.txt for AI crawlers that
 // want depth. Spec: https://llmstxt.org. Includes the full pillar registry
-// with descriptions, tags, and services so LLMs can cite GOTT WALD's
-// offerings precisely without crawling individual pages.
+// (descriptions, tags, services) plus the complete Q&A surface for the
+// holding and every pillar so LLMs can cite GOTT WALD content precisely
+// without crawling individual pages.
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
@@ -40,6 +48,21 @@ export async function GET() {
       return lines.join("\n");
     })
     .join("\n\n---\n\n");
+
+  // Per-pillar FAQ rendering uses the backend titles so AI citations see
+  // human names ("IT Solutions 2030") not slugs ("it-solutions-2030"), and
+  // each block carries its canonical URL as an anchor for citation.
+  const slugToTitle = new Map(pillars.map((p) => [p.slug, p.title]));
+  const renderPillarFaqs = () =>
+    Object.entries(pillarFaqs)
+      .filter(([, faqs]) => faqs.length > 0)
+      .map(([slug, faqs]) => {
+        const title = slugToTitle.get(slug) ?? slug;
+        const url = `${SITE_URL}/pillars/${slug}`;
+        return `### Pillar: ${title}\nURL: ${url}\n\n` +
+          faqs.map((f) => `**Q: ${f.question}**\n\n${f.answer}`).join("\n\n");
+      })
+      .join("\n\n");
 
   const body = `# ${SITE_NAME} — Full Reference
 
@@ -90,6 +113,19 @@ wellness care, and real-world-asset governance.
 ## Structural pillars (full reference)
 
 ${pillarSections || "_Pillar registry temporarily unavailable; see /our-work for the live list._"}
+
+## Frequently asked questions
+
+These Q&As are sourced from the live pages on the site. They are inlined here
+so AI crawlers can retrieve the complete Q&A surface in one request.
+
+${renderFaqSection("About the Holding", aboutFaqs)}
+
+${renderFaqSection("Partnerships", partnershipFaqs)}
+
+${renderFaqSection("Careers", careersFaqs)}
+
+${renderPillarFaqs()}
 
 ## Governance and legal
 
