@@ -6,6 +6,7 @@ import {
   faqJsonLd,
   howToJsonLd,
 } from "@/lib/seo";
+import { partnershipFaqs } from "@/lib/faqs";
 
 const PARTNERSHIPS_DESCRIPTION =
   "Apply to become a values-aligned partner in the GOTT WALD 2030 infrastructure cycle. Confidential by default, standards-led by design. Limited selection for principals and operators.";
@@ -25,24 +26,6 @@ export const metadata: Metadata = {
     description: PARTNERSHIPS_DESCRIPTION,
   },
 };
-
-const partnershipFaqs = [
-  {
-    question: "How do I become a partner with GOTT WALD?",
-    answer:
-      "GOTT WALD selects a limited number of values-aligned partners for its 2030 infrastructure cycles. Apply through the strategic inquiry form on the partnerships page. The process is confidential by default and standards-led by design.",
-  },
-  {
-    question: "What are the partnership requirements?",
-    answer:
-      "GOTT WALD partners are principals and operators who build resilient systems and treat trust, discipline, and delivery as non-negotiable. The selection is values-first — character over credentials, alignment over volume.",
-  },
-  {
-    question: "Is the partnership process confidential?",
-    answer:
-      "Yes. GOTT WALD operates discreet by default. Confidentiality is engineered into the framework — not a promise, but a structural guarantee. No public theatrics, clean interfaces, controlled access.",
-  },
-];
 
 const partnershipHowTo = {
   name: "How to apply for a GOTT WALD Partnership",
