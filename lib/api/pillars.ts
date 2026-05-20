@@ -230,7 +230,9 @@ async function fetchAllApiPillars(): Promise<ApiPillar[]> {
   const res = await apiFetch<PillarsApiResponse>("/api/v1/pillars/", {
     tags: [PILLARS_CACHE_TAG],
   });
-  return (res.data ?? res.results ?? []).reverse();
+  // Backend sorts by `order` ascending (then -created_at). Preserve that order
+  // so the admin's drag-to-reorder is reflected on the public site.
+  return res.data ?? res.results ?? [];
 }
 
 async function fetchAllPillars(): Promise<Pillar[]> {
