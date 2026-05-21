@@ -237,6 +237,7 @@ export function faqJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    inLanguage: "en",
     mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
@@ -263,6 +264,7 @@ export function aboutPageJsonLd() {
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#organization` },
     mainEntity: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "en",
   };
 }
 
@@ -282,6 +284,7 @@ export function contactPageJsonLd() {
     // Reference the Organization node (emitted by layout.tsx) rather than
     // re-declaring contactPoint here. Prevents partially-overlapping truths.
     mainEntity: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "en",
   };
 }
 
@@ -310,6 +313,7 @@ export function collectionPageJsonLd(
         description: p.description,
       })),
     },
+    inLanguage: "en",
   };
 }
 
@@ -411,6 +415,135 @@ export function howToJsonLd(howTo: {
       name: step.name,
       text: step.text,
     })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Article / BlogPosting — for editorial content (blog posts, case studies,
+// press releases). Publisher is auto-linked to the Organization node so AI
+// engines can cite the company alongside the article author.
+// ---------------------------------------------------------------------------
+export function articleJsonLd(article: {
+  type?: "Article" | "BlogPosting" | "NewsArticle";
+  path: string;
+  headline: string;
+  description: string;
+  datePublished: string;
+  dateModified?: string;
+  author?: { name: string; url?: string };
+  image?: string;
+  keywords?: string[];
+}) {
+  const url = `${SITE_URL}${article.path}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": article.type ?? "Article",
+    "@id": `${url}#article`,
+    headline: article.headline,
+    description: article.description,
+    url,
+    mainEntityOfPage: { "@id": url },
+    datePublished: article.datePublished,
+    dateModified: article.dateModified ?? article.datePublished,
+    author: article.author
+      ? {
+          "@type": "Person",
+          name: article.author.name,
+          ...(article.author.url ? { url: article.author.url } : {}),
+        }
+      : { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    image: article.image
+      ? { "@type": "ImageObject", url: article.image, width: 1200, height: 630 }
+      : { "@type": "ImageObject", url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 },
+    ...(article.keywords?.length ? { keywords: article.keywords.join(", ") } : {}),
+    inLanguage: "en",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Review + AggregateRating — for testimonials and ratings. Currently no
+// reviews live on-site; helpers are scaffolded so adding them is a single
+// data-source change, not a schema rewrite.
+// ---------------------------------------------------------------------------
+export function reviewJsonLd(review: {
+  itemReviewedId?: string;
+  author: string;
+  ratingValue: number;
+  reviewBody: string;
+  datePublished: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: { "@id": review.itemReviewedId ?? `${SITE_URL}/#organization` },
+    author: { "@type": "Person", name: review.author },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: review.ratingValue,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    reviewBody: review.reviewBody,
+    datePublished: review.datePublished,
+  };
+}
+
+export function aggregateRatingJsonLd(opts: {
+  ratingValue: number;
+  reviewCount: number;
+  itemReviewedId?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AggregateRating",
+    itemReviewed: { "@id": opts.itemReviewedId ?? `${SITE_URL}/#organization` },
+    ratingValue: opts.ratingValue,
+    bestRating: 5,
+    worstRating: 1,
+    reviewCount: opts.reviewCount,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Founder / Executive Person schema — emit on /about when bio fields are
+// confirmed. Kept separate from the minimal org-level `patron` (which by
+// design carries name only). When invoked, this enriched Person node binds
+// the executive to the Organization via `worksFor` so AI engines can resolve
+// "who runs GOTT WALD" with high confidence.
+// ---------------------------------------------------------------------------
+export function founderJsonLd(person: {
+  name: string;
+  jobTitle: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  sameAs?: string[];
+  alumniOf?: string[];
+  awards?: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${SITE_URL}/about#${person.name.toLowerCase().replace(/\s+/g, "-")}`,
+    name: person.name,
+    jobTitle: person.jobTitle,
+    worksFor: { "@id": `${SITE_URL}/#organization` },
+    ...(person.description ? { description: person.description } : {}),
+    ...(person.image
+      ? { image: { "@type": "ImageObject", url: person.image } }
+      : {}),
+    ...(person.url ? { url: person.url } : {}),
+    ...(person.sameAs?.length ? { sameAs: person.sameAs } : {}),
+    ...(person.alumniOf?.length
+      ? {
+          alumniOf: person.alumniOf.map((name) => ({
+            "@type": "Organization",
+            name,
+          })),
+        }
+      : {}),
+    ...(person.awards?.length ? { award: person.awards } : {}),
   };
 }
 
