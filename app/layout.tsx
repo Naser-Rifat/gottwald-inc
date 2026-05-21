@@ -16,7 +16,6 @@ import {
   SITE_URL,
   SITE_NAME,
   DEFAULT_DESCRIPTION,
-  DEFAULT_OG_IMAGE,
   organizationJsonLd,
   webSiteJsonLd,
   speakableJsonLd,
@@ -101,9 +100,12 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — Standards-Led Holding & Operations`,
     description: DEFAULT_DESCRIPTION,
+    // Branded dynamic OG (Edge-rendered by app/opengraph-image.tsx) — stronger
+    // signal for AI knowledge panels than a static photo. Per-route convention
+    // files (e.g. app/about/opengraph-image.tsx) override this automatically.
     images: [
       {
-        url: DEFAULT_OG_IMAGE,
+        url: `${SITE_URL}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: `${SITE_NAME} — Turning complexity into clarity`,
@@ -114,7 +116,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} — Standards-Led Holding & Operations`,
     description: DEFAULT_DESCRIPTION,
-    images: [DEFAULT_OG_IMAGE],
+    images: [
+      {
+        url: `${SITE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — Turning complexity into clarity`,
+      },
+    ],
   },
   robots: {
     index: true,
