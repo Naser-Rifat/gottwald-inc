@@ -4,7 +4,7 @@ import { Playfair_Display } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
-import GlobalCanvas from "@/components/GlobalCanvas";
+import GlobalCanvasLoader from "@/components/GlobalCanvasLoader";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
@@ -227,7 +227,7 @@ export default async function RootLayout({
         <DomSafetyPatch />
         <RouteCleanup />
         <PageLoader />
-        <GlobalCanvas />
+        <GlobalCanvasLoader />
         <NoiseOverlay />
         <CookieManager />
         <GoogleTranslateRoot />

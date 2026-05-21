@@ -6,7 +6,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import VideoPanelSection from "@/components/VideoPanelSection";
-import WebGLCanvas from "@/components/WebGLCanvas";
+import WebGLCanvasLoader from "@/components/WebGLCanvasLoader";
 import { getPillars } from "@/lib/api/pillars";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -58,7 +58,7 @@ export default async function Home() {
       <JsonLd
         data={breadcrumbJsonLd([{ name: "Home", url: "/" }])}
       />
-      <WebGLCanvas />
+      <WebGLCanvasLoader />
       <LoadingOverlay />
 
       <div id="home-content" className="fade-out">
