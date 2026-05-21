@@ -91,6 +91,12 @@ export default function GoogleTranslate() {
       // reload guarantees a fresh English DOM.
       window.location.reload();
     } else {
+      // Force-boot Google Translate immediately if it was deferred. GT is
+      // lazy-loaded for English visitors (perf optimization); the moment a
+      // user picks a non-English locale we boot it now so triggerGtCombo
+      // doesn't have to retry-poll for the combo for several seconds.
+      (window as Window & { __gwBootGoogleTranslate?: () => void })
+        .__gwBootGoogleTranslate?.();
       triggerGtCombo(code);
       // next-intl resolves locale on the server from the googtrans cookie.
       // router.refresh() re-runs the server layout so hero strings re-render

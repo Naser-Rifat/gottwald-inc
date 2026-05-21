@@ -67,31 +67,62 @@ export default function GoogleTranslateRoot() {
 
   useEffect(() => {
     if (loaded.current) return;
-    loaded.current = true;
 
-    window.googleTranslateElementInit = () => {
-      if (!window.google?.translate?.TranslateElement) return;
-      new window.google.translate.TranslateElement(
-        {
-          pageLanguage: "en",
-          includedLanguages: GT_LANGUAGES.join(","),
-          autoDisplay: false,
-        },
-        GT_MOUNT_ID,
-      );
+    const bootGoogleTranslate = () => {
+      if (loaded.current) return;
+      loaded.current = true;
 
-      // Re-apply the persisted language after the combo mounts.
-      const cookieLocale = readGtLocale();
-      if (cookieLocale !== "en") triggerGtCombo(cookieLocale);
+      window.googleTranslateElementInit = () => {
+        if (!window.google?.translate?.TranslateElement) return;
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: GT_LANGUAGES.join(","),
+            autoDisplay: false,
+          },
+          GT_MOUNT_ID,
+        );
+
+        // Re-apply the persisted language after the combo mounts.
+        const cookieLocale = readGtLocale();
+        if (cookieLocale !== "en") triggerGtCombo(cookieLocale);
+      };
+
+      if (!document.querySelector<HTMLScriptElement>("script[data-gt-boot]")) {
+        const script = document.createElement("script");
+        script.src =
+          "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
+        script.dataset.gtBoot = "true";
+        document.body.appendChild(script);
+      }
     };
 
-    if (!document.querySelector<HTMLScriptElement>("script[data-gt-boot]")) {
-      const script = document.createElement("script");
-      script.src =
-        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      script.async = true;
-      script.dataset.gtBoot = "true";
-      document.body.appendChild(script);
+    // Returning translated visitors (e.g. /de/, /fr/ cookie set) — load GT
+    // immediately so their content gets translated on first paint. Without
+    // this branch German visitors would see a flash of English content.
+    const cookieLocale = readGtLocale();
+    if (cookieLocale !== "en") {
+      bootGoogleTranslate();
+      return;
+    }
+
+    // First-time and English-only visitors — defer GT until the browser is
+    // idle. GT's element.js + auto-translate observer is ~250ms of blocking
+    // JS that 90%+ of visitors never use. Hover/click on the header language
+    // dropdown also force-boots GT via the same `bootGoogleTranslate` path
+    // exposed below, so the dropdown stays instant even if idle hasn't fired.
+    (window as Window & {
+      __gwBootGoogleTranslate?: () => void;
+    }).__gwBootGoogleTranslate = bootGoogleTranslate;
+
+    if ("requestIdleCallback" in window) {
+      (window as Window & typeof globalThis).requestIdleCallback(
+        bootGoogleTranslate,
+        { timeout: 5000 },
+      );
+    } else {
+      setTimeout(bootGoogleTranslate, 2500);
     }
   }, []);
 
