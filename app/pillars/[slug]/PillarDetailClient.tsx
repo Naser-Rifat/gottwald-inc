@@ -1030,6 +1030,27 @@ function normalizeRichTextHtml(html: string): string {
   return raw.includes("\\n") ? raw.replaceAll("\\n", "<br/>") : raw;
 }
 
+/**
+ * Format an offer price using Intl.NumberFormat so each currency renders in
+ * its native conventional layout — €1.500, $1,500, CHF 1'500, £1,500, ₾1500.
+ * Fixed to `de-DE` locale since the primary audience is German-speaking;
+ * Intl still formats US/UK/CH/GE currency symbols correctly under this
+ * locale. Falls back to a plain "<CCY> <amount>" string if Intl rejects the
+ * currency code at runtime (defensive — should never happen in production
+ * because the backend validates currency against a strict allow-list).
+ */
+function formatPrice(price: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat("de-DE", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: price % 1 === 0 ? 0 : 2,
+    }).format(price);
+  } catch {
+    return `${currency} ${price}`;
+  }
+}
+
 interface BlockProps {
   block: ContentBlock;
   project: Pillar;
@@ -1296,6 +1317,27 @@ const OffersBlock = forwardRef<
                   <h3 className="relative z-10 text-2xl lg:text-3xl font-serif text-white text-center px-6 leading-tight drop-shadow-lg">
                     {offer.title}
                   </h3>
+                  {/* Price block — only renders when a numeric price is set;
+                      a missing/null price renders as "Contact for quote" so
+                      Mathias can leave pricing unset on bespoke packages. */}
+                  <div
+                    className="relative z-10 mt-5 flex flex-col items-center gap-1"
+                  >
+                    {typeof offer.price === "number" && offer.price >= 0 ? (
+                      <span
+                        className="text-3xl lg:text-4xl font-serif text-white tracking-tight tabular-nums"
+                        style={{
+                          textShadow: `0 2px 12px ${tc.accent}55`,
+                        }}
+                      >
+                        {formatPrice(offer.price, offer.currency ?? "EUR")}
+                      </span>
+                    ) : (
+                      <span className="text-[11px] tracking-[0.25em] uppercase font-bold text-white/70">
+                        Contact for quote
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Body List */}
