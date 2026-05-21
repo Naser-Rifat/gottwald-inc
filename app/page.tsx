@@ -11,11 +11,23 @@ import { getPillars } from "@/lib/api/pillars";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 
+const HOME_DESCRIPTION =
+  "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.";
+
 export const metadata: Metadata = {
   title: "Home",
-  description:
-    "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.",
+  description: HOME_DESCRIPTION,
   alternates: { canonical: "/" },
+  openGraph: {
+    title: "GOTT WALD Holding — Standards-Led Holding & Operations",
+    description: HOME_DESCRIPTION,
+    // og:image resolved from app/opengraph-image.tsx convention file
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GOTT WALD Holding — Standards-Led Holding & Operations",
+    description: HOME_DESCRIPTION,
+  },
 };
 
 const PillarsTilesSection = dynamic(
