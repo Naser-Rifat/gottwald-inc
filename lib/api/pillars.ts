@@ -266,8 +266,16 @@ export async function getPillar(slug: string): Promise<Pillar | undefined> {
     console.warn(`[pillars] getPillar("${slug}") failed, using list:`, msg);
   }
 
-  const pillars = await fetchAllPillars();
-  return pillars.find((p) => p.slug === slug);
+  // 2. Fall back to the shared cached list
+  try {
+    const pillars = await fetchAllPillars();
+    return pillars.find((p) => p.slug === slug);
+  } catch (err: unknown) {
+    // API completely unreachable — return undefined so the page renders 404 not 500
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn(`[pillars] fetchAllPillars() also failed for "${slug}":`, msg);
+    return undefined;
+  }
 }
 
 export async function getNextPillar(slug: string): Promise<Pillar> {

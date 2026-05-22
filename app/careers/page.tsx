@@ -4,7 +4,6 @@ import JsonLd from "@/components/JsonLd";
 import {
   breadcrumbJsonLd,
   faqJsonLd,
-  jobPostingJsonLd,
 } from "@/lib/seo";
 import { careersFaqs } from "@/lib/faqs";
 
@@ -27,12 +26,6 @@ export const metadata: Metadata = {
   },
 };
 
-const sampleJobs = [
-  { title: "IT Solutions Specialist", description: "Build future-ready digital infrastructure for SMEs under the IT Solutions 2030 pillar.", pillar: "IT Solutions 2030" },
-  { title: "Strategic Consultant", description: "Design strategy architecture and scalable systems for executive clients.", pillar: "Consulting" },
-  { title: "Marketing & Communication Lead", description: "Engineer trust and build predictable demand infrastructure for premium positioning.", pillar: "Marketing & Communication" },
-];
-
 export default function CareersPage() {
   return (
     <>
@@ -43,7 +36,6 @@ export default function CareersPage() {
             { name: "Careers", url: "/careers" },
           ]),
           faqJsonLd(careersFaqs),
-          ...jobPostingJsonLd(sampleJobs),
         ]}
       />
       <CareersClient />
