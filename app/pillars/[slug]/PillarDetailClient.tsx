@@ -921,8 +921,18 @@ function revealPanel(panel: HTMLElement) {
   const body = panel.querySelector(".panel-body");
   const stats = panel.querySelectorAll(".panel-stat");
   const label = panel.querySelector(".panel-label");
+  const glow = panel.querySelector(".panel-glow");
 
   const tl = gsap.timeline();
+
+  if (glow) {
+    tl.fromTo(
+      glow,
+      { opacity: 0 },
+      { opacity: 1, duration: 1.6, ease: "power2.out" },
+      0,
+    );
+  }
 
   if (label) {
     tl.fromTo(
@@ -1449,14 +1459,33 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
         ref={ref}
         className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
+        {/* ── Ambient radial glow ── */}
+        <div
+          className="panel-glow absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+          }}
+        />
+        {/* ── Horizontal connecting thread ── */}
+        <div
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            bottom: '10px',
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+          }}
+        />
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+            background: isLight
+              ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+              : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+            borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
@@ -1513,14 +1542,33 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
         ref={ref}
         className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
+        {/* ── Ambient radial glow ── */}
+        <div
+          className="panel-glow absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+          }}
+        />
+        {/* ── Horizontal connecting thread ── */}
+        <div
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            bottom: '10px',
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+          }}
+        />
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
           style={{
-            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+            background: isLight
+              ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+              : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+            borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
@@ -1605,14 +1653,33 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
       ref={ref}
       className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
     >
+      {/* ── Ambient radial glow ── */}
+      <div
+        className="panel-glow absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+        }}
+      />
+      {/* ── Horizontal connecting thread ── */}
+      <div
+        className="absolute left-0 right-0 pointer-events-none"
+        style={{
+          bottom: '10px',
+          height: '1px',
+          background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+        }}
+      />
       <div
         className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
         style={{
-          backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+          background: isLight
+            ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+            : hexToRgba(bgHex, 0.9),
           color: txtHex,
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
-          border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+          border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+          borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
           boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
         }}
       >
@@ -1706,14 +1773,33 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
       ref={ref}
       className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
     >
+      {/* ── Ambient radial glow ── */}
+      <div
+        className="panel-glow absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+        }}
+      />
+      {/* ── Horizontal connecting thread ── */}
+      <div
+        className="absolute left-0 right-0 pointer-events-none"
+        style={{
+          bottom: '10px',
+          height: '1px',
+          background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+        }}
+      />
       <div
         className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
         style={{
-          backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+          background: isLight
+            ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+            : hexToRgba(bgHex, 0.9),
           color: txtHex,
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
-          border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+          border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+          borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
           boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}`,
         }}
       >
@@ -1798,14 +1884,33 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
         ref={ref}
         className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
+        {/* ── Ambient radial glow ── */}
+        <div
+          className="panel-glow absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+          }}
+        />
+        {/* ── Horizontal connecting thread ── */}
+        <div
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            bottom: '10px',
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+          }}
+        />
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative"
           style={{
-            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+            background: isLight
+              ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+              : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+            borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
@@ -1873,14 +1978,33 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
         ref={ref}
         className="w-full lg:w-screen lg:h-screen shrink-0 flex items-center justify-center p-6 lg:p-12 relative"
       >
+        {/* ── Ambient radial glow ── */}
+        <div
+          className="panel-glow absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at ${isLight ? '75% 65%' : '25% 35%'}, ${hexToRgba(accentHex, 0.10)} 0%, transparent 70%)`,
+          }}
+        />
+        {/* ── Horizontal connecting thread ── */}
+        <div
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            bottom: '10px',
+            height: '1px',
+            background: `linear-gradient(to right, transparent, ${hexToRgba(accentHex, 0.13)} 20%, ${hexToRgba(accentHex, 0.09)} 80%, transparent)`,
+          }}
+        />
         <div
           className="w-full h-full max-h-[85vh] lg:max-w-[1400px] rounded-[40px] overflow-hidden flex flex-col lg:flex-row relative"
           style={{
-            backgroundColor: isLight ? bgHex : hexToRgba(bgHex, 0.9),
+            background: isLight
+              ? `linear-gradient(135deg, ${bgHex} 65%, ${hexToRgba(accentHex, 0.07)} 100%)`
+              : hexToRgba(bgHex, 0.9),
             color: txtHex,
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: `1px solid ${hexToRgba(txtHex, 0.08)}`,
+            border: `1px solid ${hexToRgba(isLight ? txtHex : accentHex, isLight ? 0.08 : 0.15)}`,
+            borderLeft: isLight ? undefined : `3px solid ${hexToRgba(accentHex, 0.28)}`,
             boxShadow: `0 30px 100px -20px ${hexToRgba(bgHex, 0.5)}, inset 0 0 0 1px rgba(255,255,255,0.05)`,
           }}
         >
@@ -1974,7 +2098,38 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                 />
                 <ImageFallback idx={panelIdx} accentHex={accentHex} />
               </div>
-            ) : null}
+            ) : (
+              <div className="relative w-full h-full min-h-[40vh] flex items-center justify-center overflow-hidden rounded-4xl">
+                <span
+                  className="select-none absolute font-black"
+                  style={{
+                    fontFamily: "var(--font-serif), Georgia, serif",
+                    fontSize: "min(22vw, 13rem)",
+                    color: accentHex,
+                    opacity: 0.04,
+                    lineHeight: 1,
+                    letterSpacing: "-0.05em",
+                  }}
+                >
+                  {String(panelIdx + 1).padStart(2, "0")}
+                </span>
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 48px, ${hexToRgba(accentHex, 0.035)} 48px, ${hexToRgba(accentHex, 0.035)} 49px)`,
+                  }}
+                />
+                <div className="absolute bottom-8 right-8 flex flex-col gap-2">
+                  {([0.35, 0.18, 0.08] as number[]).map((op, i) => (
+                    <div
+                      key={i}
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: accentHex, opacity: op }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
