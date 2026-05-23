@@ -45,14 +45,14 @@ const securityHeaders = [
       // Inline styles are emitted by RSC; we accept the trade-off. GT injects a stylesheet from translate.googleapis.com.
       "style-src 'self' 'unsafe-inline' https://translate.googleapis.com https://www.gstatic.com https://fonts.googleapis.com",
       // Cloudinary CDN + backend media + data URIs (noise SVG) + blob (for runtime-generated imagery) + GT icons/SVG.
-      "img-src 'self' data: blob: https://res.cloudinary.com https://gottwald-admin.vercel.app https://translate.googleapis.com https://www.gstatic.com https://fonts.gstatic.com https://www.google.com",
+      "img-src 'self' data: blob: https://res.cloudinary.com https://gottwald-admin.vercel.app https://api.gottwald.world https://translate.googleapis.com https://www.gstatic.com https://fonts.gstatic.com https://www.google.com",
       // Video/audio assets served locally; blob for decoded streams.
       "media-src 'self' blob: https://res.cloudinary.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       // Backend API + same-origin form submissions + GT translation API endpoints.
       // Sentry EU ingest (the project lives in the .de region —
       // sentry.client.config.ts uses the matching DSN).
-      "connect-src 'self' https://gottwald-admin.vercel.app https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com https://*.ingest.de.sentry.io",
+      "connect-src 'self' https://gottwald-admin.vercel.app https://api.gottwald.world https://translate.googleapis.com https://translate-pa.googleapis.com https://translate.google.com https://*.ingest.de.sentry.io",
       // GT falls back to an iframe on www.google.com for some UI chrome.
       "frame-src https://www.google.com https://translate.google.com",
       "frame-ancestors 'none'",
@@ -90,6 +90,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "gottwald-admin.vercel.app",
+        pathname: "/media/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.gottwald.world",
         pathname: "/media/**",
       },
       {
