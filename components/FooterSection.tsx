@@ -226,7 +226,7 @@ export default function FooterSection() {
               Registration Code
             </h4>
             <span className="text-white tracking-widest tabular-nums font-mono">
-              4OO415421
+              400415421
             </span>
           </div>
 
