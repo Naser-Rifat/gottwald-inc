@@ -15,7 +15,10 @@ const HOME_DESCRIPTION =
   "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.";
 
 export const metadata: Metadata = {
-  title: "Home",
+  // Absolute title bypasses the root layout's "%s | GOTT WALD Holding"
+  // template — the homepage leads with the full brand title rather than
+  // a generic "Home" in the browser tab and search results.
+  title: { absolute: "GOTT WALD Holding — Standards-Led Holding & Operations" },
   description: HOME_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
