@@ -6,7 +6,7 @@ const ENTITY_GRID_DESCRIPTION =
   "A structured overview of the holding's operational entities, platforms, and strategic ventures.";
 
 export const metadata = {
-  title: "Entity Grid | GOTT WALD",
+  title: "Entity Grid",
   description: ENTITY_GRID_DESCRIPTION,
   alternates: { canonical: "/entity-grid" },
   openGraph: {

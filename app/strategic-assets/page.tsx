@@ -6,7 +6,7 @@ const STRATEGIC_ASSETS_DESCRIPTION =
   "A curated portfolio of strategic structures, platforms, ventures, and real-world value frameworks.";
 
 export const metadata = {
-  title: "Strategic Assets | GOTT WALD",
+  title: "Strategic Assets",
   description: STRATEGIC_ASSETS_DESCRIPTION,
   alternates: { canonical: "/strategic-assets" },
   openGraph: {

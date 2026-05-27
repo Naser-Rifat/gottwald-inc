@@ -6,7 +6,7 @@ const COOPERATION_HUB_DESCRIPTION =
   "A dedicated point of entry for aligned partners, operators, advisors, investors, and strategic collaborators.";
 
 export const metadata = {
-  title: "Cooperation Hub | GOTT WALD",
+  title: "Cooperation Hub",
   description: COOPERATION_HUB_DESCRIPTION,
   alternates: { canonical: "/cooperation-hub" },
   openGraph: {

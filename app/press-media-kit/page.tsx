@@ -6,7 +6,7 @@ const PRESS_MEDIA_KIT_DESCRIPTION =
   "A structured point of access for media inquiries, official materials, and selected brand information.";
 
 export const metadata = {
-  title: "Press & Media Kit | GOTT WALD Holding LLC",
+  title: "Press & Media Kit",
   description: PRESS_MEDIA_KIT_DESCRIPTION,
   alternates: { canonical: "/press-media-kit" },
   openGraph: {
