@@ -204,29 +204,28 @@ export default function VideoPanelSection() {
           ref={ctaRef}
           className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 leading-relaxed text-white/50 font-sans opacity-0"
         >
-          <Link href="/about">
-            <button
-              translate="no"
-              className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
-                         tracking-[0.02em] transition-all duration-300 mt-4"
-              style={{
-                padding: "0 18px 0 22px",
-                background: "rgba(18,168,172,0.1)",
-                border: "1px solid rgba(18,168,172,0.35)",
-                color: "rgba(18,168,172,0.95)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "rgba(18,168,172,0.2)";
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.6)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "rgba(18,168,172,0.1)";
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.35)";
-              }}
-            >
-              <span>{t("aboutCta")}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
-            </button>
+          <Link
+            href="/about"
+            translate="no"
+            className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
+                       tracking-[0.02em] transition-all duration-300 mt-4"
+            style={{
+              padding: "0 18px 0 22px",
+              background: "rgba(18,168,172,0.1)",
+              border: "1px solid rgba(18,168,172,0.35)",
+              color: "rgba(18,168,172,0.95)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(18,168,172,0.2)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.6)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(18,168,172,0.1)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.35)";
+            }}
+          >
+            <span>{t("aboutCta")}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
           </Link>
         </div>
       </div>

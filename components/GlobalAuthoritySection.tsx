@@ -181,7 +181,7 @@ export default function GlobalAuthoritySection() {
             />
             {/* Radar Scanning Line */}
             <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden rounded-full opacity-30 mix-blend-screen hidden md:block">
-              <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise to-transparent animate-[scan_6s_linear_infinite] absolute" />
+              <div className="absolute left-0 top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise to-transparent animate-[scan_6s_linear_infinite] will-change-transform" />
             </div>
           </div>
         </div>
@@ -208,9 +208,9 @@ export default function GlobalAuthoritySection() {
               <div className="hidden md:flex absolute top-1/2 left-4 items-center -translate-y-1/2">
                 <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-[#d4af37]/60 to-[#d4af37]/10" />
                 <div className="flex flex-col gap-1 ml-4 py-2 border-l border-[#d4af37]/30 pl-4 w-max backdrop-blur-md bg-black/70 rounded-r-lg pr-4 shadow-2xl">
-                  <h4 className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[10px]">
+                  <p className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[10px]">
                     01 — HEAD OFFICE
-                  </h4>
+                  </p>
                   <p className="text-white font-sans text-2xl lg:text-3xl my-1 drop-shadow-md">
                     Tbilisi, Georgia
                   </p>
@@ -227,9 +227,9 @@ export default function GlobalAuthoritySection() {
               />
               <div className="hidden md:flex absolute bottom-4 left-1/2 -translate-x-1/2 flex-col items-center">
                 <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-[#48e5e8]/40 px-8 py-3 backdrop-blur-md bg-black/75 rounded-t-lg w-max shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-                  <h4 className="text-white/90 font-bold tracking-[0.35em] uppercase text-[12px]">
+                  <p className="text-white/90 font-bold tracking-[0.35em] uppercase text-[12px]">
                     02 — STRATEGIC HUBS
-                  </h4>
+                  </p>
                   <p className="text-[#48e5e8] font-bold tracking-wide text-2xl my-1 drop-shadow-[0_0_16px_rgba(72,229,232,0.6)]">
                     DACH Region
                   </p>
@@ -283,17 +283,17 @@ export default function GlobalAuthoritySection() {
             {/* Mobile Fallback Nodes */}
             <div className="md:hidden flex flex-col gap-8 pb-8 border-b border-white/10">
               <div className="flex flex-col gap-1 border-l-2 border-[#d4af37] pl-4">
-                <h4 className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[9px]">
+                <p className="text-[#d4af37] font-bold tracking-[0.3em] uppercase text-[9px]">
                   01 — HEAD OFFICE
-                </h4>
+                </p>
                 <p className="text-white font-serif italic text-2xl">
                   Tbilisi, Georgia
                 </p>
               </div>
               <div className="flex flex-col gap-1 border-l-2 border-[#48e5e8]/60 pl-4">
-                <h4 className="text-white font-bold tracking-[0.3em] uppercase text-[9px] drop-shadow-sm">
+                <p className="text-white font-bold tracking-[0.3em] uppercase text-[9px] drop-shadow-sm">
                   02 — STRATEGIC HUBS
-                </h4>
+                </p>
                 <p className="text-[#48e5e8] text-xl font-bold tracking-wide drop-shadow-[0_0_8px_rgba(72,229,232,0.3)]">
                   DACH Region
                 </p>
@@ -303,9 +303,9 @@ export default function GlobalAuthoritySection() {
             {/* Data Grid Title */}
             <div className="flex items-center gap-3 mb-4 hidden md:flex">
               <div className="w-1 h-1 bg-white/70 rounded-full" />
-              <h4 className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[12px] lg:text-[14px]">
+              <p className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[12px] lg:text-[14px]">
                 03 — GLOBAL PRESENCE
-              </h4>
+              </p>
             </div>
 
             {/* Grid */}
