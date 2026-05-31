@@ -50,6 +50,7 @@ interface PillarsApiResponse {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 const API_ORIGIN = BASE_URL.replace(/\/$/, "");
+const CLOUDINARY_IMAGE_TRANSFORM = "f_auto,q_auto:good,c_limit,w_1200";
 
 // ─── Cache tag used for on-demand revalidation ──────────────────────────────
 export const PILLARS_CACHE_TAG = "pillars";
@@ -57,8 +58,35 @@ export const PILLARS_CACHE_TAG = "pillars";
 function toAbsoluteImageUrl(url: string | undefined): string {
   if (!url || !url.trim()) return "";
   const s = url.trim();
-  if (s.startsWith("http://") || s.startsWith("https://")) return s;
-  return `${API_ORIGIN}${s.startsWith("/") ? "" : "/"}${s}`;
+  const absoluteUrl =
+    s.startsWith("http://") || s.startsWith("https://")
+      ? s
+      : `${API_ORIGIN}${s.startsWith("/") ? "" : "/"}${s}`;
+
+  return withCloudinaryImageTransform(absoluteUrl);
+}
+
+function withCloudinaryImageTransform(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const uploadMarker = "/image/upload/";
+
+    if (
+      !parsed.hostname.endsWith("res.cloudinary.com") ||
+      !parsed.pathname.includes(uploadMarker) ||
+      parsed.pathname.includes(`/${CLOUDINARY_IMAGE_TRANSFORM}/`)
+    ) {
+      return url;
+    }
+
+    parsed.pathname = parsed.pathname.replace(
+      uploadMarker,
+      `${uploadMarker}${CLOUDINARY_IMAGE_TRANSFORM}/`,
+    );
+    return parsed.toString();
+  } catch {
+    return url;
+  }
 }
 
 

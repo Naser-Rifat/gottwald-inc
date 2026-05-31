@@ -20,7 +20,7 @@ interface AudioContextValue {
 }
 
 const AudioCtx = createContext<AudioContextValue>({
-  isPlaying: true,
+  isPlaying: false,
   toggle: () => {},
   playSfx: () => {},
 });
@@ -47,7 +47,7 @@ const SFX_GAIN: Record<SfxName, number> = {
 };
 
 export default function AudioProvider({ children }: { children: ReactNode }) {
-  const [isPlaying, setIsPlaying] = useState(true); // User's master preference
+  const [isPlaying, setIsPlaying] = useState(false); // User's master preference
   const pathname = usePathname();
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
@@ -73,7 +73,7 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const initAudio = useCallback(async () => {
+  const initAudio = useCallback(async (startAmbient = globalShouldPlay) => {
     if (initedRef.current) return;
     initedRef.current = true;
 
@@ -117,8 +117,8 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
 
       await Promise.all([waterPromise, sfxPromise]);
 
-      // Smooth fade in over 3 seconds if we're supposed to play
-      if (globalShouldPlay) {
+      // Smooth fade in over 3 seconds if we're supposed to play.
+      if (startAmbient) {
         master.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
       }
     } catch (err) {
@@ -126,52 +126,6 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
       initedRef.current = false; // Allow retry
     }
   }, [globalShouldPlay]);
-
-  // Attempt immediate autoplay on mount (or when route changes to allowed)
-  useEffect(() => {
-    if (!initedRef.current && globalShouldPlay) {
-      initAudio();
-    }
-  }, [initAudio, globalShouldPlay]);
-
-  // Fallback: Start or resume audio on first user interaction if browser blocked autoplay
-  useEffect(() => {
-    const startOnInteraction = () => {
-      // Remove listeners so this only fires once
-      window.removeEventListener("click", startOnInteraction);
-      window.removeEventListener("touchstart", startOnInteraction);
-      window.removeEventListener("scroll", startOnInteraction);
-      window.removeEventListener("keydown", startOnInteraction);
-
-      if (!initedRef.current) {
-        // Always init on first interaction so SFX buffers load even on
-        // routes where the water ambient is not allowed to play. The water
-        // source still starts, but masterGain stays at 0 until globalShouldPlay.
-        initAudio();
-      } else if (audioCtxRef.current?.state === "suspended") {
-        if (globalShouldPlay) {
-          audioCtxRef.current.resume();
-        } else {
-          // Silent unlock: resume then immediately suspend
-          audioCtxRef.current.resume().then(() => {
-            audioCtxRef.current?.suspend();
-          });
-        }
-      }
-    };
-
-    window.addEventListener("click", startOnInteraction, { passive: true });
-    window.addEventListener("touchstart", startOnInteraction, { passive: true });
-    window.addEventListener("scroll", startOnInteraction, { passive: true });
-    window.addEventListener("keydown", startOnInteraction, { passive: true });
-
-    return () => {
-      window.removeEventListener("click", startOnInteraction);
-      window.removeEventListener("touchstart", startOnInteraction);
-      window.removeEventListener("scroll", startOnInteraction);
-      window.removeEventListener("keydown", startOnInteraction);
-    };
-  }, [initAudio, globalShouldPlay]);
 
   // Fade in/out strictly based on combined globalShouldPlay state
   useEffect(() => {
@@ -202,11 +156,11 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
   const toggle = useCallback(() => {
     if (!initedRef.current) {
       setIsPlaying(true);
-      initAudio();
+      initAudio(isAllowedRoute);
       return;
     }
     setIsPlaying((prev) => !prev);
-  }, [initAudio]);
+  }, [initAudio, isAllowedRoute]);
 
   const playSfx = useCallback(
     (name: SfxName) => {
