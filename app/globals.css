@@ -188,7 +188,7 @@ a.button:hover {
 
 @keyframes scan {
   0% {
-    top: -10%;
+    transform: translate3d(0, -10vh, 0);
     opacity: 0;
   }
   10% {
@@ -198,7 +198,7 @@ a.button:hover {
     opacity: 1;
   }
   100% {
-    top: 110%;
+    transform: translate3d(0, 110vh, 0);
     opacity: 0;
   }
 }

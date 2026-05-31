@@ -286,7 +286,7 @@ export default function NextChapterTransition({
                 GT during a language switch. */}
             <span
               translate="no"
-              className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold text-white/58"
+              className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold text-white/75"
             >
               {t("nextChapter")}
             </span>
@@ -306,9 +306,9 @@ export default function NextChapterTransition({
 
           {/* Bottom Progress UI */}
           <div className="absolute bottom-[10vh] flex flex-col items-center gap-3 w-52 sm:w-64">
-            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.34em] font-semibold text-white/52 mb-1">
+            <div className="flex justify-between w-full items-center text-[9px] uppercase tracking-[0.34em] font-semibold text-white/72 mb-1">
               <span>{t("nextPage")}</span>
-              <span className="text-white/55">
+              <span className="text-white/72">
                 →
               </span>
             </div>
@@ -321,7 +321,7 @@ export default function NextChapterTransition({
               />
             </div>
             {/* Percentage */}
-            <span ref={pctRef} className="text-[10px] font-mono text-white/44 tracking-[0.18em] tabular-nums">
+            <span ref={pctRef} className="text-[10px] font-mono text-white/70 tracking-[0.18em] tabular-nums">
               0%
             </span>
           </div>
