@@ -19,6 +19,8 @@ export default class HomeScene {
   stats?: { dom: HTMLElement; update: () => void };
   private resizeHandler: () => void;
   private isDisposed = false;
+  private environmentLoaded = false;
+  private environmentLoadHandler?: () => void;
 
   constructor() {
     this.resizeHandler = () => this.onWindowResized();
@@ -65,22 +67,33 @@ export default class HomeScene {
     this.scene = new THREE.Scene();
     // this.scene.background = new THREE.Color(0x000000);
 
-    // Defer HDR loading so it doesn't block first paint. Skip entirely on
-    // mobile — the 1.4MB environment map produces subtle reflections that
-    // aren't worth the bandwidth on small screens or low-core devices.
-    if (getDeviceTier() === "mobile") return;
-    const loadHDR = () => {
-      if (this.isDisposed) return;
-      new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
-        texture.mapping = THREE.EquirectangularReflectionMapping;
-        this.scene.environment = texture;
+    // The HDR environment is a nice reflection layer, but not required for
+    // first paint. Load it only after the visitor interacts with the scene.
+    if (getDeviceTier() !== "mobile") {
+      this.environmentLoadHandler = () => this.loadEnvironmentMap();
+      window.addEventListener("scroll", this.environmentLoadHandler, {
+        passive: true,
+        once: true,
       });
-    };
-    if (typeof requestIdleCallback !== "undefined") {
-      requestIdleCallback(loadHDR);
-    } else {
-      setTimeout(loadHDR, 200);
+      window.addEventListener("pointerdown", this.environmentLoadHandler, {
+        passive: true,
+        once: true,
+      });
     }
+  };
+
+  private loadEnvironmentMap = () => {
+    if (this.isDisposed || this.environmentLoaded) return;
+    this.environmentLoaded = true;
+
+    new RGBELoader().load("/assets/hdri/quarry_01_1k.hdr", (texture) => {
+      if (this.isDisposed) {
+        texture.dispose();
+        return;
+      }
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      this.scene.environment = texture;
+    });
   };
 
   initScene = () => {
@@ -175,6 +188,10 @@ export default class HomeScene {
 
     // 2. Remove all event listeners
     window.removeEventListener("resize", this.resizeHandler);
+    if (this.environmentLoadHandler) {
+      window.removeEventListener("scroll", this.environmentLoadHandler);
+      window.removeEventListener("pointerdown", this.environmentLoadHandler);
+    }
 
     // 3. Dispose scene children
     this.videoPanel?.dispose();

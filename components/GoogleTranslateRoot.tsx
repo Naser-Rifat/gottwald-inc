@@ -98,31 +98,16 @@ export default function GoogleTranslateRoot() {
       }
     };
 
-    // Returning translated visitors (e.g. /de/, /fr/ cookie set) — load GT
-    // immediately so their content gets translated on first paint. Without
-    // this branch German visitors would see a flash of English content.
-    const cookieLocale = readGtLocale();
-    if (cookieLocale !== "en") {
-      bootGoogleTranslate();
-      return;
-    }
-
-    // First-time and English-only visitors — defer GT until the browser is
-    // idle. GT's element.js + auto-translate observer is ~250ms of blocking
-    // JS that 90%+ of visitors never use. Hover/click on the header language
-    // dropdown also force-boots GT via the same `bootGoogleTranslate` path
-    // exposed below, so the dropdown stays instant even if idle hasn't fired.
     (window as Window & {
       __gwBootGoogleTranslate?: () => void;
     }).__gwBootGoogleTranslate = bootGoogleTranslate;
 
-    if ("requestIdleCallback" in window) {
-      (window as Window & typeof globalThis).requestIdleCallback(
-        bootGoogleTranslate,
-        { timeout: 5000 },
-      );
-    } else {
-      setTimeout(bootGoogleTranslate, 2500);
+    // Returning translated visitors still need GT restored immediately.
+    // English/default visitors keep the selector UI, but the heavy third-party
+    // widget waits until they explicitly choose a translated language.
+    const cookieLocale = readGtLocale();
+    if (cookieLocale !== "en") {
+      bootGoogleTranslate();
     }
   }, []);
 

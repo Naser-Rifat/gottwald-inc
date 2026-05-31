@@ -118,17 +118,49 @@ export default function AudioToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggle}
+      aria-pressed={isPlaying}
       aria-label={isPlaying ? "Mute ambient sound" : "Unmute ambient sound"}
-      className="group relative w-11 h-11 rounded-full flex items-center justify-center
-                 bg-white/8 hover:bg-white/15 transition-all duration-300 cursor-pointer
-                 hover:scale-105 active:scale-95"
+      title={isPlaying ? "Mute ambient sound" : "Unmute ambient sound"}
+      className={`group relative flex h-11 w-11 items-center justify-center rounded-full
+                 border transition-[background-color,border-color,box-shadow,transform] duration-300
+                 cursor-pointer hover:scale-105 active:scale-95
+                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/65 focus-visible:ring-offset-2 focus-visible:ring-offset-black
+                 ${
+                   isPlaying
+                     ? "border-white/25 bg-white/14 shadow-[0_0_24px_rgba(255,255,255,0.13)] hover:bg-white/18"
+                     : "border-white/10 bg-white/8 hover:border-white/22 hover:bg-white/15"
+                 }`}
     >
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 rounded-full transition-opacity duration-300
+                   ${
+                     isPlaying
+                       ? "opacity-100 shadow-[inset_0_0_0_1px_rgba(212,175,55,0.26)]"
+                       : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
+                   }`}
+      />
       <canvas
         ref={canvasRef}
-        className="pointer-events-none"
+        className="pointer-events-none relative z-10"
         style={{ width: 44, height: 44 }}
       />
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute right-2 top-2 h-1.5 w-1.5 rounded-full transition-colors duration-300
+                   ${isPlaying ? "bg-gold" : "bg-white/35"}`}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-[calc(100%+8px)] z-20 whitespace-nowrap rounded-sm
+                   bg-black/80 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-white/75
+                   opacity-0 shadow-lg backdrop-blur-md transition-opacity duration-200
+                   group-hover:opacity-100 group-focus-visible:opacity-100"
+      >
+        {isPlaying ? "Sound on" : "Sound off"}
+      </span>
     </button>
   );
 }

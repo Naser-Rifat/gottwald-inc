@@ -189,11 +189,7 @@ export function createVideoTexture(
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
-  // "auto" lets the browser progressively buffer via range requests so
-  // THREE.VideoTexture has frames to sample the moment play() succeeds.
-  // "metadata" leaves the texture empty until play() forces data load,
-  // producing a black panel during the gap.
-  video.preload = "auto";
+  video.preload = "metadata";
 
   // Pick the first source the browser claims it can play. canPlayType returns
   // "probably" / "maybe" / "" — anything non-empty is good enough to attempt.
@@ -202,12 +198,18 @@ export function createVideoTexture(
   const chosen =
     sources.find((s) => video.canPlayType(s.type) !== "") ?? sources[0];
   const src = chosen.src;
-  video.src = src;
   video.addEventListener("error", () => {
     console.warn(`[VideoPanel] load error for ${src}`, video.error);
   });
 
+  const ensureSource = () => {
+    if (video.src) return;
+    video.src = src;
+    video.load();
+  };
+
   const tryPlay = () => {
+    ensureSource();
     video.play().catch((err) => {
       // Surface autoplay/CORS/network failures so they're debuggable.
       // Without this, a broken video looks identical to a working one.
@@ -226,11 +228,12 @@ export function createVideoTexture(
           video.pause();
         }
       },
-      { rootMargin: "200px 0px" }, // Start loading slightly before in view
+      { rootMargin: "700px 0px" }, // Start loading before reveal without joining initial page load
     );
     observer.observe(startAnchor);
   } else {
     // Fallback: play as soon as the browser reports data is ready
+    ensureSource();
     video.addEventListener("canplay", tryPlay, { once: true });
   }
 

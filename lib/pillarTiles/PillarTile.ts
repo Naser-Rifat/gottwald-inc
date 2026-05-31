@@ -42,6 +42,7 @@ export default class ProjectTile extends THREE.Group {
   tileMesh!: THREE.Mesh;
   tileWorldRect!: { position: THREE.Vector3; width: number; height: number };
   lastScrollPosition?: number;
+  private environmentLoaded = false;
 
   get renderTexture() {
     return this.renderTarget.texture;
@@ -67,14 +68,18 @@ export default class ProjectTile extends THREE.Group {
     this.initDebug();
   }
 
-  initPortalScene = async () => {
+  initPortalScene = () => {
     this.portalScene.background = new THREE.Color(DEFAULT_BG_COLOUR);
 
     this.targetCameraPosition = DEFAULT_CAM_POS.clone();
 
     this.portalCamera.position.copy(DEFAULT_CAM_POS);
     this.portalCamera.lookAt(CAMERA_LOOKAT);
+  };
 
+  private loadEnvironmentMap = async () => {
+    if (this.environmentLoaded) return;
+    this.environmentLoaded = true;
     // Skip the 1.4MB HDRI on mobile — environment reflections are barely
     // perceptible on small screens and the portal still renders correctly
     // without a scene.environment (materials fall back to unlit shading).
@@ -125,11 +130,14 @@ export default class ProjectTile extends THREE.Group {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(
         (entry) =>
-          (this.maskAmount.targetValue = entry.isIntersecting
-            ? HORIZONTAL_MASK_OPEN
-            : HORIZONTAL_MASK_CLOSED),
+          {
+            this.maskAmount.targetValue = entry.isIntersecting
+              ? HORIZONTAL_MASK_OPEN
+              : HORIZONTAL_MASK_CLOSED;
+            if (entry.isIntersecting) this.loadEnvironmentMap();
+          },
       );
-    });
+    }, { rootMargin: "300px 0px" });
     observer.observe(el);
   };
 
