@@ -401,8 +401,8 @@ export default function AboutClient() {
           <div className="relative z-10 flex flex-col justify-between flex-1 pt-[18vh] pb-0">
             {/* Eyebrow */}
             <div className="hero-manifest-text px-gutter flex items-center gap-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
-              <span className="text-gold text-[9px] font-black tracking-[0.65em] uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-turquoise shrink-0 shadow-[0_0_10px_rgba(18,168,172,0.65)]" />
+              <span className="text-turquoise text-[9px] font-black tracking-[0.65em] uppercase">
                 About Us
               </span>
               <span className="h-px w-8 bg-white/20" />
@@ -437,11 +437,15 @@ export default function AboutClient() {
                     {t("hero.line2")}
                   </span>
                 </div>
-                {/* Serif italic — offset right to break left-column monotony */}
+                {/* System line — keeps the hero technical, not luxury-editorial. */}
                 <div className="overflow-hidden flex justify-end pr-4 lg:pr-16 mt-2">
                   <span
-                    className="block font-serif italic text-gold leading-[1.0] tracking-[-0.01em] parallax-slow"
-                    style={{ fontSize: "calc(clamp(2.8rem, 9vw, 118px) * var(--heading-scale))" }}
+                    className="block font-black uppercase text-transparent bg-clip-text leading-[0.86] tracking-[-0.04em] parallax-slow"
+                    style={{
+                      fontSize: "calc(clamp(3.2rem, 9.5vw, 126px) * var(--heading-scale))",
+                      backgroundImage:
+                        "linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(72,229,232,0.9) 55%, rgba(0,109,132,0.78) 100%)",
+                    }}
                   >
                     {t("hero.line3")}
                   </span>
@@ -527,8 +531,8 @@ export default function AboutClient() {
 
             {/* Block 4: The Turn */}
             <div className="reveal-text text-center pt-[5vh]">
-              <div className="w-12 h-px bg-gold/40 mx-auto mb-10" />
-              <p className="text-[clamp(2.5rem,5vw,5rem)] font-serif italic leading-[1.2] text-gold">
+              <div className="w-12 h-px bg-turquoise/50 mx-auto mb-10" />
+              <p className="text-[clamp(2rem,4vw,4rem)] font-black uppercase leading-[1.05] tracking-[-0.03em] text-transparent bg-clip-text bg-[linear-gradient(90deg,rgba(255,255,255,0.92),rgba(72,229,232,0.86))]">
                 That&apos;s where our work begins.
               </p>
             </div>
@@ -592,7 +596,7 @@ export default function AboutClient() {
               <h3 className="text-4xl md:text-6xl font-light text-white">
                 We don&apos;t optimize parts.
               </h3>
-              <p className="text-2xl md:text-4xl font-serif italic text-white/80">
+              <p className="text-2xl md:text-4xl font-light tracking-[0.02em] text-white/80">
                 We redesign the system — until &quot;solved&quot; is felt in
                 real life.
               </p>
@@ -603,7 +607,7 @@ export default function AboutClient() {
         {/* WHAT WE STAND FOR */}
         <section className="py-[25vh] px-gutter relative bg-[#03070d]">
           <div className="max-w-6xl mx-auto">
-            <p className="reveal-text text-sm tracking-[0.3em] uppercase text-gold font-bold mb-16">
+            <p className="reveal-text text-sm tracking-[0.3em] uppercase text-turquoise font-bold mb-16">
               What we stand for
             </p>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 xl:gap-24 items-center">
@@ -611,7 +615,7 @@ export default function AboutClient() {
               <div className="reveal-text space-y-10">
                 <h3 className="text-[clamp(2.5rem,4vw,3.5rem)] font-light leading-[1.15] tracking-tight text-white/90">
                   We believe in something radical — <br className="hidden md:block" />
-                  <span className="font-serif italic text-gold/90 mt-2 block">
+                  <span className="font-semibold uppercase tracking-[0.08em] text-turquoise mt-2 block">
                     and practical:
                   </span>
                 </h3>
@@ -628,7 +632,7 @@ export default function AboutClient() {
                     "In a way that lets teams deliver with focus — and systems carry instead of pull."
                   ].map((text, idx) => (
                     <li key={idx} className="flex gap-5 items-start bg-white/5 p-4 rounded-xl border border-white/5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gold/90 mt-2.5 shrink-0 shadow-[0_0_8px_rgba(212,175,55,0.6)]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-turquoise/90 mt-2.5 shrink-0 shadow-[0_0_8px_rgba(18,168,172,0.6)]" />
                       <p className="text-lg text-white/90  font-light leading-relaxed">{text}</p>
                     </li>
                   ))}
@@ -642,8 +646,8 @@ export default function AboutClient() {
                   Solved means <strong className="text-white font-normal block mt-2">solved.</strong>
                 </h4>
                 
-                <div className="border-l-2 border-gold/50 pl-6 mb-8">
-                  <p className="text-xl md:text-2xl font-serif italic text-white/90 leading-[1.4]">
+                <div className="border-l-2 border-turquoise/50 pl-6 mb-8">
+                  <p className="text-xl md:text-2xl font-light tracking-[0.02em] text-white/90 leading-[1.4]">
                     &quot;Solved&quot; means you feel it on Monday morning, not in
                     a pitch.
                   </p>
@@ -664,8 +668,8 @@ export default function AboutClient() {
           <div className="max-w-5xl mx-auto">
             <div className="mb-32 max-w-5xl stagger-container">
               <div className="flex items-center gap-6 mb-12">
-                <span className="w-16 h-[2px] bg-gold/50 origin-left stagger-scaleX" />
-                <p className="text-[12px] tracking-[0.3em] uppercase text-gold font-bold stagger-line">
+                <span className="w-16 h-[2px] bg-turquoise/50 origin-left stagger-scaleX" />
+                <p className="text-[12px] tracking-[0.3em] uppercase text-turquoise font-bold stagger-line">
                   What we do differently
                 </p>
               </div>
@@ -684,7 +688,7 @@ export default function AboutClient() {
                 <div className="overflow-hidden">
                   <span className="block md:pl-8 text-white/80 stagger-line">
                     We build{" "}
-                    <span className="font-serif italic text-gold font-normal">
+                    <span className="font-semibold uppercase tracking-[0.04em] text-turquoise">
                       architecture
                     </span>{" "}
                     —
@@ -765,7 +769,7 @@ export default function AboutClient() {
                 <h3 className="text-[clamp(2.5rem,3.5vw,3.5rem)] text-white/95 font-light leading-[1.1] tracking-tight mb-6 pr-4">
                   We work discreetly and systematically.
                 </h3>
-                <p className="text-[clamp(1.2rem,1.5vw,1.5rem)] font-serif italic text-white/70">
+                <p className="text-[clamp(1.1rem,1.35vw,1.35rem)] font-light uppercase tracking-[0.08em] text-white/70">
                   Our proof is not loudness — it&apos;s outcomes.
                 </p>
               </div>
@@ -904,7 +908,7 @@ export default function AboutClient() {
                 Mini Case Stories
               </p>
             </div>
-            <p className="text-2xl md:text-3xl font-serif italic text-white/50 max-w-md">
+            <p className="text-sm md:text-base font-mono uppercase tracking-[0.28em] text-white/50 max-w-md">
               (you&apos;ll recognize yourself)
             </p>
           </div>
@@ -978,15 +982,15 @@ export default function AboutClient() {
 
                     {/* Tagline */}
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="w-8 h-px bg-gold/50" />
-                      <p className="text-xs sm:text-sm font-mono tracking-[0.2em] uppercase text-gold/90">
+                      <div className="w-8 h-px bg-turquoise/50" />
+                      <p className="text-xs sm:text-sm font-mono tracking-[0.2em] uppercase text-turquoise/90">
                         {c.tag}
                       </p>
                     </div>
                     
                     {/* Title */}
                     <div className="mb-8 md:mb-12">
-                      <span className="block font-serif italic text-gold/80 text-lg md:text-xl mb-2 tracking-wide">{caseNum}</span>
+                      <span className="block font-mono text-turquoise/80 text-xs md:text-sm mb-2 tracking-[0.3em] uppercase">{caseNum}</span>
                       <h3 className="text-3xl sm:text-4xl md:text-5xl font-light text-white leading-[1.1] max-w-4xl tracking-[-0.02em]">
                         {caseName}
                       </h3>
@@ -1042,7 +1046,7 @@ export default function AboutClient() {
               <h2 className="text-4xl md:text-5xl font-light text-white">
                 Our Ecosystem
               </h2>
-              <p className="text-2xl font-serif italic text-white/70 mt-4">
+              <p className="text-sm font-mono uppercase tracking-[0.22em] text-white/60 mt-4">
                 (everything reinforces everything)
               </p>
             </div>
@@ -1083,14 +1087,14 @@ export default function AboutClient() {
                   className="eco-item  reveal-text group py-8 border-t border-white/5 cursor-default relative overflow-hidden"
                 >
                   <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
-                    <h3 className="text-2xl md:text-3xl text-white font-light group-hover:text-gold transition-colors duration-500">
+                    <h3 className="text-2xl md:text-3xl text-white font-light group-hover:text-turquoise transition-colors duration-500">
                       {eco.name}
                     </h3>
                     <p className="text-xl text-white/80 font-light md:w-1/2 md:text-right">
                       {eco.desc}
                     </p>
                   </div>
-                  <div className="eco-line absolute bottom-0 left-0 h-px w-0 bg-gold" />
+                  <div className="eco-line absolute bottom-0 left-0 h-px w-0 bg-turquoise" />
                 </div>
               ))}
             </div>
@@ -1105,7 +1109,7 @@ export default function AboutClient() {
               className="patron-orb ambient-light w-[80vw] h-[80vw] rounded-full opacity-20 blur-[150px]"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 60%)",
+                  "radial-gradient(circle, rgba(18,168,172,0.12) 0%, transparent 60%)",
                 willChange: "transform",
               }}
             />
@@ -1115,7 +1119,7 @@ export default function AboutClient() {
             <div className="reveal-text space-y-8">
               <h2 className="text-[clamp(3rem,6vw,6rem)] font-light leading-[1.1] uppercase tracking-tighter">
                 THE PATRON <br />
-                <span className="font-serif italic text-gold/80 block text-[clamp(2rem,4vw,4rem)] lowercase mt-4">
+                <span className="font-mono text-turquoise/80 block text-[clamp(1.4rem,2.4vw,2.6rem)] uppercase tracking-[0.35em] mt-4">
                   of gott wald
                 </span>
               </h2>
@@ -1152,7 +1156,7 @@ export default function AboutClient() {
                     { core: "Service", meaning: "as lived responsibility" },
                   ].map((val, idx) => (
                     <li key={idx} className="flex items-center justify-between border-b border-white/5 py-6 group cursor-default">
-                      <span className="font-serif italic text-3xl md:text-4xl text-white group-hover:text-gold transition-colors duration-500">
+                      <span className="font-semibold uppercase tracking-[0.04em] text-2xl md:text-3xl text-white group-hover:text-turquoise transition-colors duration-500">
                         {val.core}
                       </span>
                       <span className="text-xs uppercase tracking-[0.2em] font-light text-white group-hover:text-white transition-colors duration-500">
@@ -1162,10 +1166,10 @@ export default function AboutClient() {
                   ))}
                 </ul>
                 
-                <div className="border-l border-gold/40 pl-6 py-2">
+                <div className="border-l border-turquoise/40 pl-6 py-2">
                   <p className="text-lg font-light text-white/90">
                     This is not a slogan.
-                    <strong className="block font-normal text-gold mt-1">This is lived reality.</strong>
+                    <strong className="block font-normal text-turquoise mt-1">This is lived reality.</strong>
                   </p>
                 </div>
               </div>
@@ -1190,9 +1194,9 @@ export default function AboutClient() {
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(18,168,172,0.1),transparent_70%)] z-0 transition-opacity duration-1000 group-hover:opacity-100 opacity-60" />
                   
                   <div className="relative z-10">
-                    <p className="text-white/95 italic font-serif leading-[1.2] text-3xl md:text-4xl tracking-tight mb-10">
+                    <p className="text-white/95 font-light leading-[1.25] text-2xl md:text-4xl tracking-tight mb-10">
                       &quot;Nothing here is performed, <br className="hidden lg:block"/>
-                      <span className="text-gold/80">everything here is held.&quot;</span>
+                      <span className="text-turquoise/85">everything here is held.&quot;</span>
                     </p>
                     
                     <ul className="space-y-4">
@@ -1227,7 +1231,7 @@ export default function AboutClient() {
               className="w-[60vw] h-[60vw] rounded-full opacity-10 blur-[100px]"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 50%)",
+                  "radial-gradient(circle, rgba(18,168,172,0.08) 0%, transparent 50%)",
               }}
             />
           </div>
@@ -1243,7 +1247,7 @@ export default function AboutClient() {
               </h3>
             </div>
 
-            <p className="cta-reveal text-2xl font-serif italic text-white/80">
+            <p className="cta-reveal text-2xl font-light tracking-[0.04em] uppercase text-white/80">
               If you want it cleanly solved — we are.
             </p>
 
@@ -1251,13 +1255,13 @@ export default function AboutClient() {
               <button
                 onClick={handleStrategicClick}
                 translate="no"
-                className="notranslate cta-btn-glow group relative cursor-pointer px-10 md:px-14 py-5 md:py-6 rounded-full overflow-hidden bg-[#0A0A0A] border border-gold/30 hover:border-gold transition-colors duration-700 shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:shadow-[0_0_60px_rgba(212,175,55,0.4)]"
+                className="notranslate cta-btn-glow group relative cursor-pointer px-9 md:px-12 py-5 md:py-6 rounded-md overflow-hidden bg-[#061018] border border-turquoise/35 hover:border-turquoise/80 transition-colors duration-700 shadow-[0_0_30px_rgba(18,168,172,0.12)] hover:shadow-[0_0_60px_rgba(18,168,172,0.28)]"
               >
                 {/* Sweep animation background */}
-                <div className="absolute inset-0 bg-gold translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                <div className="absolute inset-0 bg-turquoise translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
                 {/* Button text */}
-                <span className="relative z-10 text-[11px] md:text-sm tracking-[0.3em] uppercase font-bold text-gold group-hover:text-[#030303] transition-colors duration-500">
+                <span className="relative z-10 text-[11px] md:text-sm tracking-[0.2em] uppercase font-bold text-turquoise group-hover:text-[#030303] transition-colors duration-500">
                   {t("ctas.strategicConversation")}
                 </span>
               </button>

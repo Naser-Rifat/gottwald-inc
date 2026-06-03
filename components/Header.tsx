@@ -44,7 +44,7 @@ export default function Header() {
             translate="no"
             className="notranslate hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
                        tracking-[0.02em] transition-all duration-300
-                       border border-gold/40 text-gold hover:border-[#0a9396] hover:text-[#0a9396]"
+                       border border-[#12a8ac]/35 text-[#78eef2] bg-[#12a8ac]/5 hover:border-[#78eef2]/70 hover:bg-[#12a8ac]/12 hover:text-white"
             style={{ padding: "0 20px 0 22px" }}
           >
             <span>{t("apply")}</span>

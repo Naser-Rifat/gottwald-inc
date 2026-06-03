@@ -117,7 +117,7 @@ function toArray(val: string | string[] | undefined): string[] {
 const DEFAULT_THEME: PillarTheme = {
   background: "#0a0a0a",
   text: "#f5f5f5",
-  accent: "#c9a84c",
+  accent: "#12a8ac",
 };
 
 function toTheme(val: string | PillarTheme | undefined): PillarTheme {

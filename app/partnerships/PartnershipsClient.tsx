@@ -367,7 +367,7 @@ export default function PartnershipsClient() {
   return (
     <div
       ref={pageRef}
-      className="bg-transparent min-h-screen text-white font-sans overflow-x-hidden selection:bg-gold selection:text-black"
+      className="bg-transparent min-h-screen text-white font-sans overflow-x-hidden selection:bg-turquoise selection:text-black"
     >
       {/* Fixed header */}
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
@@ -417,8 +417,8 @@ export default function PartnershipsClient() {
                   </span>
                 </h1>
 
-                <p className="hero-reveal flex items-center gap-4 text-[clamp(1.2rem,2vw,2.5rem)] lg:text-[clamp(1.5rem,2.2vw,3rem)] font-serif italic text-gold/80 tracking-tight leading-tight mt-8 lg:mt-10 pl-0.5">
-                  <span className="w-8 md:w-16 h-0.5 bg-gold/50 flex-shrink-0" />
+                <p className="hero-reveal flex items-center gap-4 text-[clamp(0.9rem,1.25vw,1.4rem)] font-mono uppercase text-turquoise/85 tracking-[0.18em] leading-tight mt-8 lg:mt-10 pl-0.5">
+                  <span className="w-8 md:w-16 h-0.5 bg-turquoise/50 flex-shrink-0" />
                   We don&apos;t buy vendors. We select PARTNERS.
                 </p>
 
@@ -431,7 +431,7 @@ export default function PartnershipsClient() {
               {/* RIGHT: HUD Metric Strip */}
               <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-[#0a0a0a]/95 rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
                 <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gold/20">
-                  <span className="w-2 h-2 rounded-full bg-gold" />
+                  <span className="w-2 h-2 rounded-full bg-turquoise" />
                   <p className="text-[10px] lg:text-sm uppercase tracking-[0.5em] text-gold/80 font-bold">
                     Our Reach — Live
                   </p>
@@ -450,7 +450,7 @@ export default function PartnershipsClient() {
                     <span className="text-sm lg:text-sm uppercase tracking-[0.3em] text-white/80 group-hover:text-white transition-colors duration-300">
                       {label}
                     </span>
-                    <span className="text-4xl lg:text-5xl font-light text-white/90 tabular-nums group-hover:text-gold transition-colors duration-300">
+                    <span className="text-4xl lg:text-5xl font-light text-white/90 tabular-nums group-hover:text-turquoise transition-colors duration-300">
                       {value}
                     </span>
                   </div>
@@ -461,9 +461,9 @@ export default function PartnershipsClient() {
                     href="#apply"
                     data-magnetic
                     translate="no"
-                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all duration-300 w-full"
+                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-md border border-turquoise/45 bg-[#061018] text-turquoise hover:border-turquoise/80 hover:bg-turquoise hover:text-[#03080c] transition-all duration-300 w-full shadow-[0_0_24px_rgba(18,168,172,0.1)] hover:shadow-[0_0_42px_rgba(18,168,172,0.24)]"
                   >
-                    <span className="text-sm lg:text-sm tracking-[0.3em] uppercase font-bold">
+                    <span className="text-sm lg:text-sm tracking-[0.18em] uppercase font-bold">
                       {tCtas("applyForPartnership")}
                     </span>
                     <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
@@ -474,9 +474,9 @@ export default function PartnershipsClient() {
                     href="#apply"
                     data-magnetic
                     translate="no"
-                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-3 text-white hover:text-white transition-colors duration-300 w-full"
+                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-3 rounded-md border border-white/10 text-white/75 hover:text-white hover:border-turquoise/45 hover:bg-turquoise/8 transition-colors duration-300 w-full"
                   >
-                    <span className="text-[11px] tracking-[0.3em] uppercase font-medium">
+                    <span className="text-[11px] tracking-[0.18em] uppercase font-medium">
                       {tCtas("requestIntroCall")}
                     </span>
                   </a>
@@ -491,7 +491,7 @@ export default function PartnershipsClient() {
               Scroll
             </span>
             <div className="w-px h-16 bg-white/10 relative overflow-hidden">
-              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-[30%] bg-gold" />
+              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-[30%] bg-turquoise" />
             </div>
           </div>
         </section>
@@ -509,7 +509,7 @@ export default function PartnershipsClient() {
               <p className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.3] tracking-tight">
                 GOTT WALD is a standard.
               </p>
-              <p className="text-2xl md:text-3xl font-serif italic text-white/70 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl font-light tracking-[0.03em] text-white/70 leading-relaxed max-w-2xl mx-auto">
                 We only work with companies that have principle — and can
                 deliver. When both are true, partnership becomes inevitable.
               </p>
@@ -599,7 +599,7 @@ export default function PartnershipsClient() {
                     key={i}
                     className="group flex items-center gap-8 py-7 border-b border-white/5 hover:pl-4 transition-all duration-500"
                   >
-                    <span className="w-1.5 h-1.5 bg-gold rounded-full shrink-0 group-hover:scale-150 transition-transform" />
+                    <span className="w-1.5 h-1.5 bg-turquoise rounded-full shrink-0 group-hover:scale-150 transition-transform" />
                     <p className="text-xl lg:text-2xl font-light text-white/70 group-hover:text-white transition-colors duration-500">
                       {principle}
                     </p>
@@ -619,7 +619,7 @@ export default function PartnershipsClient() {
               </p>
               <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
                 OUTSTANDING COMPANIES —<br />
-                <span className="font-serif italic text-white/70 normal-case tracking-normal text-[clamp(1.8rem,3.5vw,4rem)]">
+                <span className="font-mono text-turquoise/75 uppercase tracking-[0.12em] text-[clamp(1rem,1.8vw,2rem)]">
                   proven in action, not in slides.
                 </span>
               </h2>
@@ -686,7 +686,7 @@ export default function PartnershipsClient() {
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <div className="w-12 h-px bg-white/10 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                            <div className="absolute top-0 left-0 w-full h-full bg-turquoise origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
                           </div>
                         </div>
 
@@ -729,7 +729,7 @@ export default function PartnershipsClient() {
               <div className="hidden lg:flex flex-col items-end gap-2">
                 <div className="flex items-center gap-3">
                   <span className="w-8 h-px bg-white/20" />
-                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-turquoise animate-pulse" />
                 </div>
                 <p className="text-[10px] tracking-[0.45em] text-white/70 uppercase font-semibold text-right">
                   Scroll horizontally
@@ -792,7 +792,7 @@ export default function PartnershipsClient() {
                     {/* TOP: Counter + minimal HUD */}
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="w-2 h-2 rounded-full bg-gold group-hover:scale-150 transition-transform duration-500" />
+                        <span className="w-2 h-2 rounded-full bg-turquoise group-hover:scale-150 transition-transform duration-500" />
                         <span className="font-mono text-gold text-sm tracking-[0.5em] font-bold">
                           {String(i + 1).padStart(2, "0")}
                         </span>
@@ -804,7 +804,7 @@ export default function PartnershipsClient() {
                     {/* BOTTOM: Title Block */}
                     <div className="flex flex-col gap-3 mt-auto pb-6">
                       {/* Gold accent line — expands on hover */}
-                      <div className="w-10 h-0.5 bg-gold/60 group-hover:w-20 group-hover:bg-gold transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] mb-1" />
+                      <div className="w-10 h-0.5 bg-turquoise/60 group-hover:w-20 group-hover:bg-turquoise transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] mb-1" />
                       
                       <h3 className="text-[clamp(1.4rem,2.6vw,2.8rem)] font-black tracking-tighter leading-[0.9] text-white uppercase drop-shadow-2xl break-words hyphens-auto">
                         {item.title}
@@ -848,11 +848,11 @@ export default function PartnershipsClient() {
                 <a
                   href="#apply"
                   translate="no"
-                  className="notranslate inline-flex items-center gap-3 px-6 py-3 border border-gold/40 text-gold text-xs tracking-[0.35em] uppercase font-bold hover:bg-gold hover:text-black transition-all duration-300"
+                  className="notranslate inline-flex items-center gap-3 px-6 py-3 rounded-md border border-turquoise/45 bg-[#061018] text-turquoise text-xs tracking-[0.18em] uppercase font-bold hover:bg-turquoise hover:text-[#03080c] transition-all duration-300"
                 >
                   {tCtas("applyNow")}
                 </a>
-                <div className="w-px h-16 bg-linear-to-b from-transparent via-gold/30 to-transparent mt-8" />
+                <div className="w-px h-16 bg-linear-to-b from-transparent via-turquoise/30 to-transparent mt-8" />
               </div>
             </div>
           </div>
@@ -877,12 +877,12 @@ export default function PartnershipsClient() {
                     key={i}
                     className="benefit-item flex gap-5 items-start text-white/70 text-xl"
                   >
-                    <span className="mt-2.5 w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
+                    <span className="mt-2.5 w-1.5 h-1.5 bg-turquoise rounded-full shrink-0" />
                     {benefit}
                   </li>
                 ))}
               </ul>
-              <p className="text-2xl font-serif italic text-white/80 border-l-2 border-gold pl-8 leading-tight">
+              <p className="text-xl font-light tracking-[0.03em] text-white/80 border-l-2 border-turquoise pl-8 leading-tight">
                 We keep the frame stable.
                 <br />
                 You deliver excellence.
@@ -1364,7 +1364,7 @@ export default function PartnershipsClient() {
                     type="checkbox"
                     id="nda"
                     name="nda"
-                    className="peer w-6 h-6 appearance-none border border-white/30 rounded-sm checked:bg-gold checked:border-gold cursor-pointer transition-colors"
+                    className="peer w-6 h-6 appearance-none border border-white/30 rounded-sm checked:bg-turquoise checked:border-turquoise cursor-pointer transition-colors"
                   />
                   <svg
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-0 peer-checked:opacity-100"

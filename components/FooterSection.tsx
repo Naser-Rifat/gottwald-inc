@@ -83,7 +83,7 @@ export default function FooterSection() {
                 href="https://gottwald.world"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                className="hover:text-turquoise transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 gottwald.world
               </a>
@@ -92,7 +92,7 @@ export default function FooterSection() {
                 href="https://plhh.world"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                className="hover:text-turquoise transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 plhh.world
               </a>
@@ -101,7 +101,7 @@ export default function FooterSection() {
                 href="https://yig.care"
                 target="_blank"
                 rel="noopener noreferrer me"
-                className="hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                className="hover:text-turquoise transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 yig.care
               </a>
@@ -118,7 +118,7 @@ export default function FooterSection() {
               target="_blank"
               rel="noopener noreferrer me"
               aria-label="GOTT WALD on YouTube (@GOTT_WALD)"
-              className="inline-flex items-center gap-2.5 text-md text-white/70 hover:text-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group/yt"
+              className="inline-flex items-center gap-2.5 text-md text-white/70 hover:text-turquoise transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group/yt"
             >
               <svg
                 className="w-5 h-5 shrink-0 opacity-70 group-hover/yt:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -154,7 +154,7 @@ export default function FooterSection() {
                       from aria-label on the Link, so screen readers read
                       each entry once instead of three times. Audit Section 7. */}
                   {/* Left Side Arrow Reveal */}
-                  <span aria-hidden="true" className="text-gold font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
+                  <span aria-hidden="true" className="text-turquoise font-light transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] text-lg w-0 opacity-0 overflow-hidden group-hover:w-6 group-hover:opacity-100 group-hover:mr-2 shrink-0 leading-normal">
                     ↗
                   </span>
 
@@ -169,7 +169,7 @@ export default function FooterSection() {
                     <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                       {label}
                     </span>
-                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-turquoise group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                       {label}
                     </span>
                   </div>
@@ -208,7 +208,7 @@ export default function FooterSection() {
                     <span className="absolute top-0 left-0 right-0 block text-base font-medium uppercase tracking-[0.15em] text-white/80 group-hover:-translate-y-[110%] transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                       {label}
                     </span>
-                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-gold group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
+                    <span className="absolute top-0 left-0 right-0 translate-y-[110%] block text-base font-medium uppercase tracking-[0.15em] text-turquoise group-hover:translate-y-0 transition-transform duration-900 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform transform-gpu leading-normal">
                       {label}
                     </span>
                   </div>
@@ -245,7 +245,7 @@ export default function FooterSection() {
             <h4 className=" uppercase tracking-[0.3em] font-light text-white/80 mb-2">
               Network Signature
             </h4>
-            <span className=" font-bold tracking-widest text-gold font-mono drop-shadow-[0_0_6px_rgba(212,175,55,0.3)]">
+            <span className=" font-bold tracking-widest text-turquoise font-mono drop-shadow-[0_0_6px_rgba(18,168,172,0.35)]">
               888±
             </span>
           </div>
