@@ -174,7 +174,7 @@ export default function PillarTilesSection({
                   <br />
                   <strong
                     className="font-medium tracking-[0.05em] block mt-3"
-                    style={{ color: "#d4af37" }}
+                    style={{ color: "rgba(18,168,172,0.95)" }}
                   >
                     Peace. Love. Harmony — for more Humanity.
                   </strong>

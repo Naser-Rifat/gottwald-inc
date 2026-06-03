@@ -86,7 +86,7 @@ export default function AboutSection() {
               aimed at sustainable growth.
             </p>
 
-            <p className="reveal-item text-xl md:text-2xl leading-[1.8] text-white/50 italic font-serif tracking-wide max-w-md mt-4">
+            <p className="reveal-item text-base md:text-lg leading-[1.8] text-white/50 font-light tracking-[0.04em] max-w-md mt-4">
               &quot;Precision is not just a measure of distance, but a state of
               mind. Responsibility is not a burden, but a propellant.&quot;
             </p>

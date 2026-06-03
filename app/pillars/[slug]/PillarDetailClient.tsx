@@ -1231,7 +1231,7 @@ const OffersBlock = forwardRef<
               {String(panelIdx + 1).padStart(2, "0")} — Strategic Offers
             </span>
           </div>
-          <h3 className="panel-heading text-[clamp(1.5rem,3vw,2.5rem)] font-serif italic mt-1 opacity-90 text-white">
+          <h3 className="panel-heading text-[clamp(1.35rem,2.3vw,2.2rem)] font-mono uppercase tracking-[0.16em] mt-2 opacity-90 text-turquoise">
             Engagement Matrix
           </h3>
           {/* Copper · Silver · Gold legend strip */}

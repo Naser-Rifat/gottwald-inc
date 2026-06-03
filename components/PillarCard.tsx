@@ -22,7 +22,7 @@ export default function PillarCard({
   index,
   className = "",
   imageClassName = "aspect-3/2 mb-5",
-  titleClassName = "text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight leading-[1.15] group-hover:text-gold transition-colors duration-500 line-clamp-2",
+  titleClassName = "text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight leading-[1.15] group-hover:text-turquoise transition-colors duration-500 line-clamp-2",
 }: PillarCardProps) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
@@ -122,7 +122,7 @@ export default function PillarCard({
 
     gsap.to(overlay, {
       opacity: 0.15,
-      background: `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(212,175,55,0.2), transparent 70%)`,
+      background: `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(18,168,172,0.22), transparent 70%)`,
       duration: 0.3,
       overwrite: "auto",
     });
@@ -213,7 +213,7 @@ export default function PillarCard({
               <div 
                 className="absolute inset-0 pointer-events-none mix-blend-color"
                 style={{
-                  background: "linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(192,120,64,0.15) 50%, rgba(160,165,170,0.15) 100%)"
+                  background: "linear-gradient(135deg, rgba(18,168,172,0.18) 0%, rgba(0,109,132,0.18) 48%, rgba(184,192,204,0.12) 100%)"
                 }}
               />
               <div 
@@ -285,7 +285,7 @@ export default function PillarCard({
       </div>
 
       <div className="flex items-center">
-        <span className="w-0 overflow-hidden group-hover:w-auto group-hover:opacity-100 group-hover:mr-4 opacity-0 transition-all duration-500 ease-out text-gold font-light">
+        <span className="w-0 overflow-hidden group-hover:w-auto group-hover:opacity-100 group-hover:mr-4 opacity-0 transition-all duration-500 ease-out text-turquoise font-light">
           →
         </span>
         <h3 ref={titleRef} className={titleClassName}>
