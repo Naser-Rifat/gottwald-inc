@@ -1,12 +1,17 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useMemo, useRef, useEffect, useState, useCallback } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { getDeviceTier } from "@/lib/deviceTier";
 
 // -------------------------------------------------------------
-// The "Dark Fluid" / Ink Shader — Enhanced for liquid feel
+// Resonance Field Shader — Phase A refinement
+// Concept: a chamber of drifting wave sources that interfere
+// organically (the "orchestra"), with subtle particle accents
+// at wave peaks. Derived directly from the client's frequency
+// manifesto — "different frequencies, one orchestra". Brand
+// colors locked, restrained motion, premium stillness.
 // -------------------------------------------------------------
 const vertexShader = `
 varying vec2 vUv;
@@ -16,13 +21,13 @@ void main() {
 }
 `;
 
-// ── Desktop shader: Full quality (2-octave FBM, 6 noise calls + gold fold) ──
+// ── Desktop shader: 3 drifting wave sources + particles + mouse resonance ──
 const fragmentShaderDesktop = `
 uniform float uTime;
 uniform vec2 uResolution;
 uniform vec2 uMouse;
 
-// Theme Colors
+// Theme Colors (locked to brand spec — do not change)
 uniform vec3 uColorBase;
 uniform vec3 uColorPetrol;
 uniform vec3 uColorTurquoise;
@@ -30,98 +35,87 @@ uniform vec3 uColorGold;
 
 varying vec2 vUv;
 
-// ----------------------------------------------------------
-// Classic Simplex Noise (Ashima Arts)
-// ----------------------------------------------------------
-vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-float snoise(vec2 v) {
-  const vec4 C = vec4(0.211324865405187,
-                      0.366025403784439,
-                     -0.577350269189626,
-                      0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy));
-  vec2 x0 = v -   i + dot(i, C.xx);
-  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod289(i);
-  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-		+ i.x + vec3(0.0, i1.x, 1.0 ));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-  m = m*m;
-  m = m*m;
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
-}
-
-// Fractal Brownian Motion — 2 octaves
-float fbm(vec2 p) {
-    float value = 0.0;
-    float amplitude = 0.5;
-    for (int i = 0; i < 2; i++) {
-        value += amplitude * snoise(p);
-        p *= 2.0;
-        amplitude *= 0.5;
-    }
-    return value;
-}
-
 void main() {
     vec2 st = gl_FragCoord.xy / uResolution.xy;
-    st.x *= uResolution.x / uResolution.y;
+    float aspect = uResolution.x / uResolution.y;
+    // Centered, aspect-corrected so wave fronts stay circular
+    vec2 p = (st - 0.5) * vec2(aspect, 1.0);
 
-    float t1 = uTime * 0.12;
-    float t2 = uTime * 0.08;
-    
-    vec2 mouseUV = uMouse * vec2(uResolution.x / uResolution.y, 1.0);
-    float mouseDist = distance(st, mouseUV);
-    float mouseForce = exp(-mouseDist * 2.5) * 0.7;
+    vec2 mouseP = (uMouse - 0.5) * vec2(aspect, 1.0);
 
-    vec2 q = vec2(0.0);
-    q.x = fbm(st + t1 * 0.3);
-    q.y = fbm(st + vec2(1.0) + t2 * 0.2);
+    // Slow restrained time — premium stillness, no frenetic motion
+    float t = uTime * 0.45;
 
-    vec2 r = vec2(0.0);
-    r.x = fbm(st + 1.0 * q + vec2(1.7, 9.2) + 0.15 * t1);
-    r.y = fbm(st + 1.0 * q + vec2(8.3, 2.8) + 0.126 * t2);
-    
-    r += mouseForce * vec2(0.6, 0.4);
+    // ── Wave Source 1: drifts across the upper region ──
+    vec2 source1 = vec2(sin(t * 0.07) * 0.7, 0.25 + cos(t * 0.09) * 0.12);
+    float dist1 = length(p - source1);
+    float wave1 = sin(dist1 * 11.0 - t * 0.6);
 
-    float f = fbm(st + r * 1.2);
+    // ── Wave Source 2: drifts across the lower region ──
+    vec2 source2 = vec2(cos(t * 0.05) * 0.6, -0.25 + sin(t * 0.08) * 0.12);
+    float dist2 = length(p - source2);
+    float wave2 = sin(dist2 * 8.0 + t * 0.5) * 0.7;
 
-    vec3 color = mix(uColorBase, uColorPetrol, clamp((f * f) * 4.0, 0.0, 1.0));
-    
-    float veinIntensity = clamp(length(q), 0.0, 1.0) * clamp(length(r), 0.0, 1.0);
-    color = mix(color, uColorTurquoise, veinIntensity * 0.45);
-    
-    float fold = fbm(st * 3.0 + r * 2.0 + t1 * 0.1);
-    float highlight = smoothstep(0.4, 0.48, fold) * smoothstep(0.56, 0.48, fold);
-    color += uColorGold * highlight * 0.25;
+    // ── Wave Source 3: slow central anchor pulse ──
+    float dist3 = length(p);
+    float wave3 = sin(dist3 * 5.0 - t * 0.35) * 0.55;
 
-    float breathe = sin(uTime * 0.3) * 0.03 + 0.03;
-    color += uColorTurquoise * breathe * veinIntensity;
+    // Interference field — the "orchestra" composition
+    float interference = (wave1 + wave2 + wave3) / 2.25;
 
-    color += uColorGold * mouseForce * 0.12;
+    // ── Mouse as additional frequency emitter ──
+    float mouseDist = length(p - mouseP);
+    float mouseWave = sin(mouseDist * 18.0 - t * 2.0);
+    float mouseAttenuation = exp(-mouseDist * 1.6);
+    float mouseResonance = mouseWave * mouseAttenuation;
 
-    float vignetteDist = distance(vUv, vec2(0.5)) * 2.0;
-    float mask = 1.0 - smoothstep(0.6, 1.0, vignetteDist) * 0.5;
+    // Combined field
+    float field = interference + mouseResonance * 0.6;
+    float fieldPower = smoothstep(-0.5, 1.0, field);
+
+    // ── Particle dots at wave peaks — Awwwards-style elegance ──
+    vec2 gridP = p * 9.0;
+    vec2 gridFract = fract(gridP) - 0.5;
+    float dotMask = 1.0 - smoothstep(0.0, 0.07, length(gridFract));
+    float dotIntensity = smoothstep(0.55, 0.95, field) * dotMask;
+
+    // Slow ambient breathing — orchestral inhale/exhale
+    float breathe = sin(t * 0.2) * 0.5 + 0.5;
+
+    // ── Compose color ──
+    vec3 color = uColorBase;
+
+    // Petrol body — the deep mid-tone of the field
+    color = mix(color, uColorPetrol, fieldPower * 0.5);
+
+    // Turquoise on wave peaks — the brand's eye-catcher accent
+    float peak = smoothstep(0.4, 1.0, field);
+    color = mix(color, uColorTurquoise, peak * 0.55);
+
+    // Gold filaments at the sharpest peaks — prestige warmth
+    float goldFilament = smoothstep(0.72, 1.0, field) * (0.6 + 0.4 * breathe);
+    color += uColorGold * goldFilament * 0.2;
+
+    // Particle dots — turquoise twinkle at peaks
+    color += uColorTurquoise * dotIntensity * 0.7;
+
+    // Mouse resonance — turquoise radiating outward
+    color += uColorTurquoise * abs(mouseResonance) * 0.3;
+
+    // Soft gold warmth around the cursor
+    color += uColorGold * mouseAttenuation * 0.07;
+
+    // Subtle radial vignette — depth focus, premium feel
+    float vignetteDist = length(p) * 1.35;
+    float mask = 1.0 - smoothstep(0.5, 1.15, vignetteDist) * 0.55;
     color *= mask;
 
+    color = max(color, vec3(0.0));
     gl_FragColor = vec4(color, 1.0);
 }
 `;
 
-// ── Mobile shader: Optimized (1-octave FBM, no gold fold = 40% fewer ALU ops) ──
+// ── Mobile shader: 2 wave sources, no particles, lighter mouse ──
 const fragmentShaderMobile = `
 uniform float uTime;
 uniform vec2 uResolution;
@@ -134,94 +128,63 @@ uniform vec3 uColorGold;
 
 varying vec2 vUv;
 
-vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-float snoise(vec2 v) {
-  const vec4 C = vec4(0.211324865405187,
-                      0.366025403784439,
-                     -0.577350269189626,
-                      0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy));
-  vec2 x0 = v -   i + dot(i, C.xx);
-  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod289(i);
-  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-		+ i.x + vec3(0.0, i1.x, 1.0 ));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-  m = m*m;
-  m = m*m;
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
-}
-
-// 1-octave FBM — half the cost of desktop
-float fbm(vec2 p) {
-    return snoise(p) * 0.5;
-}
-
 void main() {
     vec2 st = gl_FragCoord.xy / uResolution.xy;
-    st.x *= uResolution.x / uResolution.y;
+    float aspect = uResolution.x / uResolution.y;
+    vec2 p = (st - 0.5) * vec2(aspect, 1.0);
 
-    float t1 = uTime * 0.12;
-    float t2 = uTime * 0.08;
-    
-    // Simplified mouse (cheaper exp → single mul)
-    vec2 mouseUV = uMouse * vec2(uResolution.x / uResolution.y, 1.0);
-    float mouseDist = distance(st, mouseUV);
-    float mouseForce = exp(-mouseDist * 2.5) * 0.5;
+    vec2 mouseP = (uMouse - 0.5) * vec2(aspect, 1.0);
 
-    // Fewer warp layers: only 2 fbm calls for q
-    vec2 q = vec2(0.0);
-    q.x = fbm(st + t1 * 0.3);
-    q.y = fbm(st + vec2(1.0) + t2 * 0.2);
+    float t = uTime * 0.45;
 
-    // Single warp layer (skip second r layer)
-    vec2 r = vec2(0.0);
-    r.x = fbm(st + 1.0 * q + vec2(1.7, 9.2) + 0.15 * t1);
-    r.y = fbm(st + 1.0 * q + vec2(8.3, 2.8) + 0.126 * t2);
-    r += mouseForce * vec2(0.6, 0.4);
+    // Two drifting wave sources (mobile budget)
+    vec2 source1 = vec2(sin(t * 0.07) * 0.6, 0.2);
+    vec2 source2 = vec2(cos(t * 0.05) * 0.5, -0.2);
 
-    float f = fbm(st + r * 1.2);
+    float dist1 = length(p - source1);
+    float dist2 = length(p - source2);
 
-    vec3 color = mix(uColorBase, uColorPetrol, clamp((f * f) * 4.0, 0.0, 1.0));
-    
-    float veinIntensity = clamp(length(q), 0.0, 1.0) * clamp(length(r), 0.0, 1.0);
-    color = mix(color, uColorTurquoise, veinIntensity * 0.45);
-    
-    // Skip gold fold (saves 1 expensive fbm call) — use simpler highlight
-    color += uColorGold * veinIntensity * 0.08;
+    float wave1 = sin(dist1 * 10.0 - t * 0.6);
+    float wave2 = sin(dist2 * 8.0 + t * 0.5) * 0.7;
 
-    float breathe = sin(uTime * 0.3) * 0.03 + 0.03;
-    color += uColorTurquoise * breathe * veinIntensity;
+    float interference = (wave1 + wave2) / 1.7;
 
-    color += uColorGold * mouseForce * 0.12;
+    float mouseDist = length(p - mouseP);
+    float mouseWave = sin(mouseDist * 16.0 - t * 1.8);
+    float mouseAttenuation = exp(-mouseDist * 1.6);
+    float mouseResonance = mouseWave * mouseAttenuation;
 
-    float vignetteDist = distance(vUv, vec2(0.5)) * 2.0;
-    float mask = 1.0 - smoothstep(0.6, 1.0, vignetteDist) * 0.5;
+    float field = interference + mouseResonance * 0.6;
+    float fieldPower = smoothstep(-0.5, 1.0, field);
+
+    float breathe = sin(t * 0.2) * 0.5 + 0.5;
+
+    vec3 color = uColorBase;
+    color = mix(color, uColorPetrol, fieldPower * 0.5);
+
+    float peak = smoothstep(0.4, 1.0, field);
+    color = mix(color, uColorTurquoise, peak * 0.5);
+
+    float goldFilament = smoothstep(0.75, 1.0, field) * (0.6 + 0.4 * breathe);
+    color += uColorGold * goldFilament * 0.16;
+
+    color += uColorTurquoise * abs(mouseResonance) * 0.28;
+    color += uColorGold * mouseAttenuation * 0.06;
+
+    float vignetteDist = length(p) * 1.35;
+    float mask = 1.0 - smoothstep(0.5, 1.15, vignetteDist) * 0.5;
     color *= mask;
 
+    color = max(color, vec3(0.0));
     gl_FragColor = vec4(color, 1.0);
 }
 `;
 
 // ── Throttled Render Controller ──
-// Drives R3F in "demand" mode at a capped framerate.
-// The fluid animation moves at uTime * 0.12 — 30fps is
-// visually identical to 60fps for this effect, cutting GPU work in half.
-// When reducedMotion is true, paint exactly one frame so the fluid is
-// visible as a still image, then stop ticking.
+// Drives R3F in "demand" mode at a capped framerate. Wave-field motion
+// is slow enough that 30fps desktop / 24fps mobile is visually identical
+// to 60fps while cutting GPU work meaningfully. When reducedMotion is
+// true, paint exactly one frame so the field is visible as a still image.
 const ThrottledRenderer = ({
   fps,
   reducedMotion,
@@ -349,16 +312,13 @@ export default function GlobalCanvas() {
     return {
       isMobile: tier === "mobile",
       dpr: tier === "mobile" ? [1, 1] as [number, number] : [1, 1.5] as [number, number],
-      // Desktop: 30fps (half GPU of 60, no visual difference for slow fluid)
-      // Mobile:  24fps (further savings, still buttery for this animation speed)
+      // Desktop: 30fps, Mobile: 24fps. Field motion is slow enough that
+      // throttled fps is visually identical to 60fps.
       fps: tier === "mobile" ? 24 : 30,
     };
   }, []);
 
-  // Use "demand" frameloop — ThrottledRenderer calls invalidate() at our target FPS.
-  // This is the key performance win: instead of rendering at 60fps (the browser default),
-  // we render at 30fps desktop / 24fps mobile. For an animation moving at uTime * 0.12,
-  // this is visually identical but cuts GPU work by 50-60%.
+  // Use "demand" frameloop — ThrottledRenderer drives invalidate() at target FPS.
   const frameloop = isTabVisible ? "demand" : "never";
 
   return (
