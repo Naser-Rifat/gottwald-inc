@@ -12,48 +12,76 @@ import NextChapterTransition from "@/components/NextChapterTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ECOSYSTEM_FREQUENCIES = [
+// Per-business semantic frequency tint. Maps each business area to a brand
+// color that matches its inner state (per client manifesto): gold = positive /
+// stability, silver = neutral / space, petrol = depth / structure, turquoise =
+// signal / clarity, copper = warmth / human presence. Distributes the full
+// 5-color brand across the 8 sub-frequencies — each business "sounds" distinct.
+type FrequencyTone = "gold" | "silver" | "petrol" | "copper" | "turquoise";
+
+const FREQUENCY_TONE_CLASSES: Record<FrequencyTone, string> = {
+  gold: "text-gold/55 group-hover:text-gold",
+  silver: "text-silver/55 group-hover:text-silver",
+  petrol: "text-petrol/80 group-hover:text-petrol",
+  copper: "text-copper/55 group-hover:text-copper",
+  turquoise: "text-turquoise/65 group-hover:text-turquoise",
+};
+
+const ECOSYSTEM_FREQUENCIES: ReadonlyArray<{
+  name: string;
+  frequency: string;
+  desc: string;
+  tone: FrequencyTone;
+}> = [
   {
     name: "SolutionFinder / Solution Management",
     frequency: "Clarity",
     desc: "Find the cause, lead the solution, lock stability.",
+    tone: "turquoise", // signal — clarity / leadership
   },
   {
     name: "Consulting",
     frequency: "Structure",
     desc: "Executive-grade strategy, decision systems, and growth.",
+    tone: "petrol", // depth — structural strategy
   },
   {
     name: "Marketing & Communication",
     frequency: "Signal",
     desc: "Trust and demand infrastructure.",
+    tone: "gold", // positive — trust / signal
   },
   {
     name: "IT Solutions 2030",
     frequency: "Momentum",
     desc: "Websites as high-performance, indexable infrastructure.",
+    tone: "silver", // neutral metallic — infrastructure
   },
   {
     name: "Coaching & Mentoring",
     frequency: "Presence",
     desc: "A human operating system for high responsibility.",
+    tone: "copper", // warmth — empathy / human presence
   },
   {
     name: "Structure Deployment (Georgia)",
     frequency: "Stability",
     desc: "Defensible setup for entrepreneurs and holdings.",
+    tone: "petrol", // depth — defensible structure
   },
   {
     name: "YIG.CARE",
     frequency: "Expansion",
     desc: "Platform and movement. Launch 2026.",
+    tone: "silver", // space / awareness / expansion
   },
   {
     name: "PLHH_Coin",
     frequency: "Harmony",
     desc: "RWA and Governance DAO for real-world regeneration.",
+    tone: "gold", // stability / trust / reliability
   },
-] as const;
+];
 
 export default function AboutClient() {
   // Page-scoped namespace: t("hero.line1"), t("manifesto.title"), etc.
@@ -505,11 +533,18 @@ export default function AboutClient() {
       </div>
 
       <aside
-        aria-label="About page journey"
+        aria-label="About page orchestration thread"
         className="fixed right-5 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:block pointer-events-none"
       >
-        <div className="relative h-32 w-px bg-white/10 overflow-hidden">
-          <div className="journey-progress absolute inset-0 bg-gradient-to-b from-turquoise via-turquoise to-gold origin-top scale-y-0" />
+        {/* Manifesto orchestration thread — single vertical "tuning rod"
+            holding all 5 brand frequencies as one composition. Gold (positive)
+            silver (neutral) petrol (depth) turquoise (signal) copper (warmth).
+            Literalizes the client manifesto: "Different frequencies — one
+            coherent sound." The progress layer (turquoise) reads as the
+            playhead moving through the orchestration as the user scrolls. */}
+        <div className="relative h-[62vh] w-px overflow-hidden">
+          <div className="orchestration-line absolute inset-0" />
+          <div className="journey-progress absolute inset-0 bg-gradient-to-b from-transparent via-turquoise/70 to-transparent origin-top scale-y-0" />
         </div>
       </aside>
 
@@ -1483,6 +1518,22 @@ export default function AboutClient() {
           </div>
         </section>
 
+        {/* HELD BREATH — composed pause between PROOF (quantitative trust)
+            and CASES (personal recognition). Manifesto: "pauses are
+            composition." Single thin hairline + minimal gold dot floats
+            in empty space; both breathe subtly. The orchestra holds its
+            breath between movements. */}
+        <div
+          aria-hidden="true"
+          className="bg-[#070c14] flex items-center justify-center py-[14vh] lg:py-[18vh] relative"
+        >
+          <div className="relative flex flex-col items-center gap-5">
+            <span className="held-breath-line block w-16 h-px bg-silver/50" />
+            <span className="held-breath-dot block w-[5px] h-[5px] rounded-full bg-gold" />
+            <span className="held-breath-line block w-16 h-px bg-silver/50" />
+          </div>
+        </div>
+
         {/* MINI CASES — editorial proof sequence.
             Restructure: section header + table-of-contents index at the top,
             then each case as a dense editorial spread with marginalia (roman
@@ -1845,7 +1896,9 @@ export default function AboutClient() {
                   <h3 className="md:col-span-5 text-[clamp(1.5rem,2.6vw,2.8rem)] leading-[1.05] tracking-[-0.025em] text-white/90 font-light group-hover:text-white transition-colors duration-500">
                     {eco.name}
                   </h3>
-                  <p className="col-start-2 md:col-start-auto md:col-span-2 mt-3 md:mt-2 text-[10px] tracking-[0.3em] uppercase text-gold/55 group-hover:text-gold transition-colors duration-500">
+                  <p
+                    className={`col-start-2 md:col-start-auto md:col-span-2 mt-3 md:mt-2 text-[10px] tracking-[0.3em] uppercase transition-colors duration-500 ${FREQUENCY_TONE_CLASSES[eco.tone]}`}
+                  >
                     {eco.frequency}
                   </p>
                   <p className="col-start-2 md:col-start-auto md:col-span-4 mt-3 md:mt-1 text-base md:text-lg text-white/70 font-light leading-[1.55] group-hover:text-white/95 transition-colors duration-500">

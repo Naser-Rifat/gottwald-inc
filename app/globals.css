@@ -559,6 +559,54 @@ html[lang="de"] {
   box-shadow: 0 0 12px rgba(18, 168, 172, 0.45), 0 0 4px rgba(18, 168, 172, 0.7);
 }
 
+/* ===== Orchestration Thread =====
+   Manifesto-faithful resonance line in the right margin. A vertical
+   gradient holding all 5 brand frequencies as one orchestration —
+   gold (positive) silver (neutral) petrol (depth) turquoise (signal)
+   copper (warmth). Subtle pulse keeps it "alive" so the page reads as
+   a living instrument, not a static document.
+   Literalizes the client manifesto: "Different frequencies — one
+   coherent sound." */
+.orchestration-line {
+  background: linear-gradient(
+    to bottom,
+    rgba(212, 175, 55, 0)     0%,
+    rgba(212, 175, 55, 0.32)  8%,     /* gold — perception/positive */
+    rgba(184, 192, 204, 0.28) 28%,    /* silver — neutral metallic */
+    rgba(0, 109, 132, 0.32)   48%,    /* petrol — depth */
+    rgba(18, 168, 172, 0.42)  68%,    /* turquoise — signal */
+    rgba(192, 120, 64, 0.30)  88%,    /* copper — warmth/decision */
+    rgba(192, 120, 64, 0)     100%
+  );
+  animation: orchestration-breath 9s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes orchestration-breath {
+  0%, 100% { opacity: 0.85; transform: scaleY(1); }
+  50%      { opacity: 1;    transform: scaleY(0.985); }
+}
+
+/* ===== Held Breath Marker =====
+   Composed pause between major sections. Manifesto: "pauses are
+   composition." A single thin centered hairline + minimal gold dot
+   floats in empty space — the visual equivalent of a held breath
+   between orchestra movements. */
+.held-breath-line {
+  animation: held-breath-pulse 4s ease-in-out infinite;
+}
+.held-breath-dot {
+  animation: held-breath-dot 4s ease-in-out infinite;
+}
+@keyframes held-breath-pulse {
+  0%, 100% { opacity: 0.35; transform: scaleX(1); }
+  50%      { opacity: 0.6;  transform: scaleX(1.15); }
+}
+@keyframes held-breath-dot {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.3); }
+}
+
 /* ===== prefers-reduced-motion (Accessibility) =====
    Users with vestibular sensitivity or who've set the OS preference get
    shortened or instant animations across the site. We don't disable
