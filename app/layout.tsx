@@ -12,6 +12,7 @@ import PageLoader from "@/components/PageLoader";
 import AudioProvider from "@/components/AudioProvider";
 import CookieManager from "@/components/CookieManager";
 import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
+import ResonanceCursor from "@/components/ResonanceCursor";
 import {
   SITE_URL,
   SITE_NAME,
@@ -49,7 +50,7 @@ const playfair = Playfair_Display({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#070c14",
   width: "device-width",
   initialScale: 1,
 };
@@ -211,7 +212,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className="bg-black text-text-primary font-sans antialiased"
+        className="bg-base text-text-primary font-sans antialiased"
         suppressHydrationWarning
       >
         {/* Skip-link: first focusable element on every page. Hidden by
@@ -231,6 +232,7 @@ export default async function RootLayout({
         <NoiseOverlay />
         <CookieManager />
         <GoogleTranslateRoot />
+        <ResonanceCursor />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AudioProvider>
             <main id="main-content" tabIndex={-1} className="outline-none">

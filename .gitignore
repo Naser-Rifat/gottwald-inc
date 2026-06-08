@@ -31,6 +31,9 @@ npm-debug.log*
 # docs
 docs/
 
+reports/
+
+
 # vercel
 .vercel
 
