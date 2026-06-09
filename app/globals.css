@@ -553,6 +553,35 @@ html[lang="de"] {
   filter: drop-shadow(0 0 12px rgba(18, 168, 172, 0.32));
 }
 
+/* ===== Strategic Inquiry signal drift =====
+   Subtle frequency wave at the bottom of the StrategicInquirySection
+   that drifts horizontally in step with the LivingEnvironment's
+   scroll-velocity-driven pace (--orchestration-pace, written by JS in
+   LivingEnvironment.tsx). Per-visit phase offset via --rand-phase-signal
+   ensures different visits begin at different points in the cycle, so
+   the wave never feels "synced from session zero." Brand signal-language
+   anchor for the closing CTA without becoming dashboard decoration. */
+.strategic-signal-drift {
+  animation: strategic-signal-drift var(--orchestration-pace, 11s) linear
+    infinite;
+  animation-delay: var(--rand-phase-signal, 0s);
+}
+
+@keyframes strategic-signal-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strategic-signal-drift {
+    animation: none;
+  }
+}
+
 /* ===== PILLARS Pin Section =====
    Vertical progress bar that grows top → bottom as user scrolls through
    all 5 pillar frames. Glows faintly to signal active progress. */

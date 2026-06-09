@@ -1,24 +1,36 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * HeldBreath — living pause between movements.
  *
  * Five sine waves, one per brand frequency (gold, silver, petrol,
- * turquoise, copper), drift continuously across a horizontal field.
- * Pace is read from --orchestration-pace (set by LivingEnvironment from
- * scroll velocity), so the orchestra accelerates when the reader does
- * and settles when they rest. Edge envelope tapers amplitude to zero at
- * both ends — waves emerge from and dissolve into nothing. Mix-blend
- * screen turns overlaps into light — the manifesto's "resonance" made
- * visible. No labels, no widgets — the field IS the breath.
+ * turquoise, copper). The field responds to four signals simultaneously:
+ *
+ *   1. Ambient phase drift — paced by --orchestration-pace (set by
+ *      LivingEnvironment from global scroll velocity). Always alive.
+ *   2. Reveal envelope — a sine tent on scroll progress through the
+ *      element. Waves rise from a flat line as you approach, peak at
+ *      mid-pass, fall back to flat as you leave. The breath itself.
+ *   3. Scroll-position phase — direct coupling. Scrubbing back/forth
+ *      visibly moves the waves. The reader conducts.
+ *   4. Attack-decay energy — fast scrolling bumps amplitude and line
+ *      weight; rests decay them. Excitement that calms.
+ *
+ * Edge envelope tapers amplitude to zero at horizontal ends. Mix-blend
+ * screen turns wave overlaps into light — the manifesto's "resonance"
+ * rendered visible. No labels, no widgets, no typography. The field IS
+ * the breath.
  */
 
 type Band = { color: string; freq: number; amp: number; phase: number };
 
-// Frequencies chosen non-harmonic so waves never line up the same way
-// twice — sustained interference, never a static pattern.
+// Non-harmonic frequencies — the orchestra never repeats the same chord.
 const BANDS: Band[] = [
   { color: "rgba(212,175,55,0.34)",  freq: 2.1, amp: 0.55, phase: 0.0 }, // gold
   { color: "rgba(184,192,204,0.26)", freq: 3.3, amp: 0.42, phase: 0.7 }, // silver
@@ -45,7 +57,7 @@ export default function HeldBreath() {
 
     let w = 0;
     let h = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -68,19 +80,44 @@ export default function HeldBreath() {
     );
     io.observe(container);
 
-    // Per-visit seed nudges starting phase so the orchestra never opens
-    // on the same chord twice.
-    let phase = Math.random() * Math.PI * 2;
+    // Scroll signals — written by ScrollTrigger, read by the rAF loop.
+    const scrollProgressRef = { current: 0 };  // 0..1 across the element
+    const energyRef = { current: 0 };           // 0..1 attack-decay velocity
+
+    const gsapCtx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => {
+          scrollProgressRef.current = self.progress;
+          // Attack: take the max of current energy and incoming velocity.
+          // Decay happens in the rAF tick. Normalized: ~2000 px/s = full.
+          const v = Math.min(Math.abs(self.getVelocity()) / 2000, 1);
+          if (v > energyRef.current) energyRef.current = v;
+        },
+      });
+    }, container);
+
+    // Per-visit seed nudges the opening chord.
+    let ambientPhase = Math.random() * Math.PI * 2;
     let lastT = performance.now();
 
-    const draw = () => {
+    const draw = (revealAmount: number, energy: number) => {
       ctx.clearRect(0, 0, w, h);
+      if (revealAmount < 0.01) return;
+
       const cy = h / 2;
       const baseAmp = h * 0.28;
       const steps = Math.max(80, Math.floor(w / 5));
 
-      ctx.lineWidth = 1;
+      // Velocity-coupled line weight — faster scroll, thicker stroke.
+      ctx.lineWidth = 1 + energy * 0.6;
       ctx.globalCompositeOperation = "screen";
+
+      // Scroll-position phase: 6 full cycles across the element. Scrubbing
+      // back and forth visibly moves the waves — direct conducting.
+      const scrollPhase = scrollProgressRef.current * Math.PI * 6;
 
       for (const band of BANDS) {
         ctx.beginPath();
@@ -88,14 +125,15 @@ export default function HeldBreath() {
         const k = (band.freq * Math.PI * 2) / w;
         for (let s = 0; s <= steps; s++) {
           const x = (s / steps) * w;
-          // Sine envelope: amplitude fades to zero at edges.
-          const envelope = Math.sin((s / steps) * Math.PI);
+          const edgeEnvelope = Math.sin((s / steps) * Math.PI);
           const y =
             cy +
-            Math.sin(x * k + phase + band.phase) *
+            Math.sin(x * k + ambientPhase + scrollPhase + band.phase) *
               baseAmp *
               band.amp *
-              envelope;
+              edgeEnvelope *
+              revealAmount *
+              (1 + energy * 0.5);
           if (s === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
@@ -109,26 +147,31 @@ export default function HeldBreath() {
       lastT = t;
 
       if (inView) {
-        // --orchestration-pace is "Xs" (seconds per breath cycle), set
-        // by LivingEnvironment. Faster scroll → smaller value → faster
-        // phase drift. Idle → 11s → calm.
+        // Ambient drift — paced by global orchestration var.
         const paceStr =
           getComputedStyle(document.documentElement)
             .getPropertyValue("--orchestration-pace")
             .trim() || "11s";
         const paceSec = parseFloat(paceStr) || 11;
-        // 0.35 multiplier keeps ambient drift contemplative even at the
-        // fastest scroll pace.
-        const rate = ((Math.PI * 2) / paceSec) * 0.35;
-        phase += dt * rate;
-        draw();
+        // 0.35 keeps ambient drift contemplative even at fastest pace.
+        ambientPhase += dt * ((Math.PI * 2) / paceSec) * 0.35;
+
+        // Reveal envelope — sine tent on scroll progress through element.
+        const p = Math.max(0, Math.min(1, scrollProgressRef.current));
+        const reveal = Math.sin(p * Math.PI);
+
+        // Decay energy each frame — exponential, ~0.5s to half.
+        energyRef.current *= Math.pow(0.5, dt / 0.5);
+
+        draw(reveal, energyRef.current);
       }
 
       rafId = window.requestAnimationFrame(tick);
     };
 
     if (reducedMotion) {
-      draw();
+      // Static frame at mid-reveal, no animation, no scroll coupling.
+      draw(1, 0);
     } else {
       rafId = window.requestAnimationFrame(tick);
     }
@@ -137,6 +180,7 @@ export default function HeldBreath() {
       if (rafId !== null) window.cancelAnimationFrame(rafId);
       ro.disconnect();
       io.disconnect();
+      gsapCtx.revert();
     };
   }, []);
 
