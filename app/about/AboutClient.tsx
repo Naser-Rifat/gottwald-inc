@@ -9,7 +9,6 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
-import FrequencyEngine from "@/components/FrequencyEngine";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,6 +83,44 @@ const ECOSYSTEM_FREQUENCIES: ReadonlyArray<{
   },
 ];
 
+const PILLARS_DATA= [
+              {
+                num: "01",
+                principle: "CLARITY",
+                title: "We remove noise until only truth remains",
+                desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence.",
+                image: "/about/pillar-01-clarity.webp",
+              },
+              {
+                num: "02",
+                principle: "LIGHTNESS",
+                title: "We make decisions light again",
+                desc: 'When a system becomes clear, decisions almost make themselves. Not because it\'s "easy," but because it is finally ordered.',
+                image: "/about/pillar-02-lightness.webp",
+              },
+              {
+                num: "03",
+                principle: "SIGNAL",
+                title: "We build signal, not volume",
+                desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately.",
+                image: "/about/pillar-03-signal.webp",
+              },
+              {
+                num: "04",
+                principle: "INFRASTRUCTURE",
+                title: "We treat technology as infrastructure",
+                desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure.",
+                image: "/about/pillar-04-infrastructure.webp",
+              },
+              {
+                num: "05",
+                principle: "PRESENCE",
+                title: "We strengthen the human behind the system",
+                desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable.",
+                image: "/about/pillar-05-presence.webp",
+              },
+            ]
+
 export default function AboutClient() {
   // Page-scoped namespace: t("hero.line1"), t("manifesto.title"), etc.
   const t = useTranslations("about");
@@ -102,172 +139,10 @@ export default function AboutClient() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // MOVE A — Living Environment: Time-of-Day
-  // The page knows what time you arrived. A `data-time-of-day` attribute on
-  // <html> triggers a barely-perceptible tint via globals.css. Re-evaluated
-  // every 10 minutes in case the user keeps a tab open across the boundary
-  // (dawn → morning, dusk → evening). Manifesto-faithful: "before mind
-  // understands, something is already happening."
-  useEffect(() => {
-    const applyTimeOfDay = () => {
-      const h = new Date().getHours();
-      const period =
-        h < 5  ? "deep-night" :
-        h < 9  ? "dawn" :
-        h < 12 ? "morning" :
-        h < 16 ? "afternoon" :
-        h < 19 ? "dusk" :
-        h < 22 ? "evening" :
-                 "deep-night";
-      document.documentElement.dataset.timeOfDay = period;
-    };
-    applyTimeOfDay();
-    const id = window.setInterval(applyTimeOfDay, 10 * 60 * 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  // MOVE B — Living Environment: Dwell-Responsive Deepening
-  // Sections the reader actually dwells on (>=50% in view for >=10s) get a
-  // permanent `dwell-deepened` class. CSS pseudo-element fades in a thin gold
-  // resonance mark on the section's right edge — the page literally notices
-  // the reader's attention and rewards it. Manifesto: "feeling creates
-  // resonance creates trust." Once marked, it stays for the session.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!("IntersectionObserver" in window)) return;
-    const sections = document.querySelectorAll<HTMLElement>(
-      "section[data-journey]"
-    );
-    if (sections.length === 0) return;
-
-    const dwellTimers = new Map<Element, number>();
-    const DWELL_MS = 10000;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            if (
-              !dwellTimers.has(entry.target) &&
-              !entry.target.classList.contains("dwell-deepened")
-            ) {
-              const t = window.setTimeout(() => {
-                entry.target.classList.add("dwell-deepened");
-                dwellTimers.delete(entry.target);
-              }, DWELL_MS);
-              dwellTimers.set(entry.target, t);
-            }
-          } else {
-            const t = dwellTimers.get(entry.target);
-            if (t !== undefined) {
-              window.clearTimeout(t);
-              dwellTimers.delete(entry.target);
-            }
-          }
-        });
-      },
-      { threshold: [0.5] },
-    );
-
-    sections.forEach((s) => observer.observe(s));
-
-    return () => {
-      dwellTimers.forEach((t) => window.clearTimeout(t));
-      dwellTimers.clear();
-      observer.disconnect();
-    };
-  }, []);
-
-  // MOVE D — Living Environment: Scroll-Velocity-Aware Pace
-  // The orchestration thread's breath cycle adapts to the reader's pace.
-  // Fast scroller → tighter ~4-7s cycles (the orchestra catches up).
-  // Slow / dwelling reader → wider 10-13s cycles (the orchestra relaxes).
-  // After 1.2s of scroll silence, decay back to a calm baseline (11s).
-  // Skipped under prefers-reduced-motion to keep the page static for users
-  // with vestibular sensitivity. CSS reads from `--orchestration-pace`.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reducedMotion) return;
-
-    let lastY = window.scrollY;
-    let lastT = performance.now();
-    const samples: number[] = [];
-    const MAX_SAMPLES = 6;
-    let rafId: number | null = null;
-    let scrollEndTimer: number | null = null;
-
-    const applyPace = () => {
-      rafId = null;
-      const now = performance.now();
-      const y = window.scrollY;
-      const dy = Math.abs(y - lastY);
-      const dt = now - lastT;
-      const v = dt > 0 ? (dy / dt) * 1000 : 0;
-      samples.push(v);
-      if (samples.length > MAX_SAMPLES) samples.shift();
-      const avg =
-        samples.reduce((a, b) => a + b, 0) / Math.max(samples.length, 1);
-
-      let duration: number;
-      if (avg < 100) duration = 13;
-      else if (avg < 350) duration = 10;
-      else if (avg < 900) duration = 7;
-      else if (avg < 2000) duration = 5;
-      else duration = 3.5;
-
-      document.documentElement.style.setProperty(
-        "--orchestration-pace",
-        `${duration}s`,
-      );
-      lastY = y;
-      lastT = now;
-    };
-
-    const onScroll = () => {
-      if (rafId === null) rafId = window.requestAnimationFrame(applyPace);
-      if (scrollEndTimer !== null) window.clearTimeout(scrollEndTimer);
-      scrollEndTimer = window.setTimeout(() => {
-        samples.length = 0;
-        document.documentElement.style.setProperty(
-          "--orchestration-pace",
-          "11s",
-        );
-      }, 1200);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId !== null) window.cancelAnimationFrame(rafId);
-      if (scrollEndTimer !== null) window.clearTimeout(scrollEndTimer);
-    };
-  }, []);
-
-  // MOVE E — Living Environment: Per-Visit Generative Seed
-  // A small random nudge to the start-phase of each long-cycle animation, so
-  // no two visits "land" at the same breath. The orchestra is a different
-  // performance every time — same composition, slightly different conducting.
-  // Pure phase shifts, no extra motion → safe under reduced-motion.
-  useEffect(() => {
-    const root = document.documentElement;
-    const seed = Math.random();
-    // Negative delays so animations start mid-cycle on first paint.
-    root.style.setProperty(
-      "--rand-phase-orchestration",
-      `${(seed * -0.55).toFixed(3)}s`,
-    );
-    root.style.setProperty(
-      "--rand-phase-signal",
-      `${(seed * -0.75).toFixed(3)}s`,
-    );
-    root.style.setProperty(
-      "--rand-phase-breath",
-      `${(seed * -0.35).toFixed(3)}s`,
-    );
-  }, []);
+  // Living Environment behaviors (time-of-day, dwell, scroll-pace, seed) +
+  // FrequencyEngine + orchestration aside are now mounted site-wide via
+  // <LivingEnvironment /> in app/layout.tsx. About-specific local copies
+  // removed to avoid double-mounting and keep behavior in one place.
 
   const handleStrategicClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -699,28 +574,6 @@ export default function AboutClient() {
           <Header />
         </div>
       </div>
-
-      {/* MOVE C — Living Environment: Frequency Engine.
-          Ambient drone (Web Audio API, no asset). Default OFF, mutable via
-          discrete editorial toggle in bottom-right corner. Manifesto: "feel
-          it." Sound is literal frequency. */}
-      <FrequencyEngine />
-
-      <aside
-        aria-label="About page orchestration thread"
-        className="fixed right-5 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:block pointer-events-none"
-      >
-        {/* Manifesto orchestration thread — single vertical "tuning rod"
-            holding all 5 brand frequencies as one composition. Gold (positive)
-            silver (neutral) petrol (depth) turquoise (signal) copper (warmth).
-            Literalizes the client manifesto: "Different frequencies — one
-            coherent sound." The progress layer (turquoise) reads as the
-            playhead moving through the orchestration as the user scrolls. */}
-        <div className="relative h-[62vh] w-px overflow-hidden">
-          <div className="orchestration-line absolute inset-0" />
-          <div className="journey-progress absolute inset-0 bg-gradient-to-b from-transparent via-turquoise/70 to-transparent origin-top scale-y-0" />
-        </div>
-      </aside>
 
       <main>
         {/* ── HERO ── Editorial statement: tension–release typography on a void.
@@ -1179,43 +1032,7 @@ export default function AboutClient() {
             </div>
 
             {/* Stage — all 5 frames stacked, GSAP fades between them */}
-            {[
-              {
-                num: "01",
-                principle: "CLARITY",
-                title: "We remove noise until only truth remains",
-                desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence.",
-                image: "/about/pillar-01-clarity.webp",
-              },
-              {
-                num: "02",
-                principle: "LIGHTNESS",
-                title: "We make decisions light again",
-                desc: 'When a system becomes clear, decisions almost make themselves. Not because it\'s "easy," but because it is finally ordered.',
-                image: "/about/pillar-02-lightness.webp",
-              },
-              {
-                num: "03",
-                principle: "SIGNAL",
-                title: "We build signal, not volume",
-                desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately.",
-                image: "/about/pillar-03-signal.webp",
-              },
-              {
-                num: "04",
-                principle: "INFRASTRUCTURE",
-                title: "We treat technology as infrastructure",
-                desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure.",
-                image: "/about/pillar-04-infrastructure.webp",
-              },
-              {
-                num: "05",
-                principle: "PRESENCE",
-                title: "We strengthen the human behind the system",
-                desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable.",
-                image: "/about/pillar-05-presence.webp",
-              },
-            ].map((pillar, i) => (
+            {PILLARS_DATA.map((pillar, i) => (
               <div
                 key={i}
                 className="pillar-stage-frame absolute inset-0"
@@ -1281,6 +1098,9 @@ export default function AboutClient() {
                   </p>
                 </div>
               </div>
+
+
+
             ))}
 
             {/* Bottom — chapter progress bar, one segment per pillar */}
@@ -1691,22 +1511,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
-        {/* HELD BREATH — composed pause between PROOF (quantitative trust)
-            and CASES (personal recognition). Manifesto: "pauses are
-            composition." Single thin hairline + minimal gold dot floats
-            in empty space; both breathe subtly. The orchestra holds its
-            breath between movements. */}
-        <div
-          aria-hidden="true"
-          className="bg-[#070c14] flex items-center justify-center py-[14vh] lg:py-[18vh] relative"
-        >
-          <div className="relative flex flex-col items-center gap-5">
-            <span className="held-breath-line block w-16 h-px bg-silver/50" />
-            <span className="held-breath-dot block w-[5px] h-[5px] rounded-full bg-gold" />
-            <span className="held-breath-line block w-16 h-px bg-silver/50" />
-          </div>
-        </div>
 
         {/* MINI CASES — editorial proof sequence.
             Restructure: section header + table-of-contents index at the top,

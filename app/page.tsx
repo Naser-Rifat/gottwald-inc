@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 import CustomScrollbar from "@/components/CustomScrollbar";
+import HeldBreath from "@/components/HeldBreath";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
@@ -52,7 +53,6 @@ const NextChapterTransition = dynamic(
   () => import("@/components/NextChapterTransition"),
   { ssr: true },
 );
-
 export default async function Home() {
   const pillars = await getPillars();
   const tNav = await getTranslations("nav");
@@ -66,9 +66,12 @@ export default async function Home() {
 
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
+        <HeldBreath />
         <VideoPanelSection />
         <PillarsTilesSection pillars={pillars} />
+        <HeldBreath />
         <GlobalAuthoritySection />
+        <HeldBreath />
         <StrategicInquirySection />
         <FooterSection />
         <NextChapterTransition nextTitle={tNav("about")} nextHref="/about" />

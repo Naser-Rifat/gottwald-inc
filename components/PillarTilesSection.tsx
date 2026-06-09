@@ -22,7 +22,6 @@ export default function PillarTilesSection({
   const [isExpanded, setIsExpanded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,22 +48,6 @@ export default function PillarTilesSection({
         });
       }
 
-      if (subtitleRef.current) {
-        gsap.fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: subtitleRef.current,
-              start: "top 88%",
-            },
-          },
-        );
-      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -74,55 +57,30 @@ export default function PillarTilesSection({
     <section
       ref={sectionRef}
       id="project-tiles-section"
+      data-journey="trust"
       aria-label="GOTT WALD Business Standards and Service Pillars"
       className="flex flex-col px-gutter w-full py-[15vh]"
     >
       <div className="flex flex-col items-center text-center gap-10 mb-20 lg:mb-32 w-full">
         <div className="flex flex-col items-center w-full max-w-[95vw] px-4">
-          {/* Turquoise accent pill above heading */}
-          <div
-            className="flex items-center gap-2 mb-5"
-            style={{ color: "rgba(18,168,172,0.75)" }}
-          >
-            <span
-              className="inline-block w-6 h-px"
-              style={{ background: "rgba(18,168,172,0.6)" }}
-            />
-            <span className="text-[9px] tracking-[0.35em] font-bold uppercase">
-              Standards-Led Architecture
-            </span>
-            <span
-              className="inline-block w-6 h-px"
-              style={{ background: "rgba(18,168,172,0.6)" }}
-            />
-          </div>
+          {/* Editorial restraint: the title alone carries the moment. The
+              previous treatment (symmetric hairline eyebrow + tracked
+              uppercase + gradient underline accent + period-trio subtitle)
+              was classic AI-generated-portfolio template cadence. Stripped
+              ruthlessly — Awwwards designers let the type do the work. */}
           <h2
             ref={headlineRef}
-            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-wide uppercase mb-4 whitespace-normal md:whitespace-nowrap"
+            className="text-white text-[clamp(2.5rem,6vw,9rem)] leading-[0.9] font-bold tracking-wide uppercase whitespace-normal md:whitespace-nowrap"
           >
             BUSINESS STANDARDS.
           </h2>
-          {/* Turquoise underline accent */}
-          <div
-            className="w-full max-w-[24rem] h-[3px] mb-4 rounded-full"
-            style={{
-              background: "linear-gradient(90deg, rgba(18,168,172,0.9) 0%, rgba(0,109,132,0.5) 60%, transparent 100%)",
-            }}
-          />
-          <p
-            ref={subtitleRef}
-            className="text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase opacity-0"
-            style={{ color: "rgba(18,168,172,0.9)" }}
-          >
-            TRUST. STRUCTURE. PERFORMANCE.
-          </p>
         </div>
 
         <div className="flex flex-col items-center w-full max-w-4xl mx-auto px-6 lg:px-0">
           <div className="text-white/80 font-light text-[clamp(1rem,1.3vw,1.5rem)] leading-[1.7] flex flex-col gap-8 w-full">
             <p className="text-white/90">
               We build{" "}
-              <strong className="font-semibold" style={{ color: "rgba(192,120,64,0.95)" }}>
+              <strong className="font-semibold text-copper/95">
                 operating-grade systems
               </strong>{" "}
               for people and strategic assets—when outcomes must be clear,
@@ -172,10 +130,7 @@ export default function PillarTilesSection({
                 <p>
                   At the core is a non-negotiable filter:
                   <br />
-                  <strong
-                    className="font-medium tracking-[0.05em] block mt-3"
-                    style={{ color: "rgba(18,168,172,0.95)" }}
-                  >
+                  <strong className="font-medium tracking-[0.05em] block mt-3 text-turquoise/95">
                     Peace. Love. Harmony — for more Humanity.
                   </strong>
                 </p>
@@ -224,17 +179,29 @@ export default function PillarTilesSection({
         ref={gridRef}
         className="grid grid-cols-1 md:grid-cols-2 gap-x-[2.5vw] gap-y-[8vh]"
       >
-        {pillars.slice(0, 4).map((pillar, index) => (
-          <PillarCard key={pillar.slug} pillar={pillar} index={index} />
-        ))}
+        {pillars.slice(0, 4).map((pillar, index) => {
+          // Manifesto: each business area expresses its own distinct
+          // frequency. Four pillars get four brand tones — gold, silver,
+          // petrol, copper — so the group reads as four voices in one
+          // orchestra. Turquoise reserved for active/eye-catcher moments
+          // elsewhere.
+          const tones = ["gold", "silver", "petrol", "copper"] as const;
+          return (
+            <PillarCard
+              key={pillar.slug}
+              pillar={pillar}
+              index={index}
+              tone={tones[index] ?? "turquoise"}
+            />
+          );
+        })}
       </div>
 
       {pillars.length > 4 && (
         <Link
           href="/our-work"
           translate="no"
-          className="notranslate group mx-auto inline-flex items-center gap-4 transition-colors mt-12 w-fit"
-          style={{ color: "rgba(18,168,172,0.9)" }}
+          className="notranslate group mx-auto inline-flex items-center gap-4 transition-colors mt-12 w-fit text-gold/90 hover:text-gold"
         >
           <span className="text-[clamp(1rem,1vw,1.3rem)] tracking-[0.2em] uppercase font-bold">
             {tPillars("viewAll")}

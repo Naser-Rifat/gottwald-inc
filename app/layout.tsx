@@ -13,6 +13,7 @@ import AudioProvider from "@/components/AudioProvider";
 import CookieManager from "@/components/CookieManager";
 import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
 import ResonanceCursor from "@/components/ResonanceCursor";
+import LivingEnvironment from "@/components/LivingEnvironment";
 import {
   SITE_URL,
   SITE_NAME,
@@ -233,6 +234,11 @@ export default async function RootLayout({
         <CookieManager />
         <GoogleTranslateRoot />
         <ResonanceCursor />
+        {/* Site-wide manifesto wiring — orchestration thread, frequency
+            engine, time-of-day tint, dwell deepening, scroll-velocity pace,
+            per-visit phase seed. Mounted once at the root so every page
+            inherits the living-frequency-space behaviors. */}
+        <LivingEnvironment />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AudioProvider>
             <main id="main-content" tabIndex={-1} className="outline-none">

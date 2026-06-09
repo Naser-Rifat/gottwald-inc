@@ -9,21 +9,53 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type FrequencyTone = "gold" | "silver" | "petrol" | "copper" | "turquoise";
+
 interface PillarCardProps {
   pillar: Pillar;
   index: number;
   className?: string;
   imageClassName?: string;
   titleClassName?: string;
+  /** Per-pillar brand tone — gives each card its own frequency. Defaults
+   *  rotate gold → silver → petrol → copper across the four pillars so the
+   *  group reads as "different frequencies, one orchestration" (manifesto). */
+  tone?: FrequencyTone;
 }
+
+const TONE_DOT: Record<FrequencyTone, string> = {
+  gold: "bg-gold",
+  silver: "bg-silver",
+  petrol: "bg-petrol",
+  copper: "bg-copper",
+  turquoise: "bg-turquoise",
+};
+const TONE_HAIRLINE: Record<FrequencyTone, string> = {
+  gold: "bg-gold/30 group-hover:bg-gold/65",
+  silver: "bg-silver/30 group-hover:bg-silver/65",
+  petrol: "bg-petrol/35 group-hover:bg-petrol/70",
+  copper: "bg-copper/30 group-hover:bg-copper/65",
+  turquoise: "bg-turquoise/30 group-hover:bg-turquoise/60",
+};
+const TONE_TITLE_HOVER: Record<FrequencyTone, string> = {
+  gold: "group-hover:text-gold",
+  silver: "group-hover:text-silver",
+  petrol: "group-hover:text-petrol",
+  copper: "group-hover:text-copper",
+  turquoise: "group-hover:text-turquoise",
+};
 
 export default function PillarCard({
   pillar,
   index,
   className = "",
   imageClassName = "aspect-3/2 mb-5",
-  titleClassName = "text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight leading-[1.15] group-hover:text-turquoise transition-colors duration-500 line-clamp-2",
+  titleClassName,
+  tone = "turquoise",
 }: PillarCardProps) {
+  const titleClass =
+    titleClassName ??
+    `text-white text-[clamp(1.2rem,2vw,2rem)] font-semibold tracking-tight leading-[1.15] ${TONE_TITLE_HOVER[tone]} transition-colors duration-500 line-clamp-2`;
   const cardRef = useRef<HTMLAnchorElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -224,7 +256,7 @@ export default function PillarCard({
               />
               {/* Optional: Add a dark gradient at bottom for text readability if image exists */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent pointer-events-none mix-blend-multiply" />
-              <div className="absolute inset-x-0 top-0 h-[2px] bg-turquoise/30 pointer-events-none group-hover:bg-turquoise/60 transition-colors" />
+              <div className={`absolute inset-x-0 top-0 h-0.5 pointer-events-none transition-colors ${TONE_HAIRLINE[tone]}`} />
             </div>
           )}
 
@@ -246,7 +278,7 @@ export default function PillarCard({
             {/* Bottom content — title integrated into the card */}
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 drop-shadow-lg">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-turquoise group-hover:shadow-[0_0_8px_rgba(10,147,150,0.8)] transition-shadow" />
+                <div className={`w-1.5 h-1.5 rounded-full transition-shadow ${TONE_DOT[tone]} group-hover:shadow-[0_0_8px_rgba(18,168,172,0.6)]`} />
                 <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/80 uppercase font-bold drop-shadow-md">
                   Pillar {String(index + 1).padStart(2, "0")}
                 </span>
@@ -288,7 +320,7 @@ export default function PillarCard({
         <span className="w-0 overflow-hidden group-hover:w-auto group-hover:opacity-100 group-hover:mr-4 opacity-0 transition-all duration-500 ease-out text-turquoise font-light">
           →
         </span>
-        <h3 ref={titleRef} className={titleClassName}>
+        <h3 ref={titleRef} className={titleClass}>
           {pillar.title}
         </h3>
       </div>

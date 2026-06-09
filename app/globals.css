@@ -594,28 +594,9 @@ html[lang="de"] {
   50%      { opacity: 1;    transform: scaleY(0.985); }
 }
 
-/* ===== Held Breath Marker =====
-   Composed pause between major sections. Manifesto: "pauses are
-   composition." A single thin centered hairline + minimal gold dot
-   floats in empty space — the visual equivalent of a held breath
-   between orchestra movements. */
-.held-breath-line {
-  animation: held-breath-pulse 4s ease-in-out infinite;
-  /* MOVE E: per-visit phase offset */
-  animation-delay: var(--rand-phase-breath, 0s);
-}
-.held-breath-dot {
-  animation: held-breath-dot 4s ease-in-out infinite;
-  animation-delay: var(--rand-phase-breath, 0s);
-}
-@keyframes held-breath-pulse {
-  0%, 100% { opacity: 0.35; transform: scaleX(1); }
-  50%      { opacity: 0.6;  transform: scaleX(1.15); }
-}
-@keyframes held-breath-dot {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.3); }
-}
+/* (Held-breath marker is now its own component <HeldBreath /> driven by
+   GSAP ScrollTrigger — the old static line+dot keyframes are no longer
+   referenced.) */
 
 /* ===== Living Environment: Time-of-Day Tint =====
    Manifesto: "before the mind understands, something is already happening."
