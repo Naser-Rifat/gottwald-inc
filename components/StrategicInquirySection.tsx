@@ -130,7 +130,7 @@ export default function StrategicInquirySection() {
       ref={sectionRef}
       data-journey="decision"
       aria-label="Strategic Partnership Inquiry"
-      className="relative z-10 w-full min-h-[100svh] bg-base border-t border-white/[0.05] overflow-hidden flex items-center"
+      className="relative z-10 w-full min-h-svh bg-base border-t border-white/[0.05] overflow-hidden flex items-center"
     >
       {/* Architectural anchor — massive italic "alignment." floats behind
           the headline area as the section's ghost echo. Repositioned to
@@ -154,6 +154,51 @@ export default function StrategicInquirySection() {
         </span>
       </div>
 
+      {/* Brand signal-language anchor — subtle frequency wave subscribes
+          to LivingEnvironment's --orchestration-pace + --rand-phase-signal
+          so it drifts in step with the site's scroll-velocity-driven
+          breath. Connects this section to the brand's frequency/signal
+          vocabulary (also seen in the PILLARS imagery and TuningInstrument
+          HUD) without becoming dashboard decoration. The wave is two
+          opacity-stacked sine curves at low opacity, gradient-faded at
+          both edges so it reads as ambient signal, not a hard graphic. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[22vh] lg:h-[28vh] z-0 overflow-hidden"
+      >
+        <div
+          className="strategic-signal-drift absolute bottom-0 left-0 w-[200%] h-full will-change-transform"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
+          }}
+        >
+          <svg
+            viewBox="0 0 1600 200"
+            preserveAspectRatio="none"
+            className="block w-full h-full"
+            aria-hidden="true"
+          >
+            <path
+              d="M0,100 Q100,40 200,100 T400,100 T600,100 T800,100 T1000,100 T1200,100 T1400,100 T1600,100"
+              fill="none"
+              stroke="rgba(18, 168, 172, 0.20)"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d="M0,130 Q100,90 200,130 T400,130 T600,130 T800,130 T1000,130 T1200,130 T1400,130 T1600,130"
+              fill="none"
+              stroke="rgba(18, 168, 172, 0.10)"
+              strokeWidth="0.8"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+        </div>
+      </div>
+
       <div
         ref={contentRef}
         className="relative z-10 w-full max-w-[1500px] mx-auto px-gutter py-[12vh] lg:py-[14vh] flex flex-col gap-[8vh] lg:gap-[10vh]"
@@ -173,11 +218,13 @@ export default function StrategicInquirySection() {
               {/* Overflow-hidden mask + inner span ref. GSAP raises the
                   inner span y:100%→0% on scroll, performing the italic
                   word as a typographic event — the section's signature
-                  memorable moment. */}
-              <span className="block pt-2 overflow-hidden">
+                  memorable moment. pb-[0.18em] gives the Playfair italic
+                  descenders ("g" tail, period stem) breathing room so
+                  the overflow-hidden mask doesn't clip them. */}
+              <span className="block pt-2 pb-[0.18em] overflow-hidden">
                 <span
                   ref={alignmentRef}
-                  className="block text-[0.78em] normal-case leading-[0.85] tracking-[-0.04em] text-turquoise"
+                  className="block text-[0.78em] normal-case leading-[1] tracking-[-0.04em] text-turquoise"
                   style={{
                     fontFamily: "var(--font-playfair)",
                     fontStyle: "italic",
@@ -199,7 +246,10 @@ export default function StrategicInquirySection() {
               theatrical Playfair. */}
           <div className="strategic-reveal lg:col-span-6 lg:pt-4 flex flex-col gap-8 opacity-0">
             {/* Lead — dramatically larger than body. The scale jump alone
-                signals the chapter opening; no decorative marker needed. */}
+                signals the chapter opening; no decorative marker needed.
+                Default view's ONLY visible body line, Pentagram-style
+                restraint. The body, operating principle, and expanded
+                clauses all live behind the disclosure below. */}
             <p className="text-[clamp(1.7rem,2.6vw,3rem)] font-light leading-[1.18] tracking-[-0.018em] text-white max-w-[22ch]">
               We are currently selecting a limited number of values-aligned
               partners for our{" "}
@@ -208,34 +258,25 @@ export default function StrategicInquirySection() {
               </strong>
             </p>
 
-            {/* Body — quiet, settled into reading scale. */}
-            <p className="text-[clamp(1rem,1.15vw,1.2rem)] font-light leading-[1.7] text-white/72 max-w-[56ch]">
-              This channel is reserved for principals and operators who build
-              resilient systems—and who treat trust, discipline, and delivery
-              as non-negotiable.
-            </p>
+            {/* Standalone discover-more — italic editorial link sitting
+                below the lead paragraph in default view. Reveals body +
+                operating principle + expanded clauses on click. */}
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              className="self-start italic font-light text-turquoise/90 hover:text-turquoise underline decoration-turquoise/35 hover:decoration-turquoise/80 underline-offset-[6px] decoration-1 transition-colors duration-300 cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-turquoise/60 focus-visible:outline-offset-4 rounded-xs"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.05rem, 1.2vw, 1.25rem)",
+              }}
+            >
+              {expanded ? "show less" : "discover more"}
+            </button>
 
-            {/* Operating principle — discover-more folded INLINE as italic
-                continuation. No button, no separate row. Clicking the
-                italic phrase reveals the expansion below. */}
-            <p className="text-[clamp(1rem,1.15vw,1.2rem)] font-light leading-[1.7] text-white/72 max-w-[56ch]">
-              We operate{" "}
-              <span className="text-white/95">discreet by default</span> and{" "}
-              <span className="text-white/95">standards-led by design</span>
-              {" — "}
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                className="italic font-light text-turquoise/90 hover:text-turquoise underline decoration-turquoise/35 hover:decoration-turquoise/80 underline-offset-[6px] decoration-1 transition-colors duration-300 align-baseline cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-turquoise/60 focus-visible:outline-offset-4 rounded-xs"
-                style={{ fontFamily: "var(--font-playfair)" }}
-              >
-                {expanded ? "show less" : "discover more"}
-              </button>
-              {expanded ? ":" : "."}
-            </p>
-
-            {/* Progressive disclosure — folds inline as continuation
-                clauses, not a modal. */}
+            {/* Progressive disclosure — body + operating principle + the
+                three expanded clauses all live here. Default view shows
+                only the lead paragraph above; clicking discover more opens
+                the full editorial flow. */}
             <div
               className={`grid transition-[grid-template-rows,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 expanded
@@ -245,16 +286,27 @@ export default function StrategicInquirySection() {
               aria-hidden={!expanded}
             >
               <div className="overflow-hidden">
-                <div className="flex flex-col gap-5">
-                  <p className="text-[clamp(0.95rem,1.05vw,1.1rem)] font-light leading-[1.7] text-white/65 max-w-[58ch] italic">
-                    a governance-first framework, engineered for execution,
+                <div className="flex flex-col gap-6 pt-1">
+                  <p className="text-[clamp(1rem,1.15vw,1.2rem)] font-light leading-[1.7] text-white/72 max-w-[56ch]">
+                    This channel is reserved for principals and operators who
+                    build resilient systems—and who treat trust, discipline,
+                    and delivery as non-negotiable.
+                  </p>
+                  <p className="text-[clamp(1rem,1.15vw,1.2rem)] font-light leading-[1.7] text-white/72 max-w-[56ch]">
+                    We operate{" "}
+                    <span className="text-white/95">discreet by default</span>{" "}
+                    and{" "}
+                    <span className="text-white/95">
+                      standards-led by design
+                    </span>
+                    : a governance-first framework, engineered for execution,
                     built to compound performance over time.
                   </p>
                   <p className="text-[clamp(0.95rem,1.05vw,1.1rem)] font-light leading-[1.7] text-white/65 max-w-[58ch]">
                     No noise. No public theatrics. Clean interfaces, controlled
                     access, measurable outcomes.
                   </p>
-                  <p className="text-[clamp(0.95rem,1.05vw,1.1rem)] font-light leading-[1.7] text-white/72 max-w-[58ch]">
+                  <p className="text-[clamp(0.95rem,1.05vw,1.1rem)] font-light leading-[1.7] text-white/80 max-w-[58ch]">
                     If your work demands precision, confidentiality, and
                     long-horizon thinking—this is the entry point.
                   </p>
