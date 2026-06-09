@@ -147,6 +147,7 @@ export default function VideoPanelSection() {
     <section
       ref={sectionRef}
       id="video-panel-section"
+      data-journey="openness"
       aria-label="Company Mission"
       className="flex flex-col px-gutter w-full min-h-screen py-[15vh]"
     >
@@ -165,11 +166,13 @@ export default function VideoPanelSection() {
             {topline}
           </h2>
         </div>
-        {/* Petrol → turquoise underline accent */}
+        {/* Underline accent — petrol depth → gold positive (no double
+            turquoise so the brand "eye-catcher" stays rare). */}
         <div
           className="w-full max-w-[60vw] h-px mt-3 mb-3"
           style={{
-            background: "linear-gradient(90deg, rgba(18,168,172,0.7) 0%, rgba(0,109,132,0.4) 50%, transparent 100%)",
+            background:
+              "linear-gradient(90deg, rgba(0,109,132,0.65) 0%, rgba(184,192,204,0.32) 50%, rgba(212,175,55,0.4) 100%)",
           }}
         />
         <div className="overflow-hidden w-full">
@@ -188,12 +191,7 @@ export default function VideoPanelSection() {
       <div className="flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
         <p
           ref={descRef}
-          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed font-sans opacity-0"
-          style={{
-            color: "rgba(240,242,245,0.75)",
-            borderLeft: "2px solid rgba(18,168,172,0.35)",
-            paddingLeft: "1.25rem",
-          }}
+          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed font-sans opacity-0 text-white/75 border-l-2 border-silver/35 pl-5"
         >
           GOTT WALD is not a collection of services. It is a unified
           architecture: modular components, one standard, one language of
@@ -207,22 +205,7 @@ export default function VideoPanelSection() {
           <Link
             href="/about"
             translate="no"
-            className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
-                       tracking-[0.02em] transition-all duration-300 mt-4"
-            style={{
-              padding: "0 18px 0 22px",
-              background: "rgba(18,168,172,0.1)",
-              border: "1px solid rgba(18,168,172,0.35)",
-              color: "rgba(18,168,172,0.95)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(18,168,172,0.2)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.6)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(18,168,172,0.1)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.35)";
-            }}
+            className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium tracking-[0.02em] transition-all duration-300 mt-4 px-5.5 bg-turquoise/10 border border-turquoise/35 text-turquoise/95 hover:bg-turquoise/20 hover:border-turquoise/60"
           >
             <span>{t("aboutCta")}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />

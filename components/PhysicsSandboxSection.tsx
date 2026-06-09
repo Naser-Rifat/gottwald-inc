@@ -217,6 +217,7 @@ export default function PhysicsSandboxSection() {
 
       <section
         ref={heroRef}
+        data-journey="perception"
         aria-label="GOTT WALD Hero — Turning Complexity Into Clarity"
         className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[8vh] sm:pb-[10vh] px-gutter"
         style={{ perspective: "1000px" }}
@@ -228,14 +229,9 @@ export default function PhysicsSandboxSection() {
             <div className="hero-top-label flex items-center gap-3 opacity-0">
               {/* CI pill */}
               <span
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[9px] tracking-[0.2em] font-bold uppercase"
-                style={{
-                  borderColor: "rgba(18,168,172,0.35)",
-                  color: "rgba(18,168,172,0.9)",
-                  backgroundColor: "rgba(18,168,172,0.06)",
-                }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-petrol/40 text-gold/85 bg-petrol/[0.06] text-[9px] tracking-[0.2em] font-bold uppercase"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-turquoise/80 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-gold/85 animate-pulse" />
                 Gott Wald Area
               </span>
             </div>
@@ -268,11 +264,15 @@ export default function PhysicsSandboxSection() {
               </span>
             </h1>
 
-            {/* Accent line under heading — petrol → turquoise → gold */}
+            {/* Accent line under heading — full 5-frequency span:
+                gold (positive) → silver (neutral) → petrol (depth) →
+                turquoise (signal) → copper (warmth). Same orchestration
+                gradient as the site-wide thread, scaled horizontally. */}
             <div
               className="accent-line h-[2px] w-full max-w-[320px] origin-left"
               style={{
-                background: "linear-gradient(90deg, rgba(18,168,172,0.8) 0%, rgba(0,109,132,0.6) 40%, rgba(212,175,55,0.4) 80%, transparent 100%)",
+                background:
+                  "linear-gradient(90deg, rgba(212,175,55,0.55) 0%, rgba(184,192,204,0.42) 28%, rgba(0,109,132,0.55) 52%, rgba(18,168,172,0.70) 76%, rgba(192,120,64,0.45) 100%)",
               }}
             />
           </div>
@@ -285,13 +285,19 @@ export default function PhysicsSandboxSection() {
               className="hidden lg:flex w-32 h-32 relative items-center justify-center mix-blend-screen pointer-events-none mb-4 scale-0 opacity-0"
             >
               {/* Petrol outer ring */}
-              <div className="orb-ring-1 absolute inset-0 rounded-full" style={{ border: "1px solid rgba(0,109,132,0.5)" }} />
-              {/* Turquoise inner ring */}
-              <div className="orb-ring-2 absolute inset-3 rounded-full" style={{ border: "1px solid rgba(18,168,172,0.3)" }} />
-              {/* Petrol core glow */}
-              <div className="orb-glow absolute inset-6 blur-xl rounded-full" style={{ background: "rgba(18,168,172,0.12)" }} />
-              {/* Gold center dot */}
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#d4af37", boxShadow: "0 0 12px rgba(212,175,55,0.9), 0 0 30px rgba(18,168,172,0.4)" }} />
+              <div className="orb-ring-1 absolute inset-0 rounded-full border border-petrol/60" />
+              {/* Silver inner ring (neutral metallic) */}
+              <div className="orb-ring-2 absolute inset-3 rounded-full border border-silver/35" />
+              {/* Turquoise core glow */}
+              <div className="orb-glow absolute inset-6 blur-xl rounded-full bg-turquoise/15" />
+              {/* Gold center dot — energetic positive */}
+              <div
+                className="w-1.5 h-1.5 rounded-full bg-gold"
+                style={{
+                  boxShadow:
+                    "0 0 12px rgba(212,175,55,0.9), 0 0 30px rgba(18,168,172,0.4)",
+                }}
+              />
             </div>
 
             {/* Scroll indicator */}

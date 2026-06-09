@@ -113,6 +113,7 @@ export default function GlobalAuthoritySection() {
   return (
     <section
       ref={containerRef}
+      data-journey="proof"
       className="relative w-full bg-transparent overflow-hidden flex flex-col pt-[5vh] md:pt-[6vh] pb-8 lg:pb-12 px-gutter min-h-screen"
     >
       {/* 1. Foreground Title (At the top of the flow) */}
@@ -123,8 +124,8 @@ export default function GlobalAuthoritySection() {
         >
           <div>
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-2 h-2 bg-[#48e5e8] rounded-full animate-pulse shadow-[0_0_10px_rgba(72,229,232,0.7)]" />
-              <span className="text-[9px] sm:text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-[#48e5e8] uppercase font-bold">
+              <div className="w-2 h-2 bg-turquoise rounded-full animate-pulse shadow-[0_0_10px_rgba(18,168,172,0.7)]" />
+              <span className="text-[9px] sm:text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] text-turquoise uppercase font-bold">
                 Node 001. Worldwide Execution.
               </span>
             </div>
@@ -141,17 +142,11 @@ export default function GlobalAuthoritySection() {
               </span>
             </h2>
           </div>
-          <div
-            className="flex flex-col gap-2 pl-6 ml-2 max-w-[80vw]"
-            style={{ borderLeft: "2px solid rgba(18,168,172,0.5)" }}
-          >
+          <div className="flex flex-col gap-2 pl-6 ml-2 max-w-[80vw] border-l-2 border-petrol/60">
             <p className="text-[clamp(1.2rem,2.2vw,3rem)] text-white leading-tight font-light tracking-tight">
               One system. One standard.
             </p>
-            <p
-              className="text-[clamp(0.9rem,1.2vw,1.35rem)] font-mono uppercase tracking-[0.18em] opacity-90"
-              style={{ color: "rgba(18,168,172,0.85)" }}
-            >
+            <p className="text-[clamp(0.9rem,1.2vw,1.35rem)] font-mono uppercase tracking-[0.18em] opacity-90 text-turquoise/85">
               Outcomes that hold.
             </p>
           </div>
@@ -196,19 +191,19 @@ export default function GlobalAuthoritySection() {
 
             {/* 1. Tbilisi Control Node */}
             <div className="absolute top-[29.3%] left-[58.8%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-[#48e5e8] shadow-[0_0_15px_rgba(72,229,232,0.85)] z-10" />
+              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-turquoise shadow-[0_0_15px_rgba(18,168,172,0.85)] z-10" />
               <div
-                className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full border border-[#48e5e8]/40 animate-ping"
+                className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full border border-turquoise/40 animate-ping"
                 style={{ animationDuration: "3s" }}
               />
               <div
-                className="absolute w-24 h-24 md:w-32 md:h-32 rounded-full border border-[#48e5e8]/10 animate-ping hidden md:block"
+                className="absolute w-24 h-24 md:w-32 md:h-32 rounded-full border border-turquoise/10 animate-ping hidden md:block"
                 style={{ animationDuration: "3s", animationDelay: "1s" }}
               />
               <div className="hidden md:flex absolute top-1/2 left-4 items-center -translate-y-1/2">
-                <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-[#48e5e8]/70 to-[#48e5e8]/10" />
-                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-[#48e5e8]/35 pl-4 w-max backdrop-blur-md bg-black/70 rounded-r-lg pr-4 shadow-2xl">
-                  <p className="text-[#48e5e8] font-bold tracking-[0.3em] uppercase text-[10px]">
+                <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-turquoise/70 to-turquoise/10" />
+                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-turquoise/35 pl-4 w-max backdrop-blur-md bg-black/70 rounded-r-lg pr-4 shadow-2xl">
+                  <p className="text-turquoise font-bold tracking-[0.3em] uppercase text-[10px]">
                     01 — HEAD OFFICE
                   </p>
                   <p className="text-white font-sans text-2xl lg:text-3xl my-1 drop-shadow-md">
@@ -226,11 +221,11 @@ export default function GlobalAuthoritySection() {
                 style={{ animationDuration: "4s" }}
               />
               <div className="hidden md:flex absolute bottom-4 left-1/2 -translate-x-1/2 flex-col items-center">
-                <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-[#48e5e8]/40 px-8 py-3 backdrop-blur-md bg-black/75 rounded-t-lg w-max shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-turquoise/40 px-8 py-3 backdrop-blur-md bg-black/75 rounded-t-lg w-max shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
                   <p className="text-white/90 font-bold tracking-[0.35em] uppercase text-[12px]">
                     02 — STRATEGIC HUBS
                   </p>
-                  <p className="text-[#48e5e8] font-bold tracking-wide text-2xl my-1 drop-shadow-[0_0_16px_rgba(72,229,232,0.6)]">
+                  <p className="text-turquoise font-bold tracking-wide text-2xl my-1 drop-shadow-[0_0_16px_rgba(18,168,172,0.6)]">
                     DACH Region
                   </p>
                   <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.25em]">
@@ -241,7 +236,7 @@ export default function GlobalAuthoritySection() {
                     <span className="text-white font-semibold">Switzerland</span>
                   </div>
                 </div>
-                <div className="h-10 lg:h-16 w-[2px] bg-gradient-to-t from-[#48e5e8] to-transparent drop-shadow-[0_0_6px_rgba(72,229,232,0.8)]" />
+                <div className="h-10 lg:h-16 w-[2px] bg-gradient-to-t from-turquoise to-transparent drop-shadow-[0_0_6px_rgba(18,168,172,0.8)]" />
               </div>
             </div>
 
@@ -274,27 +269,27 @@ export default function GlobalAuthoritySection() {
           {/* 03 Global Presence Metrics */}
           <div
             ref={metricsRef}
-            className="order-1 lg:order-2 flex flex-col gap-8 w-full lg:max-w-[900px] xl:max-w-[1050px] backdrop-blur-xl p-8 rounded-none border-t lg:py-12 lg:px-14 shadow-2xl"
+            className="order-1 lg:order-2 flex flex-col gap-8 w-full lg:max-w-[900px] xl:max-w-[1050px] backdrop-blur-xl p-8 rounded-none border-t border-petrol/10 lg:py-12 lg:px-14 shadow-2xl"
             style={{
-              background: "linear-gradient(135deg, rgba(7,12,20,0.97) 0%, rgba(0,40,55,0.92) 100%)",
-              borderColor: "rgba(18,168,172,0.1)",
+              background:
+                "linear-gradient(135deg, rgba(7,12,20,0.97) 0%, rgba(0,40,55,0.92) 100%)",
             }}
           >
             {/* Mobile Fallback Nodes */}
             <div className="md:hidden flex flex-col gap-8 pb-8 border-b border-white/10">
-              <div className="flex flex-col gap-1 border-l-2 border-[#48e5e8] pl-4">
-                <p className="text-[#48e5e8] font-bold tracking-[0.3em] uppercase text-[9px]">
+              <div className="flex flex-col gap-1 border-l-2 border-turquoise pl-4">
+                <p className="text-turquoise font-bold tracking-[0.3em] uppercase text-[9px]">
                   01 — HEAD OFFICE
                 </p>
                 <p className="text-white font-mono uppercase tracking-[0.14em] text-base">
                   Tbilisi, Georgia
                 </p>
               </div>
-              <div className="flex flex-col gap-1 border-l-2 border-[#48e5e8]/60 pl-4">
+              <div className="flex flex-col gap-1 border-l-2 border-turquoise/60 pl-4">
                 <p className="text-white font-bold tracking-[0.3em] uppercase text-[9px] drop-shadow-sm">
                   02 — STRATEGIC HUBS
                 </p>
-                <p className="text-[#48e5e8] text-xl font-bold tracking-wide drop-shadow-[0_0_8px_rgba(72,229,232,0.3)]">
+                <p className="text-turquoise text-xl font-bold tracking-wide drop-shadow-[0_0_8px_rgba(18,168,172,0.3)]">
                   DACH Region
                 </p>
               </div>
@@ -323,67 +318,40 @@ export default function GlobalAuthoritySection() {
                 </span>
               </div>
 
-              {/* Column 2 */}
+              {/* Column 2 — Turquoise × Partners (signal/eye-catcher) */}
               <div className="flex flex-col gap-3">
-                <span
-                  className="uppercase text-[12px] tracking-[0.2em] font-semibold"
-                  style={{ color: "rgba(18,168,172,0.7)" }}
-                >
+                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-turquoise/70">
                   — PARTNERS
                 </span>
-                <span
-                  className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2"
-                  style={{ color: "rgba(18,168,172,0.9)" }}
-                >
+                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2 text-turquoise/90">
                   71
-                  <span
-                    className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1"
-                    style={{ color: "rgba(18,168,172,0.5)" }}
-                  >
+                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 text-turquoise/50">
                     ORIGINS
                   </span>
                 </span>
               </div>
 
-              {/* Column 3 — Copper × Network */}
+              {/* Column 3 — Copper × Network (warmth/human reach) */}
               <div className="flex flex-col gap-3">
-                <span
-                  className="uppercase text-[12px] tracking-[0.2em] font-semibold"
-                  style={{ color: "rgba(192,120,64,0.8)" }}
-                >
+                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-copper/80">
                   — NETWORK
                 </span>
-                <span
-                  className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-1.5"
-                  style={{ color: "rgba(192,120,64,0.95)" }}
-                >
+                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-1.5 text-copper/95">
                   888<span className="text-2xl lg:text-3xl -ml-2 -mt-2">±</span>
-                  <span
-                    className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1"
-                    style={{ color: "rgba(192,120,64,0.55)" }}
-                  >
+                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1 text-copper/55">
                     SIGNATURE
                   </span>
                 </span>
               </div>
 
-              {/* Column 4 */}
+              {/* Column 4 — Silver × Language (neutral metallic clarity) */}
               <div className="flex flex-col gap-3">
-                <span
-                  className="uppercase text-[12px] tracking-[0.2em] font-semibold"
-                  style={{ color: "rgba(184,192,204,0.72)" }}
-                >
+                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-silver/75">
                   — LANGUAGE
                 </span>
-                <span
-                  className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2"
-                  style={{ color: "rgba(184,192,204,0.92)" }}
-                >
+                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2 text-silver/90">
                   17
-                  <span
-                    className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1"
-                    style={{ color: "rgba(184,192,204,0.55)" }}
-                  >
+                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 text-silver/55">
                     SPOKEN
                   </span>
                 </span>
