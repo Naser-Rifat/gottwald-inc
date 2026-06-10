@@ -730,6 +730,99 @@ section[data-journey].dwell-deepened::after {
   50%      { opacity: 1;    transform: scale(1.35); }
 }
 
+/* ===== Careers Hero — Hubtown-style Immersive Scene =====
+   Full-viewport cinematic hero with animated SVG mountains, water surface,
+   floating wireframe diamond, and particle field. All turquoise #12a8ac
+   on deep navy #070c14 to match GOTT WALD brand. */
+
+/* Mountain layers drift subtly for parallax depth */
+@keyframes mountain-drift {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-8px); }
+}
+@keyframes mountain-drift-reverse {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(6px); }
+}
+
+/* Water surface wave animation — horizontal scroll of SVG path */
+@keyframes water-flow {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes water-flow-reverse {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Water shimmer — opacity pulse on the surface */
+@keyframes water-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.7; }
+}
+
+/* Floating wireframe diamond — slow continuous rotation */
+@keyframes diamond-rotate {
+  0%   { transform: translateY(0) rotateY(0deg) rotateX(15deg); }
+  25%  { transform: translateY(-8px) rotateY(90deg) rotateX(15deg); }
+  50%  { transform: translateY(0) rotateY(180deg) rotateX(15deg); }
+  75%  { transform: translateY(8px) rotateY(270deg) rotateX(15deg); }
+  100% { transform: translateY(0) rotateY(360deg) rotateX(15deg); }
+}
+
+/* Diamond inner glow pulse */
+@keyframes diamond-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(18,168,172,0.3), inset 0 0 20px rgba(18,168,172,0.15); }
+  50%      { box-shadow: 0 0 60px rgba(18,168,172,0.5), inset 0 0 40px rgba(18,168,172,0.25); }
+}
+
+/* Diamond reflection in water — inverted, faded */
+@keyframes diamond-reflect {
+  0%   { transform: translateY(0) rotateY(0deg) rotateX(-15deg) scaleY(-1); }
+  25%  { transform: translateY(4px) rotateY(90deg) rotateX(-15deg) scaleY(-1); }
+  50%  { transform: translateY(0) rotateY(180deg) rotateX(-15deg) scaleY(-1); }
+  75%  { transform: translateY(-4px) rotateY(270deg) rotateX(-15deg) scaleY(-1); }
+  100% { transform: translateY(0) rotateY(360deg) rotateX(-15deg) scaleY(-1); }
+}
+
+/* Particles float up from water surface */
+@keyframes careers-float-up {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(var(--sway, 20px)); opacity: 0; }
+}
+
+/* Side nav active indicator pulse */
+@keyframes sidenav-pulse {
+  0%, 100% { opacity: 0.4; width: 8px; }
+  50%      { opacity: 1; width: 16px; }
+}
+
+/* Scroll chevron bounce */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* Star twinkle for background particles */
+@keyframes star-twinkle {
+  0%, 100% { opacity: var(--base-opacity, 0.3); }
+  50%      { opacity: calc(var(--base-opacity, 0.3) * 2.5); }
+}
+
+/* Volumetric cloud drift for the careers page */
+@keyframes cloud-drift {
+  0%   { transform: translateX(-15%) scale(1); opacity: 0.3; }
+  50%  { opacity: 0.7; }
+  100% { transform: translateX(15%) scale(1.15); opacity: 0.3; }
+}
+@keyframes cloud-drift-reverse {
+  0%   { transform: translateX(15%) scale(1.15); opacity: 0.3; }
+  50%  { opacity: 0.6; }
+  100% { transform: translateX(-15%) scale(1); opacity: 0.3; }
+}
+
 /* ===== prefers-reduced-motion (Accessibility) =====
    Users with vestibular sensitivity or who've set the OS preference get
    shortened or instant animations across the site. We don't disable

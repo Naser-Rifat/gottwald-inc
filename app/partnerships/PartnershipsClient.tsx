@@ -812,24 +812,66 @@ export default function PartnershipsClient() {
         </div>
         </section>
 
-        {/* ── SECTION 2: GOTT WALD STANDARD (3 statements) ── */}
-        <section className="px-gutter py-[18vh] bg-[#0c0e14] relative z-10 border-t border-white/5">
-          <div className="max-w-4xl mx-auto text-center space-y-12 reveal-up">
-            <p className="text-sm tracking-[0.45em] uppercase text-turquoise font-bold">
-              What we are
+        {/* SECTION 2 — Standard, not marketplace. Centered monumental
+            composition: declaration carved like an inscription. Atmospheric
+            turquoise glow blooms behind the type (depth, breath). Italic
+            Playfair question → bold sans monumental answer (brand voice
+            change carries the rhetorical pivot). 5-frequency hairline
+            below ties this beat to the hero's orchestra. */}
+        <section
+          data-journey="proof"
+          className="px-gutter py-[26vh] lg:py-[32vh] bg-[#0c0e14] relative z-10 border-t border-white/5 overflow-hidden"
+        >
+          {/* Atmospheric glow — turquoise breath behind the statement.
+              Manifesto-coded "frequency space" rendered as ambient depth
+              so the section isn't flat type-on-black. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[64vw] max-w-[1000px] aspect-square"
+            style={{
+              background:
+                "radial-gradient(circle at center, rgba(18,168,172,0.10) 0%, rgba(18,168,172,0.04) 35%, transparent 65%)",
+              filter: "blur(40px)",
+            }}
+          />
+
+          <div className="relative max-w-[88rem] mx-auto text-center reveal-up">
+            <p
+              className="text-[clamp(1.7rem,3.8vw,4.4rem)] font-light leading-[1.18] tracking-[-0.018em] text-white/72 mb-8 lg:mb-12"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontStyle: "italic",
+              }}
+            >
+              GOTT WALD is not a marketplace.
             </p>
-            <div className="space-y-6">
-              <p className="text-3xl md:text-4xl lg:text-5xl font-light text-white/90 leading-[1.3]">
-                GOTT WALD is not a marketplace.
-              </p>
-              <p className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.3] tracking-tight">
-                GOTT WALD is a standard.
-              </p>
-              <p className="text-xl md:text-2xl font-light tracking-[0.03em] text-white/70 leading-relaxed max-w-2xl mx-auto">
-                We only work with companies that have principle — and can
-                deliver. When both are true, partnership becomes inevitable.
-              </p>
-            </div>
+
+            <p className="text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-white">
+              GOTT WALD is a standard.
+            </p>
+
+            {/* 5-frequency hairline — gold→silver→petrol→turquoise→copper,
+                same gradient as the hero accent line. Section's
+                signature line to the brand orchestra. */}
+            <span
+              aria-hidden="true"
+              className="block mx-auto h-px w-24 mt-16 lg:mt-20"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(212,175,55,0.55) 0%, rgba(184,192,204,0.42) 28%, rgba(0,109,132,0.55) 52%, rgba(18,168,172,0.70) 76%, rgba(192,120,64,0.45) 100%)",
+              }}
+            />
+
+            <p
+              className="mt-10 lg:mt-14 text-[clamp(1.05rem,1.35vw,1.5rem)] font-light leading-[1.65] text-white/65 max-w-[44ch] mx-auto"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontStyle: "italic",
+              }}
+            >
+              We only work with companies that have principle — and can
+              deliver. When both are true, partnership becomes inevitable.
+            </p>
           </div>
         </section>
 

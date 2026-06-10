@@ -30,7 +30,7 @@ export function useAudio() {
 }
 
 const STORAGE_KEY = "gw-audio-pref";
-const AUDIO_URL = "/assets/soul_serenity_sounds-water-noises-241049.mp3";
+const AUDIO_URL = "/audio/ambient-loop.wav";
 
 const SFX_URLS: Record<SfxName, string> = {
   chime: "/assets/sfx/chime.mp3",

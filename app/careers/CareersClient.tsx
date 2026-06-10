@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, FormEvent } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
@@ -154,6 +156,16 @@ export default function CareersClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
+  // Server-safe pre-calculated pseudo-random particles (avoids hydration errors)
+  const floatingParticles = Array.from({ length: 50 }).map((_, i) => ({
+    id: i,
+    left: `${(i * 13 + 17) % 100}%`,
+    duration: `${15 + (i % 15)}s`,
+    delay: `${(i * 3) % 20}s`,
+    size: `${1.5 + (i % 3)}px`,
+    opacity: 0.4 + ((i % 5) * 0.1)
+  }));
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
@@ -290,90 +302,107 @@ export default function CareersClient() {
       ref={pageRef}
       className="min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black relative"
     >
-      {/* #1 — Dark overlay for content readability — lets fluid bleed through edges */}
-      <div
-        className="fixed inset-0 pointer-events-none -z-10"
-        style={{
-          background:
-            "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(6,6,6,0.88) 0%, rgba(6,6,6,0.7) 50%, rgba(6,6,6,0.5) 100%)",
-        }}
-      />
-
-      {/* #2 — CSS Floating Particles */}
-      <div className="fixed inset-0 pointer-events-none -z-[5] overflow-hidden" aria-hidden="true">
-        {PARTICLES.map((p) => (
-          <div
-            key={p.id}
-            className="absolute rounded-full"
-            style={{
-              width: p.size,
-              height: p.size,
-              left: `${p.left}%`,
-              bottom: "-5%",
-              opacity: p.opacity,
-              backgroundColor:
-                p.color === "turquoise"
-                  ? "rgba(18,168,172,0.6)"
-                  : p.color === "gold"
-                    ? "rgba(212,175,55,0.5)"
-                    : "rgba(255,255,255,0.4)",
-              boxShadow:
-                p.color === "turquoise"
-                  ? "0 0 6px rgba(18,168,172,0.3)"
-                  : p.color === "gold"
-                    ? "0 0 6px rgba(212,175,55,0.2)"
-                    : "none",
-              animation: `floatUp ${p.duration}s linear ${p.delay}s infinite, sway${p.id % 3} ${p.duration * 0.6}s ease-in-out ${p.delay}s infinite alternate`,
-            }}
-          />
-        ))}
-      </div>
 
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
       </div>
 
-      <main className="pt-[25vh]">
-        {/* ── HERO ── */}
-        <section className="px-gutter pb-[20vh] flex flex-col gap-16 relative">
-          {/* Layered ambient depth — petrol + turquoise (#4) */}
-          <div
-            className="absolute right-[-5vw] top-[-15vh] w-[60vw] h-[60vw] rounded-full pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(0,109,132,0.06) 0%, transparent 65%)",
-            }}
-          />
-          <div
-            className="absolute left-[-10vw] bottom-[-10vh] w-[50vw] h-[50vw] rounded-full pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(18,168,172,0.04) 0%, transparent 60%)",
-            }}
-          />
+      <main>
+        {/* ══════════════════════════════════════════════════════════
+            HUBTOWN-STYLE IMMERSIVE HERO — Full-viewport cinematic scene
+            Mountain silhouettes + animated water + floating diamond + particles
+            Adapted to GOTT WALD turquoise (#12a8ac) / navy (#070c14) aesthetic
+            ══════════════════════════════════════════════════════════ */}
+        <section className="relative h-screen w-full overflow-hidden flex items-end justify-center" style={{ background: "linear-gradient(180deg, #04080f 0%, #070c14 40%, #0a1018 70%, #070c14 100%)" }}>
 
-          <div className="max-w-6xl z-10">
-            {/* #4 — Gold Eyebrow */}
-            <p
-              className="careers-eyebrow text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase mb-8"
-              style={{ color: "rgba(212,175,55,0.85)", opacity: 0 }}
+          {/* ── BACKGROUND IMAGE & ANIMATED CLOUDS ── */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+            {/* The majestic mountain photograph (Clean plate) */}
+            <motion.div
+              className="absolute inset-0"
+              animate={{ scale: [1.02, 1.08, 1.02] }}
+              transition={{ duration: 40, ease: "easeInOut", repeat: Infinity }}
             >
-              PEOPLE &amp; CULTURE // GLOBAL TALENT
-            </p>
+              <Image
+                src="/images/careers-hubtown-bg-clean.png"
+                alt="GOTT WALD Mountains"
+                fill
+                className="object-cover object-center opacity-90"
+                priority
+                quality={100}
+              />
+            </motion.div>
 
-            {/* Hero text is owned by next-intl (see messages/*.json).
-                translate="no" tells Google Translate to skip this element so
-                it doesn't double-translate and doesn't break the
-                background-clip: text gradient by wrapping text in <font> tags. */}
+            {/* FLOATING ANIMATED DOTS (Rises from bottom to top) */}
+            <div className="absolute inset-0 z-10 pointer-events-none">
+              {floatingParticles.map((p) => (
+                <div
+                  key={p.id}
+                  className="absolute bottom-0 rounded-full bg-turquoise"
+                  style={{
+                    left: p.left,
+                    width: p.size,
+                    height: p.size,
+                    opacity: 0,
+                    boxShadow: `0 0 ${parseInt(p.size) * 2}px rgba(18,168,172,0.8)`,
+                    animation: `careers-float-up ${p.duration} linear infinite`,
+                    animationDelay: p.delay,
+                  }}
+                />
+              ))}
+            </div>
+            
+            {/* Volumetric Animated Mist / Cloud Layers powered by Framer Motion for 100% reliability */}
+            {/* Layer 1: High turquoise mist */}
+            <motion.div 
+              className="absolute top-[10%] left-[-20%] w-[140%] h-[70%]"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(18,168,172,0.6) 0%, rgba(18,168,172,0) 60%)",
+                filter: "blur(40px)"
+              }}
+              animate={{ x: ["-25%", "25%", "-25%"] }}
+              transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+            />
+            
+            {/* Layer 2: Low dense white fog */}
+            <motion.div 
+              className="absolute top-[35%] left-[-20%] w-[140%] h-[60%]"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 65%)",
+                filter: "blur(40px)"
+              }}
+              animate={{ x: ["25%", "-25%", "25%"] }}
+              transition={{ duration: 14, ease: "linear", repeat: Infinity }}
+            />
+            
+            {/* Layer 3: Fast moving foreground wisp */}
+            <motion.div 
+              className="absolute top-[25%] left-[-10%] w-[120%] h-[50%]"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(18,168,172,0.5) 0%, rgba(18,168,172,0) 50%)",
+                filter: "blur(30px)"
+              }}
+              animate={{ x: ["-30%", "30%", "-30%"] }}
+              transition={{ duration: 6, ease: "linear", repeat: Infinity }}
+            />
+
+            {/* Deep gradients to blend into the UI and the section below */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070c14]/40 to-[#070c14]" />
+            <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-t from-[#070c14] via-[#070c14]/80 to-transparent" />
+          </div>
+
+
+
+          {/* ── CONTENT — Original Layout over Mountain Background ── */}
+          <div className="relative z-30 w-full max-w-7xl mx-auto px-gutter pb-[15vh]">
+            {/* Hero headline — left aligned */}
             <h1
               ref={heroRef}
               translate="no"
-              className="notranslate reveal-text leading-[0.85] font-extrabold tracking-tighter uppercase mb-12"
+              className="notranslate reveal-text leading-[0.85] font-extrabold tracking-tighter uppercase mb-16"
               style={{
-                fontSize:
-                  "calc(clamp(4rem, 9vw, 10rem) * var(--heading-scale))",
-                backgroundImage:
-                  "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.7) 50%, #ffffff 100%)",
+                fontSize: "calc(clamp(4.5rem, 9vw, 11rem) * var(--heading-scale))",
+                backgroundImage: "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.8) 70%, #ffffff 100%)",
                 backgroundSize: "200% 100%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -384,45 +413,48 @@ export default function CareersClient() {
               {t("line2")}
             </h1>
 
-            <div className="flex flex-col md:flex-row gap-12 md:gap-24">
-              <div className="flex-1 flex flex-col gap-6 text-white font-light leading-relaxed tracking-wide reveal-text">
+            <div className="flex flex-col md:flex-row gap-16 md:gap-24">
+              <div className="flex-1 flex flex-col gap-8 text-white font-light leading-relaxed tracking-wide reveal-text">
                 <p className="text-2xl md:text-3xl font-medium tracking-tight">
-                  We recruit intentionally worldwide — and we mean it.
+                  We recruit intentionally worldwide — <br className="hidden md:block"/>and we mean it.
                 </p>
-                <p className="text-white max-w-md text-lg">
-                  GOTT WALD is a human family: different cultures, traditions, languages, life paths — wanted. Because diversity increases our intelligence. 
-                  <br /><br />
-                  Our axis of impact: NATURE — ANIMALS — HUMANS.
-                </p>
+                <div className="text-white/70 max-w-md text-lg space-y-6">
+                  <p>
+                    GOTT WALD is a human family: different cultures, traditions, languages, life paths — wanted. Because diversity increases our intelligence. 
+                  </p>
+                  <p className="text-white/50 text-base">
+                    Our axis of impact: NATURE — ANIMALS — HUMANS.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex-1 flex flex-col items-start gap-8 justify-center reveal-text">
-                {/* #10 — CTA buttons with turquoise hover glow */}
+              <div className="flex-1 flex flex-col items-start gap-10 justify-center reveal-text">
+                {/* CTA buttons with turquoise hover glow */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="#apply"
                     translate="no"
-                    className="notranslate h-12.5 rounded-full bg-white text-black flex items-center justify-center px-8 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
+                    className="notranslate h-14 rounded-full bg-white text-black flex items-center justify-center px-10 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
                   >
                     {tCtas("applyNow")}
                   </a>
                   <a
                     href="#apply"
                     translate="no"
-                    className="notranslate h-12.5 rounded-full border border-white/20 text-white flex items-center justify-center px-8 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-widest font-bold"
+                    className="notranslate h-14 rounded-full border border-white/20 text-white flex items-center justify-center px-10 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
                   >
                     {tCtas("specialistPool")}
                   </a>
                 </div>
 
-                {/* Hero metadata — stagger entrance (#12) */}
-                <div className="flex gap-4 items-center pl-2 reveal-text">
-                  <div className="w-px h-12 bg-white/20" />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-white/80 text-md tracking-widest uppercase font-medium">
+                {/* Hero metadata */}
+                <div className="flex gap-5 items-center pl-2">
+                  <div className="w-px h-14 bg-white/20" />
+                  <div className="flex flex-col gap-2">
+                    <span className="text-white/60 text-[10px] tracking-[0.25em] uppercase font-bold">
                       Global-first. Remote-friendly. Confidential.
                     </span>
-                    <span className="text-gold text-md tracking-widest uppercase font-medium">
+                    <span className="text-gold text-[10px] tracking-[0.25em] uppercase font-bold">
                       HQ: Georgia.
                     </span>
                   </div>
@@ -430,6 +462,7 @@ export default function CareersClient() {
               </div>
             </div>
           </div>
+
         </section>
 
         {/* #9 — Animated Separator */}
