@@ -2,6 +2,13 @@
 
 import { useLayoutEffect, useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -21,6 +28,476 @@ import {
 } from "@/lib/partnershipData";
 
 gsap.registerPlugin(ScrollTrigger);
+
+function MagneticButton({ children, className = "", onClick, disabled, type = "button" }: any) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.4, y: middleY * 0.4 });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.button
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+function SpotlightCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current) return;
+    const rect = divRef.current.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  return (
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+      className={`relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(18,168,172,0.12)] stagger-item ${className}`}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 ease-out"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(18,168,172,0.15), transparent 40%)`,
+        }}
+      />
+      <div className="relative z-10 transition-transform duration-500 group-hover:scale-[1.02]">{children}</div>
+    </div>
+  );
+}
+function ParallaxShard({ principle, index }: { principle: string; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const yOffset = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [index % 2 === 0 ? 50 : 100, index % 2 === 0 ? -50 : -100]
+  );
+
+  return (
+    <motion.div ref={ref} style={{ y: yOffset }} className="group/shard relative h-full">
+      <SpotlightCard className="p-8 h-full flex items-center border border-white/5 bg-[#0a0c12]/80 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover/shards:opacity-20 group-hover/shards:blur-sm hover:!opacity-100 hover:!blur-none hover:scale-[1.02] hover:z-10 hover:border-turquoise/30">
+        <div className="flex items-center gap-6">
+          <span className="w-1.5 h-1.5 bg-turquoise rounded-full shrink-0 group-hover/shard:scale-[3] transition-transform duration-500 shadow-[0_0_15px_rgba(18,168,172,0.8)]" />
+          <p className="text-xl lg:text-2xl font-light text-white/70 group-hover/shard:text-white group-hover/shard:translate-x-2 transition-all duration-500">
+            {principle}
+          </p>
+        </div>
+      </SpotlightCard>
+    </motion.div>
+  );
+}
+
+
+function ArchetypeCard({ arch, index, flexValue, onHover, onLeave }: any) {
+  return (
+    <motion.div
+      layout
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      animate={{ flex: flexValue }}
+      initial={{ flex: flexValue }}
+      transition={{ type: "spring", stiffness: 120, damping: 20 }}
+      className="group relative bg-[#0a0c12] p-8 lg:p-10 rounded-2xl border border-white/8 hover:border-[var(--color-petrol)]/40 overflow-hidden flex flex-col justify-between cursor-default transition-[border-color,box-shadow] duration-700 w-full min-h-[320px] md:min-h-0 md:w-auto"
+      onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
+        const el = e.currentTarget;
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const moveX = (x - centerX) * -0.05;
+        const moveY = (y - centerY) * -0.05;
+
+        requestAnimationFrame(() => {
+          el.style.setProperty("--x", `${x}px`);
+          el.style.setProperty("--y", `${y}px`);
+          el.style.setProperty("--mx", `${moveX}px`);
+          el.style.setProperty("--my", `${moveY}px`);
+        });
+      }}
+    >
+      {/* 3D Abstract Asset */}
+      {arch.image && (
+        <div
+          className="absolute -right-10 -bottom-10 w-full h-full md:w-[120%] md:h-[120%] z-0 opacity-[0.15] group-hover:opacity-[0.35] transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] pointer-events-none mix-blend-screen"
+          style={{
+            transform: "translate(calc(var(--mx, 0) * 0.8), calc(var(--my, 0) * 0.8)) scale(1.05)",
+            maskImage: "radial-gradient(ellipse at center, black 10%, transparent 70%)",
+            WebkitMaskImage: "radial-gradient(ellipse at center, black 10%, transparent 70%)"
+          }}
+        >
+          <Image
+            src={arch.image}
+            alt={arch.title}
+            fill
+            className="object-contain group-hover:scale-110 transition-transform duration-[2000ms] ease-out will-change-transform"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+      )}
+
+      <div
+        className="pointer-events-none absolute inset-0 z-1 opacity-0 transition-opacity duration-700 group-hover:opacity-100 mix-blend-overlay"
+        style={{ background: `radial-gradient(600px circle at var(--x) var(--y), rgba(212,175,55,0.07), transparent 50%)` }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-2 rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 ring-1 ring-inset ring-gold/50"
+        style={{
+          maskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
+          WebkitMaskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
+        }}
+      />
+      <div 
+        className="absolute -bottom-8 -right-4 text-[10rem] lg:text-[13rem] font-black leading-none text-white/2 transition-[transform,color] duration-300 ease-out select-none pointer-events-none z-3 group-hover:text-gold/4"
+        style={{ transform: "translate(var(--mx, 0), var(--my, 0))" }}
+      >
+        0{index + 1}
+      </div>
+      <motion.div layout className="relative z-10 flex flex-col h-full justify-between">
+        <motion.div layout className="flex items-center justify-between mb-auto">
+          <span className="text-gold/80 font-mono text-sm tracking-[0.4em] font-medium">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <div className="w-12 h-px bg-white/10 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full bg-turquoise origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+          </div>
+        </motion.div>
+        <motion.div layout className="mt-8 pt-4 border-t border-white/5 group-hover:border-gold/15 transition-colors duration-700">
+          <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${index === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
+            {arch.title}
+          </h3>
+          <p className="text-white/80 text-base font-light leading-relaxed group-hover:text-white/80 transition-colors duration-700 max-w-[20ch] sm:max-w-none">
+            {arch.desc}
+          </p>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ArchetypeBentoGrid() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const isAnyHovered = hoveredIndex !== null;
+
+  return (
+    <div className="flex flex-col gap-4 mt-12 w-full group/bento">
+      <div className="flex flex-col md:flex-row gap-4 w-full h-auto md:h-[380px] lg:h-[440px]">
+        {PARTNERSHIP_ARCHETYPES.slice(0, 2).map((arch, localIndex) => {
+          const i = localIndex;
+          const isHovered = hoveredIndex === i;
+          const defaultFlex = i === 0 ? 1.4 : 1;
+          const flexValue = isHovered ? defaultFlex * 1.5 : (isAnyHovered ? defaultFlex * 0.8 : defaultFlex);
+          return <ArchetypeCard key={i} arch={arch} index={i} flexValue={flexValue} onHover={() => setHoveredIndex(i)} onLeave={() => setHoveredIndex(null)} />;
+        })}
+      </div>
+      <div className="flex flex-col md:flex-row gap-4 w-full h-auto md:h-[320px] lg:h-[360px]">
+        {PARTNERSHIP_ARCHETYPES.slice(2, 5).map((arch, localIndex) => {
+          const i = localIndex + 2;
+          const isHovered = hoveredIndex === i;
+          const flexValue = isHovered ? 1.5 : (isAnyHovered ? 0.8 : 1);
+          return <ArchetypeCard key={i} arch={arch} index={i} flexValue={flexValue} onHover={() => setHoveredIndex(i)} onLeave={() => setHoveredIndex(null)} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ScrambleText({ text, isActive }: { text: string; isActive: boolean }) {
+  const [displayText, setDisplayText] = useState(text);
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\\\/[]{}—=+*^?#";
+  
+  useEffect(() => {
+    if (!isActive) {
+      setDisplayText(text);
+      return;
+    }
+    let iteration = 0;
+    const interval = setInterval(() => {
+      setDisplayText((old) =>
+        text
+          .split("")
+          .map((letter, index) => {
+            if (letter === " ") return " ";
+            if (index < iteration) {
+              return text[index];
+            }
+            return chars[Math.floor(Math.random() * chars.length)];
+          })
+          .join("")
+      );
+      if (iteration >= text.length) {
+        clearInterval(interval);
+      }
+      iteration += 1 / 2;
+    }, 30);
+    return () => clearInterval(interval);
+  }, [text, isActive]);
+
+  return <>{displayText}</>;
+}
+
+function VerticalSpineStep({
+  step,
+  i,
+  total,
+  scrollYProgress,
+}: {
+  step: any;
+  i: number;
+  total: number;
+  scrollYProgress: MotionValue<number>;
+}) {
+  const isEven = i % 2 === 0;
+  const progressStart = i / total;
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [progressStart, progressStart + 0.15],
+    [0.15, 1],
+  );
+  const yOffset = useTransform(
+    scrollYProgress,
+    [progressStart, progressStart + 0.15],
+    [80, 0],
+  );
+  const nodeColor = useTransform(
+    scrollYProgress,
+    [progressStart, progressStart + 0.05],
+    ["rgba(255,255,255,0.05)", "rgba(18,168,172,1)"],
+  );
+
+  return (
+    <motion.div
+      style={{ opacity, y: yOffset }}
+      className="relative w-full flex flex-col lg:flex-row items-center mb-32 lg:mb-52 last:mb-0 group"
+    >
+      <motion.div
+        className="absolute left-8 lg:left-1/2 w-8 h-8 rounded-full border-2 bg-[#050505] -translate-x-1/2 z-20 transition-transform duration-700 group-hover:scale-[1.8] flex items-center justify-center"
+        style={{ borderColor: nodeColor }}
+      >
+        <div className="w-2 h-2 rounded-full bg-turquoise opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_10px_rgba(18,168,172,0.8)]" />
+      </motion.div>
+
+      <div
+        className={`w-full lg:w-1/2 flex pl-24 lg:pl-0 ${isEven ? "lg:justify-end lg:pr-24" : "lg:order-2 lg:justify-start lg:pl-24"}`}
+      >
+        <div className="relative">
+          <span className="absolute -top-10 lg:-top-24 -left-6 lg:-left-12 text-[7rem] lg:text-[14rem] font-black text-white/[0.015] select-none pointer-events-none group-hover:text-white/[0.04] transition-colors duration-1000 -z-10">
+            0{i + 1}
+          </span>
+          <h3 className="text-3xl lg:text-5xl font-black text-white relative z-10 group-hover:text-gold transition-colors duration-500 tracking-tighter">
+            {step.title}
+          </h3>
+        </div>
+      </div>
+
+      <div
+        className={`w-full lg:w-1/2 flex pl-24 lg:pl-0 mt-8 lg:mt-0 ${isEven ? "lg:order-2 lg:justify-start lg:pl-24" : "lg:justify-end lg:pr-24"}`}
+      >
+        <div className="bg-white/[0.01] border border-white/5 p-8 lg:p-10 rounded-3xl backdrop-blur-md w-full max-w-lg group-hover:bg-white/[0.03] group-hover:border-turquoise/30 transition-all duration-700 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <p className="text-white/60 text-base lg:text-lg font-light leading-relaxed">
+            {step.desc}
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function VerticalSpineTimeline({ steps }: { steps: any[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
+
+  const laserHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  return (
+    <div ref={containerRef} className="relative w-full max-w-6xl mx-auto py-20 lg:py-40 overflow-hidden">
+      <div className="absolute top-0 bottom-0 left-8 lg:left-1/2 w-[1px] bg-white/5 -translate-x-1/2 z-0" />
+      <motion.div
+        style={{ height: laserHeight }}
+        className="absolute top-0 left-8 lg:left-1/2 w-[2px] bg-gradient-to-b from-turquoise to-petrol shadow-[0_0_30px_6px_rgba(18,168,172,0.7)] z-10 -translate-x-1/2"
+      />
+
+      {steps.map((step, i) => (
+        <VerticalSpineStep
+          key={i}
+          step={step}
+          i={i}
+          total={steps.length}
+          scrollYProgress={scrollYProgress}
+        />
+      ))}
+    </div>
+  );
+}
+
+function EquilibriumSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const yTransform = useTransform(scrollYProgress, [0, 1], [-80, 80]);
+
+  return (
+    <section ref={containerRef} className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5 overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-turquoise/5 blur-[120px] rounded-full pointer-events-none z-0" />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-0 relative">
+          
+          {/* Central Divider & Core (Desktop Only) */}
+          <div className="hidden lg:flex absolute left-1/2 top-0 bottom-0 -translate-x-1/2 flex-col items-center justify-center w-24 z-20 pointer-events-none">
+            <div className="w-px h-full bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+            <motion.div 
+              style={{ y: yTransform }}
+              className="absolute w-12 h-12 rounded-full border border-white/10 bg-[#0a0a0a] flex items-center justify-center shadow-[0_0_30px_rgba(18,168,172,0.2)] backdrop-blur-md"
+            >
+              <div className="w-3 h-3 bg-turquoise rounded-full shadow-[0_0_15px_rgba(18,168,172,1)]" />
+            </motion.div>
+          </div>
+
+          {/* Left Column: What Partners Get */}
+          <div className="lg:w-1/2 lg:pr-24">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="h-full flex flex-col justify-between p-10 lg:p-14 bg-[#06080a]/80 border border-white/5 rounded-3xl backdrop-blur-2xl hover:border-turquoise/30 transition-colors duration-700 relative overflow-hidden group"
+            >
+              {/* Turquoise Corner Glow */}
+              <div className="absolute -top-32 -left-32 w-64 h-64 bg-turquoise/10 blur-[80px] rounded-full group-hover:bg-turquoise/20 transition-colors duration-700" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-10">
+                  <span className="w-8 h-px bg-turquoise" />
+                  <h3 className="text-sm uppercase tracking-[0.3em] text-turquoise/90 font-bold">
+                    What Partners Get
+                  </h3>
+                </div>
+                
+                <h4 className="text-4xl lg:text-5xl font-black tracking-tighter mb-12 leading-[1.1] text-white">
+                  A premium ecosystem.<br />
+                  <span className="text-white/40 font-light">Clean projects.</span>
+                </h4>
+                
+                <ul className="flex flex-col gap-6 mb-16">
+                  {PARTNER_BENEFITS.map((benefit, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1, duration: 0.5 }}
+                      viewport={{ once: true }}
+                      className="flex gap-5 items-start text-white/70 text-lg lg:text-xl font-light"
+                    >
+                      <span className="mt-3 w-1.5 h-1.5 bg-turquoise shadow-[0_0_10px_rgba(18,168,172,0.8)] rounded-full shrink-0" />
+                      <span className="leading-relaxed">{benefit}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="relative z-10 border-l-2 border-turquoise pl-8 mt-auto group-hover:translate-x-2 transition-transform duration-500">
+                <p className="text-xl font-medium tracking-tight text-white/90 leading-tight">
+                  We keep the frame stable.<br />
+                  <span className="text-white/60 font-light">You deliver excellence.</span>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Column: What We Expect */}
+          <div className="lg:w-1/2 lg:pl-24 mt-10 lg:mt-32">
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="h-full flex flex-col justify-between p-10 lg:p-14 bg-[#0a0806]/80 border border-white/5 rounded-3xl backdrop-blur-2xl hover:border-gold/30 transition-colors duration-700 relative overflow-hidden group"
+            >
+              {/* Gold Corner Glow */}
+              <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-gold/10 blur-[80px] rounded-full group-hover:bg-gold/15 transition-colors duration-700" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-10">
+                  <span className="w-8 h-px bg-gold" />
+                  <h3 className="text-sm uppercase tracking-[0.3em] text-gold/90 font-bold">
+                    What We Expect
+                  </h3>
+                </div>
+                
+                <h4 className="text-4xl lg:text-5xl font-black tracking-tighter mb-12 leading-[1.1] text-white">
+                  Professionalism that<br />
+                  <span className="text-white/40 font-light">doesn&apos;t require supervision.</span>
+                </h4>
+                
+                <ul className="flex flex-col gap-6">
+                  {PARTNER_EXPECTATIONS.map((expectation, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1, duration: 0.5 }}
+                      viewport={{ once: true }}
+                      className="flex gap-5 items-start text-white/70 text-lg lg:text-xl font-light"
+                    >
+                      <span className="mt-3 w-1.5 h-1.5 bg-gold/80 shadow-[0_0_10px_rgba(212,175,55,0.4)] rounded-full shrink-0" />
+                      <span className="leading-relaxed">{expectation}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function PartnershipsClient() {
   const t = useTranslations("partnerships.hero");
@@ -197,6 +674,20 @@ export default function PartnershipsClient() {
           );
         },
         once: true,
+      });
+
+      // Scroll-Fill Text Animation
+      gsap.utils.toArray('.scroll-fill-text').forEach((el: any) => {
+        gsap.to(el, {
+          backgroundPosition: "0% 0",
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+            end: "bottom 40%",
+            scrub: true,
+          }
+        });
       });
 
       // 3. Standards Horizontal Scroll
@@ -846,7 +1337,16 @@ export default function PartnershipsClient() {
               GOTT WALD is not a marketplace.
             </p>
 
-            <p className="text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-white">
+            <p 
+              className="scroll-fill-text text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent"
+              style={{
+                WebkitTextStroke: "1px rgba(255,255,255,0.2)",
+                backgroundImage: "linear-gradient(90deg, #fff 50%, transparent 50%)",
+                backgroundSize: "200% 100%",
+                backgroundPosition: "100% 0",
+                WebkitBackgroundClip: "text",
+              }}
+            >
               GOTT WALD is a standard.
             </p>
 
@@ -891,20 +1391,21 @@ export default function PartnershipsClient() {
                 <span className="text-white/60">MANIFESTO</span>
               </h2>
             </div>
-            <div className="flex flex-col border-t border-white/10">
+            <div className="flex flex-col border-t border-white/10 group/manifesto">
               {MANIFESTO_LINES.map((line, i) => (
                 <div
                   key={i}
-                  className="manifesto-line group flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/2 transition-colors duration-500 px-4 -mx-4"
+                  className="manifesto-line group/line relative flex items-center gap-8 py-8 border-b border-white/5 hover:bg-white/[0.02] transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] px-4 -mx-4 group-hover/manifesto:opacity-20 group-hover/manifesto:blur-sm hover:!opacity-100 hover:!blur-none"
                 >
-                  <span className="text-gold font-mono text-sm shrink-0 w-8 text-right opacity-90 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-turquoise opacity-0 group-hover/line:opacity-100 transition-opacity duration-700 shadow-[0_0_20px_rgba(18,168,172,0.8)]" />
+                  <span className="text-gold font-mono text-sm shrink-0 w-8 text-right opacity-90 transition-all duration-700 group-hover/line:opacity-100">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/90 group-hover:text-white transition-colors duration-500 leading-tight">
+                  <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/80 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] leading-tight group-hover/line:text-white group-hover/line:translate-x-6 group-hover/line:scale-[1.02] origin-left">
                     {i === 5 ? (
                       <>
                         We build for{" "}
-                        <span className="font-black text-gold">
+                        <span className="font-black text-gold group-hover/line:drop-shadow-[0_0_15px_rgba(212,175,55,0.6)] transition-all duration-700">
                           NATURE — ANIMALS — HUMANS
                         </span>
                         .
@@ -951,17 +1452,9 @@ export default function PartnershipsClient() {
               <p className="text-sm uppercase tracking-[0.3em] text-white/70 mb-10 font-semibold">
                 We work with partners who:
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 border-t border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 group/shards relative z-10 pt-10 pb-20">
                 {PARTNERSHIP_PRINCIPLES.map((principle, i) => (
-                  <div
-                    key={i}
-                    className="group flex items-center gap-8 py-7 border-b border-white/5 hover:pl-4 transition-all duration-500"
-                  >
-                    <span className="w-1.5 h-1.5 bg-turquoise rounded-full shrink-0 group-hover:scale-150 transition-transform" />
-                    <p className="text-xl lg:text-2xl font-light text-white/70 group-hover:text-white transition-colors duration-500">
-                      {principle}
-                    </p>
-                  </div>
+                  <ParallaxShard key={i} principle={principle} index={i} />
                 ))}
               </div>
             </div>
@@ -986,83 +1479,7 @@ export default function PartnershipsClient() {
               </p>
             </div>
 
-            {(() => {
-              const bentoClasses = [
-                "md:col-span-7 min-h-[380px] lg:min-h-[440px]",
-                "md:col-span-5 min-h-[380px] lg:min-h-[440px]",
-                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
-                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
-                "md:col-span-4 min-h-[320px] lg:min-h-[360px]",
-              ];
-              return (
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-12 w-full">
-                  {PARTNERSHIP_ARCHETYPES.map((arch, i) => (
-                    <div
-                      key={i}
-                      className={`arch-card group relative bg-[#0a0c12] p-8 lg:p-10 rounded-2xl border border-white/8 hover:border-[var(--color-petrol)]/40 overflow-hidden flex flex-col justify-between cursor-default transition-[border-color,box-shadow] duration-700 ${bentoClasses[i]}`}
-                      onMouseMove={(e) => {
-                        const el = e.currentTarget;
-                        const rect = el.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        requestAnimationFrame(() => {
-                          el.style.setProperty("--x", `${x}px`);
-                          el.style.setProperty("--y", `${y}px`);
-                        });
-                      }}
-                    >
-                      {/* Solid opaque bg to block fluid bg bleed */}
-                      <div className="absolute inset-0 bg-[#0a0c12] rounded-2xl z-0" />
-
-                      {/* Spotlight Glow Background */}
-                      <div
-                        className="pointer-events-none absolute inset-0 z-1 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-                        style={{
-                          background: `radial-gradient(600px circle at var(--x) var(--y), rgba(212,175,55,0.07), transparent 50%)`,
-                        }}
-                      />
-
-                      {/* Spotlight Border */}
-                      <div
-                        className="pointer-events-none absolute inset-0 z-2 rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 ring-1 ring-inset ring-gold/50"
-                        style={{
-                          maskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
-                          WebkitMaskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
-                        }}
-                      />
-
-                      {/* Giant Watermark Number */}
-                      <div className="absolute -bottom-8 -right-4 text-[10rem] lg:text-[13rem] font-black leading-none text-white/2 group-hover:-translate-y-3 group-hover:text-gold/4 transition-[transform,color] duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-3">
-                        0{i + 1}
-                      </div>
-
-                      {/* Content */}
-                      <div className="relative z-10 flex flex-col h-full justify-between">
-                        {/* Top Header */}
-                        <div className="flex items-center justify-between mb-auto">
-                          <span className="text-gold/80 font-mono text-sm tracking-[0.4em] font-medium">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <div className="w-12 h-px bg-white/10 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-full bg-turquoise origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
-                          </div>
-                        </div>
-
-                        {/* Bottom Text */}
-                        <div className="mt-8 pt-4 border-t border-white/5 group-hover:border-gold/15 transition-colors duration-700">
-                          <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${i === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
-                            {arch.title}
-                          </h3>
-                          <p className="text-white/80 text-base font-light leading-relaxed group-hover:text-white/80 transition-colors duration-700">
-                            {arch.desc}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              );
-            })()}
+            <ArchetypeBentoGrid />
           </div>
         </section>
 
@@ -1217,131 +1634,132 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 7: WHAT PARTNERS GET + WHAT WE EXPECT ── */}
-        <section className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-24">
-            {/* What Partners Get */}
-            <div className="reveal-up">
-              <h3 className="text-sm uppercase tracking-[0.3em] text-white/80 mb-10">
-                What Partners Get
-              </h3>
-              <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
-                A premium ecosystem.
-                <br />
-                <span className="text-white/70">Clean projects.</span>
-              </h4>
-              <ul className="flex flex-col gap-6 mb-16">
-                {PARTNER_BENEFITS.map((benefit, i) => (
-                  <li
-                    key={i}
-                    className="benefit-item flex gap-5 items-start text-white/70 text-xl"
-                  >
-                    <span className="mt-2.5 w-1.5 h-1.5 bg-turquoise rounded-full shrink-0" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-xl font-light tracking-[0.03em] text-white/80 border-l-2 border-turquoise pl-8 leading-tight">
-                We keep the frame stable.
-                <br />
-                You deliver excellence.
-              </p>
-            </div>
-
-            {/* What We Expect */}
-            <div className="reveal-up">
-              <h3 className="text-sm uppercase tracking-[0.3em] text-white/80 mb-10">
-                What We Expect
-              </h3>
-              <h4 className="text-4xl lg:text-5xl font-bold tracking-tighter mb-12 leading-[1.1]">
-                Professionalism that
-                <br />
-                <span className="text-white/70">
-                  doesn&apos;t require supervision.
-                </span>
-              </h4>
-              <ul className="flex flex-col gap-6">
-                {PARTNER_EXPECTATIONS.map((expectation, i) => (
-                  <li
-                    key={i}
-                    className="benefit-item flex gap-5 items-start text-white/70 text-xl"
-                  >
-                    <span className="mt-2.5 w-1.5 h-1.5 bg-white/30 rounded-full shrink-0" />
-                    {expectation}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+        <EquilibriumSection />
 
         {/* ── SECTION 8: DOMAINS ACCORDION ── */}
-        <section className="px-gutter py-[20vh] bg-transparent relative z-10 border-t border-white/5">
-          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
-            <div className="lg:w-1/3 reveal-up">
-              <h2 className="text-5xl lg:text-6xl font-bold tracking-tighter uppercase mb-8 sticky top-[20vh]">
-                Partnership <span className="text-white/70">Domains</span>
-              </h2>
-              <p className="text-white/70 text-xl lg:text-2xl leading-relaxed font-light mb-8 max-w-md sticky top-[30vh]">
-                Full transparency across all our operating pillars. We integrate
-                partners natively into our architecture.
-              </p>
+        <section className="px-gutter py-[20vh] bg-[#000] relative z-10 border-t border-white/5 overflow-hidden">
+          {/* Subtle Cyber Grid Background */}
+          <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
+               style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "40px 40px" }} 
+          />
+
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20 relative z-10">
+            {/* Left Side: Sticky Data Core */}
+            <div className="lg:w-2/5 reveal-up relative">
+              <div className="sticky top-[15vh]">
+                <p className="text-sm tracking-[0.4em] uppercase text-gold/80 font-bold mb-6">
+                  Core Architecture
+                </p>
+                <h2 className="text-5xl lg:text-7xl font-black tracking-tighter uppercase mb-8 leading-[0.9] text-white">
+                  PARTNERSHIP
+                  <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-turquoise to-white/50">DOMAINS</span>
+                </h2>
+                <p className="text-white/60 text-xl leading-relaxed font-light mb-12 max-w-sm">
+                  Full transparency across all our operating pillars. We integrate
+                  partners natively into our architecture.
+                </p>
+
+                {/* Massive Interactive Indicator */}
+                <div className="hidden lg:flex relative w-64 h-64 border border-white/10 rounded-full items-center justify-center bg-[#050505]">
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 rounded-full border border-dashed border-turquoise/30"
+                  />
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeAccordion || "none"}
+                      initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
+                      transition={{ duration: 0.5, ease: "backOut" }}
+                      className="text-[8rem] font-mono font-black text-white/5 tracking-tighter drop-shadow-[0_0_30px_rgba(18,168,172,0.4)]"
+                    >
+                      {activeAccordion ? activeAccordion : "X"}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
             </div>
 
+            {/* Right Side: Accordion List */}
             <div
-              className="lg:w-2/3 flex flex-col border-t border-white/10"
+              className="lg:w-3/5 flex flex-col"
               ref={accordionWrapperRef}
             >
               {PARTNERSHIP_DOMAINS.map((domain) => {
                 const isActive = activeAccordion === domain.id;
+                const isAnotherActive = activeAccordion && !isActive;
+
                 return (
                   <div
                     key={domain.id}
-                    className="accordion-item border-b border-white/10 group"
+                    className={`accordion-item border-b border-white/10 group relative transition-opacity duration-700 ${isAnotherActive ? "opacity-30 hover:opacity-100" : "opacity-100"}`}
                   >
+                    {/* Hover Laser Line */}
+                    <div className="absolute bottom-0 left-0 h-[1px] bg-gold w-0 group-hover:w-full transition-all duration-700 ease-out pointer-events-none" />
+
                     <button
-                      onClick={() => toggleAccordion(domain.id)}
+                      onClick={() => setActiveAccordion(isActive ? null : domain.id)}
                       className="w-full py-10 flex items-center justify-between text-left focus:outline-none"
                     >
-                      <div className="flex items-center gap-6 lg:gap-8">
+                      <div className="flex items-center gap-6 lg:gap-8 relative overflow-hidden group/title">
                         <span
-                          className={`text-base font-mono transition-colors ${isActive ? "text-gold" : "text-white/70"}`}
+                          className={`text-lg font-mono transition-all duration-500 ${isActive ? "text-turquoise scale-125 drop-shadow-[0_0_15px_rgba(18,168,172,0.6)]" : "text-white/30 group-hover/title:text-gold"}`}
                         >
-                          {domain.id}
+                          <ScrambleText text={domain.id} isActive={isActive} />
                         </span>
                         <h3
-                          className={`text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight transition-colors ${isActive ? "text-white" : "text-white/70 group-hover:text-white"}`}
+                          className={`text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter transition-transform duration-500 ${isActive ? "translate-x-6 text-white" : "text-white/60 group-hover/title:translate-x-4 group-hover/title:text-white"}`}
                         >
-                          {domain.title}
+                          <ScrambleText text={domain.title} isActive={isActive} />
                         </h3>
                       </div>
-                      <div className="w-10 h-10 border border-white/10 flex items-center justify-center shrink-0">
-                        <span className="text-xl font-light text-white/70">
-                          {isActive ? "-" : "+"}
-                        </span>
+                      <div className={`w-12 h-12 border flex items-center justify-center shrink-0 rounded-full transition-all duration-500 ${isActive ? "border-turquoise bg-turquoise text-black shadow-[0_0_20px_rgba(18,168,172,0.6)] -rotate-180 scale-110" : "border-white/10 text-white/50 group-hover:border-gold/60 group-hover:text-gold"}`}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d={isActive ? "M1 7h12" : "M7 1v12M1 7h12"} />
+                        </svg>
                       </div>
                     </button>
 
-                    <div
-                      className="overflow-hidden transition-[max-height,opacity] duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]"
-                      style={{
-                        maxHeight: isActive ? "800px" : "0px",
-                        opacity: isActive ? 1 : 0,
-                      }}
-                    >
-                      <div className="pb-10 pl-14">
-                        <ul className="flex flex-col gap-4">
-                          {domain.items.map((item, idx) => (
-                            <li
-                              key={idx}
-                              className="text-xl text-white/70 flex items-start gap-4"
-                            >
-                              <span className="text-gold mt-3 leading-none shrink-0 border-t border-gold w-4" />
-                              <span className="leading-relaxed">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                    <AnimatePresence initial={false}>
+                      {isActive && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden relative"
+                        >
+                          {/* Cyber-Scanner Line */}
+                          <motion.div
+                            initial={{ top: 0 }}
+                            animate={{ top: "100%" }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                            className="absolute left-0 w-full h-[1px] bg-turquoise shadow-[0_0_15px_3px_rgba(18,168,172,0.8)] z-20 pointer-events-none"
+                          />
+                          
+                          <div className="pb-12 pl-14 relative z-10 bg-[#050505]/50 border-l border-white/5 ml-4 mt-4">
+                            <ul className="flex flex-col gap-6 pt-6 pr-6">
+                              {domain.items.map((item, idx) => (
+                                <motion.li
+                                  key={idx}
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  exit={{ x: -20, opacity: 0 }}
+                                  transition={{ delay: 0.1 + (idx * 0.05), duration: 0.5, ease: "easeOut" }}
+                                  className="text-lg lg:text-xl text-white/70 flex items-start gap-5"
+                                >
+                                  <span className="text-turquoise mt-3 leading-none shrink-0 w-2 h-2 rounded-full bg-turquoise shadow-[0_0_10px_rgba(18,168,172,0.8)]" />
+                                  <span className="leading-relaxed tracking-wide font-light"><ScrambleText text={item} isActive={isActive} /></span>
+                                </motion.li>
+                              ))}
+                            </ul>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 );
               })}
@@ -1363,26 +1781,7 @@ export default function PartnershipsClient() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-white/5">
-              {PARTNERSHIP_SELECTION_STEPS.map((step, i) => (
-                <div
-                  key={i}
-                  className="process-step group bg-[#060606] p-8 lg:p-10 hover:bg-[#0e0e0e] transition-colors duration-500 flex flex-col gap-6"
-                >
-                  <span className="text-gold font-mono text-3xl font-light tracking-tighter group-hover:text-white transition-colors duration-500">
-                    {step.step}
-                  </span>
-                  <div>
-                    <h3 className="text-xl lg:text-2xl font-bold text-white/80 group-hover:text-white transition-colors duration-500 mb-3">
-                      {step.title}
-                    </h3>
-                    <p className="text-white/70 font-light leading-relaxed group-hover:text-white/60 transition-colors duration-500">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <VerticalSpineTimeline steps={PARTNERSHIP_SELECTION_STEPS} />
           </div>
         </section>
 
@@ -1429,12 +1828,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="company"
                     name="company"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Company Name"
                   />
                   <label
                     htmlFor="company"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Company Name
                   </label>
@@ -1445,12 +1844,12 @@ export default function PartnershipsClient() {
                     type="url"
                     id="website"
                     name="website"
-                    className="peer w-full bg-transparent border-b border-white/20  pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20  pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Website URL"
                   />
                   <label
                     htmlFor="website"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Website
                   </label>
@@ -1465,12 +1864,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="country"
                     name="country"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Country / Region"
                   />
                   <label
                     htmlFor="country"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Country / Region
                   </label>
@@ -1481,12 +1880,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="contact"
                     name="contact"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Main Contact (Name, Email, Phone)"
                   />
                   <label
                     htmlFor="contact"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Main Contact
                   </label>
@@ -1528,15 +1927,16 @@ export default function PartnershipsClient() {
                       Local Operations PARTNERSHIP
                     </option>
                   </select>
-                  <div className="absolute right-0 bottom-6 pointer-events-none">
+                  <div className="absolute right-0 bottom-6 pointer-events-none transition-transform duration-500 peer-focus:-rotate-180 peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)]">
                     <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
                       <path
                         d="M1 1L7 7L13 1"
-                        stroke="white"
+                        stroke="currentColor"
                         strokeOpacity="0.5"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        className="peer-focus:stroke-turquoise transition-colors"
                       />
                     </svg>
                   </div>
@@ -1546,12 +1946,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="pillars"
                     name="pillars"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Relevant Pillars (A, B, C...)"
                   />
                   <label
                     htmlFor="pillars"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Relevant Pillars
                   </label>
@@ -1565,12 +1965,12 @@ export default function PartnershipsClient() {
                   id="description"
                   name="description"
                   rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                   placeholder="What you do  (1–3 sentences)"
                 />
                 <label
                   htmlFor="description"
-                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                 >
                   What you do ?
                 </label>
@@ -1584,12 +1984,12 @@ export default function PartnershipsClient() {
                     id="capabilities"
                     name="capabilities"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Top 3 capabilities (bullet points)"
                   />
                   <label
                     htmlFor="capabilities"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Top 3 capabilities
                   </label>
@@ -1600,12 +2000,12 @@ export default function PartnershipsClient() {
                     id="proof"
                     name="proof"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Proof of work (links / portfolio / cases)"
                   />
                   <label
                     htmlFor="proof"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Proof of work
                   </label>
@@ -1619,12 +2019,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="references"
                     name="references"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="References (optional)"
                   />
                   <label
                     htmlFor="references"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     References (optional)
                   </label>
@@ -1635,12 +2035,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="capacity"
                     name="capacity"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Capacity (project slots / hours)"
                   />
                   <label
                     htmlFor="capacity"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Capacity
                   </label>
@@ -1651,12 +2051,12 @@ export default function PartnershipsClient() {
                     type="text"
                     id="budget"
                     name="budget"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Typical project range (budget/scope)"
                   />
                   <label
                     htmlFor="budget"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Typical project range
                   </label>
@@ -1670,12 +2070,12 @@ export default function PartnershipsClient() {
                   id="values"
                   name="values"
                   rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                   placeholder="Values Fit (required): 2–3 sentences on responsibility, integrity, excellence, discretion"
                 />
                 <label
                   htmlFor="values"
-                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                  className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                 >
                   Values Fit (Required)
                 </label>
@@ -1688,12 +2088,12 @@ export default function PartnershipsClient() {
                     id="why"
                     name="why"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Why GOTT WALD? (short)"
                   />
                   <label
                     htmlFor="why"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Why GOTT WALD?
                   </label>
@@ -1703,12 +2103,12 @@ export default function PartnershipsClient() {
                     id="constraints"
                     name="constraints"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-gold transition-colors placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Anything we must know? (timing, constraints, risks)"
                   />
                   <label
                     htmlFor="constraints"
-                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-gold peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
+                    className="absolute left-0 top-3 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase text-white/70 peer-focus:text-turquoise peer-focus:drop-shadow-[0_0_8px_rgba(18,168,172,0.8)] peer-focus:-translate-y-3 peer-placeholder-shown:translate-y-7 peer-placeholder-shown:text-xl peer-placeholder-shown:md:text-2xl peer-placeholder-shown:tracking-normal peer-placeholder-shown:font-light peer-placeholder-shown:normal-case peer-placeholder-shown:text-white/90 transition-all duration-300 pointer-events-none"
                   >
                     Anything we must know?
                   </label>
@@ -1744,18 +2144,16 @@ export default function PartnershipsClient() {
                 </label>
               </div>
 
-              <button
+              <MagneticButton
                 type="submit"
                 disabled={isSubmitting}
-                data-magnetic
-                translate="no"
-                className="notranslate group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative flex items-center justify-center gap-4 bg-white px-12 py-6 overflow-hidden w-full md:w-max mt-4 disabled:opacity-50 disabled:cursor-not-allowed rounded-full border border-transparent hover:border-turquoise/50 hover:shadow-[0_0_20px_rgba(18,168,172,0.3)] transition-all duration-500"
               >
                 <span className="relative z-10 font-bold uppercase tracking-[0.15em] text-sm text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
                   {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
                 </span>
-                <span className="relative z-0 w-2 h-2 rounded-full bg-black group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
-              </button>
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-turquoise group-hover:scale-[60] transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] pointer-events-none" />
+              </MagneticButton>
 
               {submitStatus === "success" && (
                 <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm">

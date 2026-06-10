@@ -20,22 +20,27 @@ export const PARTNERSHIP_ARCHETYPES = [
   {
     title: "Strategic PARTNERSHIPS",
     desc: "co-creation, joint delivery, long-term",
+    image: "/images/abstracts/strategic_abstract_1781101563383.png",
   },
   {
     title: "Delivery PARTNERSHIPS",
     desc: "implementation, operations, rollouts, production",
+    image: "/images/abstracts/delivery_abstract_1781101622220.png",
   },
   {
     title: "Technology PARTNERSHIPS",
     desc: "AI, automation, platform, security, infrastructure",
+    image: "/images/abstracts/technology_abstract_1781101634509.png",
   },
   {
     title: "Creative & Media PARTNERSHIPS",
     desc: "brand, film, design, content",
+    image: "/images/abstracts/creative_abstract_1781101646264.png",
   },
   {
     title: "Local Operations PARTNERSHIPS",
     desc: "relocation, regional execution, on-site networks",
+    image: "/images/abstracts/local_abstract_1781101657021.png",
   },
 ];
 
