@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "lusion-next",
+      "name": "gottwald-next",
       "dependencies": {
         "@react-email/components": "^1.0.10",
         "@react-three/drei": "^10.7.7",

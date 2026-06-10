@@ -3,7 +3,6 @@
 import { useEffect, useRef, useCallback } from "react";
 
 /**
- * Global liquid click ripple effect — Lusion-style.
  *
  * PERFORMANCE OPTIMIZATIONS (v2):
  * - Checks `navigator.hardwareConcurrency` — disables on ≤2 core devices

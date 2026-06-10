@@ -518,7 +518,7 @@ export default function AboutClient() {
       // 5. Magnetic CTA — pulls toward the cursor within a 220px radius.
       // The small luxury that signals "this surface responds to you, not
       // the other way around" — a recurring micro-interaction language
-      // across award-grade sites (Lusion, Active Theory, Pangea).
+      // across award-grade sites ( Active Theory, Pangea).
       const magneticBtn =
         pageRef.current?.querySelector<HTMLElement>(".magnetic-cta");
       if (magneticBtn && !reducedMotion) {

@@ -4,7 +4,7 @@ import { useRef, useEffect, useCallback } from "react";
 import { useAudio } from "./AudioProvider";
 
 /**
- * Lusion-style audio toggle — canvas sine wave.
+ *  audio toggle — canvas sine wave.
  * Self-terminates rAF when muted, pauses on hidden tab.
  */
 export default function AudioToggle() {

@@ -175,28 +175,28 @@ function ArchetypeCard({ arch, index, flexValue, onHover, onLeave }: any) {
         style={{ background: `radial-gradient(600px circle at var(--x) var(--y), rgba(212,175,55,0.07), transparent 50%)` }}
       />
       <div
-        className="pointer-events-none absolute inset-0 z-2 rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 ring-1 ring-inset ring-gold/50"
+        className="pointer-events-none absolute inset-0 z-2 rounded-2xl opacity-0 transition-opacity duration-700 group-hover:opacity-100 ring-1 ring-inset ring-silver/50"
         style={{
           maskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
           WebkitMaskImage: `radial-gradient(350px circle at var(--x) var(--y), black, transparent 55%)`,
         }}
       />
       <div 
-        className="absolute -bottom-8 -right-4 text-[10rem] lg:text-[13rem] font-black leading-none text-white/2 transition-[transform,color] duration-300 ease-out select-none pointer-events-none z-3 group-hover:text-gold/4"
+        className="absolute -bottom-8 -right-4 text-[10rem] lg:text-[13rem] font-black leading-none text-white/2 transition-[transform,color] duration-300 ease-out select-none pointer-events-none z-3 group-hover:text-silver/5"
         style={{ transform: "translate(var(--mx, 0), var(--my, 0))" }}
       >
         0{index + 1}
       </div>
       <motion.div layout className="relative z-10 flex flex-col h-full justify-between">
         <motion.div layout className="flex items-center justify-between mb-auto">
-          <span className="text-gold/80 font-mono text-sm tracking-[0.4em] font-medium">
+          <span className="text-silver/80 font-mono text-sm tracking-[0.4em] font-medium">
             {String(index + 1).padStart(2, "0")}
           </span>
           <div className="w-12 h-px bg-white/10 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full bg-turquoise origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)]" />
           </div>
         </motion.div>
-        <motion.div layout className="mt-8 pt-4 border-t border-white/5 group-hover:border-gold/15 transition-colors duration-700">
+        <motion.div layout className="mt-8 pt-4 border-t border-white/5 group-hover:border-silver/20 transition-colors duration-700">
           <h3 className={`font-black text-white/80 group-hover:text-white transition-colors duration-500 leading-[0.9] mb-3 tracking-tighter uppercase ${index === 0 ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}>
             {arch.title}
           </h3>
@@ -1426,7 +1426,7 @@ export default function PartnershipsClient() {
             {/* TOP: The Principle Statement */}
             <div className="reveal-up space-y-10">
               <div>
-                <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-6">
+                <p className="text-sm tracking-[0.45em] uppercase text-copper/90 font-bold mb-6">
                   The Principle
                 </p>
                 <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
@@ -1465,7 +1465,7 @@ export default function PartnershipsClient() {
         <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto">
             <div className="reveal-up mb-20">
-              <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-6">
+              <p className="text-sm tracking-[0.45em] uppercase text-copper/90 font-bold mb-6">
                 Who We&apos;re Looking For
               </p>
               <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black tracking-tighter leading-[0.85] uppercase text-white mb-6">
@@ -1492,7 +1492,7 @@ export default function PartnershipsClient() {
             {/* Section Title Row */}
             <div className="flex-none flex justify-between items-center px-gutter pt-20 pb-6 reveal-up shrink-0">
               <div>
-                <p className="text-xs tracking-[0.5em] uppercase text-gold font-bold mb-3">Non-Negotiables</p>
+                <p className="text-xs tracking-[0.5em] uppercase text-silver font-bold mb-3">Non-Negotiables</p>
                 <h2 className="text-[clamp(2rem,max(3.5vw,4.5vh),5.5rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
                   OUR
                   <br />
