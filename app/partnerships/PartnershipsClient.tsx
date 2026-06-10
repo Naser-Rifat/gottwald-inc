@@ -28,6 +28,8 @@ export default function PartnershipsClient() {
   const tNav = useTranslations("nav");
   const pageRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
+  const heroGlowRef = useRef<HTMLDivElement>(null);
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
@@ -71,6 +73,10 @@ export default function PartnershipsClient() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       // 1. Hero Entrance
       if (heroTextRef.current) {
         const heroChildren =
@@ -86,6 +92,45 @@ export default function PartnershipsClient() {
           ease: "expo.out",
           force3D: true,
         });
+
+        // MOVE 1 — Kinetic letter choreography on the headline. Each
+        // character of "PARTNERSHIPS" + "AT GOTT WALD" arrives scattered
+        // (offset / rotated / faded) and animates into its aligned
+        // position with elastic ease. Brand metaphor literalized:
+        // chaotic possibilities → aligned partnerships. Deterministic
+        // pseudo-random offsets keep SSR/hydration stable.
+        const kineticChars =
+          heroTextRef.current.querySelectorAll<HTMLElement>(".kinetic-char");
+        kineticChars.forEach((el, i) => {
+          const seed = i + 7;
+          const dx = (((seed * 73) % 100) - 50) * 1.4;
+          const dy = (((seed * 137) % 80) - 40) * 1.6;
+          const rot = (((seed * 211) % 40) - 20) * 0.7;
+          el.dataset.dx = String(dx);
+          el.dataset.dy = String(dy);
+          el.dataset.rot = String(rot);
+        });
+
+        if (reducedMotion) {
+          gsap.set(kineticChars, { x: 0, y: 0, rotate: 0, opacity: 1 });
+        } else {
+          gsap.set(kineticChars, {
+            x: (i, target) => Number(target.dataset.dx),
+            y: (i, target) => Number(target.dataset.dy),
+            rotate: (i, target) => Number(target.dataset.rot),
+            opacity: 0,
+          });
+          gsap.to(kineticChars, {
+            x: 0,
+            y: 0,
+            rotate: 0,
+            opacity: 1,
+            duration: 1.5,
+            stagger: 0.022,
+            ease: "elastic.out(1, 0.7)",
+            delay: 0.35,
+          });
+        }
 
         // Hero decoupled parallax typography
         const heroParent = heroTextRef.current?.parentElement;
@@ -334,6 +379,72 @@ export default function PartnershipsClient() {
     return () => ctx.revert();
   }, []);
 
+  // MOVE 2 (handler) — cursor-follow glow with GSAP quickTo. The glow
+  // fades in on mouse-enter, follows with smooth lag while moving, and
+  // fades out / breathes via CSS keyframes when idle. Touch / no-hover
+  // devices skip the glow entirely (cursor-following ambient on touch
+  // is meaningless and degrades perf).
+  useEffect(() => {
+    const section = heroSectionRef.current;
+    const glow = heroGlowRef.current;
+    if (!section || !glow) return;
+
+    if (typeof window === "undefined") return;
+    const canHover = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+    if (!canHover) return;
+
+    const quickX = gsap.quickTo(glow, "x", { duration: 0.55, ease: "power3.out" });
+    const quickY = gsap.quickTo(glow, "y", { duration: 0.55, ease: "power3.out" });
+
+    let idleTimer: number | null = null;
+
+    const setIdle = (idle: boolean) => {
+      if (idle) {
+        glow.classList.add("hero-cursor-glow--idle");
+      } else {
+        glow.classList.remove("hero-cursor-glow--idle");
+      }
+    };
+
+    const handleMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      quickX(x);
+      quickY(y);
+      gsap.to(glow, { opacity: 1, duration: 0.5, ease: "power2.out", overwrite: "auto" });
+      setIdle(false);
+      if (idleTimer !== null) window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => setIdle(true), 400);
+    };
+
+    const handleEnter = () => {
+      gsap.to(glow, { opacity: 1, duration: 0.6, ease: "power2.out" });
+    };
+
+    const handleLeave = () => {
+      gsap.to(glow, { opacity: 0, duration: 0.7, ease: "power2.out" });
+      setIdle(false);
+      if (idleTimer !== null) {
+        window.clearTimeout(idleTimer);
+        idleTimer = null;
+      }
+    };
+
+    section.addEventListener("mousemove", handleMove, { passive: true });
+    section.addEventListener("mouseenter", handleEnter);
+    section.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      section.removeEventListener("mousemove", handleMove);
+      section.removeEventListener("mouseenter", handleEnter);
+      section.removeEventListener("mouseleave", handleLeave);
+      if (idleTimer !== null) window.clearTimeout(idleTimer);
+    };
+  }, []);
+
   useEffect(() => {
     const handleHashScroll = () => {
       const hash = window.location.hash;
@@ -375,7 +486,10 @@ export default function PartnershipsClient() {
       </div>
 
       <main>
-        <section className="min-h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-40">
+        <section
+          ref={heroSectionRef}
+          className="min-h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-40"
+        >
           <div
             className="absolute inset-0 pointer-events-none z-1"
             style={{
@@ -385,115 +499,317 @@ export default function PartnershipsClient() {
           />
           <div className="absolute top-0 left-0 w-full h-px bg-white/5 z-2" />
 
+          {/* MOVE 2 — Cursor-following atmospheric glow. A soft turquoise
+              radial halo follows the cursor across the hero with GSAP
+              quickTo for buttery-smooth lag. When the cursor is idle the
+              halo gently breathes (CSS animation subscribing to the
+              LivingEnvironment's --orchestration-pace). Centered at the
+              cursor position via translate(-50%, -50%); soft blur sells
+              the depth; mix-blend-mode screen makes it read through the
+              liquid background without flattening it. */}
+          <div
+            ref={heroGlowRef}
+            aria-hidden="true"
+            className="hero-cursor-glow pointer-events-none absolute z-2 will-change-transform opacity-0"
+            style={{
+              left: 0,
+              top: 0,
+              width: "min(70vw, 900px)",
+              height: "min(70vw, 900px)",
+              borderRadius: "9999px",
+              background:
+                "radial-gradient(circle at center, rgba(18,168,172,0.18) 0%, rgba(18,168,172,0.08) 35%, transparent 65%)",
+              filter: "blur(60px)",
+              mixBlendMode: "screen",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+
+          {/* Ghost echo — massive italic "partners." floats behind the
+              headline as the section's atmospheric anchor. Editorial
+              wallpaper-magazine signature, not a dashboard backdrop. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[14%] -left-[5vw] z-2 select-none hidden lg:block"
+          >
+            <span
+              className="block italic font-light text-white/[0.025] leading-[0.78] tracking-[-0.06em] whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(12rem, 24vw, 30rem)",
+              }}
+            >
+              partners.
+            </span>
+          </div>
+
+          {/* Brand signal-language anchor — subtle frequency wave at the
+              bottom of the hero subscribes to LivingEnvironment's
+              --orchestration-pace + --rand-phase-signal so it drifts in
+              step with the site's scroll-velocity-driven breath. Connects
+              this hero to the brand's frequency/signal vocabulary
+              (PILLARS imagery, TuningInstrument HUD, Strategic Inquiry
+              wave) without becoming dashboard decoration. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[18vh] lg:h-[24vh] z-2 overflow-hidden"
+          >
+            <div
+              className="strategic-signal-drift absolute bottom-0 left-0 w-[200%] h-full will-change-transform"
+              style={{
+                maskImage:
+                  "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
+              }}
+            >
+              <svg
+                viewBox="0 0 1600 200"
+                preserveAspectRatio="none"
+                className="block w-full h-full"
+                aria-hidden="true"
+              >
+                <path
+                  d="M0,100 Q100,40 200,100 T400,100 T600,100 T800,100 T1000,100 T1200,100 T1400,100 T1600,100"
+                  fill="none"
+                  stroke="rgba(18, 168, 172, 0.18)"
+                  strokeWidth="1"
+                  vectorEffect="non-scaling-stroke"
+                />
+                <path
+                  d="M0,130 Q100,90 200,130 T400,130 T600,130 T800,130 T1000,130 T1200,130 T1400,130 T1600,130"
+                  fill="none"
+                  stroke="rgba(18, 168, 172, 0.09)"
+                  strokeWidth="0.8"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* ALIGNED-PAIR — atmospheric centerpiece. Two cyan wireframe
+              profiles flank the entire hero composition; the frequency
+              wave between their eyes runs across the page BEHIND the
+              headline at roughly its baseline. Headline, tagline, and
+              stats live INSIDE the image's frequency field, not next
+              to it. Heavy vignette mask removes all rectangular boundary;
+              low opacity (~32%) lets content read on top. The image is
+              the brand's concept made atmosphere — partnership as the
+              ground, not the decoration. */}
+          <div
+            aria-hidden="true"
+            className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-[52%] w-[68vw] max-w-[1180px] aspect-square z-[2] pointer-events-none"
+            style={{
+              opacity: 0.32,
+              maskImage:
+                "radial-gradient(ellipse 75% 60% at center, #000 30%, rgba(0,0,0,0.45) 60%, transparent 88%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 75% 60% at center, #000 30%, rgba(0,0,0,0.45) 60%, transparent 88%)",
+              mixBlendMode: "screen",
+            }}
+          >
+            <Image
+              src="/partnerships/partnerships-hero-aligned-pair.png"
+              alt=""
+              fill
+              sizes="(min-width: 1280px) 1180px, 68vw"
+              className="object-contain"
+              unoptimized
+              priority={false}
+            />
+          </div>
+
           <div
             ref={heroTextRef}
             className="relative w-full px-gutter pb-32 md:pb-40 lg:pb-48 xl:pb-56 will-change-transform z-5 mt-auto"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-10 lg:gap-16 xl:gap-24 items-end">
-              {/* LEFT: Power-statement */}
+            {/* Single optical axis — headline carries the moment, all
+                supporting content flows below in a narrow editorial
+                column. The previous two-column spread (massive headline
+                left, boxed HUD metric strip right with stats grid + two
+                stacked rectangular CTAs) was the strongest AI-template
+                tell on the entire site; stripped wholesale.
+                Variable gap rhythm replaces uniform spacing: large gap
+                after headline (breathing room), medium after tagline,
+                small between CTA row and the colophon strip. */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px] gap-12 lg:gap-16 xl:gap-24 items-end">
+              {/* LEFT — power-statement (eyebrow + headline + tagline +
+                  trust line). Restores the OLD two-column composition
+                  the user asked to keep; AI-template signals stripped
+                  per-element rather than wholesale. */}
               <div className="hero-reveal w-full max-w-[850px]">
-                <div className="flex items-center gap-3 mb-8 lg:mb-10">
-                  <span className="text-gold text-sm lg:text-sm font-bold tracking-[0.4em] uppercase">
-                    02/
+                {/* Eyebrow — 02/ Partnerships. Restored. Thinner
+                    typographic weight + Playfair italic for the label
+                    reads as editorial chapter marker, not AI luxury
+                    template (no bold uppercase, no symmetric bracket). */}
+                {/* <div className="flex items-center gap-3 mb-8 lg:mb-10">
+                  <span className="text-gold text-xs lg:text-sm tracking-[0.4em] uppercase font-light">
+                    02 /
                   </span>
-                  <span className="w-16 h-px bg-white/15" />
-                  <span className="text-sm lg:text-sm tracking-[0.35em] text-white/70 uppercase font-bold">
+                  <span className="w-12 h-px bg-white/20" />
+                  <span
+                    className="text-xs lg:text-sm tracking-[0.35em] text-white/65 uppercase font-light"
+                    style={{ fontFamily: "var(--font-playfair)" }}
+                  >
                     Partnerships
                   </span>
-                </div>
+                </div> */}
 
-                {/* Hero text owned by next-intl. translate="no" keeps GT
-                    out so the parallax + scroll-trigger animations don't
-                    fight <font> wrapping during language change. */}
-                <h1
-                  translate="no"
-                  className="notranslate text-[clamp(1.6rem,8vw,5rem)] sm:text-[clamp(2.25rem,9vw,5.5rem)] lg:text-[clamp(2.25rem,4.5vw,5.5rem)] xl:text-[clamp(3rem,5.5vw,6.5rem)] leading-[0.9] font-black tracking-[-0.04em] uppercase text-white flex flex-col max-w-full [overflow-wrap:anywhere] [hyphens:auto]"
+              {/* Hero text owned by next-intl. translate="no" keeps GT
+                  out so the parallax + scroll-trigger animations don't
+                  fight <font> wrapping during language change.
+                  Editorial spread: "PARTNERSHIPS" massive sans uppercase
+                  on line 1, "at Gott Wald" Playfair italic gold accent
+                  on line 2 (Playfair italic carries the brand's
+                  signature accent voice). */}
+              <h1
+                translate="no"
+                className="notranslate flex flex-col max-w-full"
+              >
+                <span className="parallax-fast block whitespace-nowrap text-[clamp(2.2rem,7.4vw,7rem)] leading-[0.88] font-black tracking-[-0.045em] uppercase text-white">
+                  {Array.from(t("line1")).map((ch, idx) => (
+                    <span
+                      key={`l1-${idx}`}
+                      className="kinetic-char inline-block will-change-transform"
+                      aria-hidden={ch === " " ? "true" : undefined}
+                    >
+                      {ch === " " ? " " : ch}
+                    </span>
+                  ))}
+                </span>
+                <span
+                  className="parallax-slow block whitespace-nowrap text-[clamp(1.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.035em] text-gold pt-1 lg:pt-2 normal-case"
+                  style={{
+                    fontFamily: "var(--font-playfair)",
+                    fontStyle: "italic",
+                    fontWeight: 400,
+                  }}
                 >
-                  <span className="parallax-fast inline-block">
-                    {t("line1")}
-                  </span>
-                  <span className="parallax-slow inline-block text-white/80">
-                    {t("line2")}
-                  </span>
-                </h1>
+                  {Array.from(t("line2")).map((ch, idx) => (
+                    <span
+                      key={`l2-${idx}`}
+                      className="kinetic-char inline-block will-change-transform"
+                      aria-hidden={ch === " " ? "true" : undefined}
+                    >
+                      {ch === " " ? " " : ch}
+                    </span>
+                  ))}
+                </span>
+              </h1>
 
-                <p className="hero-reveal flex items-center gap-4 text-[clamp(0.9rem,1.25vw,1.4rem)] font-mono uppercase text-turquoise/85 tracking-[0.18em] leading-tight mt-8 lg:mt-10 pl-0.5">
-                  <span className="w-8 md:w-16 h-0.5 bg-turquoise/50 flex-shrink-0" />
-                  We don&apos;t buy vendors. We select PARTNERS.
-                </p>
+              {/* Tagline — editorial Playfair italic, sentence case. */}
+              <p
+                className="hero-reveal mt-10 lg:mt-12 text-[clamp(1.2rem,1.8vw,1.8rem)] font-light leading-[1.35] text-white/85 max-w-[42ch]"
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontStyle: "italic",
+                }}
+              >
+                We don&apos;t buy vendors. We select{" "}
+                <span className="text-turquoise">partners.</span>
+              </p>
 
-                {/* Trust line */}
-                <p className="hero-reveal mt-6 text-sm uppercase tracking-[0.3em] text-white/80 font-medium pl-0.5">
-                  Confidential by default. NDA-ready on request.
-                </p>
-              </div>
+              {/* Trust line — sentence-case Playfair italic colophon
+                  closes the LEFT column. The previous tracked-caps
+                  treatment was AI luxury template; this is editorial. */}
+              <p
+                className="hero-reveal mt-10 lg:mt-12 text-[clamp(0.9rem,1.05vw,1.1rem)] text-white/55 italic font-light"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Confidential by default. NDA-ready on request.
+              </p>
+            </div>
 
-              {/* RIGHT: HUD Metric Strip */}
-              <div className="hero-reveal hidden lg:flex flex-col gap-0 self-end bg-[#0a0a0a]/95 rounded-sm p-8 lg:p-10 -m-8 border border-white/10 shadow-2xl">
-                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gold/20">
-                  <span className="w-2 h-2 rounded-full bg-turquoise" />
-                  <p className="text-[10px] lg:text-sm uppercase tracking-[0.5em] text-gold/80 font-bold">
-                    Our Reach — Live
-                  </p>
-                </div>
+            {/* RIGHT — converging frequency waves image (visual anchor)
+                + open editorial stats column + dual CTAs. The bespoke
+                "two waves merging into one" image literalizes the
+                partnership / alignment metaphor — two distinct
+                frequencies resonating into a shared signal. Replaces
+                the old dashboard panel as the right column's visual
+                weight. Brand-aesthetic family-matched with the 5 Pillar
+                images (turquoise scan-line + particle dust) but a
+                completely different subject so it doesn't echo Pillar
+                05's single profile. */}
 
+            <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10">
+
+              {/* Section label — single italic Playfair line, sits
+                  beneath the image as a caption to the visual moment. */}
+              <p
+                className="text-[clamp(0.95rem,1.1vw,1.15rem)] text-gold/85 italic font-light tracking-[-0.012em]"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Our reach.
+              </p>
+
+              {/* Stats — editorial 2-column grid. Label column is
+                  auto-sized so the wider labels ("Partner Origins" /
+                  "Network Size") set the column width; numeral column
+                  is auto-sized too. Small fixed gap keeps the pairs
+                  tight together (no justify-between extreme spread).
+                  Reads as publication index, not metric badges. */}
+              <div className="grid grid-cols-[1fr_auto] gap-x-6 gap-y-4 lg:gap-y-5 items-baseline">
                 {[
                   { label: "Countries", value: "26" },
                   { label: "Partner Origins", value: "71" },
                   { label: "Network Size", value: "888+" },
                   { label: "Languages", value: "17" },
-                ].map(({ label, value }) => (
-                  <div
-                    key={label}
-                    className="group flex items-baseline justify-between py-5 border-b border-white/5 last:border-0 cursor-default"
+                ].flatMap(({ label, value }) => [
+                  <span
+                    key={`label-${label}`}
+                    className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-white/55 font-light"
                   >
-                    <span className="text-sm lg:text-sm uppercase tracking-[0.3em] text-white/80 group-hover:text-white transition-colors duration-300">
-                      {label}
-                    </span>
-                    <span className="text-4xl lg:text-5xl font-light text-white/90 tabular-nums group-hover:text-turquoise transition-colors duration-300">
-                      {value}
-                    </span>
-                  </div>
-                ))}
+                    {label}
+                  </span>,
+                  <span
+                    key={`value-${label}`}
+                    className="text-[clamp(1.8rem,2.4vw,2.4rem)] font-light text-white tabular-nums leading-[1] tracking-[-0.025em] text-right"
+                    style={{ fontFamily: "var(--font-playfair)" }}
+                  >
+                    {value}
+                  </span>,
+                ])}
+              </div>
 
-                <div className="mt-8 flex flex-col gap-3">
-                  <a
-                    href="#apply"
-                    data-magnetic
-                    translate="no"
-                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-4 rounded-md border border-turquoise/45 bg-[#061018] text-turquoise hover:border-turquoise/80 hover:bg-turquoise hover:text-[#03080c] transition-all duration-300 w-full shadow-[0_0_24px_rgba(18,168,172,0.1)] hover:shadow-[0_0_42px_rgba(18,168,172,0.24)]"
+              {/* Editorial CTAs — text-as-affordance, NOT rectangular
+                  outlined pills. Apply (primary, gold accent) + Intro
+                  call (secondary, italic). Magnetic preserved via
+                  data-magnetic attribute. */}
+              <div className="flex flex-col gap-5 mt-2">
+                <a
+                  href="#apply"
+                  data-magnetic
+                  translate="no"
+                  className="notranslate group inline-flex items-baseline gap-4 text-white hover:text-gold transition-colors duration-500 self-start"
+                >
+                  <span className="font-light tracking-[-0.018em] leading-[1] text-[clamp(1.1rem,1.4vw,1.45rem)]">
+                    {tCtas("applyForPartnership")}
+                  </span>
+                  <span className="inline-block w-10 h-px bg-current opacity-60 translate-y-[-0.3em] group-hover:w-20 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+                  <span className="text-current translate-y-[-0.05em] text-[clamp(1rem,1.2vw,1.25rem)] leading-[1] group-hover:translate-x-1.5 transition-transform duration-300">
+                    →
+                  </span>
+                </a>
+                <a
+                  href="#apply"
+                  data-magnetic
+                  translate="no"
+                  className="notranslate group inline-flex items-baseline gap-3 text-white/60 hover:text-white transition-colors duration-500 self-start"
+                >
+                  <span
+                    className="font-light italic tracking-[-0.012em] text-[clamp(0.95rem,1.1vw,1.15rem)]"
+                    style={{ fontFamily: "var(--font-playfair)" }}
                   >
-                    <span className="text-sm lg:text-sm tracking-[0.18em] uppercase font-bold">
-                      {tCtas("applyForPartnership")}
-                    </span>
-                    <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">
-                      →
-                    </span>
-                  </a>
-                  <a
-                    href="#apply"
-                    data-magnetic
-                    translate="no"
-                    className="notranslate group inline-flex items-center justify-center gap-4 px-8 py-3 rounded-md border border-white/10 text-white/75 hover:text-white hover:border-turquoise/45 hover:bg-turquoise/8 transition-colors duration-300 w-full"
-                  >
-                    <span className="text-[11px] tracking-[0.18em] uppercase font-medium">
-                      {tCtas("requestIntroCall")}
-                    </span>
-                  </a>
-                </div>
+                    {tCtas("requestIntroCall")}
+                  </span>
+                  <span className="text-current text-sm group-hover:translate-x-1 transition-transform duration-300">
+                    →
+                  </span>
+                </a>
               </div>
             </div>
           </div>
-
-          {/* Awwwards Scroll Indicator */}
-          <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-4 z-20 pointer-events-none">
-            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-medium">
-              Scroll
-            </span>
-            <div className="w-px h-16 bg-white/10 relative overflow-hidden">
-              <div className="scroll-indicator-line absolute top-0 left-0 w-full h-[30%] bg-turquoise" />
-            </div>
-          </div>
+        </div>
         </section>
 
         {/* ── SECTION 2: GOTT WALD STANDARD (3 statements) ── */}

@@ -553,6 +553,43 @@ html[lang="de"] {
   filter: drop-shadow(0 0 12px rgba(18, 168, 172, 0.32));
 }
 
+/* ===== Partnerships hero cursor glow — idle breath =====
+   When the cursor pauses inside the Partnerships hero, a class is
+   toggled on the glow div by the React handler. This keyframe gently
+   pulses the opacity, with timing borrowed from the LivingEnvironment's
+   --orchestration-pace so the breath stays in step with the rest of the
+   site's signal breath. The phase offset (--rand-phase-orchestration)
+   ensures different sessions begin the breath at different points. */
+.hero-cursor-glow {
+  /* Anchor for translate(-50%, -50%) so the glow centers at (x, y)
+     written by GSAP. The transform is set inline initially; once GSAP
+     starts writing translate via the x/y plugin, the transform string
+     stays anchored at the centered translate. */
+  will-change: transform, opacity;
+}
+
+.hero-cursor-glow--idle {
+  animation: hero-glow-breath var(--orchestration-pace, 9s) ease-in-out
+    infinite;
+  animation-delay: var(--rand-phase-orchestration, 0s);
+}
+
+@keyframes hero-glow-breath {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cursor-glow--idle {
+    animation: none;
+  }
+}
+
 /* ===== Strategic Inquiry signal drift =====
    Subtle frequency wave at the bottom of the StrategicInquirySection
    that drifts horizontally in step with the LivingEnvironment's
