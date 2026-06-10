@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
@@ -144,6 +144,71 @@ const PILLARS = [
   },
 ];
 
+function MagneticButton({ children, className = "", onClick, disabled, type = "button" }: any) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.4, y: middleY * 0.4 });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.button
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+function SpotlightCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current) return;
+    const rect = divRef.current.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  return (
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+      className={`relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(18,168,172,0.12)] stagger-item ${className}`}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 ease-out"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(18,168,172,0.15), transparent 40%)`,
+        }}
+      />
+      <div className="relative z-10 transition-transform duration-500 group-hover:scale-[1.02]">{children}</div>
+    </div>
+  );
+}
+
 export default function CareersClient() {
   const t = useTranslations("careers.hero");
   const tCtas = useTranslations("careers.ctas");
@@ -279,6 +344,18 @@ export default function CareersClient() {
           },
         );
       }
+
+      // #10 — Scroll-fill Typography
+      gsap.to(".scroll-fill-text", {
+        backgroundPosition: "0% 0",
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".scroll-fill-text",
+          start: "top 80%",
+          end: "bottom 30%",
+          scrub: true,
+        }
+      });
 
       // Eyebrow reveal
       gsap.fromTo(
@@ -487,36 +564,35 @@ export default function CareersClient() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
-              {/* Card hover: lift + glow (#5), stray ƒ removed (#1) */}
-              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
+              <SpotlightCard className="group">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-turquoise">
                   Path 01
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
-                <p className="text-white font-light leading-relaxed text-lg">
+                <p className="text-white/80 font-light leading-relaxed text-lg">
                   For people who want to build long-term and carry responsibility.
                 </p>
-              </div>
+              </SpotlightCard>
 
-              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold">
+              <SpotlightCard className="group">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-turquoise">
                   Path 02
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Freelancer / Interim</h3>
-                <p className="text-white font-light leading-relaxed text-lg">
+                <p className="text-white/80 font-light leading-relaxed text-lg">
                   For professionals who deliver at a high level for defined scopes — clean standards, clear ownership.
                 </p>
-              </div>
+              </SpotlightCard>
 
-              <div className="stagger-item border border-white/10 p-10 hover:border-turquoise/30 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(18,168,172,0.08)] transition-all duration-500 bg-black/40">
-                <div className="text-md tracking-[0.2em] uppercase text-gold/80 mb-6 font-bold">
+              <SpotlightCard className="group">
+                <div className="text-md tracking-[0.2em] uppercase text-gold/80 mb-6 font-bold transition-colors group-hover:text-gold">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
-                <p className="text-white font-light leading-relaxed text-lg">
+                <p className="text-white/80 font-light leading-relaxed text-lg">
                   For selected experts we activate on demand (project-based, NDA-ready).
                 </p>
-              </div>
+              </SpotlightCard>
             </div>
           </div>
         </section>
@@ -524,8 +600,17 @@ export default function CareersClient() {
         {/* ── WHO WE'RE LOOKING FOR ── */}
         <section className="px-gutter py-[15vh] border-t border-white/5">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-            <div className="flex-1 reveal-text">
-              <h2 className="text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8">
+            <div className="flex-1">
+              <h2 
+                className="scroll-fill-text text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8 text-transparent"
+                style={{
+                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
+                  backgroundImage: "linear-gradient(90deg, #fff 50%, transparent 50%)",
+                  backgroundSize: "200% 100%",
+                  backgroundPosition: "100% 0",
+                  WebkitBackgroundClip: "text",
+                }}
+              >
                 WHO WE&apos;RE <br /> LOOKING FOR
               </h2>
               <p className="text-white/80 italic text-lg border-l border-gold pl-6 mt-12">
@@ -592,19 +677,19 @@ export default function CareersClient() {
                     onClick={() =>
                       setOpenPillar(openPillar === i ? null : i)
                     }
-                    className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none pl-4 md:pl-6"
+                    className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none pl-4 md:pl-6 group/btn"
                   >
                     <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
-                      <span className={`text-2xl md:text-4xl font-light transition-colors w-12 md:w-20 shrink-0 ${openPillar === i ? "text-gold" : "text-white/20 group-hover:text-gold"}`}>
+                      <span className={`text-2xl md:text-4xl font-light transition-all duration-500 w-12 md:w-20 shrink-0 ${openPillar === i ? "text-turquoise scale-125 drop-shadow-[0_0_15px_rgba(18,168,172,0.6)]" : "text-white/20 group-hover/btn:text-gold"}`}>
                         {pillar.letter}
                       </span>
-                      <h3 className="text-xl md:text-3xl font-medium tracking-tight group-hover:translate-x-4 transition-transform duration-500 leading-tight">
+                      <h3 className={`text-xl md:text-3xl font-medium tracking-tight transition-transform duration-500 leading-tight ${openPillar === i ? "translate-x-6 text-white" : "group-hover/btn:translate-x-4 text-white/80"}`}>
                         {pillar.title}
                       </h3>
                     </div>
                     <div
                       className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
-                       ${openPillar === i ? "border-white bg-white text-black -rotate-180" : "border-white/20 text-white/50 group-hover:border-white/60"}
+                       ${openPillar === i ? "border-turquoise bg-turquoise text-black shadow-[0_0_15px_rgba(18,168,172,0.4)] -rotate-180" : "border-white/20 text-white/50 group-hover/btn:border-white/60"}
                      `}
                     >
                       <svg
@@ -625,33 +710,54 @@ export default function CareersClient() {
                     </div>
                   </button>
 
-                  <div
-                    className={`overflow-hidden transition-all duration-700 ease-in-out ${openPillar === i ? "max-h-250 opacity-100 mb-12" : "max-h-0 opacity-0"}`}
-                  >
-                    <div className="pl-4 md:pl-20 flex flex-col md:flex-row gap-12 pt-4">
-                      <div className="flex-1">
-                        <h4 className="text-md tracking-[0.2em] text-gold uppercase mb-6 font-bold">
-                          Role Profiles
-                        </h4>
-                        <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
-                          {pillar.roles.map((role, idx) => (
-                            <li key={idx} className="flex gap-3">
-                              <span className="text-turquoise/40 mt-1.5">•</span>
-                              {role}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4">
-                        <h4 className="text-md tracking-[0.2em] text-gold/80 uppercase mb-4 font-bold">
-                          Impact Profile
-                        </h4>
-                        <p className="text-white font-medium tracking-wide">
-                          &quot;{pillar.impact}&quot;
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <AnimatePresence initial={false}>
+                    {openPillar === i && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pl-4 md:pl-20 flex flex-col md:flex-row gap-12 pt-4 pb-12">
+                          <div className="flex-1">
+                            <h4 className="text-md tracking-[0.2em] text-gold uppercase mb-6 font-bold">
+                              Role Profiles
+                            </h4>
+                            <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
+                              {pillar.roles.map((role, idx) => (
+                                <motion.li 
+                                  key={idx} 
+                                  initial={{ x: -10, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  exit={{ x: -10, opacity: 0 }}
+                                  transition={{ delay: 0.05 + (idx * 0.03), duration: 0.4 }}
+                                  className="flex gap-3"
+                                >
+                                  <span className="text-turquoise/40 mt-1.5">•</span>
+                                  {role}
+                                </motion.li>
+                              ))}
+                            </ul>
+                          </div>
+                          <motion.div 
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4"
+                          >
+                            <h4 className="text-md tracking-[0.2em] text-gold/80 uppercase mb-4 font-bold">
+                              Impact Profile
+                            </h4>
+                            <p className="text-white font-medium tracking-wide">
+                              &quot;{pillar.impact}&quot;
+                            </p>
+                          </motion.div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ))}
             </div>
@@ -784,56 +890,50 @@ export default function CareersClient() {
               <Honeypot />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="name" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input required id="name" name="name" type="text" placeholder="First & Last Name *"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="name" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     First &amp; Last Name *
                   </label>
-                  <input required id="name" name="name"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="contact" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input required id="contact" name="contact" type="text" placeholder="Email / Phone *"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="contact" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Email / Phone *
                   </label>
-                  <input required id="contact" name="contact"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="location" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="location" name="location" type="text" placeholder="Country / City / Time Zone"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="location" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Country / City / Time Zone
                   </label>
-                  <input id="location" name="location"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="region" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="region" name="region" type="text" placeholder="Continent / Region"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="region" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Continent / Region
                   </label>
-                  <input id="region" name="region"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <label htmlFor="languages" className="text-md uppercase tracking-wider text-white/70 font-medium">
+              <div className="relative pt-6">
+                <input id="languages" name="languages" type="text" placeholder="Languages (Select / Free text) e.g. English (Native), German (Fluent)"
+                  className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                />
+                <label htmlFor="languages" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                   Languages (Select / Free text)
                 </label>
-                <input id="languages" name="languages"
-                  type="text"
-                  placeholder="e.g. English (Native), German (Fluent)"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
-                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -879,35 +979,31 @@ export default function CareersClient() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <label htmlFor="roles" className="text-md uppercase tracking-wider text-white/70 font-medium">
-                  Pillars of Interest (Multi-select) &amp; Desired Role(s)
-                </label>
-                <input id="roles" name="roles"
-                  type="text"
-                  placeholder="e.g. Pillar G - Copywriter"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-white/20 focus:border-gold transition-colors"
+              <div className="relative pt-6">
+                <input id="roles" name="roles" type="text" placeholder="Pillars of Interest (Multi-select) & Desired Role(s)"
+                  className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
                 />
+                <label htmlFor="roles" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  Pillars of Interest &amp; Desired Role(s)
+                </label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="linkedin" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="linkedin" name="linkedin" type="url" placeholder="LinkedIn / Website"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="linkedin" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     LinkedIn / Website
                   </label>
-                  <input id="linkedin" name="linkedin"
-                    type="url"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="portfolio" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="portfolio" name="portfolio" type="text" placeholder="Portfolio / Proof Links (Max 3)"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="portfolio" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Portfolio / Proof Links (Max 3)
                   </label>
-                  <input id="portfolio" name="portfolio"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
               </div>
 
@@ -923,23 +1019,21 @@ export default function CareersClient() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="availability" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="availability" name="availability" type="text" placeholder="Availability (Start date / Hrs per week)"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="availability" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Availability (Start date / Hrs per week)
                   </label>
-                  <input id="availability" name="availability"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
-                <div className="flex flex-col gap-3">
-                  <label htmlFor="salary" className="text-md uppercase tracking-wider text-white/70 font-medium">
+                <div className="relative pt-6">
+                  <input id="salary" name="salary" type="text" placeholder="Salary range or Day rate (Optional)"
+                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  />
+                  <label htmlFor="salary" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
                     Salary range or Day rate (Optional)
                   </label>
-                  <input id="salary" name="salary"
-                    type="text"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium placeholder-transparent focus:border-gold transition-colors"
-                  />
                 </div>
               </div>
 
@@ -968,19 +1062,17 @@ export default function CareersClient() {
               </div>
 
               <div className="pt-8 border-t border-white/10 flex flex-col items-center justify-center sm:items-start gap-6">
-                {/* Submit button — turquoise expansion (#11) */}
-                <button
+                {/* Magnetic Submit button — turquoise expansion */}
+                <MagneticButton
                   type="submit"
                   disabled={isSubmitting}
-                  data-magnetic
-                  translate="no"
-                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(18,168,172,0.4)] transition-shadow duration-300"
                 >
                   <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
                     {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
                   </span>
-                  <span className="relative z-0 w-2 h-2 rounded-full bg-[#0a9396] group-hover:scale-[60] transition-transform duration-500 ease-out origin-center pointer-events-none" />
-                </button>
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-2 h-2 rounded-full bg-turquoise group-hover:scale-[60] transition-transform duration-500 ease-out pointer-events-none" />
+                </MagneticButton>
                 
                 {submitStatus === "success" && (
                   <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm w-full">

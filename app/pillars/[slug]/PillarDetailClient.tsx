@@ -413,6 +413,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10"
       >
         {/* ═══════ PANEL 1 — Hero ═══════ */}
+        {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
           ref={(el) => registerPanel(el, 0)}
           className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col lg:flex-row"
