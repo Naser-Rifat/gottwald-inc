@@ -29,7 +29,20 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-function MagneticButton({ children, className = "", onClick, disabled, type = "button" }: any) {
+type PartnershipArchetype = (typeof PARTNERSHIP_ARCHETYPES)[number];
+type PartnershipSelectionStep = (typeof PARTNERSHIP_SELECTION_STEPS)[number];
+
+type MagneticButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: React.ReactNode;
+};
+
+function MagneticButton({
+  children,
+  className = "",
+  onClick,
+  disabled,
+  type = "button",
+}: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -121,7 +134,19 @@ function ParallaxShard({ principle, index }: { principle: string; index: number 
 }
 
 
-function ArchetypeCard({ arch, index, flexValue, onHover, onLeave }: any) {
+function ArchetypeCard({
+  arch,
+  index,
+  flexValue,
+  onHover,
+  onLeave,
+}: {
+  arch: PartnershipArchetype;
+  index: number;
+  flexValue: number;
+  onHover: () => void;
+  onLeave: () => void;
+}) {
   return (
     <motion.div
       layout
@@ -241,13 +266,11 @@ function ScrambleText({ text, isActive }: { text: string; isActive: boolean }) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\\\/[]{}—=+*^?#";
   
   useEffect(() => {
-    if (!isActive) {
-      setDisplayText(text);
-      return;
-    }
+    if (!isActive) return;
+
     let iteration = 0;
     const interval = setInterval(() => {
-      setDisplayText((old) =>
+      setDisplayText(
         text
           .split("")
           .map((letter, index) => {
@@ -267,7 +290,7 @@ function ScrambleText({ text, isActive }: { text: string; isActive: boolean }) {
     return () => clearInterval(interval);
   }, [text, isActive]);
 
-  return <>{displayText}</>;
+  return <>{isActive ? displayText : text}</>;
 }
 
 function VerticalSpineStep({
@@ -276,7 +299,7 @@ function VerticalSpineStep({
   total,
   scrollYProgress,
 }: {
-  step: any;
+  step: PartnershipSelectionStep;
   i: number;
   total: number;
   scrollYProgress: MotionValue<number>;
@@ -339,7 +362,11 @@ function VerticalSpineStep({
   );
 }
 
-function VerticalSpineTimeline({ steps }: { steps: any[] }) {
+function VerticalSpineTimeline({
+  steps,
+}: {
+  steps: PartnershipSelectionStep[];
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -677,7 +704,9 @@ export default function PartnershipsClient() {
       });
 
       // Scroll-Fill Text Animation
-      gsap.utils.toArray('.scroll-fill-text').forEach((el: any) => {
+      gsap.utils
+        .toArray<HTMLElement>(".scroll-fill-text", pageRef.current!)
+        .forEach((el) => {
         gsap.to(el, {
           backgroundPosition: "0% 0",
           ease: "none",
@@ -688,7 +717,7 @@ export default function PartnershipsClient() {
             scrub: true,
           }
         });
-      });
+        });
 
       // 3. Standards Horizontal Scroll
       const scrollWrapper = gsap.utils.toArray(
@@ -962,10 +991,6 @@ export default function PartnershipsClient() {
     return () => window.removeEventListener("hashchange", handleHashScroll);
   }, []);
 
-  const toggleAccordion = (id: string) => {
-    setActiveAccordion(activeAccordion === id ? null : id);
-  };
-
   return (
     <div
       ref={pageRef}
@@ -1223,6 +1248,23 @@ export default function PartnershipsClient() {
                 05's single profile. */}
 
             <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10">
+              <div
+                className="relative w-full overflow-hidden aspect-[3/2]"
+                style={{
+                  maskImage:
+                    "linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%)",
+                }}
+              >
+                <Image
+                  src="/partnerships/partnerships-converging-waves.png"
+                  alt=""
+                  fill
+                  sizes="400px"
+                  className="object-cover object-center opacity-75 mix-blend-screen"
+                />
+              </div>
 
               {/* Section label — single italic Playfair line, sits
                   beneath the image as a caption to the visual moment. */}

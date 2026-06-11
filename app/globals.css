@@ -3,8 +3,12 @@
 @theme {
   /* Base — deep navy, not pure black — gives breathing room */
   --color-base: #070c14;
-  --color-text-primary: #f0f2f5;
-  --color-text-secondary: rgba(240, 242, 245, 0.65);
+  --color-surface-1: #0c1320;       /* cards, sections, panels */
+  --color-surface-2: #131b2b;       /* raised state, hover */
+  --color-edge: rgba(184, 192, 204, 0.08);  /* silver hairline borders */
+  --color-text-primary: #f4f6f9;
+  --color-text-secondary: rgba(240, 242, 245, 0.78);
+  --color-text-muted: rgba(240, 242, 245, 0.48);
 
   /* CI Palette — Petrol · Turquoise · Copper · Silver · Gold */
   --color-petrol: #006d84;      /* Petrol: vibrant teal-blue */
@@ -118,19 +122,29 @@
 a.button {
   padding: 16px 26px;
   border-radius: 26px;
+  background-image: linear-gradient(135deg, rgba(0,109,132,0.32), rgba(18,168,172,0.18));
   background-color: rgba(0,109,132,0.15);
-  border: 1px solid rgba(18,168,172,0.25);
+  border: 1px solid rgba(18,168,172,0.4);
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
   color: white;
   cursor: pointer;
   display: inline-block;
+  /* Inner top specular + outer lift = raised metallic feel */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 6px 20px rgba(0,0,0,0.28);
 }
 
 a.button:hover {
-  background-color: rgba(18,168,172,0.25);
-  border-color: rgba(18,168,172,0.5);
+  background-image: linear-gradient(135deg, rgba(18,168,172,0.4), rgba(0,109,132,0.24));
+  border-color: rgba(18,168,172,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 10px 28px rgba(0,109,132,0.32),
+    0 0 24px rgba(18,168,172,0.18);
+  transform: translateY(-1px);
 }
 
 /* ===== Project Tile Modal ===== */
@@ -425,19 +439,17 @@ html[lang="de"] {
 }
 
 .about-visual--hero .about-visual-image {
-  opacity: 0.6;
-  filter: none;
+  opacity: 0.95;
+  filter: contrast(1.2) brightness(1.15) saturate(1.1);
   mix-blend-mode: screen;
 }
 
 .about-visual--hero::before {
-  background:
-    linear-gradient(180deg, rgba(7, 12, 20, 0.08), rgba(7, 12, 20, 0.88)),
-    linear-gradient(90deg, rgba(7, 12, 20, 0.48), transparent 48%, rgba(7, 12, 20, 0.42));
+  background: none;
 }
 
 .about-visual--hero::after {
-  background: radial-gradient(ellipse at 55% 44%, transparent 4%, rgba(7, 12, 20, 0.58) 72%, #070c14 100%);
+  background: none;
 }
 
 .about-visual--living {

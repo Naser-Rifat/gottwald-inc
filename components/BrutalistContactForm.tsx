@@ -127,16 +127,16 @@ export default function BrutalistContactForm({
           name="name"
           required
           disabled={isSubmitting}
-          className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
+          className="w-full bg-transparent border-b border-white/30 hover:border-white/45 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
           placeholder="Your Name"
         />
         <label
           htmlFor="name"
-          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-gold origin-left"
+          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-turquoise origin-left"
         >
           Your Name
         </label>
-        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gold scale-x-0 origin-left pointer-events-none z-20" />
+        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-turquoise to-petrol scale-x-0 shadow-[0_0_8px_rgba(18,168,172,0.5)] origin-left pointer-events-none z-20" />
       </div>
 
       <div className="relative group/input">
@@ -146,16 +146,16 @@ export default function BrutalistContactForm({
           name="email"
           required
           disabled={isSubmitting}
-          className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
+          className="w-full bg-transparent border-b border-white/30 hover:border-white/45 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
           placeholder="Email Address"
         />
         <label
           htmlFor="email"
-          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-gold origin-left"
+          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-turquoise origin-left"
         >
           Email Address
         </label>
-        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gold scale-x-0 origin-left pointer-events-none z-20" />
+        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-turquoise to-petrol scale-x-0 shadow-[0_0_8px_rgba(18,168,172,0.5)] origin-left pointer-events-none z-20" />
       </div>
 
       <div className="relative group/input">
@@ -164,16 +164,16 @@ export default function BrutalistContactForm({
           id="organization"
           name="organization"
           disabled={isSubmitting}
-          className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
+          className="w-full bg-transparent border-b border-white/30 hover:border-white/45 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer focus:border-transparent transition-colors disabled:opacity-50 text-white"
           placeholder="Organization (Optional)"
         />
         <label
           htmlFor="organization"
-          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-gold origin-left"
+          className="absolute left-0 bottom-4 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:bottom-4 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-turquoise origin-left"
         >
           Organization (Optional)
         </label>
-        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gold scale-x-0 origin-left pointer-events-none z-20" />
+        <div className="focus-line absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-turquoise to-petrol scale-x-0 shadow-[0_0_8px_rgba(18,168,172,0.5)] origin-left pointer-events-none z-20" />
       </div>
 
       <div className="relative group/input">
@@ -183,16 +183,16 @@ export default function BrutalistContactForm({
           required
           rows={4}
           disabled={isSubmitting}
-          className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer resize-none focus:border-transparent transition-colors disabled:opacity-50 text-white"
+          className="w-full bg-transparent border-b border-white/30 hover:border-white/45 pb-4 pt-6 outline-none text-xl lg:text-2xl font-medium placeholder-transparent relative z-10 peer resize-none focus:border-transparent transition-colors disabled:opacity-50 text-white"
           placeholder="Message Details"
         />
         <label
           htmlFor="message"
-          className="absolute left-0 top-6 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:top-6 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-gold origin-top-left"
+          className="absolute left-0 top-6 text-white/50 text-xl lg:text-2xl font-medium pointer-events-none transition-all z-0 peer-placeholder-shown:top-6 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-turquoise origin-top-left"
         >
           Message Details
         </label>
-        <div className="focus-line absolute bottom-1 left-0 w-full h-0.5 bg-gold scale-x-0 origin-left pointer-events-none z-20" />
+        <div className="focus-line absolute bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-turquoise to-petrol scale-x-0 shadow-[0_0_8px_rgba(18,168,172,0.5)] origin-left pointer-events-none z-20" />
       </div>
 
       <div className="mt-8 flex flex-col gap-4">
