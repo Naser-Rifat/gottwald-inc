@@ -10,20 +10,10 @@ import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
+import CareersCanvas from "@/components/CareersCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Floating Particles Data (CSS-only, no JS overhead) ──
-const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
-  id: i,
-  size: 2 + Math.random() * 3,
-  left: Math.random() * 100,
-  delay: Math.random() * 20,
-  duration: 30 + Math.random() * 30,
-  opacity: 0.08 + Math.random() * 0.15,
-  color: i % 3 === 0 ? "turquoise" : i % 3 === 1 ? "gold" : "white",
-  sway: 20 + Math.random() * 40,
-}));
 
 const PILLARS = [
   {
@@ -195,13 +185,13 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(18,168,172,0.12)] stagger-item ${className}`}
+      className={`relative overflow-hidden rounded-xl border border-white/5 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_8px_30px_rgba(184,192,204,0.06)] stagger-item ${className}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 ease-out"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(18,168,172,0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(184,192,204,0.08), transparent 40%)`,
         }}
       />
       <div className="relative z-10 transition-transform duration-500 group-hover:scale-[1.02]">{children}</div>
@@ -221,15 +211,7 @@ export default function CareersClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
-  // Server-safe pre-calculated pseudo-random particles (avoids hydration errors)
-  const floatingParticles = Array.from({ length: 50 }).map((_, i) => ({
-    id: i,
-    left: `${(i * 13 + 17) % 100}%`,
-    duration: `${15 + (i % 15)}s`,
-    delay: `${(i * 3) % 20}s`,
-    size: `${1.5 + (i % 3)}px`,
-    opacity: 0.4 + ((i % 5) * 0.1)
-  }));
+
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -385,87 +367,15 @@ export default function CareersClient() {
       </div>
 
       <main>
-        {/* ══════════════════════════════════════════════════════════
-            HUBTOWN-STYLE IMMERSIVE HERO — Full-viewport cinematic scene
-            Mountain silhouettes + animated water + floating diamond + particles
-            Adapted to GOTT WALD turquoise (#12a8ac) / navy (#070c14) aesthetic
-            ══════════════════════════════════════════════════════════ */}
-        <section className="relative h-screen w-full overflow-hidden flex items-end justify-center" style={{ background: "linear-gradient(180deg, #04080f 0%, #070c14 40%, #0a1018 70%, #070c14 100%)" }}>
+        <section className="relative h-[100svh] w-full overflow-hidden flex items-end justify-center bg-[#070c14]">
 
-          {/* ── BACKGROUND IMAGE & ANIMATED CLOUDS ── */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-            {/* The majestic mountain photograph (Clean plate) */}
-            <motion.div
-              className="absolute inset-0"
-              animate={{ scale: [1.02, 1.08, 1.02] }}
-              transition={{ duration: 40, ease: "easeInOut", repeat: Infinity }}
-            >
-              <Image
-                src="/images/careers-hubtown-bg-clean.png"
-                alt="GOTT WALD Mountains"
-                fill
-                className="object-cover object-center opacity-90"
-                priority
-                quality={100}
-              />
-            </motion.div>
-
-            {/* FLOATING ANIMATED DOTS (Rises from bottom to top) */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
-              {floatingParticles.map((p) => (
-                <div
-                  key={p.id}
-                  className="absolute bottom-0 rounded-full bg-turquoise"
-                  style={{
-                    left: p.left,
-                    width: p.size,
-                    height: p.size,
-                    opacity: 0,
-                    boxShadow: `0 0 ${parseInt(p.size) * 2}px rgba(18,168,172,0.8)`,
-                    animation: `careers-float-up ${p.duration} linear infinite`,
-                    animationDelay: p.delay,
-                  }}
-                />
-              ))}
-            </div>
+          {/* ── INTERACTIVE CANVAS BACKGROUND ── */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+            <CareersCanvas />
             
-            {/* Volumetric Animated Mist / Cloud Layers powered by Framer Motion for 100% reliability */}
-            {/* Layer 1: High turquoise mist */}
-            <motion.div 
-              className="absolute top-[10%] left-[-20%] w-[140%] h-[70%]"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(18,168,172,0.6) 0%, rgba(18,168,172,0) 60%)",
-                filter: "blur(40px)"
-              }}
-              animate={{ x: ["-25%", "25%", "-25%"] }}
-              transition={{ duration: 10, ease: "linear", repeat: Infinity }}
-            />
-            
-            {/* Layer 2: Low dense white fog */}
-            <motion.div 
-              className="absolute top-[35%] left-[-20%] w-[140%] h-[60%]"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 65%)",
-                filter: "blur(40px)"
-              }}
-              animate={{ x: ["25%", "-25%", "25%"] }}
-              transition={{ duration: 14, ease: "linear", repeat: Infinity }}
-            />
-            
-            {/* Layer 3: Fast moving foreground wisp */}
-            <motion.div 
-              className="absolute top-[25%] left-[-10%] w-[120%] h-[50%]"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(18,168,172,0.5) 0%, rgba(18,168,172,0) 50%)",
-                filter: "blur(30px)"
-              }}
-              animate={{ x: ["-30%", "30%", "-30%"] }}
-              transition={{ duration: 6, ease: "linear", repeat: Infinity }}
-            />
-
-            {/* Deep gradients to blend into the UI and the section below */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070c14]/40 to-[#070c14]" />
-            <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-t from-[#070c14] via-[#070c14]/80 to-transparent" />
+            {/* Subtle gradients to blend into the UI without obscuring the canvas */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#070c14]/90" />
+            <div className="absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-[#070c14] to-transparent" />
           </div>
 
 
@@ -473,17 +383,13 @@ export default function CareersClient() {
           {/* ── CONTENT — Original Layout over Mountain Background ── */}
           <div className="relative z-30 w-full max-w-7xl mx-auto px-gutter pb-[15vh]">
             {/* Hero headline — left aligned */}
-            <h1
+              <h1
               ref={heroRef}
               translate="no"
-              className="notranslate reveal-text leading-[0.85] font-extrabold tracking-tighter uppercase mb-16"
+              className="notranslate reveal-text leading-[0.85] font-light tracking-[-0.015em] mb-16 uppercase text-white/90"
               style={{
-                fontSize: "calc(clamp(4.5rem, 9vw, 11rem) * var(--heading-scale))",
-                backgroundImage: "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.8) 70%, #ffffff 100%)",
-                backgroundSize: "200% 100%",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "calc(clamp(3.5rem, 7vw, 9rem) * var(--heading-scale))",
               }}
             >
               {t("line1")} <br />
@@ -506,19 +412,18 @@ export default function CareersClient() {
               </div>
 
               <div className="flex-1 flex flex-col items-start gap-10 justify-center reveal-text">
-                {/* CTA buttons with turquoise hover glow */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="#apply"
                     translate="no"
-                    className="notranslate h-14 rounded-full bg-white text-black flex items-center justify-center px-10 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(18,168,172,0.2)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
+                    className="notranslate h-14 rounded-full bg-white text-black flex items-center justify-center px-10 hover:bg-white/90 hover:shadow-[0_0_20px_rgba(192,120,64,0.15)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
                   >
                     {tCtas("applyNow")}
                   </a>
                   <a
                     href="#apply"
                     translate="no"
-                    className="notranslate h-14 rounded-full border border-white/20 text-white flex items-center justify-center px-10 hover:bg-white/10 hover:border-turquoise/40 hover:shadow-[0_0_20px_rgba(18,168,172,0.12)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
+                    className="notranslate h-14 rounded-full border border-white/20 text-white flex items-center justify-center px-10 hover:bg-white/10 hover:border-silver/40 hover:shadow-[0_0_20px_rgba(184,192,204,0.1)] transition-all duration-300 uppercase text-xs tracking-[0.2em] font-bold"
                   >
                     {tCtas("specialistPool")}
                   </a>
@@ -531,7 +436,7 @@ export default function CareersClient() {
                     <span className="text-white/60 text-[10px] tracking-[0.25em] uppercase font-bold">
                       Global-first. Remote-friendly. Confidential.
                     </span>
-                    <span className="text-gold text-[10px] tracking-[0.25em] uppercase font-bold">
+                    <span className="text-copper text-[10px] tracking-[0.25em] uppercase font-bold">
                       HQ: Georgia.
                     </span>
                   </div>
@@ -549,7 +454,7 @@ export default function CareersClient() {
             className="h-px w-full origin-left"
             style={{
               background:
-                "linear-gradient(90deg, rgba(18,168,172,0.4) 0%, rgba(212,175,55,0.3) 50%, rgba(18,168,172,0.1) 100%)",
+                "linear-gradient(90deg, rgba(184,192,204,0.4) 0%, rgba(192,120,64,0.3) 50%, rgba(184,192,204,0.1) 100%)",
             }}
           />
         </div>
@@ -565,7 +470,7 @@ export default function CareersClient() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
               <SpotlightCard className="group">
-                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-turquoise">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-silver">
                   Path 01
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Employee</h3>
@@ -575,7 +480,7 @@ export default function CareersClient() {
               </SpotlightCard>
 
               <SpotlightCard className="group">
-                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-turquoise">
+                <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-silver">
                   Path 02
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Freelancer / Interim</h3>
@@ -585,7 +490,7 @@ export default function CareersClient() {
               </SpotlightCard>
 
               <SpotlightCard className="group">
-                <div className="text-md tracking-[0.2em] uppercase text-gold/80 mb-6 font-bold transition-colors group-hover:text-gold">
+                <div className="text-md tracking-[0.2em] uppercase text-copper/80 mb-6 font-bold transition-colors group-hover:text-copper">
                   Path 03
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Specialist Pool</h3>
@@ -613,7 +518,7 @@ export default function CareersClient() {
               >
                 WHO WE&apos;RE <br /> LOOKING FOR
               </h2>
-              <p className="text-white/80 italic text-lg border-l border-gold pl-6 mt-12">
+              <p className="text-white/80 italic text-lg border-l border-copper pl-6 mt-12">
                 &quot;If this feels &apos;normal&apos; to you, you&apos;re
                 probably in the right room.&quot;
               </p>
@@ -623,27 +528,27 @@ export default function CareersClient() {
             <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/[0.02] stagger-group">
               <ul className="flex flex-col gap-6 text-lg md:text-xl font-light text-white/80 tracking-wide">
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   think in outcomes (not tasks)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   communicate cleanly (no fog, no ego)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   document properly (transferable, auditable)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   keep quality under pressure
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   live discretion as a reflex
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-turquoise/50 rounded-full shrink-0" />
+                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
                   can be different — without losing foundation
                 </li>
               </ul>
@@ -655,7 +560,7 @@ export default function CareersClient() {
         <section className="px-gutter py-[15vh] border-t border-white/5 bg-white/[0.01]">
           <div className="max-w-5xl mx-auto">
             <div className="mb-20 reveal-text text-center">
-              <span className="text-md tracking-[0.5em] uppercase text-gold/80 font-medium block mb-4">
+              <span className="text-md tracking-[0.5em] uppercase text-copper/80 font-medium block mb-4">
                 ARCHITECTURE
               </span>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
@@ -680,7 +585,7 @@ export default function CareersClient() {
                     className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none pl-4 md:pl-6 group/btn"
                   >
                     <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
-                      <span className={`text-2xl md:text-4xl font-light transition-all duration-500 w-12 md:w-20 shrink-0 ${openPillar === i ? "text-turquoise scale-125 drop-shadow-[0_0_15px_rgba(18,168,172,0.6)]" : "text-white/20 group-hover/btn:text-gold"}`}>
+                      <span className={`text-2xl md:text-4xl font-light transition-all duration-500 w-12 md:w-20 shrink-0 ${openPillar === i ? "text-silver scale-125 drop-shadow-[0_0_15px_rgba(184,192,204,0.6)]" : "text-white/20 group-hover/btn:text-copper"}`}>
                         {pillar.letter}
                       </span>
                       <h3 className={`text-xl md:text-3xl font-medium tracking-tight transition-transform duration-500 leading-tight ${openPillar === i ? "translate-x-6 text-white" : "group-hover/btn:translate-x-4 text-white/80"}`}>
@@ -689,7 +594,7 @@ export default function CareersClient() {
                     </div>
                     <div
                       className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
-                       ${openPillar === i ? "border-turquoise bg-turquoise text-black shadow-[0_0_15px_rgba(18,168,172,0.4)] -rotate-180" : "border-white/20 text-white/50 group-hover/btn:border-white/60"}
+                       ${openPillar === i ? "border-silver bg-silver text-black shadow-[0_0_15px_rgba(184,192,204,0.4)] -rotate-180" : "border-white/20 text-white/50 group-hover/btn:border-white/60"}
                      `}
                     >
                       <svg
@@ -721,7 +626,7 @@ export default function CareersClient() {
                       >
                         <div className="pl-4 md:pl-20 flex flex-col md:flex-row gap-12 pt-4 pb-12">
                           <div className="flex-1">
-                            <h4 className="text-md tracking-[0.2em] text-gold uppercase mb-6 font-bold">
+                            <h4 className="text-md tracking-[0.2em] text-copper uppercase mb-6 font-bold">
                               Role Profiles
                             </h4>
                             <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
@@ -734,7 +639,7 @@ export default function CareersClient() {
                                   transition={{ delay: 0.05 + (idx * 0.03), duration: 0.4 }}
                                   className="flex gap-3"
                                 >
-                                  <span className="text-turquoise/40 mt-1.5">•</span>
+                                  <span className="text-silver/40 mt-1.5">•</span>
                                   {role}
                                 </motion.li>
                               ))}
@@ -747,7 +652,7 @@ export default function CareersClient() {
                             transition={{ delay: 0.2, duration: 0.5 }}
                             className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4"
                           >
-                            <h4 className="text-md tracking-[0.2em] text-gold/80 uppercase mb-4 font-bold">
+                            <h4 className="text-md tracking-[0.2em] text-copper/80 uppercase mb-4 font-bold">
                               Impact Profile
                             </h4>
                             <p className="text-white font-medium tracking-wide">
@@ -812,7 +717,7 @@ export default function CareersClient() {
                   </span>
                 </li>
                 <li className="flex justify-between pt-2">
-                  <span className="text-gold">a global human family</span>
+                  <span className="text-copper">a global human family</span>
                   <span className="text-white/70 italic text-md text-right">
                     diversity is wanted
                     <br />
@@ -859,7 +764,7 @@ export default function CareersClient() {
 
         {/* ── APPLICATION FORM ── (#9 — gold border + glow) */}
         {/* #7 — Application form — transparent bg, let fluid show through */}
-        <section id="apply" className="px-gutter py-[15vh] relative border-t border-gold/20">
+        <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20">
           {/* Ambient glow above form */}
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vh] pointer-events-none"
@@ -870,7 +775,7 @@ export default function CareersClient() {
           />
           <div className="max-w-3xl mx-auto reveal-text relative z-10">
             <div className="mb-16">
-              <span className="text-md tracking-[0.5em] uppercase text-gold font-medium block mb-4">
+              <span className="text-md tracking-[0.5em] uppercase text-copper font-medium block mb-4">
                 INITIATE
               </span>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6">
@@ -892,17 +797,17 @@ export default function CareersClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="relative pt-6">
                   <input required id="name" name="name" type="text" placeholder="First & Last Name *"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="name" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="name" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     First &amp; Last Name *
                   </label>
                 </div>
                 <div className="relative pt-6">
                   <input required id="contact" name="contact" type="text" placeholder="Email / Phone *"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="contact" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="contact" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Email / Phone *
                   </label>
                 </div>
@@ -911,17 +816,17 @@ export default function CareersClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="relative pt-6">
                   <input id="location" name="location" type="text" placeholder="Country / City / Time Zone"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="location" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="location" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Country / City / Time Zone
                   </label>
                 </div>
                 <div className="relative pt-6">
                   <input id="region" name="region" type="text" placeholder="Continent / Region"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="region" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="region" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Continent / Region
                   </label>
                 </div>
@@ -929,9 +834,9 @@ export default function CareersClient() {
 
               <div className="relative pt-6">
                 <input id="languages" name="languages" type="text" placeholder="Languages (Select / Free text) e.g. English (Native), German (Fluent)"
-                  className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                 />
-                <label htmlFor="languages" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                <label htmlFor="languages" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                   Languages (Select / Free text)
                 </label>
               </div>
@@ -942,7 +847,7 @@ export default function CareersClient() {
                     Work Model
                   </label>
                   <select id="work_model" name="work_model"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors appearance-none cursor-pointer"
                     defaultValue="remote"
                   >
                     <option value="remote" className="text-black">Remote</option>
@@ -956,7 +861,7 @@ export default function CareersClient() {
                     Travel Readiness
                   </label>
                   <select id="travel" name="travel"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors appearance-none cursor-pointer"
                     defaultValue="project"
                   >
                     <option value="yes" className="text-black">Yes</option>
@@ -969,7 +874,7 @@ export default function CareersClient() {
                     Entry Path
                   </label>
                   <select id="entry_path" name="entry_path"
-                    className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors appearance-none cursor-pointer"
                     defaultValue="employee"
                   >
                     <option value="employee" className="text-black">Employee</option>
@@ -981,9 +886,9 @@ export default function CareersClient() {
 
               <div className="relative pt-6">
                 <input id="roles" name="roles" type="text" placeholder="Pillars of Interest (Multi-select) & Desired Role(s)"
-                  className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                  className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                 />
-                <label htmlFor="roles" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                <label htmlFor="roles" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                   Pillars of Interest &amp; Desired Role(s)
                 </label>
               </div>
@@ -991,17 +896,17 @@ export default function CareersClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="relative pt-6">
                   <input id="linkedin" name="linkedin" type="url" placeholder="LinkedIn / Website"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="linkedin" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="linkedin" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     LinkedIn / Website
                   </label>
                 </div>
                 <div className="relative pt-6">
                   <input id="portfolio" name="portfolio" type="text" placeholder="Portfolio / Proof Links (Max 3)"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="portfolio" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="portfolio" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Portfolio / Proof Links (Max 3)
                   </label>
                 </div>
@@ -1014,31 +919,31 @@ export default function CareersClient() {
                 <input id="cv" name="cv"
                   type="file"
                   accept=".pdf,.doc,.docx"
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-lg font-medium text-white/80 file:mr-4 file:py-2 file:px-6 file:border-0 file:text-sm file:font-bold file:uppercase file:tracking-widest file:bg-white/10 file:text-white/80 file:cursor-pointer file:rounded-none hover:file:bg-gold/20 hover:file:text-gold transition-colors focus:border-gold"
+                  className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-lg font-medium text-white/80 file:mr-4 file:py-2 file:px-6 file:border-0 file:text-sm file:font-bold file:uppercase file:tracking-widest file:bg-white/10 file:text-white/80 file:cursor-pointer file:rounded-none hover:file:bg-copper/20 hover:file:text-copper transition-colors focus:border-copper"
                 />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="relative pt-6">
                   <input id="availability" name="availability" type="text" placeholder="Availability (Start date / Hrs per week)"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="availability" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="availability" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Availability (Start date / Hrs per week)
                   </label>
                 </div>
                 <div className="relative pt-6">
                   <input id="salary" name="salary" type="text" placeholder="Salary range or Day rate (Optional)"
-                    className="peer w-full bg-transparent border-b border-white/20 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-turquoise focus:shadow-[0_1px_0_0_rgba(18,168,172,1)] transition-all"
+                    className="peer w-full bg-transparent border-b border-white/40 pb-4 outline-none text-xl font-medium text-white placeholder-transparent focus:border-silver focus:shadow-[0_1px_0_0_rgba(184,192,204,1)] transition-all"
                   />
-                  <label htmlFor="salary" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-turquoise cursor-text">
+                  <label htmlFor="salary" className="absolute left-0 top-0 text-md uppercase tracking-wider text-white/50 font-medium transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-xl peer-placeholder-shown:text-white/30 peer-focus:top-0 peer-focus:text-md peer-focus:text-silver cursor-text">
                     Salary range or Day rate (Optional)
                   </label>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3">
-                <label htmlFor="foundation" className="text-md uppercase tracking-widest text-gold font-bold">
+                <label htmlFor="foundation" className="text-md uppercase tracking-widest text-copper font-bold">
                   Foundation Fit (Required) *
                 </label>
                 <p className="text-md text-white/80 mb-2">
@@ -1047,7 +952,7 @@ export default function CareersClient() {
                 </p>
                 <textarea required id="foundation" name="foundation"
                   rows={4}
-                  className="w-full bg-transparent border-b border-gold/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-copper/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors resize-none"
                 />
               </div>
 
@@ -1057,7 +962,7 @@ export default function CareersClient() {
                 </label>
                 <textarea id="message" name="message"
                   rows={2}
-                  className="w-full bg-transparent border-b border-white/20 pb-4 pt-6 outline-none text-xl font-medium focus:border-gold transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors resize-none"
                 />
               </div>
 
@@ -1066,12 +971,12 @@ export default function CareersClient() {
                 <MagneticButton
                   type="submit"
                   disabled={isSubmitting}
-                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(18,168,172,0.4)] transition-shadow duration-300"
+                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(184,192,204,0.4)] transition-shadow duration-300"
                 >
                   <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
                     {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
                   </span>
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-2 h-2 rounded-full bg-turquoise group-hover:scale-[60] transition-transform duration-500 ease-out pointer-events-none" />
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-2 h-2 rounded-full bg-silver group-hover:scale-[60] transition-transform duration-500 ease-out pointer-events-none" />
                 </MagneticButton>
                 
                 {submitStatus === "success" && (
