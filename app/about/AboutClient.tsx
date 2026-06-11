@@ -594,10 +594,7 @@ export default function AboutClient() {
           {/* Top: minimal brand mark — earns its place because it tells you where you are. */}
           <div className="hero-frame relative z-10 px-gutter pt-28 md:pt-[7.5rem] lg:pt-32 opacity-0">
             <div className="flex items-center gap-4">
-              <span className="w-6 h-px bg-turquoise/65" />
-              <span className="text-[11px] tracking-[0.42em] text-white/60 font-light uppercase">
-                About — GOTT WALD Holding
-              </span>
+            
             </div>
           </div>
 
