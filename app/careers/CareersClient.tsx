@@ -469,7 +469,7 @@ export default function CareersClient() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-group">
-              <SpotlightCard className="group">
+              <SpotlightCard className="group backdrop-blur-md">
                 <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-silver">
                   Path 01
                 </div>
@@ -479,7 +479,7 @@ export default function CareersClient() {
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="group">
+              <SpotlightCard className="group backdrop-blur-md">
                 <div className="text-md tracking-[0.2em] uppercase text-white/60 mb-6 font-bold transition-colors group-hover:text-silver">
                   Path 02
                 </div>
@@ -489,7 +489,7 @@ export default function CareersClient() {
                 </p>
               </SpotlightCard>
 
-              <SpotlightCard className="group">
+              <SpotlightCard className="group backdrop-blur-md">
                 <div className="text-md tracking-[0.2em] uppercase text-copper/80 mb-6 font-bold transition-colors group-hover:text-copper">
                   Path 03
                 </div>
@@ -509,7 +509,7 @@ export default function CareersClient() {
               <h2 
                 className="scroll-fill-text text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8 text-transparent"
                 style={{
-                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
+                  WebkitTextStroke: "1px rgba(184,192,204,0.4)",
                   backgroundImage: "linear-gradient(90deg, #fff 50%, transparent 50%)",
                   backgroundSize: "200% 100%",
                   backgroundPosition: "100% 0",
@@ -528,27 +528,27 @@ export default function CareersClient() {
             <div className="flex-1 border border-white/10 p-10 md:p-16 bg-white/[0.02] stagger-group">
               <ul className="flex flex-col gap-6 text-lg md:text-xl font-light text-white/80 tracking-wide">
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   think in outcomes (not tasks)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   communicate cleanly (no fog, no ego)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   document properly (transferable, auditable)
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   keep quality under pressure
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   live discretion as a reflex
                 </li>
                 <li className="stagger-item flex items-center gap-4">
-                  <span className="w-2 h-2 bg-silver/50 rounded-full shrink-0" />
+                  <span className="w-6 h-px bg-silver/40 shrink-0" />
                   can be different — without losing foundation
                 </li>
               </ul>
@@ -574,7 +574,7 @@ export default function CareersClient() {
                   key={i}
                   className={`stagger-item border-b border-white/10 group transition-all duration-500 ${
                     openPillar === i
-                      ? "border-l-2 border-l-gold bg-white/[0.02]"
+                      ? "border-l-2 border-l-copper bg-white/[0.02]"
                       : "border-l-2 border-l-transparent"
                   }`}
                 >
@@ -637,10 +637,10 @@ export default function CareersClient() {
                                   animate={{ x: 0, opacity: 1 }}
                                   exit={{ x: -10, opacity: 0 }}
                                   transition={{ delay: 0.05 + (idx * 0.03), duration: 0.4 }}
-                                  className="flex gap-3"
+                                  className="flex items-center gap-3"
                                 >
-                                  <span className="text-silver/40 mt-1.5">•</span>
-                                  {role}
+                                  <span className="w-4 h-px bg-silver/30 shrink-0" />
+                                  <span>{role}</span>
                                 </motion.li>
                               ))}
                             </ul>
@@ -650,7 +650,7 @@ export default function CareersClient() {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 20, opacity: 0 }}
                             transition={{ delay: 0.2, duration: 0.5 }}
-                            className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4"
+                            className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4 shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-t-white/10 border-l border-l-white/10"
                           >
                             <h4 className="text-md tracking-[0.2em] text-copper/80 uppercase mb-4 font-bold">
                               Impact Profile
@@ -675,11 +675,11 @@ export default function CareersClient() {
             {/* What you'll find — double space fixed (#8) */}
             {/* #8 — Glassmorphic "What You'll Find" wrapper */}
             <div className="reveal-text p-10 md:p-14 border border-white/10 bg-white/[0.03] backdrop-blur-sm rounded-sm relative overflow-hidden">
-              {/* Subtle turquoise edge glow */}
+              {/* Subtle silver edge glow */}
               <div
                 className="absolute top-0 left-0 w-full h-px pointer-events-none"
                 style={{
-                  background: "linear-gradient(90deg, transparent, rgba(18,168,172,0.3), transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(184,192,204,0.3), transparent)",
                 }}
               />
               <h2 className="text-4xl text-white font-bold mb-10 tracking-tight">
@@ -734,7 +734,7 @@ export default function CareersClient() {
               </h2>
 
               <div className="flex flex-col gap-10 relative">
-                <div className="absolute left-3.75 top-6 bottom-4 w-0.5 bg-white/10" />
+                <div className="absolute left-4 top-4 bottom-4 w-px bg-gradient-to-b from-copper via-silver/40 to-transparent shadow-[0_0_15px_rgba(192,120,64,0.8)]" />
 
                 {[
                   { n: "1", t: "Submit", d: "Role interest + proof" },
@@ -744,7 +744,7 @@ export default function CareersClient() {
                   { n: "5", t: "Start", d: "Employee, interim, or pool" },
                 ].map((step, i) => (
                   <div key={i} className="flex gap-8 relative z-10">
-                    <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm shrink-0 mt-1">
+                    <div className="w-8 h-8 rounded-full border border-silver/40 bg-[#070c14] text-silver shadow-[0_0_10px_rgba(184,192,204,0.2)] flex items-center justify-center font-bold text-sm shrink-0 mt-1">
                       {step.n}
                     </div>
                     <div>
@@ -762,7 +762,7 @@ export default function CareersClient() {
           </div>
         </section>
 
-        {/* ── APPLICATION FORM ── (#9 — gold border + glow) */}
+        {/* ── APPLICATION FORM ── (#9 — copper border + glow) */}
         {/* #7 — Application form — transparent bg, let fluid show through */}
         <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20">
           {/* Ambient glow above form */}
@@ -770,7 +770,7 @@ export default function CareersClient() {
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vh] pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at center top, rgba(212,175,55,0.06) 0%, transparent 70%)",
+                "radial-gradient(ellipse at center top, rgba(192,120,64,0.06) 0%, transparent 70%)",
             }}
           />
           <div className="max-w-3xl mx-auto reveal-text relative z-10">
@@ -952,7 +952,7 @@ export default function CareersClient() {
                 </p>
                 <textarea required id="foundation" name="foundation"
                   rows={4}
-                  className="w-full bg-transparent border-b border-copper/30 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-white/40 pb-4 pt-6 outline-none text-xl font-medium focus:border-copper transition-colors resize-none"
                 />
               </div>
 
@@ -967,17 +967,20 @@ export default function CareersClient() {
               </div>
 
               <div className="pt-8 border-t border-white/10 flex flex-col items-center justify-center sm:items-start gap-6">
-                {/* Magnetic Submit button — turquoise expansion */}
-                <MagneticButton
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full md:w-max mt-8 disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(184,192,204,0.4)] transition-shadow duration-300"
-                >
-                  <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
-                    {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
-                  </span>
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-2 h-2 rounded-full bg-silver group-hover:scale-[60] transition-transform duration-500 ease-out pointer-events-none" />
-                </MagneticButton>
+                {/* Magnetic Submit button — silver expansion */}
+                <div className="relative w-full md:w-max mt-8">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[150%] bg-copper/20 blur-[30px] pointer-events-none rounded-full" />
+                  <MagneticButton
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="notranslate group relative flex items-center justify-center gap-4 bg-white px-10 py-5 overflow-hidden w-full disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(184,192,204,0.4)] transition-shadow duration-300"
+                  >
+                    <span className="relative z-10 font-bold uppercase tracking-widest text-md text-black group-hover:text-white transition-colors duration-300 pointer-events-none">
+                      {isSubmitting ? tCtas("submitting") : tCtas("submitApplication")}
+                    </span>
+                    <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-2 h-2 rounded-full bg-silver group-hover:scale-[60] transition-transform duration-500 ease-out pointer-events-none" />
+                  </MagneticButton>
+                </div>
                 
                 {submitStatus === "success" && (
                   <p className="text-green-500/90 text-lg font-light mt-2 border border-green-500/20 bg-green-500/10 p-4 rounded-sm w-full">
