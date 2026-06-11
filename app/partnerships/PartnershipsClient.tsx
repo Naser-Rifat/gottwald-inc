@@ -93,7 +93,7 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(18,168,172,0.12)] stagger-item ${className}`}
+      className={`relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_8px_30px_rgba(18,168,172,0.12)] stagger-item ${className}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 ease-out"
@@ -1162,9 +1162,9 @@ export default function PartnershipsClient() {
                   <span className="text-gold text-xs lg:text-sm tracking-[0.4em] uppercase font-light">
                     02 /
                   </span>
-                  <span className="w-12 h-px bg-white/20" />
+                  <span className="w-12 h-px bg-white" />
                   <span
-                    className="text-xs lg:text-sm tracking-[0.35em] text-white/65 uppercase font-light"
+                    className="text-xs lg:text-sm tracking-[0.35em] text-white uppercase font-light"
                     style={{ fontFamily: "var(--font-playfair)" }}
                   >
                     Partnerships
@@ -1215,7 +1215,7 @@ export default function PartnershipsClient() {
 
               {/* Tagline — editorial Playfair italic, sentence case. */}
               <p
-                className="hero-reveal mt-10 lg:mt-12 text-[clamp(1.2rem,1.8vw,1.8rem)] font-light leading-[1.35] text-white/85 max-w-[42ch]"
+                className="hero-reveal mt-10 lg:mt-12 text-[clamp(1.2rem,1.8vw,1.8rem)] font-light leading-[1.35] text-white max-w-[42ch]"
                 style={{
                   fontFamily: "var(--font-playfair)",
                   fontStyle: "italic",
@@ -1229,7 +1229,7 @@ export default function PartnershipsClient() {
                   closes the LEFT column. The previous tracked-caps
                   treatment was AI luxury template; this is editorial. */}
               <p
-                className="hero-reveal mt-10 lg:mt-12 text-[clamp(0.9rem,1.05vw,1.1rem)] text-white/55 italic font-light"
+                className="hero-reveal mt-10 lg:mt-12 text-[clamp(0.9rem,1.05vw,1.1rem)] text-white italic font-light"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 Confidential by default. NDA-ready on request.
@@ -1248,28 +1248,11 @@ export default function PartnershipsClient() {
                 05's single profile. */}
 
             <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10">
-              <div
-                className="relative w-full overflow-hidden aspect-[3/2]"
-                style={{
-                  maskImage:
-                    "linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%)",
-                  WebkitMaskImage:
-                    "linear-gradient(180deg, transparent 0%, #000 16%, #000 78%, transparent 100%)",
-                }}
-              >
-                <Image
-                  src="/partnerships/partnerships-converging-waves.png"
-                  alt=""
-                  fill
-                  sizes="400px"
-                  className="object-cover object-center opacity-75 mix-blend-screen"
-                />
-              </div>
 
               {/* Section label — single italic Playfair line, sits
                   beneath the image as a caption to the visual moment. */}
               <p
-                className="text-[clamp(0.95rem,1.1vw,1.15rem)] text-gold/85 italic font-light tracking-[-0.012em]"
+                className="text-[clamp(0.95rem,1.1vw,1.15rem)] text-gold italic font-light tracking-[-0.012em]"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 Our reach.
@@ -1290,7 +1273,7 @@ export default function PartnershipsClient() {
                 ].flatMap(({ label, value }) => [
                   <span
                     key={`label-${label}`}
-                    className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-white/55 font-light"
+                    className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-white font-light"
                   >
                     {label}
                   </span>,
@@ -1325,9 +1308,8 @@ export default function PartnershipsClient() {
                 </a>
                 <a
                   href="#apply"
-                  data-magnetic
                   translate="no"
-                  className="notranslate group inline-flex items-baseline gap-3 text-white/60 hover:text-white transition-colors duration-500 self-start"
+                  className="notranslate group inline-flex items-baseline gap-3 text-white hover:text-white transition-colors duration-500 self-start"
                 >
                   <span
                     className="font-light italic tracking-[-0.012em] text-[clamp(0.95rem,1.1vw,1.15rem)]"
@@ -1615,7 +1597,7 @@ export default function PartnershipsClient() {
                         </span>
                       </div>
                       {/* Corner bracket decoration */}
-                      <div className="w-6 h-6 border-t border-r border-white/20 group-hover:border-gold/60 transition-colors duration-700" />
+                      <div className="w-6 h-6 border-t border-r border-white/40 group-hover:border-gold/60 transition-colors duration-700" />
                     </div>
 
                     {/* BOTTOM: Title Block */}
@@ -1870,7 +1852,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="company"
                     name="company"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Company Name"
                   />
                   <label
@@ -1886,7 +1868,7 @@ export default function PartnershipsClient() {
                     type="url"
                     id="website"
                     name="website"
-                    className="peer w-full bg-transparent border-b border-white/20  pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40  pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Website URL"
                   />
                   <label
@@ -1906,7 +1888,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="country"
                     name="country"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Country / Region"
                   />
                   <label
@@ -1922,7 +1904,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="contact"
                     name="contact"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Main Contact (Name, Email, Phone)"
                   />
                   <label
@@ -1947,7 +1929,7 @@ export default function PartnershipsClient() {
                     required
                     id="partnership_type"
                     name="partnership_type"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white/80 focus:text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white/80 focus:text-white focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
                     defaultValue=""
                   >
                     <option value="" disabled className="text-black">
@@ -1988,7 +1970,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="pillars"
                     name="pillars"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Relevant Pillars (A, B, C...)"
                   />
                   <label
@@ -2007,7 +1989,7 @@ export default function PartnershipsClient() {
                   id="description"
                   name="description"
                   rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                  className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                   placeholder="What you do  (1–3 sentences)"
                 />
                 <label
@@ -2026,7 +2008,7 @@ export default function PartnershipsClient() {
                     id="capabilities"
                     name="capabilities"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Top 3 capabilities (bullet points)"
                   />
                   <label
@@ -2042,7 +2024,7 @@ export default function PartnershipsClient() {
                     id="proof"
                     name="proof"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Proof of work (links / portfolio / cases)"
                   />
                   <label
@@ -2061,7 +2043,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="references"
                     name="references"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="References (optional)"
                   />
                   <label
@@ -2077,7 +2059,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="capacity"
                     name="capacity"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Capacity (project slots / hours)"
                   />
                   <label
@@ -2093,7 +2075,7 @@ export default function PartnershipsClient() {
                     type="text"
                     id="budget"
                     name="budget"
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent"
                     placeholder="Typical project range (budget/scope)"
                   />
                   <label
@@ -2112,7 +2094,7 @@ export default function PartnershipsClient() {
                   id="values"
                   name="values"
                   rows={2}
-                  className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                  className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                   placeholder="Values Fit (required): 2–3 sentences on responsibility, integrity, excellence, discretion"
                 />
                 <label
@@ -2130,7 +2112,7 @@ export default function PartnershipsClient() {
                     id="why"
                     name="why"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Why GOTT WALD? (short)"
                   />
                   <label
@@ -2145,7 +2127,7 @@ export default function PartnershipsClient() {
                     id="constraints"
                     name="constraints"
                     rows={2}
-                    className="peer w-full bg-transparent border-b border-white/20 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
+                    className="peer w-full bg-transparent border-b border-white/40 pt-8 pb-4 text-xl md:text-2xl font-light text-white focus:outline-none focus:border-turquoise focus:shadow-[0_1px_15px_rgba(18,168,172,0.6)] transition-all duration-500 placeholder-transparent resize-none leading-relaxed"
                     placeholder="Anything we must know? (timing, constraints, risks)"
                   />
                   <label
