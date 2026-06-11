@@ -66,6 +66,7 @@ export default async function Home() {
 
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
+        
         <HeldBreath />
         <VideoPanelSection />
         <PillarsTilesSection pillars={pillars} />

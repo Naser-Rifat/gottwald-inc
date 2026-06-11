@@ -12,7 +12,8 @@ import NextChapterTransition from "@/components/NextChapterTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Per-business semantic frequency tint. Maps each business area to a brand
+import AboutWaveCanvas from "@/components/AboutWaveCanvas";
+
 // color that matches its inner state (per client manifesto): gold = positive /
 // stability, silver = neutral / space, petrol = depth / structure, turquoise =
 // signal / clarity, copper = warmth / human presence. Distributes the full
@@ -587,14 +588,7 @@ export default function AboutClient() {
               dimmed and screened so the typography stays the focal point.
               This is the section's bespoke visual signature. */}
           <div className="about-visual about-visual--hero pointer-events-none absolute inset-0 z-0 overflow-hidden">
-            <Image
-              src="/about/hero-frequency-field.webp"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="hero-bg-image about-visual-image object-cover scale-110"
-            />
+            <AboutWaveCanvas />
           </div>
 
           {/* Top: minimal brand mark — earns its place because it tells you where you are. */}

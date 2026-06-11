@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
-import Header from "./Header";
+import Header from "@/components/Header";
 
 export default function PhysicsSandboxSection() {
   const t = useTranslations("home.hero");
