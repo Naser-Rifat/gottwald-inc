@@ -147,7 +147,7 @@ export default function ResonanceCursor() {
       <div
         ref={outerRef}
         aria-hidden="true"
-        className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full border border-turquoise/65"
+        className="fixed top-0 left-0 z-[10000] pointer-events-none rounded-full border border-turquoise/65"
         style={{
           display: "none",
           width: "32px",
@@ -162,7 +162,7 @@ export default function ResonanceCursor() {
       <div
         ref={innerRef}
         aria-hidden="true"
-        className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full bg-turquoise"
+        className="fixed top-0 left-0 z-[10000] pointer-events-none rounded-full bg-turquoise"
         style={{
           display: "none",
           width: "6px",

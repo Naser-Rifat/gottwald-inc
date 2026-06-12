@@ -14,6 +14,7 @@ import CookieManager from "@/components/CookieManager";
 import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
 import ResonanceCursor from "@/components/ResonanceCursor";
 import LivingEnvironment from "@/components/LivingEnvironment";
+import LiquidClickEffect from "@/components/LiquidClickEffect";
 import {
   SITE_URL,
   SITE_NAME,
@@ -239,9 +240,10 @@ export default async function RootLayout({
             per-visit phase seed. Mounted once at the root so every page
             inherits the living-frequency-space behaviors. */}
         <LivingEnvironment />
+        <LiquidClickEffect />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AudioProvider>
-            <main id="main-content" tabIndex={-1} className="outline-none">
+            <main id="main-content" tabIndex={-1} className="outline-none min-h-screen">
               {children}
             </main>
           </AudioProvider>

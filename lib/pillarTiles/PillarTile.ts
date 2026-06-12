@@ -10,43 +10,26 @@ import { elementToWorldRect } from "../utils/utils";
 import type HomeScene from "../homeScene";
 
 const ASPECT = 16 / 9;
-const DEFAULT_BG_COLOUR = "#eee";
-const DEFAULT_CAM_POS = new THREE.Vector3(0, 0, 4);
-const CAMERA_LOOKAT = new THREE.Vector3(0, 0, 0);
-const CAMERA_MOVEMENT_COEF = 0.6;
-const RENDER_TEXTURE_WIDTH = 2048;
-const RENDER_TEXTURE_HEIGHT = RENDER_TEXTURE_WIDTH / ASPECT;
 const HORIZONTAL_MASK_CLOSED = 0.5;
 const HORIZONTAL_MASK_OPEN = 0;
 
 export default class ProjectTile extends THREE.Group {
   elementId: string;
   homeScene: HomeScene;
-  renderTarget = new THREE.WebGLRenderTarget(
-    RENDER_TEXTURE_WIDTH,
-    RENDER_TEXTURE_HEIGHT,
-    {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-    },
-  );
-  portalCamera = new THREE.PerspectiveCamera(45, ASPECT);
-  portalScene = new THREE.Scene();
   stretchAmount = { value: 0.0, targetValue: 0.0 };
   maskAmount = {
     value: HORIZONTAL_MASK_CLOSED,
     targetValue: HORIZONTAL_MASK_CLOSED,
   };
-  targetCameraPosition = DEFAULT_CAM_POS.clone();
+  uMouse = { value: new THREE.Vector2(999.0, 999.0) };
+  targetMouse = new THREE.Vector2(999.0, 999.0);
+  uTime = { value: 0 };
   tileMeshMat!: THREE.ShaderMaterial;
   tileMesh!: THREE.Mesh;
   tileWorldRect!: { position: THREE.Vector3; width: number; height: number };
   lastScrollPosition?: number;
-  private environmentLoaded = false;
 
-  get renderTexture() {
-    return this.renderTarget.texture;
-  }
+  private resizeObserver?: ResizeObserver;
 
   constructor(elementId: string, homeScene: HomeScene) {
     super();
@@ -54,44 +37,46 @@ export default class ProjectTile extends THREE.Group {
     this.elementId = elementId;
     this.homeScene = homeScene;
 
-    this.initPortalScene();
     this.initTileMesh();
     this.initInteractionObserver();
+    this.loadTexture();
 
     const el = document.getElementById(elementId);
     if (el) {
+      el.addEventListener("mouseenter", this.onMouseEnter);
       el.addEventListener("mousemove", this.onMouseMove);
       el.addEventListener("mouseleave", this.onMouseLeave);
       el.addEventListener("click", this.onClick);
+      
+      // Auto-resize mesh if the DOM element changes size (fixes 0x0 bug on initial load)
+      this.resizeObserver = new ResizeObserver(() => {
+        this.resize();
+      });
+      this.resizeObserver.observe(el);
     }
 
     this.initDebug();
   }
 
-  initPortalScene = () => {
-    this.portalScene.background = new THREE.Color(DEFAULT_BG_COLOUR);
-
-    this.targetCameraPosition = DEFAULT_CAM_POS.clone();
-
-    this.portalCamera.position.copy(DEFAULT_CAM_POS);
-    this.portalCamera.lookAt(CAMERA_LOOKAT);
-  };
-
-  private loadEnvironmentMap = async () => {
-    if (this.environmentLoaded) return;
-    this.environmentLoaded = true;
-    // Skip the 1.4MB HDRI on mobile — environment reflections are barely
-    // perceptible on small screens and the portal still renders correctly
-    // without a scene.environment (materials fall back to unlit shading).
-    if (getDeviceTier() === "mobile") return;
-
-    const texture = await new RGBELoader().loadAsync(
-      "/assets/hdri/studio_small_08_1k.hdr",
-    );
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-    this.portalScene.environment = texture;
-    this.portalScene.environmentIntensity = 0.8;
-  };
+  loadTexture() {
+    const el = document.getElementById(this.elementId);
+    if (!el) return;
+    const img = el.querySelector("img");
+    if (img) {
+      const src = img.currentSrc || img.src;
+      if (!src) return;
+      new THREE.TextureLoader().load(src, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        if (this.tileMeshMat) {
+          this.tileMeshMat.uniforms.map.value = texture;
+          this.tileMeshMat.needsUpdate = true;
+          
+          // Reveal WebGL mesh only when the texture is fully loaded
+          el.classList.add("webgl-active");
+        }
+      });
+    }
+  }
 
   initTileMesh() {
     this.tileWorldRect = elementToWorldRect(
@@ -102,9 +87,11 @@ export default class ProjectTile extends THREE.Group {
     this.tileMeshMat = new THREE.ShaderMaterial({
       uniforms: {
         maskAmount: this.maskAmount,
-        aspect: { value: this.tileWorldRect.width / this.tileWorldRect.height },
+        aspect: { value: this.tileWorldRect.height > 0 ? this.tileWorldRect.width / this.tileWorldRect.height : ASPECT },
         stretchAmount: this.stretchAmount,
-        map: { value: this.renderTexture },
+        uMouse: this.uMouse,
+        uTime: this.uTime,
+        map: { value: null },
       },
       vertexShader: projectTileVert,
       fragmentShader: projectTileFrag,
@@ -134,15 +121,24 @@ export default class ProjectTile extends THREE.Group {
             this.maskAmount.targetValue = entry.isIntersecting
               ? HORIZONTAL_MASK_OPEN
               : HORIZONTAL_MASK_CLOSED;
-            if (entry.isIntersecting) this.loadEnvironmentMap();
           },
       );
     }, { rootMargin: "300px 0px" });
     observer.observe(el);
   };
 
-  addToPortalScene = (object: THREE.Object3D) => {
-    this.portalScene.add(object);
+  onMouseEnter = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const xAbs = e.clientX - rect.left;
+    const yAbs = e.clientY - rect.top;
+
+    let x = xAbs / rect.width;
+    let y = yAbs / rect.height;
+
+    // Snap the actual uMouse value instantly to avoid the ripple flying in from 999,999
+    this.uMouse.value.set(x, 1.0 - y);
+    this.targetMouse.set(x, 1.0 - y);
   };
 
   onMouseMove = (e: MouseEvent) => {
@@ -154,16 +150,13 @@ export default class ProjectTile extends THREE.Group {
     let x = xAbs / rect.width;
     let y = yAbs / rect.height;
 
-    x = (x - 0.5) * 2 * CAMERA_MOVEMENT_COEF;
-    y = (y - 0.5) * 2 * CAMERA_MOVEMENT_COEF;
-
-    this.targetCameraPosition.x = DEFAULT_CAM_POS.x + x;
-    this.targetCameraPosition.y = DEFAULT_CAM_POS.y - y;
-    this.targetCameraPosition.z = DEFAULT_CAM_POS.z;
+    this.targetMouse.set(x, 1.0 - y); // WebGL y is flipped
   };
 
   onMouseLeave = () => {
-    this.targetCameraPosition.copy(DEFAULT_CAM_POS);
+    // Move targetMouse far away so the shader calculates a huge distance,
+    // which makes the hoverMask perfectly 0.0
+    this.targetMouse.set(999.0, 999.0);
   };
 
   onClick = async () => {
@@ -179,23 +172,16 @@ export default class ProjectTile extends THREE.Group {
     };
 
     const zoomSequence = async (
-      portalCamTargetZoom: number,
       pageCamTargetFrustum: number,
       pageCamTargetPosition: THREE.Vector3,
       pageCamTargetRotationZ: number,
       isForward: boolean,
     ) => {
-      const portalCamStartZoom = this.portalCamera.zoom;
       const pageCamStartFrustum = this.homeScene.frustumSize;
       const pageCamStartPosition = this.homeScene.camera.position.clone();
       const pageCamStartRotationZ = this.homeScene.camera.rotation.z;
 
       await animateAsync(500, (percent) => {
-        const portalCamZoom = THREE.MathUtils.lerp(
-          portalCamStartZoom,
-          portalCamTargetZoom,
-          percent,
-        );
         const pageCamFrustum = THREE.MathUtils.lerp(
           pageCamStartFrustum,
           pageCamTargetFrustum,
@@ -214,24 +200,9 @@ export default class ProjectTile extends THREE.Group {
           percent,
         );
         this.homeScene.camera.rotation.z = pageCamRotationZ;
-
-        this.portalCamera.zoom = portalCamZoom;
-        this.portalCamera.updateProjectionMatrix();
-
-        this.portalScene.children.forEach((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const mesh = child as THREE.Mesh;
-            if (mesh.material && "opacity" in mesh.material) {
-              (mesh.material as THREE.Material).opacity = isForward
-                ? 1 - percent
-                : percent;
-            }
-          }
-        });
       });
     };
 
-    const portalCamStartZoom = this.portalCamera.zoom;
     const pageCamStartFrustumSize = this.homeScene.frustumSize;
     const pageCamStartPosition = this.homeScene.camera.position.clone();
     const pageCamStartRotationZ = this.homeScene.camera.rotation.z;
@@ -241,7 +212,6 @@ export default class ProjectTile extends THREE.Group {
       document.getElementById("project-tile-modal")?.classList.remove("show");
       await waitAsync(1000);
       await zoomSequence(
-        portalCamStartZoom,
         pageCamStartFrustumSize,
         pageCamStartPosition,
         pageCamStartRotationZ,
@@ -262,7 +232,6 @@ export default class ProjectTile extends THREE.Group {
     addCssClass(true);
     await waitAsync(1000);
     await zoomSequence(
-      3,
       this.calculatePageCamTargetFrustum(),
       this.tileMesh.position.clone(),
       randomSign() * 0.1,
@@ -303,6 +272,11 @@ export default class ProjectTile extends THREE.Group {
 
     this.remove(this.tileMesh);
 
+    if (this.tileMeshMat) {
+      this.tileMeshMat.uniforms.aspect.value = 
+        this.tileWorldRect.height > 0 ? this.tileWorldRect.width / this.tileWorldRect.height : ASPECT;
+    }
+
     this.tileMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(
         this.tileWorldRect.width,
@@ -316,7 +290,8 @@ export default class ProjectTile extends THREE.Group {
   };
 
   update(dt: number, renderer: THREE.WebGLRenderer) {
-    this.portalCamera.position.lerp(this.targetCameraPosition, dt * 10);
+    this.uMouse.value.lerp(this.targetMouse, dt * 5.0);
+    this.uTime.value += dt;
     this.maskAmount.value = THREE.MathUtils.lerp(
       this.maskAmount.value,
       this.maskAmount.targetValue,
@@ -324,10 +299,6 @@ export default class ProjectTile extends THREE.Group {
     );
 
     this.updateStretchAmount(dt);
-
-    renderer.setRenderTarget(this.renderTarget);
-    renderer.render(this.portalScene, this.portalCamera);
-    renderer.setRenderTarget(null);
   }
 
   updateStretchAmount(dt: number) {
@@ -336,9 +307,10 @@ export default class ProjectTile extends THREE.Group {
       this.lastScrollPosition !== window.scrollY
     ) {
       const distance = window.scrollY - this.lastScrollPosition;
-      const speed = distance / dt;
+      // 'distance' is pixels per frame. If we scroll fast, it might be 30-50px.
+      // We want to map a 50px delta to a targetValue of ~1.0
       this.stretchAmount.targetValue = THREE.MathUtils.clamp(
-        speed * 0.00005,
+        distance * 0.02,
         -1,
         1,
       );
@@ -350,18 +322,23 @@ export default class ProjectTile extends THREE.Group {
     this.stretchAmount.value = THREE.MathUtils.lerp(
       this.stretchAmount.value,
       this.stretchAmount.targetValue,
-      dt * 5,
+      dt * 15.0, // Faster lerp so it responds immediately
     );
   }
 
   cleanup() {
-    this.renderTarget.dispose();
     this.tileMeshMat.dispose();
 
     const el = document.getElementById(this.elementId);
     if (el) {
+      el.removeEventListener("mouseenter", this.onMouseEnter);
       el.removeEventListener("mousemove", this.onMouseMove);
       el.removeEventListener("mouseleave", this.onMouseLeave);
+      el.removeEventListener("click", this.onClick);
+    }
+    
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
     }
   }
 }

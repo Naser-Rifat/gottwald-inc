@@ -45,8 +45,6 @@ export default class LoadingGroup extends THREE.Group {
     const gc = document.getElementById("global-fluid-canvas");
     if (gc) gc.style.opacity = "0";
 
-    document.body.classList.add("no-scroll");
-
     this.onDoneLoadSequence = onDoneLoadSequence;
 
     // Track only the target, don't update UI directly here anymore.
@@ -100,8 +98,9 @@ export default class LoadingGroup extends THREE.Group {
       new THREE.PlaneGeometry(width, height),
       this.material,
     );
-    this.mesh.renderOrder = 1000;
     this.mesh.position.copy(pos);
+    // Hide the default WebGL loading mesh because IntroPortal handles the splash screen now
+    this.mesh.visible = false;
     this.add(this.mesh);
   };
 
@@ -164,6 +163,8 @@ export default class LoadingGroup extends THREE.Group {
     if (displayPercent !== this.lastDisplayPercent) {
         this.countUp?.update(displayPercent);
         this.lastDisplayPercent = displayPercent;
+        // Dispatch event for React components (like IntroPortal)
+        window.dispatchEvent(new CustomEvent("loading-progress", { detail: displayPercent }));
     }
 
     if (this.loadingProgress.value >= 0.999) {
@@ -192,8 +193,10 @@ export default class LoadingGroup extends THREE.Group {
         const gc = document.getElementById("global-fluid-canvas");
         if (gc) gc.style.opacity = "1";
 
-        document.body.classList.remove("no-scroll");
-        this.loadingContentEl?.remove();
+        // Dispatch completion event for IntroPortal instead of directly manipulating React DOM
+        window.dispatchEvent(new CustomEvent("loading-complete"));
+        
+        // Remove fade-out so the site is ready when the portal opens
         this.homeContentEl?.classList.remove("fade-out");
         this.onDoneLoadSequence?.();
       }

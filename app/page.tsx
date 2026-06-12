@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import HeldBreath from "@/components/HeldBreath";
-import LoadingOverlay from "@/components/LoadingOverlay";
 import PagingScript from "@/components/PagingScript";
 import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
 import VideoPanelSection from "@/components/VideoPanelSection";
@@ -53,6 +52,8 @@ const NextChapterTransition = dynamic(
   () => import("@/components/NextChapterTransition"),
   { ssr: true },
 );
+import IntroPortal from "@/components/IntroPortal";
+
 export default async function Home() {
   const pillars = await getPillars();
   const tNav = await getTranslations("nav");
@@ -62,7 +63,7 @@ export default async function Home() {
         data={breadcrumbJsonLd([{ name: "Home", url: "/" }])}
       />
       <WebGLCanvasLoader />
-      <LoadingOverlay />
+      <IntroPortal />
 
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />

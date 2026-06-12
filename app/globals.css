@@ -168,6 +168,12 @@ a.button:hover {
   visibility: visible;
 }
 
+/* WebGL active state hides DOM fallback images */
+.webgl-active .dom-image-layer {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 /* ===== Video Panel End Parent ===== */
 
 #video-panel-end-parent {
