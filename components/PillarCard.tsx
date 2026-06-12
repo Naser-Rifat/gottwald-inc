@@ -191,8 +191,9 @@ export default function PillarCard({
       onMouseLeave={handleMouseLeave}
     >
       <div
+        id={`tile-${index + 1}`}
         ref={imageWrapRef}
-        className={`relative overflow-hidden rounded-xl ${imageClassName} shadow-[0_4px_25px_rgba(10,147,150,0.1)] transition-shadow duration-500 group-hover:shadow-[0_8px_30px_rgba(10,147,150,0.25)] ring-1 ring-white/5 ring-inset`}
+        className={`relative overflow-hidden rounded-xl ${imageClassName} transition-shadow duration-500`}
         style={{ clipPath: "inset(100% 0 0 0)", minHeight: "180px" }}
       >
         <div
@@ -204,7 +205,7 @@ export default function PillarCard({
           }}
         >
           {/* 1. Base Dark Background / Texture (Fallback) */}
-          <div className="absolute inset-0 pointer-events-none select-none z-0">
+          <div className="dom-image-layer absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000">
             {/* Multi-stop gradient background */}
             <div
               className="absolute inset-0"
@@ -227,7 +228,7 @@ export default function PillarCard({
 
           {/* 2. Image Layer (Sits above background) */}
           {pillar.image && (
-            <div className="absolute inset-0 z-10">
+            <div className="dom-image-layer absolute inset-0 z-10 transition-opacity duration-1000">
               <Image
                 src={pillar.image}
                 alt={pillar.title}
@@ -262,9 +263,6 @@ export default function PillarCard({
 
           {/* 3. Foreground Text / Accents (Sits above background and image) */}
           <div className="absolute inset-0 pointer-events-none select-none z-20">
-            {/* Left accent bar */}
-            <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-turquoise/40 via-petrol/20 to-transparent" />
-
             {/* Large index number — editorial hero */}
             <div className="absolute top-6 right-6 sm:top-8 sm:right-8 mix-blend-screen">
               <span
@@ -287,9 +285,6 @@ export default function PillarCard({
                 {pillar.title}
               </p> */}
             </div>
-
-            {/* Top-right corner bracket */}
-            <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-6 h-6 border-t border-r border-white/20" />
           </div>
 
           {/* Hover overlay — on top of everything */}

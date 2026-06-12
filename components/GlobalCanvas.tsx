@@ -46,6 +46,18 @@ void main() {
     // Slow restrained time — premium stillness, no frenetic motion
     float t = uTime * 0.45;
 
+    // ── Liquid Ripple Distortion (like the project tiles) ──
+    float liquidDist = length(p - mouseP);
+    // Intense ripple frequency and speed
+    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
+    float hoverMask = smoothstep(0.5, 0.0, liquidDist);
+    
+    vec2 safeDir = p - mouseP;
+    if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
+    
+    // Distort the coordinate space for the rest of the shader
+    p = p + normalize(safeDir) * ripple * hoverMask;
+
     // ── Wave Source 1: drifts across the upper region ──
     vec2 source1 = vec2(sin(t * 0.07) * 0.7, 0.25 + cos(t * 0.09) * 0.12);
     float dist1 = length(p - source1);
@@ -136,6 +148,15 @@ void main() {
     vec2 mouseP = (uMouse - 0.5) * vec2(aspect, 1.0);
 
     float t = uTime * 0.45;
+
+    // ── Liquid Ripple Distortion ──
+    float liquidDist = length(p - mouseP);
+    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
+    float hoverMask = smoothstep(0.5, 0.0, liquidDist);
+    
+    vec2 safeDir = p - mouseP;
+    if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
+    p = p + normalize(safeDir) * ripple * hoverMask;
 
     // Two drifting wave sources (mobile budget)
     vec2 source1 = vec2(sin(t * 0.07) * 0.6, 0.2);

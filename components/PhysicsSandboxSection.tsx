@@ -228,12 +228,12 @@ export default function PhysicsSandboxSection() {
           <div className="hero-title-block flex flex-col gap-6 lg:gap-8 w-full lg:w-auto">
             <div className="hero-top-label flex items-center gap-3 opacity-0">
               {/* CI pill */}
-              <span
+              {/* <span
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-petrol/40 text-gold/85 bg-petrol/[0.06] text-[9px] tracking-[0.2em] font-bold uppercase"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-gold/85 animate-pulse" />
                 Gott Wald Area
-              </span>
+              </span> */}
             </div>
 
             {/* Hero text owned by next-intl. translate="no" keeps Google
@@ -268,13 +268,13 @@ export default function PhysicsSandboxSection() {
                 gold (positive) → silver (neutral) → petrol (depth) →
                 turquoise (signal) → copper (warmth). Same orchestration
                 gradient as the site-wide thread, scaled horizontally. */}
-            <div
+            {/* <div
               className="accent-line h-[2px] w-full max-w-[320px] origin-left"
               style={{
                 background:
                   "linear-gradient(90deg, rgba(212,175,55,0.55) 0%, rgba(184,192,204,0.42) 28%, rgba(0,109,132,0.55) 52%, rgba(18,168,172,0.70) 76%, rgba(192,120,64,0.45) 100%)",
               }}
-            />
+            /> */}
           </div>
 
           {/* Right: Orb + Scroll */}
