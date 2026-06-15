@@ -24,7 +24,17 @@ const POSITIONS = (() => {
   return pos;
 })();
 
-const ManifestoMatrixFlow = () => {
+interface ManifestoMatrixFlowProps {
+  colorPetrol?: string;
+  colorSignal?: string;
+  colorSilver?: string;
+}
+
+const ManifestoMatrixFlow = ({ 
+  colorPetrol = "#006d84", 
+  colorSignal = "#12a8ac", 
+  colorSilver = "#b8c0cc" 
+}: ManifestoMatrixFlowProps) => {
   const pointsRef = useRef<THREE.Points>(null);
   const wireframeRef = useRef<THREE.Mesh>(null);
   
@@ -38,10 +48,17 @@ const ManifestoMatrixFlow = () => {
     uTime:          { value: 0 },
     uMouse:         { value: new THREE.Vector2(0, 0) },
     uMouseStrength: { value: 0 },
-    uColorPetrol:   { value: new THREE.Color("#006d84") },
-    uColorSignal:   { value: new THREE.Color("#12a8ac") },
-    uColorSilver:   { value: new THREE.Color("#b8c0cc") },
+    uColorPetrol:   { value: new THREE.Color(colorPetrol) },
+    uColorSignal:   { value: new THREE.Color(colorSignal) },
+    uColorSilver:   { value: new THREE.Color(colorSilver) },
   }), []);
+
+  // Update uniforms when props change
+  useEffect(() => {
+    uniforms.uColorPetrol.value.set(colorPetrol);
+    uniforms.uColorSignal.value.set(colorSignal);
+    uniforms.uColorSilver.value.set(colorSilver);
+  }, [colorPetrol, colorSignal, colorSilver, uniforms]);
 
   // Track mouse movement to create the interactive ripples
   useEffect(() => {
@@ -219,9 +236,21 @@ const ManifestoMatrixFlow = () => {
 };
 
 // ─── Export ────────────────────────────────────────────────────────────────────
-export default function AboutWaveCanvas() {
+export default function AboutWaveCanvas({
+  colorPetrol,
+  colorSignal,
+  colorSilver,
+  opacity = 1,
+  className = "hero-bg-image absolute inset-0 z-0 pointer-events-none bg-[#020509]"
+}: {
+  colorPetrol?: string;
+  colorSignal?: string;
+  colorSilver?: string;
+  opacity?: number;
+  className?: string;
+}) {
   return (
-    <div className="hero-bg-image absolute inset-0 z-0 pointer-events-none bg-[#020509]">
+    <div className={className} style={{ opacity, transition: 'opacity 1s ease-in-out' }}>
       <Canvas
         camera={{ position: [0, 0, 15], fov: 45 }}
         gl={{
@@ -231,7 +260,11 @@ export default function AboutWaveCanvas() {
         }}
       >
         <fog attach="fog" args={["#020509", 5, 35]} />
-        <ManifestoMatrixFlow />
+        <ManifestoMatrixFlow 
+          colorPetrol={colorPetrol}
+          colorSignal={colorSignal}
+          colorSilver={colorSilver}
+        />
       </Canvas>
     </div>
   );

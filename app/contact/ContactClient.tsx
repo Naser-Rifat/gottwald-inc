@@ -30,6 +30,7 @@ export default function ContactClient() {
   const separatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
     const ctx = gsap.context(() => {
       // 1. Hero Text Reveal (Clip-path slide up)
       if (heroTextRef.current) {
@@ -119,9 +120,37 @@ export default function ContactClient() {
         },
       );
 
+      // Awwwards Premium Mouse Parallax for Background Elements
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reducedMotion) {
+        parallaxHandler = (e: MouseEvent) => {
+          const px = (e.clientX / window.innerWidth - 0.5);
+          const py = (e.clientY / window.innerHeight - 0.5);
+          
+          gsap.to(".contact-parallax-target", {
+            x: px * 160,
+            y: py * 160,
+            duration: 1.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+          
+          gsap.to(".contact-liquid-aurora", {
+            x: px * -250,
+            y: py * -250,
+            duration: 2.5,
+            ease: "power3.out",
+            overwrite: "auto"
+          });
+        };
+        window.addEventListener("mousemove", parallaxHandler);
+      }
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (parallaxHandler) window.removeEventListener("mousemove", parallaxHandler);
+    };
   }, []);
 
   return (
@@ -169,6 +198,28 @@ export default function ContactClient() {
         ))}
       </div>
 
+      {/* AWWWARDS Premium Liquid Aurora Background (Turquoise & Gold) */}
+      <div className="contact-liquid-aurora fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] md:w-[80vw] md:h-[80vw] max-w-[1400px] max-h-[1400px] rounded-full mix-blend-screen opacity-[0.25] blur-[100px] z-[-5] will-change-transform pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#12a8ac] via-transparent to-[#d4af37] rounded-full animate-[spin_20s_linear_infinite]" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#d4af37] to-[#12a8ac] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
+      </div>
+
+      {/* AWWWARDS Ghost echo — massive italic "contact." floats behind the headline */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-[10%] right-[-10vw] z-[-2] select-none opacity-40"
+      >
+        <span
+          className="contact-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+          style={{
+            fontFamily: "var(--font-playfair)",
+            fontSize: "clamp(12rem, 25vw, 30rem)",
+          }}
+        >
+          contact.
+        </span>
+      </div>
+
       {/* ── Fixed Header ── */}
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-none">
         <div className="pointer-events-auto">
@@ -178,14 +229,14 @@ export default function ContactClient() {
 
       <main className="flex-1 w-full pt-[25vh] pb-32 relative z-10">
         {/* ── HERO ── */}
-        <section className="px-gutter mb-8">
+        <section className="px-gutter mb-8 relative">
           {/* Eyebrow (#3) */}
-          <p
+          {/* <p
             className="hero-eyebrow text-[clamp(0.65rem,0.9vw,0.85rem)] tracking-[0.3em] font-bold uppercase mb-8"
             style={{ color: "rgba(212,175,55,0.85)", opacity: 0 }}
           >
             STRATEGIC INQUIRY // CONFIDENTIAL CHANNEL
-          </p>
+          </p> */}
 
           {/* Hero text is owned by next-intl. translate="no" keeps GT
               from double-translating and from breaking the gradient-clip
@@ -260,7 +311,23 @@ export default function ContactClient() {
         </div>
 
         {/* ── CONTENT GRID ── */}
-        <section className="content-grid px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8">
+        <section className="content-grid px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 relative">
+          
+          {/* Form Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-[-5%] right-[-5vw] z-0 select-none opacity-30"
+          >
+            <span
+              className="contact-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(8rem, 15vw, 20rem)",
+              }}
+            >
+              office.
+            </span>
+          </div>
           {/* Left Column: Direct Inquiries — Glassmorphic Card (#4) */}
           <div className="lg:col-span-4 flex flex-col gap-2">
             <div className="fade-up-element p-8 lg:p-10 rounded-lg border border-white/10 bg-white/[0.03] backdrop-blur-md relative overflow-hidden">

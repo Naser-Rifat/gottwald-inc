@@ -11,12 +11,11 @@ const RADIUS = 45;
 const POSITIONS = (() => {
   const pos = new Float32Array(PARTICLE_COUNT * 3);
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    // Golden ratio spiral distribution on a sphere
+    // Golden ratio spiral distribution on a PERFECT sphere (no messy randomness)
     const phi = Math.acos(1 - 2 * (i + 0.5) / PARTICLE_COUNT);
     const theta = Math.PI * (1 + Math.sqrt(5)) * i;
     
-    // Add a little randomness for an organic look
-    const r = RADIUS + (Math.random() - 0.5) * 5;
+    const r = RADIUS; // Perfect mathematical structure
 
     pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
     pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
@@ -37,7 +36,8 @@ const GlobalFamilySphere = () => {
     uTime: { value: 0 },
     uMouse: { value: new THREE.Vector2(0, 0) },
     uColorSilver: { value: new THREE.Color("#b8c0cc") },
-    uColorCopper: { value: new THREE.Color("#c07840") },
+    // Brighter, more luminous Copper for WebGL Additive Blending (avoids the muddy rust look)
+    uColorCopper: { value: new THREE.Color("#e69b65") }, 
     uColorBase: { value: new THREE.Color("#0c1320") },
   }), []);
 
@@ -63,9 +63,10 @@ const GlobalFamilySphere = () => {
     uniforms.uTime.value = state.clock.elapsedTime;
     uniforms.uMouse.value.copy(mouseSmooth.current);
     
-    // Slow rotation
-    pointsRef.current.rotation.y += delta * 0.05;
-    pointsRef.current.rotation.x += delta * 0.02;
+    // Elegant, slow cinematic rotation
+    pointsRef.current.rotation.y += delta * 0.06;
+    pointsRef.current.rotation.x += delta * 0.025;
+    pointsRef.current.rotation.z += delta * 0.01;
   });
 
   return (
@@ -91,53 +92,55 @@ const GlobalFamilySphere = () => {
           void main() {
             vec3 pos = position;
             
-            // Mouse interaction: push points away slightly based on distance to mouse
-            // We approximate mouse impact by mapping mouse to world space
+            // Mouse interaction: push points away elegantly
             vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-            float distToMouse = distance(worldPos.xy, uMouse * 0.5); // scaled down mouse reach
-            float repulse = max(0.0, 15.0 - distToMouse);
+            float distToMouse = distance(worldPos.xy, uMouse * 0.4); 
+            float repulse = max(0.0, 20.0 - distToMouse);
             
-            // Add a subtle wave to the sphere surface
-            float noise = sin(pos.x * 0.1 + uTime * 0.5) * sin(pos.y * 0.1 + uTime * 0.5) * 2.0;
+            // Gentle, fluid breathing wave across the mathematical sphere
+            float noise = sin(pos.x * 0.08 + uTime * 0.6) * cos(pos.y * 0.08 + uTime * 0.4) * 2.5;
             vec3 dir = normalize(pos);
             
             pos += dir * noise;
-            pos += dir * repulse * 0.5;
+            pos += dir * (repulse * 0.4);
             
-            // Calculate a global intensity based on z-depth and vertical position
+            // Intensity based on depth (z) for a strong 3D volume feel
             vIntensity = (pos.z + 45.0) / 90.0; 
             vWorldPosition = pos;
 
             vec4 mvPosition = viewMatrix * modelMatrix * vec4(pos, 1.0);
-            gl_PointSize = (400.0 / -mvPosition.z) * (1.0 + vIntensity);
+            
+            // Dynamic particle size based on depth + wave
+            gl_PointSize = (450.0 / -mvPosition.z) * (0.8 + vIntensity * 0.5);
             gl_Position = projectionMatrix * mvPosition;
           }
         `}
         fragmentShader={`
           uniform vec3 uColorSilver;
           uniform vec3 uColorCopper;
-          uniform vec3 uColorBase;
+          uniform float uTime;
           
           varying float vIntensity;
           varying vec3 vWorldPosition;
           
           void main() {
-            // Soft circle particle
+            // Perfect soft circular glow
             float dist = length(gl_PointCoord - vec2(0.5));
             if (dist > 0.5) discard;
             
-            // Radial gradient inside the particle
-            float alpha = 1.0 - (dist * 2.0);
-            alpha = pow(alpha, 1.5);
+            // Smooth bell-curve alpha for premium bokeh effect
+            float alpha = smoothstep(0.5, 0.1, dist);
             
-            // Color mix: copper at the top/front, silver at the back/bottom
-            float mixFactor = smoothstep(-45.0, 45.0, vWorldPosition.y + vWorldPosition.z);
+            // Dynamic color shimmering: Copper and Silver constantly orbit each other
+            float shimmer = sin(vWorldPosition.x * 0.05 + uTime) * cos(vWorldPosition.y * 0.05 + uTime);
+            float mixFactor = smoothstep(-45.0, 45.0, vWorldPosition.y + vWorldPosition.z * shimmer * 2.0);
+            
             vec3 finalColor = mix(uColorSilver, uColorCopper, mixFactor);
             
-            // Fade out the back of the sphere for depth
-            float depthFade = smoothstep(0.1, 0.8, vIntensity);
+            // Deep fade at the back of the sphere for massive 3D volume
+            float depthFade = smoothstep(0.05, 0.85, vIntensity);
             
-            gl_FragColor = vec4(finalColor, alpha * depthFade * 1.0);
+            gl_FragColor = vec4(finalColor, alpha * depthFade * 0.95);
           }
         `}
       />

@@ -246,6 +246,7 @@ export default function CareersClient() {
   };
 
   useEffect(() => {
+    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
     const ctx = gsap.context(() => {
       // WeakSet guards against re-firing: Google Translate mutates text nodes
       // when the user switches language, which can trigger ScrollTrigger
@@ -351,15 +352,43 @@ export default function CareersClient() {
           delay: 0.3,
         },
       );
+      // 11. Awwwards Premium Mouse Parallax for Background Elements
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reducedMotion) {
+        parallaxHandler = (e: MouseEvent) => {
+          const px = (e.clientX / window.innerWidth - 0.5);
+          const py = (e.clientY / window.innerHeight - 0.5);
+          
+          gsap.to(".about-parallax-target", {
+            x: px * 160,
+            y: py * 160,
+            duration: 1.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+          
+          gsap.to(".about-liquid-aurora", {
+            x: px * -250,
+            y: py * -250,
+            duration: 2.5,
+            ease: "power3.out",
+            overwrite: "auto"
+          });
+        };
+        window.addEventListener("mousemove", parallaxHandler);
+      }
     }, pageRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (parallaxHandler) window.removeEventListener("mousemove", parallaxHandler);
+    };
   }, []);
 
   return (
     <div
       ref={pageRef}
-      className="min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black relative"
+      className="min-h-screen text-white font-sans overflow-x-hidden selection:bg-white selection:text-black relative bg-[#050505]"
     >
 
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
@@ -379,6 +408,22 @@ export default function CareersClient() {
           </div>
 
 
+
+          {/* AWWWARDS Ghost echo — massive italic "careers." floats behind the headline */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[20%] right-[-5vw] z-20 select-none opacity-50"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(12rem, 24vw, 30rem)",
+              }}
+            >
+              careers.
+            </span>
+          </div>
 
           {/* ── CONTENT — Original Layout over Mountain Background ── */}
           <div className="relative z-30 w-full max-w-7xl mx-auto px-gutter pb-[15vh]">
@@ -503,8 +548,14 @@ export default function CareersClient() {
         </section>
 
         {/* ── WHO WE'RE LOOKING FOR ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden">
+          {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
+          <div className="about-liquid-aurora absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.35] blur-[100px] z-0 will-change-transform pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tl from-[#c07840] via-transparent to-[#b8c0cc] rounded-full animate-[spin_20s_linear_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#b8c0cc] to-[#c07840] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
+          </div>
+
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center relative z-10">
             <div className="flex-1">
               <h2 
                 className="scroll-fill-text text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8 text-transparent"
@@ -557,8 +608,14 @@ export default function CareersClient() {
         </section>
 
         {/* ── ROLES BY PILLAR (ACCORDION) ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5 bg-white/[0.01]">
-          <div className="max-w-5xl mx-auto">
+        <section className="px-gutter py-[15vh] border-t border-white/5 bg-[#070c14] relative overflow-hidden">
+          {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
+          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#c07840] via-[#b8c0cc] to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#b8c0cc] to-[#c07840] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
+          </div>
+
+          <div className="max-w-5xl mx-auto relative z-10">
             <div className="mb-20 reveal-text text-center">
               <span className="text-md tracking-[0.5em] uppercase text-copper/80 font-medium block mb-4">
                 ARCHITECTURE
@@ -670,8 +727,14 @@ export default function CareersClient() {
         </section>
 
         {/* ── PROCESS & WHAT YOU'LL FIND ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden">
+          {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
+          <div className="about-liquid-aurora absolute top-[50%] left-[-20%] -translate-y-1/2 w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.35] blur-[120px] z-0 will-change-transform pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#b8c0cc] via-transparent to-[#c07840] rounded-full animate-[spin_22s_linear_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#c07840] to-[#b8c0cc] rounded-full animate-[spin_28s_linear_infinite_reverse] mix-blend-overlay" />
+          </div>
+
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 relative z-10">
             {/* What you'll find — double space fixed (#8) */}
             {/* #8 — Glassmorphic "What You'll Find" wrapper */}
             <div className="reveal-text p-10 md:p-14 border border-white/10 bg-white/[0.03] backdrop-blur-sm rounded-sm relative overflow-hidden">
@@ -764,7 +827,23 @@ export default function CareersClient() {
 
         {/* ── APPLICATION FORM ── (#9 — copper border + glow) */}
         {/* #7 — Application form — transparent bg, let fluid show through */}
-        <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20">
+        <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20 overflow-hidden bg-[#050505]">
+          {/* Background Awwwards Parallax Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[20%] right-[-5vw] z-0 select-none opacity-50"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(6rem, 20vw, 24rem)",
+              }}
+            >
+              apply.
+            </span>
+          </div>
+
           {/* Ambient glow above form */}
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vh] pointer-events-none"
@@ -1011,37 +1090,6 @@ export default function CareersClient() {
         prevHref="/partnerships"
       />
 
-      {/* ── Particle Keyframes (injected once) ── */}
-      <style jsx>{`
-        @keyframes floatUp {
-          0% {
-            transform: translateY(0) translateX(0);
-            opacity: 0;
-          }
-          5% {
-            opacity: var(--particle-opacity, 0.12);
-          }
-          90% {
-            opacity: var(--particle-opacity, 0.12);
-          }
-          100% {
-            transform: translateY(-110vh) translateX(0);
-            opacity: 0;
-          }
-        }
-        @keyframes sway0 {
-          0% { transform: translateX(-20px); }
-          100% { transform: translateX(20px); }
-        }
-        @keyframes sway1 {
-          0% { transform: translateX(-30px); }
-          100% { transform: translateX(35px); }
-        }
-        @keyframes sway2 {
-          0% { transform: translateX(-15px); }
-          100% { transform: translateX(25px); }
-        }
-      `}</style>
     </div>
   );
 }

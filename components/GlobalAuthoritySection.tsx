@@ -116,8 +116,10 @@ export default function GlobalAuthoritySection() {
       data-journey="proof"
       className="relative w-full bg-transparent overflow-hidden flex flex-col pt-[5vh] md:pt-[6vh] pb-8 lg:pb-12 px-gutter min-h-screen"
     >
+      {/* Light gradient overlay to ensure map contrast but keeping the beautiful liquid canvas fully visible */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#020b14]/80 via-transparent to-[#020b14]/80 pointer-events-none z-0" />
       {/* 1. Foreground Title (At the top of the flow) */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-4 lg:mt-8">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-16 lg:mt-24">
         <div
           ref={textRef}
           className="w-full xl:w-[50%] pr-4 md:pr-12 lg:pr-24 flex flex-col gap-8 pointer-events-auto drop-shadow-lg relative z-30"
@@ -133,16 +135,16 @@ export default function GlobalAuthoritySection() {
               GLOBAL
               <br />
               <span
-                className="text-transparent bg-clip-text"
-                style={{
-                  backgroundImage: "linear-gradient(90deg, #ffffff 0%, rgba(18,168,172,0.85) 60%, rgba(0,109,132,0.7) 100%)",
-                }}
+                className="text-silver bg-clip-text"
+                // style={{
+                //   backgroundImage: "linear-gradient(90deg, #ffffff 0%, rgba(18,168,172,0.85) 60%, rgba(0,109,132,0.7) 100%)",
+                // }}
               >
                 AUTHORITY.
               </span>
             </h2>
           </div>
-          <div className="flex flex-col gap-2 pl-6 ml-2 max-w-[80vw] border-l-2 border-petrol/60">
+          <div className="flex flex-col gap-2 pl-6 ml-2 max-w-[80vw] border-l-2 border-petrol/60 mt-8">
             <p className="text-[clamp(1.2rem,2.2vw,3rem)] text-white leading-tight font-light tracking-tight">
               One system. One standard.
             </p>
@@ -156,28 +158,19 @@ export default function GlobalAuthoritySection() {
       {/* 2. Map Section — mask ONLY on the SVG layer, HUD lives outside the mask */}
       <div className="relative w-full my-[-8%] md:my-[-5%]">
 
-        {/* 2a. Masked SVG + radar — mask stays here, never touches HUD */}
-        <div
-          className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center opacity-90 overflow-hidden"
-          style={{
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-          }}
-        >
-          <div className="relative w-full sm:w-[130%] md:w-[120%] lg:w-[90%] max-w-[1600px] aspect-[1.47]">
+        {/* 2a. Map Base */}
+        <div className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+          <div className="relative w-full sm:w-[130%] md:w-[120%] lg:w-[90%] max-w-[1600px] aspect-[1.47] flex items-center justify-center">
+            {/* Extremely faint localized ambient glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-turquoise/5 rounded-full blur-[150px] mix-blend-screen" />
+
             <Image
               src="/assets/world-map-dark.svg"
               alt="Global Network Map"
               fill
-              className="object-contain opacity-50"
+              className="object-contain opacity-[0.25] drop-shadow-[0_0_10px_rgba(255,255,255,0.05)] mix-blend-screen"
               priority={false}
             />
-            {/* Radar Scanning Line */}
-            <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden rounded-full opacity-30 mix-blend-screen hidden md:block">
-              <div className="absolute left-0 top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise to-transparent animate-[scan_6s_linear_infinite] will-change-transform" />
-            </div>
           </div>
         </div>
 
@@ -191,52 +184,47 @@ export default function GlobalAuthoritySection() {
 
             {/* 1. Tbilisi Control Node */}
             <div className="absolute top-[29.3%] left-[58.8%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
-              <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-turquoise shadow-[0_0_15px_rgba(18,168,172,0.85)] z-10" />
-              <div
-                className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full border border-turquoise/40 animate-ping"
-                style={{ animationDuration: "3s" }}
-              />
-              <div
-                className="absolute w-24 h-24 md:w-32 md:h-32 rounded-full border border-turquoise/10 animate-ping hidden md:block"
-                style={{ animationDuration: "3s", animationDelay: "1s" }}
-              />
-              <div className="hidden md:flex absolute top-1/2 left-4 items-center -translate-y-1/2">
-                <div className="w-16 lg:w-24 h-px bg-gradient-to-r from-turquoise/70 to-turquoise/10" />
-                <div className="flex flex-col gap-1 ml-4 py-2 border-l border-turquoise/35 pl-4 w-max backdrop-blur-md bg-black/70 rounded-r-lg pr-4 shadow-2xl">
-                  <p className="text-turquoise font-bold tracking-[0.3em] uppercase text-[10px]">
-                    01 — HEAD OFFICE
-                  </p>
-                  <p className="text-white font-sans text-2xl lg:text-3xl my-1 drop-shadow-md">
-                    Tbilisi, Georgia
-                  </p>
+              {/* Restored Gold Dot */}
+              <div className="w-2 h-2 rounded-full bg-[#cda434] shadow-[0_0_15px_rgba(205,164,52,1)] z-10 relative">
+                <div className="absolute inset-0 rounded-full bg-[#cda434] animate-ping opacity-40" style={{ animationDuration: "3s" }} />
+              </div>
+              
+              {/* Text located exactly where it was in the HUD design */}
+              <div className="absolute top-1/2 left-full items-center -translate-y-1/2 flex items-center pointer-events-none z-10 w-max">
+                {/* Delicate Horizontal connecting line */}
+                <div className="w-12 md:w-20 h-[1px] bg-gradient-to-r from-[#cda434]/60 to-transparent" />
+                
+                {/* Box-less pure typography, placed exactly at the end of the line */}
+                <div className="flex flex-col items-start relative -ml-2">
+                  {/* Invisible halo for perfect readability */}
+                  <div className="absolute inset-0 bg-[#020b14]/90 blur-2xl rounded-[100px] -z-10 scale-[1.3]" />
+                  <p className="text-[#cda434] tracking-[0.4em] uppercase text-[10px] font-bold whitespace-nowrap mb-1">01 — HEAD OFFICE</p>
+                  <p className="text-white font-sans text-2xl lg:text-3xl tracking-wide whitespace-nowrap font-light drop-shadow-md">Tbilisi, Georgia</p>
                 </div>
               </div>
             </div>
 
             {/* 2. DACH Hubs (Munich Anchored) */}
-            <div className="absolute top-[25.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center group z-20">
-              <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,1)] z-10" />
-              <div
-                className="absolute w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/40 animate-ping hidden md:block"
-                style={{ animationDuration: "4s" }}
-              />
-              <div className="hidden md:flex absolute bottom-4 left-1/2 -translate-x-1/2 flex-col items-center">
-                <div className="flex flex-col gap-1 items-center mb-3 pb-3 border-b border-turquoise/40 px-8 py-3 backdrop-blur-md bg-black/75 rounded-t-lg w-max shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-                  <p className="text-white/90 font-bold tracking-[0.35em] uppercase text-[12px]">
-                    02 — STRATEGIC HUBS
+            <div className="absolute top-[25.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group z-20">
+              {/* Delicate Vertical connecting line */}
+              <div className="absolute bottom-full mb-2 w-[1px] h-12 lg:h-16 bg-gradient-to-t from-turquoise/60 via-turquoise/20 to-transparent" />
+              
+              <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_15px_rgba(255,255,255,1)] z-10 relative">
+                <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" style={{ animationDuration: "4s" }} />
+              </div>
+              
+              {/* Text positioned exactly where it was in the HUD design (High Above) */}
+              <div className="absolute bottom-full mb-12 lg:mb-16 flex flex-col items-center pointer-events-none z-10 w-max">
+                {/* Box-less pure typography */}
+                <div className="flex flex-col items-center relative">
+                  {/* Invisible halo for perfect readability */}
+                  <div className="absolute inset-0 bg-[#020b14]/90 blur-2xl rounded-[100px] -z-10 scale-[1.3]" />
+                  <p className="text-white/80 tracking-[0.4em] uppercase text-[10px] font-bold whitespace-nowrap mb-1">02 — STRATEGIC HUBS</p>
+                  <p className="text-turquoise font-sans font-medium text-3xl lg:text-4xl tracking-wide whitespace-nowrap mb-2 drop-shadow-md">DACH Region</p>
+                  <p className="text-white/90 tracking-[0.3em] uppercase text-[10px] font-bold whitespace-nowrap flex items-center gap-3">
+                    GERMANY / AUSTRIA / SWITZERLAND
                   </p>
-                  <p className="text-turquoise font-bold tracking-wide text-2xl my-1 drop-shadow-[0_0_16px_rgba(18,168,172,0.6)]">
-                    DACH Region
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.25em]">
-                    <span className="text-white font-semibold">Germany</span>
-                    <span className="text-white/40">/</span>
-                    <span className="text-white font-semibold">Austria</span>
-                    <span className="text-white/40">/</span>
-                    <span className="text-white font-semibold">Switzerland</span>
-                  </div>
                 </div>
-                <div className="h-10 lg:h-16 w-[2px] bg-gradient-to-t from-turquoise to-transparent drop-shadow-[0_0_6px_rgba(18,168,172,0.8)]" />
               </div>
             </div>
 
@@ -269,12 +257,10 @@ export default function GlobalAuthoritySection() {
           {/* 03 Global Presence Metrics */}
           <div
             ref={metricsRef}
-            className="order-1 lg:order-2 flex flex-col gap-8 w-full lg:max-w-[900px] xl:max-w-[1050px] backdrop-blur-xl p-8 rounded-none border-t border-petrol/10 lg:py-12 lg:px-14 shadow-2xl"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(7,12,20,0.97) 0%, rgba(0,40,55,0.92) 100%)",
-            }}
+            className="order-1 lg:order-2 flex flex-col gap-8 w-full lg:max-w-[900px] xl:max-w-[1100px] relative z-20 pt-16 pb-8 lg:pb-0"
           >
+            {/* Extremely subtle ambient fade for text readability without a hard box */}
+            <div className="absolute inset-0 w-[150%] h-[150%] -top-[25%] -left-[25%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black/90 via-black/30 to-transparent blur-2xl -z-10 pointer-events-none" />
             {/* Mobile Fallback Nodes */}
             <div className="md:hidden flex flex-col gap-8 pb-8 border-b border-white/10">
               <div className="flex flex-col gap-1 border-l-2 border-turquoise pl-4">
@@ -296,62 +282,59 @@ export default function GlobalAuthoritySection() {
             </div>
 
             {/* Data Grid Title */}
-            <div className="flex items-center gap-3 mb-4 hidden md:flex">
-              <div className="w-1 h-1 bg-white/70 rounded-full" />
-              <p className="text-white/70 font-semibold tracking-[0.3em] uppercase text-[12px] lg:text-[14px]">
-                03 — GLOBAL PRESENCE
-              </p>
+            <div className="flex items-center gap-4 mb-6 hidden md:flex">
+             
             </div>
 
             {/* Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8 text-sm w-full">
               {/* Column 1 */}
               <div className="flex flex-col gap-3">
-                <span className="text-white/50 uppercase text-[12px] tracking-[0.2em] font-semibold">
+                <span className="uppercase text-[10px] tracking-[0.3em] font-bold text-white/50 drop-shadow-md">
                   — COVERAGE
                 </span>
-                <span className="text-white text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2">
+                <span className="text-white/90 text-5xl lg:text-[5rem] font-medium tracking-tight leading-none flex items-baseline gap-2 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]" style={{ fontFamily: "var(--font-playfair)" }}>
                   26
-                  <span className="text-white/50 text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1">
+                  <span className="text-white/40 text-[10px] tracking-[0.2em] uppercase font-bold relative -top-4 font-sans">
                     COUNTRIES
                   </span>
                 </span>
               </div>
 
-              {/* Column 2 — Turquoise × Partners (signal/eye-catcher) */}
+              {/* Column 2 — Turquoise × Partners */}
               <div className="flex flex-col gap-3">
-                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-turquoise/70">
+                <span className="uppercase text-[10px] tracking-[0.3em] font-bold text-turquoise/70 drop-shadow-md">
                   — PARTNERS
                 </span>
-                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2 text-turquoise/90">
+                <span className="text-5xl lg:text-[5rem] font-medium tracking-tight leading-none flex items-baseline gap-2 text-turquoise drop-shadow-[0_4px_16px_rgba(18,168,172,0.3)]" style={{ fontFamily: "var(--font-playfair)" }}>
                   71
-                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 text-turquoise/50">
+                  <span className="text-turquoise/50 text-[10px] tracking-[0.2em] uppercase font-bold relative -top-4 font-sans">
                     ORIGINS
                   </span>
                 </span>
               </div>
 
-              {/* Column 3 — Copper × Network (warmth/human reach) */}
+              {/* Column 3 — Copper × Network */}
               <div className="flex flex-col gap-3">
-                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-copper/80">
+                <span className="uppercase text-[10px] tracking-[0.3em] font-bold text-[#c07840]/80 drop-shadow-md">
                   — NETWORK
                 </span>
-                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-1.5 text-copper/95">
-                  888<span className="text-2xl lg:text-3xl -ml-2 -mt-2">±</span>
-                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 ml-1 text-copper/55">
+                <span className="text-5xl lg:text-[5rem] font-medium tracking-tight leading-none flex items-baseline gap-1.5 text-[#c07840] drop-shadow-[0_4px_16px_rgba(192,120,64,0.4)]" style={{ fontFamily: "var(--font-playfair)" }}>
+                  888<span className="text-3xl lg:text-4xl -ml-2 -mt-6 text-[#c07840]/60 font-sans">+</span>
+                  <span className="text-[#c07840]/50 text-[10px] tracking-[0.2em] uppercase font-bold relative -top-4 ml-1 font-sans">
                     SIGNATURE
                   </span>
                 </span>
               </div>
 
-              {/* Column 4 — Silver × Language (neutral metallic clarity) */}
+              {/* Column 4 — Silver × Language */}
               <div className="flex flex-col gap-3">
-                <span className="uppercase text-[12px] tracking-[0.2em] font-semibold text-silver/75">
+                <span className="uppercase text-[10px] tracking-[0.3em] font-bold text-silver/70 drop-shadow-md">
                   — LANGUAGE
                 </span>
-                <span className="text-5xl lg:text-[4rem] font-light tracking-tighter leading-none flex items-baseline gap-2 text-silver/90">
+                <span className="text-5xl lg:text-[5rem] font-medium tracking-tight leading-none flex items-baseline gap-2 text-silver drop-shadow-[0_4px_16px_rgba(184,192,204,0.3)]" style={{ fontFamily: "var(--font-playfair)" }}>
                   17
-                  <span className="text-[12px] tracking-[0.1em] uppercase font-bold relative -top-1 text-silver/55">
+                  <span className="text-silver/50 text-[10px] tracking-[0.2em] uppercase font-bold relative -top-4 font-sans">
                     SPOKEN
                   </span>
                 </span>

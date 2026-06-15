@@ -68,12 +68,12 @@ export default async function Home() {
       <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
         
-        <HeldBreath />
+        {/* <HeldBreath /> */}
         <VideoPanelSection />
         <PillarsTilesSection pillars={pillars} />
-        <HeldBreath />
+        {/* <HeldBreath /> */}
         <GlobalAuthoritySection />
-        <HeldBreath />
+        {/* <HeldBreath /> */}
         <StrategicInquirySection />
         <FooterSection />
         <NextChapterTransition nextTitle={tNav("about")} nextHref="/about" />

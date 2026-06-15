@@ -13,6 +13,7 @@ import NextChapterTransition from "@/components/NextChapterTransition";
 gsap.registerPlugin(ScrollTrigger);
 
 import AboutWaveCanvas from "@/components/AboutWaveCanvas";
+import ShiftCanvas from "@/components/ShiftCanvas";
 
 // color that matches its inner state (per client manifesto): gold = positive /
 // stability, silver = neutral / space, petrol = depth / structure, turquoise =
@@ -33,54 +34,63 @@ const ECOSYSTEM_FREQUENCIES: ReadonlyArray<{
   frequency: string;
   desc: string;
   tone: FrequencyTone;
+  image: string;
 }> = [
   {
     name: "SolutionFinder / Solution Management",
     frequency: "Clarity",
     desc: "Find the cause, lead the solution, lock stability.",
     tone: "turquoise", // signal — clarity / leadership
+    image: "/images/orchestra/clarity.png",
   },
   {
     name: "Consulting",
     frequency: "Structure",
     desc: "Executive-grade strategy, decision systems, and growth.",
     tone: "petrol", // depth — structural strategy
+    image: "/images/orchestra/structure.png",
   },
   {
     name: "Marketing & Communication",
     frequency: "Signal",
     desc: "Trust and demand infrastructure.",
     tone: "gold", // positive — trust / signal
+    image: "/images/orchestra/signal.png",
   },
   {
     name: "IT Solutions 2030",
     frequency: "Momentum",
     desc: "Websites as high-performance, indexable infrastructure.",
     tone: "silver", // neutral metallic — infrastructure
+    image: "/images/orchestra/momentum.png",
   },
   {
     name: "Coaching & Mentoring",
     frequency: "Presence",
     desc: "A human operating system for high responsibility.",
     tone: "copper", // warmth — empathy / human presence
+    image: "/images/orchestra/presence.png",
   },
   {
     name: "Structure Deployment (Georgia)",
     frequency: "Stability",
     desc: "Defensible setup for entrepreneurs and holdings.",
     tone: "petrol", // depth — defensible structure
+    image: "/images/orchestra/stability.png",
   },
   {
     name: "YIG.CARE",
     frequency: "Expansion",
     desc: "Platform and movement. Launch 2026.",
     tone: "silver", // space / awareness / expansion
+    image: "/images/orchestra/expansion.png",
   },
   {
     name: "PLHH_Coin",
     frequency: "Harmony",
     desc: "RWA and Governance DAO for real-world regeneration.",
     tone: "gold", // stability / trust / reliability
+    image: "/images/orchestra/harmony.png",
   },
 ];
 
@@ -90,35 +100,35 @@ const PILLARS_DATA= [
                 principle: "CLARITY",
                 title: "We remove noise until only truth remains",
                 desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence.",
-                image: "/about/pillar-01-clarity.webp",
+                image: "/about/pillar_clarity_premium_1781530185774.png",
               },
               {
                 num: "02",
                 principle: "LIGHTNESS",
                 title: "We make decisions light again",
                 desc: 'When a system becomes clear, decisions almost make themselves. Not because it\'s "easy," but because it is finally ordered.',
-                image: "/about/pillar-02-lightness.webp",
+                image: "/about/pillar_lightness_premium_1781530200059.png",
               },
               {
                 num: "03",
                 principle: "SIGNAL",
                 title: "We build signal, not volume",
                 desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately.",
-                image: "/about/pillar-03-signal.webp",
+                image: "/about/pillar_signal_premium_1781530213416.png",
               },
               {
                 num: "04",
                 principle: "INFRASTRUCTURE",
                 title: "We treat technology as infrastructure",
                 desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure.",
-                image: "/about/pillar-04-infrastructure.webp",
+                image: "/about/pillar_infrastructure_premium_1781530227488.png",
               },
               {
                 num: "05",
                 principle: "PRESENCE",
                 title: "We strengthen the human behind the system",
                 desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable.",
-                image: "/about/pillar-05-presence.webp",
+                image: "/about/pillar_presence_premium_1781530240970.png",
               },
             ]
 
@@ -130,7 +140,68 @@ export default function AboutClient() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeProofPhase, setActiveProofPhase] = useState(0);
   const [headerScrolled, setHeaderScrolled] = useState(false);
-  const [hoveredShift, setHoveredShift] = useState<number | null>(null);
+  const [activeShiftIndex, setActiveShiftIndex] = useState<number>(0);
+  const [activeCaseIndex, setActiveCaseIndex] = useState(0);
+
+  const [hoveredEcoIndex, setHoveredEcoIndex] = useState<number | null>(null);
+  const ecoCursorRef = useRef<HTMLDivElement>(null);
+
+  // Smooth cursor follow for the orchestra image reveal
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (hoveredEcoIndex !== null && ecoCursorRef.current) {
+        gsap.to(ecoCursorRef.current, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        
+        // Inner image parallax
+        const px = (e.clientX / window.innerWidth) - 0.5;
+        const py = (e.clientY / window.innerHeight) - 0.5;
+        const imgs = ecoCursorRef.current.querySelectorAll('img');
+        gsap.to(imgs, {
+          x: px * -100, // Opposite direction parallax
+          y: py * -100,
+          scale: 1.15, // Extra scale to hide edges during parallax
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      }
+    };
+    
+    if (hoveredEcoIndex !== null) {
+      window.addEventListener("mousemove", handleMouseMove);
+    } else {
+      // Reset parallax on mouse leave
+      if (ecoCursorRef.current) {
+        const imgs = ecoCursorRef.current.querySelectorAll('img');
+        gsap.to(imgs, { x: 0, y: 0, scale: 1, duration: 0.8, ease: "power2.out" });
+      }
+    }
+    
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [hoveredEcoIndex]);
+
+  // Observer for "What shifts" section scrolling using ScrollTrigger
+  useEffect(() => {
+    const elements = gsap.utils.toArray<HTMLElement>(".shift-article");
+    const triggers = elements.map((el) => {
+      const idx = Number(el.getAttribute("data-shift-index"));
+      return ScrollTrigger.create({
+        trigger: el,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveShiftIndex(idx),
+        onEnterBack: () => setActiveShiftIndex(idx),
+      });
+    });
+
+    return () => {
+      triggers.forEach((t) => t.kill());
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -517,9 +588,6 @@ export default function AboutClient() {
       }
 
       // 5. Magnetic CTA — pulls toward the cursor within a 220px radius.
-      // The small luxury that signals "this surface responds to you, not
-      // the other way around" — a recurring micro-interaction language
-      // across award-grade sites ( Active Theory, Pangea).
       const magneticBtn =
         pageRef.current?.querySelector<HTMLElement>(".magnetic-cta");
       if (magneticBtn && !reducedMotion) {
@@ -552,12 +620,40 @@ export default function AboutClient() {
         };
         window.addEventListener("mousemove", magneticHandler);
       }
+
+      // 6. Awwwards Premium Mouse Parallax for Background Elements (Independent of Magnetic CTA)
+      let parallaxHandler: ((e: MouseEvent) => void) | null = null;
+      if (!reducedMotion) {
+        parallaxHandler = (e: MouseEvent) => {
+          const px = (e.clientX / window.innerWidth - 0.5);
+          const py = (e.clientY / window.innerHeight - 0.5);
+          
+          gsap.to(".about-parallax-target", {
+            x: px * 120, // Increased movement so it's very obvious
+            y: py * 120,
+            duration: 1.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+          
+          gsap.to(".about-liquid-aurora", {
+            x: px * -200, // Counter-movement
+            y: py * -200,
+            duration: 2.5,
+            ease: "power3.out",
+            overwrite: "auto"
+          });
+        };
+        window.addEventListener("mousemove", parallaxHandler);
+      }
     }, pageRef);
 
     return () => {
       ctx.revert();
-      if (magneticHandler)
-        window.removeEventListener("mousemove", magneticHandler);
+      if (magneticHandler) window.removeEventListener("mousemove", magneticHandler);
+      // Clean up parallax handler
+      const ph = (window as any)._parallaxHandler;
+      if (ph) window.removeEventListener("mousemove", ph);
     };
   }, []);
 
@@ -871,7 +967,7 @@ export default function AboutClient() {
         </section>
 
         {/* WHAT WE STAND FOR */}
-        <section className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04] overflow-hidden">
+        <section className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04]">
           <div className="max-w-[1400px] mx-auto relative z-10">
             <p className="reveal-text text-[10px] tracking-[0.42em] uppercase text-turquoise/75 font-light mb-14">
               What we stand for
@@ -1120,28 +1216,19 @@ export default function AboutClient() {
         {/* OUTCOMES & TIME TO VALUE */}
         <section
           data-journey="proof"
-          className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04] overflow-hidden"
+          className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04]"
         >
-          {/* Atmospheric depth — Swiss pulse asset as subtle bottom-right
-              texture + film-grain overlay. Both sit below content z-layer so
-              editorial type stays crisp; opacities tuned so background reads
-              as material, not illustration. */}
+          {/* Atmospheric depth — Replaced static image with Awwwards Premium Liquid Aurora */}
           <div
             aria-hidden="true"
             className="absolute inset-0 pointer-events-none overflow-hidden"
           >
-            <div
-              className="absolute -right-[8%] bottom-[-6%] w-[65%] h-[70%] opacity-[0.07]"
-              style={{
-                backgroundImage:
-                  "url('/images/swiss_pulses_1780756828358.webp')",
-                backgroundSize: "contain",
-                backgroundPosition: "bottom right",
-                backgroundRepeat: "no-repeat",
-                mixBlendMode: "screen",
-                filter: "saturate(0.4) hue-rotate(160deg)",
-              }}
-            />
+            {/* Dramatically increased opacity and size so it's impossible to miss */}
+            <div className="about-liquid-aurora absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.28] blur-[120px] z-0 will-change-transform">
+              <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
+              <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-copper to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
+            </div>
+            
             <div className="absolute inset-0 proof-grain opacity-[0.22]" />
             {/* Corner index mark — Swiss editorial tick that establishes
                 "measured section" tone before the eye reaches the headline. */}
@@ -1389,7 +1476,7 @@ export default function AboutClient() {
                 className="pointer-events-none absolute top-[14%] right-[-6vw] z-0 select-none about-shifts-watermark"
               >
                 <span
-                  className="block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap"
+                  className="about-parallax-target block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
                   style={{
                     fontFamily: "var(--font-playfair)",
                     fontSize: "clamp(11rem, 22vw, 26rem)",
@@ -1399,107 +1486,108 @@ export default function AboutClient() {
                 </span>
               </div>
 
+
               {(() => {
                 const shifts = [
                   {
                     subject: "Decision gridlock",
                     verb: "dissolves.",
-                    context:
-                      "Clear priorities, clear ownership, fewer open loops.",
+                    context: "Clear priorities, clear ownership, fewer open loops.",
+                    image: "/images/shifts/decision.png",
                   },
                   {
                     subject: "Execution becomes",
                     verb: "predictable.",
-                    context:
-                      'Projects are not "felt." They are led with SSOT, sequence, and standards.',
+                    context: 'Projects are not "felt." They are led with SSOT, sequence, and standards.',
+                    image: "/images/shifts/execution.png",
                   },
                   {
                     subject: "Visibility becomes",
                     verb: "plan-able.",
-                    context:
-                      "Messaging locks in. Proof is structured. Conversion rises because trust forms faster.",
+                    context: "Messaging locks in. Proof is structured. Conversion rises because trust forms faster.",
+                    image: "/images/shifts/visibility.png",
                   },
                   {
                     subject: "Digital presence becomes",
                     verb: "powerful.",
-                    context:
-                      "Performance, indexability, structure. Website as operating system, not brochure.",
+                    context: "Performance, indexability, structure. Website as operating system, not brochure.",
+                    image: "/images/shifts/digital.png",
                   },
                   {
                     subject: "Leadership state",
                     verb: "stabilizes.",
-                    context:
-                      "More calm, more focus, better decisions — without self-loss.",
+                    context: "More calm, more focus, better decisions — without self-loss.",
+                    image: "/images/shifts/leadership.png",
                   },
                 ];
                 const romans = ["i", "ii", "iii", "iv", "v"];
                 return (
-                  <div className="relative z-10 max-w-[1400px] border-b border-white/[0.08]">
-                    {shifts.map((item, idx) => (
-                      <article
-                        key={idx}
-                        data-cursor="hover"
-                        className={`group relative grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start py-12 lg:py-16 border-t border-white/[0.08] transition-opacity duration-500 cursor-default ${
-                          hoveredShift !== null && hoveredShift !== idx
-                            ? "opacity-30"
-                            : "opacity-100"
-                        }`}
-                        onMouseEnter={() => setHoveredShift(idx)}
-                        onMouseLeave={() => setHoveredShift(null)}
-                      >
-                        {/* Interactive sliding line indicator */}
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise/40 to-transparent transition-transform duration-700 origin-left scale-x-0 group-hover:scale-x-100" />
+                  <div className="relative z-10 max-w-[1400px] grid lg:grid-cols-12 gap-8 lg:gap-20">     
+                    
+                    {/* Left Sticky Image Column */}
+                    <div className="lg:col-span-5 relative hidden lg:block">
+                      <div className="sticky top-[15vh] w-[80%] mx-auto aspect-square flex items-center justify-center pointer-events-none">
+                        <ShiftCanvas activeIndex={activeShiftIndex} />
+                      </div>
+                    </div>
 
-                        {/* Marginalia — lowercase roman numeral as editorial
-                            index. Not "01/02/03"; this is a footnote mark,
-                            not a step number. Reads like a manuscript. */}
-                        <div className="lg:col-span-1 pt-2 lg:pt-[0.4em] transition-transform duration-500 group-hover:translate-x-1">
-                          <span
-                            className="block italic text-[clamp(0.95rem,1.05vw,1.1rem)] text-silver/45 group-hover:text-silver/75 transition-colors duration-500 leading-none"
-                            style={{ fontFamily: "var(--font-playfair)" }}
+                    {/* Right Scrolling List */}
+                    <div className="lg:col-span-7 pb-[15vh]">
+                      {shifts.map((item, idx) => {
+                        const isActive = activeShiftIndex === idx;
+                        return (
+                          <article
+                            key={idx}
+                            data-shift-index={idx}
+                            className={`shift-article group relative grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start py-16 lg:py-24 border-t border-white/[0.08] transition-all duration-700 cursor-default ${
+                              isActive ? "opacity-100" : "opacity-30 hover:opacity-50"
+                            }`}
                           >
-                            {romans[idx]}.
-                          </span>
-                        </div>
+                            {/* Interactive sliding line indicator */}
+                            <div 
+                              className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise/40 to-transparent transition-transform duration-1000 origin-left" 
+                              style={{ transform: isActive ? "scaleX(1)" : "scaleX(0)" }}
+                            />
 
-                        {/* Statement — subject in sans, then verb on its
-                            own line in italic Playfair at a larger scale.
-                            The drop performs the shift. */}
-                        <div className="lg:col-span-7 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3">
-                          <h4 className="font-light text-white">
-                            <span
-                              className="block leading-[1.04] tracking-[-0.02em] text-white/70 group-hover:text-white transition-colors duration-500"
-                              style={{
-                                fontSize: "clamp(1.55rem, 2.7vw, 2.5rem)",
-                              }}
-                            >
-                              {item.subject}
-                            </span>
-                            <span
-                              className="block italic leading-[1.0] tracking-[-0.035em] mt-1 md:mt-2 transition-colors duration-500 group-hover:text-turquoise"
-                              style={{
-                                fontFamily: "var(--font-playfair)",
-                                fontSize: "clamp(2.4rem, 4.6vw, 4.4rem)",
-                              }}
-                            >
-                              {item.verb}
-                            </span>
-                          </h4>
-                        </div>
+                            {/* Marginalia */}
+                            <div className={`lg:col-span-1 pt-2 lg:pt-[0.6em] transition-transform duration-700 ${isActive ? "translate-x-2" : "translate-x-0"}`}>
+                              <span
+                                className={`block italic text-lg transition-colors duration-500 leading-none ${isActive ? "text-turquoise" : "text-white/30"}`}
+                                style={{ fontFamily: "var(--font-playfair)" }}
+                              >
+                                {romans[idx]}.
+                              </span>
+                            </div>
 
-                        {/* Context — quiet italic explanation in the right
-                            column, aligned to the verb's optical baseline. */}
-                        <div className="lg:col-span-4 lg:pt-[3.2em] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1">
-                          <p className="text-[clamp(0.95rem,1.1vw,1.1rem)] font-light italic leading-[1.6] text-white/50 group-hover:text-white/85 transition-colors duration-500 max-w-sm">
-                            {item.context}
-                          </p>
-                        </div>
-                      </article>
-                    ))}
+                            {/* Statement */}
+                            <div className={`lg:col-span-11 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isActive ? "translate-x-4" : "translate-x-0"}`}>
+                              <h4 className="font-light text-white mb-6">
+                                <span className={`block text-3xl lg:text-[2.5rem] leading-[1.1] tracking-[-0.02em] transition-colors duration-500 ${isActive ? "text-white" : "text-white/60"}`}>
+                                  {item.subject}
+                                </span>
+                                <span className={`block italic text-5xl lg:text-[4.5rem] leading-[1.0] tracking-[-0.035em] mt-3 lg:mt-4 transition-colors duration-500 ${isActive ? "text-turquoise" : "text-white/40"}`}
+                                  style={{ fontFamily: "var(--font-playfair)" }}
+                                >
+                                  {item.verb}
+                                </span>
+                              </h4>
+
+                              {/* Context */}
+                              <div className="max-w-md pt-4">
+                                <p className="text-lg lg:text-xl font-light leading-[1.6] text-white/50 transition-colors duration-500 group-hover:text-white/80">
+                                  {item.context}
+                                </p>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })()}
             </div>
+            
           </div>
         </section>
 
@@ -1617,8 +1705,7 @@ export default function AboutClient() {
                   <div className="flex items-center gap-6 mb-6">
                     <div className="w-12 h-px bg-gold/40" />
                     <p className="text-[11px] tracking-[0.35em] uppercase text-gold font-bold">
-                      Five mirrors
-                    </p>
+Mini Case Stories                    </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end mb-16 lg:mb-20">
                     <div className="lg:col-span-7">
@@ -1652,67 +1739,78 @@ export default function AboutClient() {
                     </div>
                   </div>
 
-                  {/* Editorial Table of Contents — manuscript style.
-                      Roman numeral · case name · audience tag in three
-                      columns. Anchor links jump readers into the spread.
-                      No turquoise eyebrows, no card decorations — just
-                      the index from a hardcover. */}
-                  <nav
-                    aria-label="Five Mirrors — case index"
-                    className="border-t border-silver/15"
-                  >
-                    {cases.map((c, i) => {
-                      const [, caseName] = c.title.split(" — ");
-                      return (
-                        <a
-                          key={i}
-                          href={`#case-${romans[i]}`}
-                          className="group grid grid-cols-12 gap-4 md:gap-8 items-baseline py-5 md:py-6 border-b border-silver/10 transition-colors duration-500 hover:bg-silver/[0.025] focus-visible:outline-1 focus-visible:outline-turquoise/40 focus-visible:outline-offset-2"
-                        >
-                          <span
-                            className="col-span-1 italic font-light text-silver/55 group-hover:text-turquoise/85 transition-colors duration-500 leading-none"
-                            style={{
-                              fontFamily: "var(--font-playfair)",
-                              fontSize: "clamp(1.05rem, 1.3vw, 1.35rem)",
-                            }}
-                          >
-                            {romans[i]}.
-                          </span>
-                          <span className="col-span-11 md:col-span-7 flex flex-col gap-1.5">
-                            <span
-                              className="font-light leading-[1.25] tracking-[-0.014em] text-white/72 group-hover:text-white transition-colors duration-500"
-                              style={{
-                                fontSize: "clamp(1.1rem, 1.55vw, 1.45rem)",
-                              }}
-                            >
-                              {caseName}.
-                            </span>
-                            {/* Pull line — one editorial sentence per case
-                                pulled from the resolution. Quiet silver
-                                italic (neutral metallic — client semantic). */}
-                            <span
-                              className="italic font-light text-silver/45 group-hover:text-silver/75 transition-colors duration-500 leading-[1.4]"
-                              style={{
-                                fontFamily: "var(--font-playfair)",
-                                fontSize: "clamp(0.85rem, 1.0vw, 1.05rem)",
-                              }}
-                            >
-                              {c.pull}
-                            </span>
-                          </span>
-                          <span
-                            className="hidden md:block md:col-span-4 italic font-light text-right text-silver/45 group-hover:text-silver/80 transition-colors duration-500 leading-[1.35]"
-                            style={{
-                              fontFamily: "var(--font-playfair)",
-                              fontSize: "clamp(0.95rem, 1.05vw, 1.1rem)",
-                            }}
-                          >
-                            {c.tag}
-                          </span>
-                        </a>
-                      );
-                    })}
-                  </nav>
+                  {/* True Awwwards-Winning Editorial Carousel */}
+                  <div className="w-full flex items-stretch justify-center gap-4 md:gap-8 mt-16 mb-12 h-full">
+                    
+                    {/* Left Navigation Pill */}
+                    <button
+                      onClick={() => setActiveCaseIndex((prev) => (prev === 0 ? cases.length - 1 : prev - 1))}
+                      className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
+                      aria-label="Previous Case"
+                    >
+                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:-translate-x-1 transition-all duration-500">←</span>
+                    </button>
+
+                    {/* Main Content Glass Card */}
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-[400px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 relative bg-white/[0.02] backdrop-blur-2xl">
+                      
+                      {/* Subtle Internal Ambient Glow */}
+                      <div className="absolute top-0 right-0 w-[60%] h-full bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-turquoise/5 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Left Column - Image & Meta (Editorial Profile) */}
+                      <div className="md:col-span-5 lg:col-span-4 p-8 md:p-12 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10 relative z-10">
+                        <div className="flex-1 flex items-center justify-center md:justify-start mb-8 md:mb-0">
+                          {cases[activeCaseIndex].mark ? (
+                            <div className="relative w-full max-w-[220px] aspect-square opacity-90 drop-shadow-lg mix-blend-screen transition-all duration-700">
+                              <Image 
+                                src={cases[activeCaseIndex].mark!} 
+                                alt={cases[activeCaseIndex].title}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-32 h-32 rounded-full border border-dashed border-white/20 flex items-center justify-center">
+                              <span className="text-white/20 font-playfair italic text-2xl">{romans[activeCaseIndex]}.</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex flex-col gap-2 mt-auto">
+                          <p className="text-white font-sans text-xl font-light tracking-wide">
+                            {cases[activeCaseIndex].title.split(" — ")[1]}
+                          </p>
+                          <p className="text-turquoise/80 text-xs font-mono uppercase tracking-[0.2em]">
+                            {cases[activeCaseIndex].tag}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Right Column - The Story / Pull Quote */}
+                      <div className="md:col-span-7 lg:col-span-8 p-8 md:p-16 lg:p-20 flex items-center relative z-10">
+                        <div className="relative">
+                          {/* Elegant editorial quote mark */}
+                          <span className="absolute -top-12 -left-8 text-white/10 font-playfair text-[8rem] leading-none select-none pointer-events-none">"</span>
+                          
+                          <p className="font-playfair text-[clamp(1.2rem,1.8vw,1.6rem)] leading-[1.7] text-white/60 relative z-10">
+                            <span className="text-white/90">"{cases[activeCaseIndex].before} </span>
+                            <span className="text-turquoise italic">{cases[activeCaseIndex].intervention} </span>
+                            <span className="text-white/90">{cases[activeCaseIndex].after}"</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Navigation Pill */}
+                    <button
+                      onClick={() => setActiveCaseIndex((prev) => (prev === cases.length - 1 ? 0 : prev + 1))}
+                      className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
+                      aria-label="Next Case"
+                    >
+                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-500">→</span>
+                    </button>
+
+                  </div>
                 </div>
               </section>
 
@@ -1721,101 +1819,68 @@ export default function AboutClient() {
                   right column. No ghost numerals, no alternating
                   flip-flop, no turquoise eyebrow rules. Hairline
                   divider between cases is the only separator. */}
-              <section className="about-atmosphere bg-[#070c14] relative px-gutter pb-[16vh] lg:pb-[20vh]">
-                <div className="max-w-[1500px] mx-auto">
-                  {cases.map((c, i) => {
-                    const [, caseName] = c.title.split(" — ");
-                    return (
-                      <article
-                        key={i}
-                        id={`case-${romans[i]}`}
-                        className={`reveal-text grid grid-cols-1 lg:grid-cols-12 gap-x-6 lg:gap-x-12 gap-y-8 lg:gap-y-0 py-20 md:py-28 scroll-mt-24 ${
-                          i > 0 ? "border-t border-white/[0.06]" : ""
-                        }`}
-                      >
-                        {/* Marginalia rail — case mark (when present) above
-                            the roman numeral and italic Playfair audience tag.
-                            Mark acts as a manuscript-page wax seal: small,
-                            atmospheric, gives each case visual identity. */}
-                        <div className="lg:col-span-2 lg:pt-2">
-                          {c.mark && (
-                            <div className="relative w-full aspect-square max-w-[180px] mb-7 md:mb-8">
-                              <Image
-                                src={c.mark}
-                                alt=""
-                                fill
-                                sizes="(max-width: 1024px) 180px, 14vw"
-                                className="object-contain"
-                                style={{
-                                  // `lighten` keeps lighter pixels (the diagram
-                                  // lines / turquoise accents) and discards any
-                                  // pixel darker than the page bg — so even when
-                                  // the generated PNG bg is slightly off from
-                                  // #070c14, the visible tile boundary dissolves
-                                  // into the section atmosphere instead of reading
-                                  // as a "card / thumbnail".
-                                  mixBlendMode: "lighten",
-                                  opacity: 0.9,
-                                  filter:
-                                    "brightness(1.15) saturate(1.05) contrast(1.18)",
-                                }}
-                              />
-                            </div>
-                          )}
-                          <span
-                            className="block italic font-light text-silver/60 leading-none mb-5 md:mb-7"
-                            style={{
-                              fontFamily: "var(--font-playfair)",
-                              fontSize: "clamp(1.6rem, 2.1vw, 2.3rem)",
-                            }}
-                          >
-                            {romans[i]}.
-                          </span>
-                          <span
-                            className="block italic font-light text-silver/60 leading-[1.4]"
-                            style={{
-                              fontFamily: "var(--font-playfair)",
-                              fontSize: "clamp(0.95rem, 1.05vw, 1.15rem)",
-                            }}
-                          >
-                            {c.tag}
-                          </span>
-                        </div>
-
-                        {/* Title + narrative — dense, magazine-spread
-                            proportions. Title sits above the body with a
-                            confident gap, body phases stack tight so the
-                            whole reading is one unit, not three islands. */}
-                        <div className="lg:col-span-9 lg:col-start-4">
-                          <h3
-                            className="font-light leading-[1.02] tracking-[-0.028em] text-white mb-10 md:mb-14"
-                            style={{
-                              fontSize:
-                                "calc(clamp(2rem, 3.6vw, 3.8rem) * var(--heading-scale))",
-                            }}
-                          >
-                            {caseName}.
-                          </h3>
-                          <div className="space-y-6 md:space-y-8 max-w-[58ch]">
-                            <p className="text-[clamp(1.05rem,1.35vw,1.4rem)] font-light leading-[1.55] text-copper/75">
-                              {c.before}
-                            </p>
-                            <p className="text-[clamp(1.15rem,1.55vw,1.65rem)] font-light leading-[1.42] tracking-[-0.012em] text-white">
-                              {c.intervention}
-                            </p>
-                            <p className="text-[clamp(1.05rem,1.4vw,1.45rem)] italic font-light leading-[1.55] text-white/82">
-                              {c.after}
-                            </p>
-                          </div>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              </section>
+                  {/* [REMOVED] Original list format is gone. Replaced by the carousel above. */}
+              
             </>
           );
         })()}
+
+        {/* -----------------------------------------------------------------
+            RADICAL & PRACTICAL SECTION (As per screenshot design)
+            ----------------------------------------------------------------- */}
+        <section className="about-atmosphere bg-[#070c14] relative px-gutter py-[12vh] lg:py-[18vh]">
+          <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            
+            {/* Left Side: Radical & Practical */}
+            <div className="lg:col-span-7">
+              <h2 className="text-white leading-[0.95] tracking-tight mb-8 md:mb-12">
+                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">We believe in something</span>
+                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">radical —</span>
+                <span className="block italic text-turquoise font-light mt-2 text-[clamp(3.2rem,5vw,5.2rem)] tracking-tight">and practical:</span>
+              </h2>
+              
+              <p className="text-silver/60 font-light text-[clamp(1.1rem,1.3vw,1.25rem)] leading-[1.6] max-w-[48ch] mb-16 lg:mb-20">
+                When structure becomes visible, the right solution becomes inevitable. Not "someday." Not "when there's time."
+              </p>
+
+              {/* Numbered Points (Only inner dividers, no outer borders) */}
+              <div className="flex flex-col mt-12">
+                {[
+                  "But in a way that lets a CEO breathe again.",
+                  "In a way that helps founders know what comes first.",
+                  "In a way that lets teams deliver with focus — and systems carry instead of pull."
+                ].map((text, i, arr) => (
+                  <div key={i} className={`flex items-center gap-8 py-6 group ${i !== arr.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
+                    <span className="text-[#c09e50] font-mono text-[11px] tracking-[0.2em] font-bold">0{i + 1}</span>
+                    <span className="text-silver/60 font-light text-[clamp(0.95rem,1.1vw,1.1rem)]">{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Side: Solved means solved */}
+            <div className="lg:col-span-5 lg:pl-16 lg:border-l border-white/[0.06] pt-4 lg:pt-0">
+              <div className="flex flex-col mb-10 md:mb-12">
+                <span className="text-silver/50 font-extralight leading-[0.9] tracking-tight text-[clamp(4rem,6vw,6.5rem)]">Solved</span>
+                <span className="text-silver/30 font-light leading-none text-xl md:text-2xl mt-5 mb-3">means</span>
+                <span className="text-white font-black leading-[0.85] tracking-tighter text-[clamp(4.5rem,7vw,8rem)]">solved.</span>
+              </div>
+
+              {/* Faint turquoise gradient divider */}
+              <div className="w-full max-w-[85%] h-[1px] bg-gradient-to-r from-turquoise/30 via-turquoise/10 to-transparent mb-10" />
+
+              <div className="flex flex-col gap-8 pr-4">
+                <p className="text-silver/60 font-light text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.6]">
+                  "Solved" means you feel it on Monday morning, not in a pitch.
+                </p>
+                <p className="text-silver/40 font-light text-[clamp(0.95rem,1.1vw,1.05rem)] leading-[1.6]">
+                  Less friction. Clearer decisions. Higher speed. More calm in the system.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </section>
 
         {/* ECOSYSTEM — distinct frequencies, one orchestration */}
         <section
@@ -1853,28 +1918,79 @@ export default function AboutClient() {
               </div>
             </div>
 
-            <div className="border-t border-white/[0.08]">
-              {ECOSYSTEM_FREQUENCIES.map((eco, index) => (
-                <article
-                  key={eco.name}
-                  className="reveal-text group relative grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 md:gap-x-8 py-7 md:py-9 border-b border-white/[0.07] cursor-default overflow-hidden"
-                >
-                  <span className="md:col-span-1 font-mono text-[10px] tracking-[0.25em] text-white/25 pt-2">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="md:col-span-5 text-[clamp(1.5rem,2.6vw,2.8rem)] leading-[1.05] tracking-[-0.025em] text-white/90 font-light group-hover:text-white transition-colors duration-500">
-                    {eco.name}
-                  </h3>
-                  <p
-                    className={`col-start-2 md:col-start-auto md:col-span-2 mt-3 md:mt-2 text-[10px] tracking-[0.3em] uppercase transition-colors duration-500 ${FREQUENCY_TONE_CLASSES[eco.tone]}`}
+            <div className="border-t border-white/[0.08] relative">
+              {/* Image Reveal Cursor Block */}
+              <div
+                ref={ecoCursorRef}
+                className="fixed top-0 left-0 w-[24vw] aspect-[4/3] pointer-events-none z-50 rounded-lg overflow-hidden -translate-x-1/2 -translate-y-1/2 opacity-0 scale-95 transition-all duration-500 ease-out will-change-transform shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-white/10"
+                style={{
+                  opacity: hoveredEcoIndex !== null ? 1 : 0,
+                  transform: hoveredEcoIndex !== null ? "scale(1)" : "scale(0.95)",
+                  visibility: hoveredEcoIndex !== null ? "visible" : "hidden",
+                }}
+              >
+                {ECOSYSTEM_FREQUENCIES.map((eco, index) => (
+                  <img
+                    key={`img-${index}`}
+                    src={eco.image}
+                    alt={eco.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                    style={{
+                      opacity: hoveredEcoIndex === index ? 1 : 0,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {ECOSYSTEM_FREQUENCIES.map((eco, index) => {
+                const isHovered = hoveredEcoIndex === index;
+                const isSiblingHovered = hoveredEcoIndex !== null && hoveredEcoIndex !== index;
+                
+                return (
+                  <article
+                    key={eco.name}
+                    onMouseEnter={(e) => {
+                      setHoveredEcoIndex(index);
+                      if (ecoCursorRef.current) {
+                        // Instantly snap to mouse position to prevent top-left corner flash on scroll-hover
+                        gsap.set(ecoCursorRef.current, {
+                          x: e.clientX,
+                          y: e.clientY,
+                        });
+                      }
+                    }}
+                    onMouseLeave={() => setHoveredEcoIndex(null)}
+                    className={`reveal-text group relative grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 md:gap-x-8 py-7 md:py-9 border-b cursor-pointer overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+                      isHovered ? "border-white/20" : "border-white/[0.07]"
+                    } ${isSiblingHovered ? "opacity-20 grayscale" : "opacity-100"}`}
                   >
-                    {eco.frequency}
-                  </p>
-                  <p className="col-start-2 md:col-start-auto md:col-span-4 mt-3 md:mt-1 text-base md:text-lg text-white/70 font-light leading-[1.55] group-hover:text-white/95 transition-colors duration-500">
-                    {eco.desc}
-                  </p>
-                </article>
-              ))}
+                    <span className={`md:col-span-1 font-mono text-[10px] tracking-[0.25em] pt-2 transition-colors duration-500 relative z-20 mix-blend-difference ${isHovered ? "text-white/60" : "text-white/25"}`}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h3 
+                      className={`md:col-span-5 text-[clamp(1.5rem,2.6vw,2.8rem)] leading-[1.05] tracking-[-0.025em] font-light relative z-20 mix-blend-difference transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+                        isHovered ? "text-white translate-x-4" : "text-white/90 translate-x-0"
+                      }`}
+                    >
+                      {eco.name}
+                    </h3>
+                    <p
+                      className={`col-start-2 md:col-start-auto md:col-span-2 mt-3 md:mt-2 text-[10px] uppercase transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] relative z-20 mix-blend-difference ${FREQUENCY_TONE_CLASSES[eco.tone]} ${
+                        isHovered ? "tracking-[0.5em] font-medium" : "tracking-[0.3em]"
+                      }`}
+                    >
+                      {eco.frequency}
+                    </p>
+                    <p 
+                      className={`col-start-2 md:col-start-auto md:col-span-4 mt-3 md:mt-1 text-base md:text-lg font-light leading-[1.55] relative z-20 mix-blend-difference transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+                        isHovered ? "text-white/95 translate-x-2" : "text-white/70 translate-x-0"
+                      }`}
+                    >
+                      {eco.desc}
+                    </p>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>

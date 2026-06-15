@@ -143,45 +143,63 @@ const PortalMaterial = () => {
       float r = length(p);
       float a = atan(p.y, p.x);
 
-      // Seamless 3D cylinder mapping to prevent any polar seams
-      float tunnelZ = 1.0 / (r + 0.1) + uTime * 0.25 + uOffsetZ;
-      float cylR = 1.2; // radius of the sampling cylinder
-      vec3 cylPos = vec3(cos(a) * cylR, sin(a) * cylR, tunnelZ);
+      // Slower, thicker flow for heavy liquid
+      float tunnelZ = 1.0 / (r + 0.1) + uTime * 0.1 + uOffsetZ;
+      float cylR = 1.2; 
+      vec3 baseCyl = vec3(cos(a) * cylR, sin(a) * cylR, tunnelZ);
 
-      // Multi-layered 3D noise for liquid flowing effect
-      float n1 = snoise(cylPos * 1.5 - vec3(0.0, 0.0, uTime * 0.15));
-      float n2 = snoise(cylPos * 3.0 + vec3(0.0, 0.0, uTime * 0.25));
-      float n3 = snoise(cylPos * 6.0 - vec3(0.0, 0.0, uTime * 0.35));
-      
-      float noise = (n1 * 0.5 + n2 * 0.35 + n3 * 0.15) * 0.5 + 0.5;
+      // RECURSIVE DOMAIN WARPING (Awwwards-level Fluid Dynamics)
+      // First layer of warping (Q)
+      vec3 q = vec3(
+        snoise(baseCyl * 1.2 + vec3(0.0, uTime * 0.08, 0.0)),
+        snoise(baseCyl * 1.2 + vec3(uTime * 0.08, 0.0, 0.0)),
+        snoise(baseCyl * 1.2 - vec3(0.0, 0.0, uTime * 0.08))
+      );
 
-      // Smoothstep for glowing liquid streaks
-      float glow = smoothstep(0.2, 0.8, noise);
-      float coreGlow = smoothstep(0.5, 1.0, noise);
+      // Second layer of warping (R) - Warping the warp creates natural folding liquids
+      vec3 rWarp = vec3(
+        snoise((baseCyl + q * 1.5) * 1.8 - vec3(0.0, uTime * 0.12, 0.0)),
+        snoise((baseCyl + q * 1.5) * 1.8 + vec3(uTime * 0.12, 0.0, 0.0)),
+        snoise((baseCyl + q * 1.5) * 1.8 + vec3(0.0, 0.0, uTime * 0.12))
+      );
       
+      // Final warped coordinates
+      vec3 cylPos = baseCyl + rWarp * 0.6;
+
+      // Extract multi-layered noise from the heavily folded coordinates
+      float n1 = snoise(cylPos * 1.5 - vec3(0.0, 0.0, uTime * 0.1));
+      float n2 = snoise(cylPos * 3.0 + vec3(0.0, 0.0, uTime * 0.15));
+      float noise = (n1 * 0.7 + n2 * 0.3) * 0.5 + 0.5;
+
+      // Create distinct liquid properties
+      float fluidBody = smoothstep(0.2, 0.7, noise);         // Thick base liquid
+      float fluidInner = smoothstep(0.5, 0.9, noise);        // Bright inner depth
+      float specular = pow(smoothstep(0.75, 1.0, noise), 3.0); // Wet glassy/caustic highlights
+
       // Eye core (black hole in the center)
-      // Smoother falloff for better depth
-      float core = smoothstep(0.1, 0.9, r);
+      float core = smoothstep(0.05, 0.7, r);
       
-      // Pulse effect based on time
-      float pulse = sin(uTime * 0.8) * 0.05 + 0.95;
+      // Slow pulsing organic breath
+      float pulse = sin(uTime * 0.5) * 0.05 + 0.95;
 
-      // Colors matching GOTT WALD / uxbert aesthetic
-      vec3 bgColor = vec3(0.01, 0.02, 0.06); // Darker deep space
-      vec3 petrol = vec3(0.0, 0.25, 0.35); // Deeper Petrol
+      // Colors matching GOTT WALD aesthetic
+      vec3 bgColor = vec3(0.01, 0.02, 0.06); // Deep space / dark navy
+      vec3 petrol = vec3(0.0, 0.25, 0.35); // Viscous Petrol
       vec3 turquoise = vec3(0.07, 0.66, 0.67); // Glowing Turquoise
-      vec3 whiteLight = vec3(0.85, 0.95, 1.0); // Bright core streaks
+      vec3 silverHighlight = vec3(0.85, 0.95, 1.0); // Liquid metal reflection
 
-      // Mix colors based on noise density and radius
-      vec3 color = mix(bgColor, petrol, glow * core * pulse);
-      color = mix(color, turquoise, coreGlow * core);
-      color = mix(color, whiteLight, smoothstep(0.88, 1.0, noise) * core);
+      // Mix colors organically
+      vec3 color = mix(bgColor, petrol, fluidBody * core * pulse);
+      color = mix(color, turquoise, fluidInner * core * 0.85);
+      
+      // Add sharp glassy highlights (The secret to Awwwards premium liquid)
+      color += silverHighlight * specular * core * 1.5;
 
-      // Add a slight vignette for depth at the edges
-      color *= smoothstep(3.0, 0.5, r);
+      // Edge vignette (soft depth)
+      color *= smoothstep(2.5, 0.3, r);
 
-      // A tiny bit of center glow inside the black hole
-      color += turquoise * smoothstep(0.3, 0.0, r) * 0.2;
+      // Deep dark core with a tiny turquoise reflection
+      color += turquoise * smoothstep(0.3, 0.0, r) * 0.2 * noise;
 
       gl_FragColor = vec4(color, 1.0);
     }
