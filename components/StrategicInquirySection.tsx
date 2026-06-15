@@ -31,6 +31,8 @@ export default function StrategicInquirySection() {
   const contentRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const alignmentRef = useRef<HTMLSpanElement>(null);
+  const bgTextRef = useRef<HTMLSpanElement>(null);
+  const auroraRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -94,7 +96,26 @@ export default function StrategicInquirySection() {
       }
     }, section);
 
-    return () => ctx.revert();
+    // Mouse Parallax for Background Elements
+    const handleParallax = (e: MouseEvent) => {
+      if (bgTextRef.current) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 60;
+        const y = (e.clientY / window.innerHeight - 0.5) * 60;
+        gsap.to(bgTextRef.current, { x, y, duration: 1.5, ease: "power2.out" });
+      }
+      if (auroraRef.current) {
+        const x = (e.clientX / window.innerWidth - 0.5) * -120; // moves opposite
+        const y = (e.clientY / window.innerHeight - 0.5) * -120;
+        gsap.to(auroraRef.current, { x, y, duration: 2.5, ease: "power3.out" });
+      }
+    };
+
+    section.addEventListener("mousemove", handleParallax);
+
+    return () => {
+      ctx.revert();
+      section.removeEventListener("mousemove", handleParallax);
+    };
   }, []);
 
   // Magnetic CTA — cursor pull within a small radius, elastic snap back.
@@ -139,12 +160,14 @@ export default function StrategicInquirySection() {
           rather than behind the colophon strip at the bottom (where its
           ghost letters previously competed with the silver/55 metadata).
           Manifesto: "before the mind understands, something is happening." */}
+      {/* Architectural anchor — massive italic "alignment." floats behind */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-[6%] -left-[6vw] z-0 select-none"
       >
         <span
-          className="block italic font-light text-white/[0.03] leading-[0.78] tracking-[-0.06em] whitespace-nowrap"
+          ref={bgTextRef}
+          className="block italic font-light text-white/[0.03] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
           style={{
             fontFamily: "var(--font-playfair)",
             fontSize: "clamp(11rem, 22vw, 26rem)",
@@ -152,6 +175,15 @@ export default function StrategicInquirySection() {
         >
           alignment.
         </span>
+      </div>
+
+      {/* Premium Liquid Aurora Background */}
+      <div 
+        ref={auroraRef}
+        className="absolute top-[20%] left-[30%] w-[50vw] h-[50vw] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen pointer-events-none opacity-[0.15] blur-[100px] z-0 will-change-transform"
+      >
+        <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_20s_linear_infinite]" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
       </div>
 
       {/* Brand signal-language anchor — subtle frequency wave subscribes
@@ -314,16 +346,13 @@ export default function StrategicInquirySection() {
               </div>
             </div>
 
-            {/* Section signature rule — gold→petrol horizontal gradient
-                above the closing editorial verse. Symbolically: positive
-                action (gold) grounded in deep structure (petrol). Adds
-                the missing 5th brand color (petrol) without disrupting
-                composition. Anchors the CTA as the section's deliberate
-                conclusion mark. */}
-            <span
-              aria-hidden="true"
-              className="block h-px w-24 lg:w-32 bg-gradient-to-r from-gold/70 to-petrol/55 mt-2"
-            />
+            {/* Section signature rule — gold→petrol horizontal gradient */}
+            <div className="mt-6 mb-4">
+              <span
+                aria-hidden="true"
+                className="block h-px w-24 lg:w-32 bg-gradient-to-r from-gold/70 to-petrol/55"
+              />
+            </div>
 
             {/* Closing editorial verse — CTA in confident sans uppercase
                 with light weight. Boosted scale + longer hairline +

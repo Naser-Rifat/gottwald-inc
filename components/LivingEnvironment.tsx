@@ -178,18 +178,7 @@ export default function LivingEnvironment() {
 
   return (
     <>
-      {/* Orchestration thread — single vertical "tuning rod" holding all
-          five brand frequencies. Site-wide visual signature of the
-          manifesto's "different frequencies, one coherent sound." */}
-      <aside
-        aria-label="Site orchestration thread"
-        className="fixed right-5 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:block pointer-events-none"
-      >
-        <div className="relative h-[62vh] w-px overflow-hidden">
-          <div className="orchestration-line absolute inset-0" />
-          <div className="journey-progress absolute inset-0 bg-gradient-to-b from-transparent via-turquoise/70 to-transparent origin-top scale-y-0" />
-        </div>
-      </aside>
+
 
       {/* Ambient frequency toggle — bottom-right corner. Default OFF. */}
       <FrequencyEngine />

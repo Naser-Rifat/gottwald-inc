@@ -311,12 +311,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       );
       animateIfPresent(
         ".hero-image",
-        { clipPath: "inset(0 0 100% 0)", scale: 1.08 },
+        { opacity: 0, y: 100, scale: 0.9 },
         {
-          clipPath: "inset(0 0 0% 0)",
+          opacity: 1,
+          y: 0,
           scale: 1,
           duration: 1.6,
-          ease: "power4.inOut",
+          ease: "power4.out",
         },
         0.1,
       );
@@ -342,16 +343,27 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       className="relative lg:fixed lg:inset-0 overflow-y-auto lg:overflow-hidden"
       style={{ backgroundColor: "transparent", color: TXT_LIGHT }}
     >
-      {/* ─── Global Atmosphere Overlay ─── */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          background:
-            "radial-gradient(circle at center, rgba(6,6,6,0.7) 0%, rgba(6,6,6,0.3) 100%)",
-        }}
-      />
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-30px); }
+        }
+      `}} />
+      
+      {/* ─── Global Atmosphere Overlay (Aurora) ─── */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[#0a0c10]" />
+        <div 
+          className="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] rounded-full blur-[140px] opacity-20"
+          style={{ background: project.theme.accent }}
+        />
+        <div 
+          className="absolute bottom-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full blur-[140px] opacity-15"
+          style={{ background: project.theme.accent }}
+        />
+      </div>
       {/* ─── Top Fade Protection ─── */}
-      <div className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#060606]/90 via-[#060606]/50 to-transparent pointer-events-none" />
+      <div className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#0a0c10]/90 via-[#0a0c10]/50 to-transparent pointer-events-none" />
 
       {/* ─── Top Navigation ─── */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-5 lg:px-15 lg:py-6 pointer-events-none">
@@ -610,82 +622,44 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             </div>
           </div>
 
-          {/* Right: Hero Image */}
-          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full flex items-stretch px-4 pb-8 lg:pb-6 lg:pr-6 lg:pt-6 lg:pl-4">
-            <div
-              className="hero-image relative w-full h-full rounded-xl overflow-hidden"
-              style={{
-                clipPath: "inset(0 0 0% 0)",
-                boxShadow: `0 20px 80px rgba(0,0,0,0.5), 0 0 40px ${hexToRgba(project.theme.accent, 0.04)}`,
-              }}
-            >
-              {/* Premium abstract fallback — consistent dark palette (z-0 behind the image) */}
-              <div className="absolute inset-0 pointer-events-none select-none z-0">
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(145deg, #08090e 0%, #0c1020 35%, #0a0e18 65%, #060810 100%)",
-                  }}
-                />
-                {/* Diagonal fine lines */}
-                <div
-                  className="absolute inset-0 opacity-[0.025]"
-                  style={{
-                    backgroundImage: `repeating-linear-gradient(135deg, transparent, transparent 2px, ${hexToRgba(project.theme.accent, 0.15)} 2px, ${hexToRgba(project.theme.accent, 0.15)} 3px)`,
-                    backgroundSize: "8px 8px",
-                  }}
-                />
-                {/* Gold accent ring */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="w-[min(50vw,280px)] h-[min(50vw,280px)] rounded-full opacity-[0.03]"
-                    style={{
-                      border: `1px solid ${project.theme.accent}`,
-                      boxShadow: `inset 0 0 80px ${hexToRgba(project.theme.accent, 0.03)}`,
-                    }}
-                  />
-                </div>
-                {/* Index watermark */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                  <span
-                    className="font-black tracking-tighter"
-                    style={{
-                      fontFamily: "var(--font-serif), Georgia, serif",
-                      fontSize: "min(35vw, 16rem)",
-                    }}
-                  >
-                    01
-                  </span>
-                </div>
+          {/* Right: Hero Image (Floating 3D Object) */}
+          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full relative flex items-center justify-center overflow-hidden mix-blend-screen px-4 pb-8 lg:pb-0">
+            {/* TALL Stacked Background Text (Behind Image) */}
+            <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none select-none opacity-[0.08]">
+              <div 
+                className="flex flex-col items-center justify-center text-[15vw] lg:text-[10vw] font-black uppercase leading-[0.85] tracking-widest text-white"
+                style={{ transform: 'scaleY(2)' }}
+              >
+                {project.title.split(' ').map((word, i) => (
+                  <span key={i}>{word}</span>
+                ))}
               </div>
+            </div>
 
+            {/* Floating Image */}
+            <div 
+              className="hero-image relative w-[80vw] lg:w-[50vw] max-w-[800px] aspect-square z-10"
+              style={{ animation: "float 6s ease-in-out infinite" }}
+            >
               {project.image ? (
-                <div className="absolute inset-0 z-10">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 54vw"
-                    className="object-cover"
-                    priority
-                    unoptimized
-                    onError={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = "none";
-                    }}
-                  />
-                </div>
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 1024px) 80vw, 50vw"
+                  className="object-contain contrast-125 brightness-110"
+                  style={{ 
+                    maskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
+                    WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)'
+                  }}
+                  priority
+                  unoptimized
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                  }}
+                />
               ) : null}
-
-              {/* Subtle gold edge glow */}
-              <div
-                className="absolute inset-0 pointer-events-none z-20"
-                style={{
-                  border: `1px solid ${hexToRgba(project.theme.accent, 0.06)}`,
-                  borderRadius: "12px",
-                }}
-              />
             </div>
           </div>
         </section>

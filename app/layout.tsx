@@ -234,7 +234,6 @@ export default async function RootLayout({
         <NoiseOverlay />
         <CookieManager />
         <GoogleTranslateRoot />
-        <ResonanceCursor />
         {/* Site-wide manifesto wiring — orchestration thread, frequency
             engine, time-of-day tint, dwell deepening, scroll-velocity pace,
             per-visit phase seed. Mounted once at the root so every page

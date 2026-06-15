@@ -512,20 +512,6 @@ html[lang="de"] {
     linear-gradient(135deg, #070c14 0%, #0c1524 58%, #070c14 100%);
 }
 
-.about-hero-material::after {
-  content: "";
-  position: absolute;
-  right: 8vw;
-  top: 18vh;
-  z-index: 0;
-  width: min(28vw, 25rem);
-  height: min(44vh, 26rem);
-  pointer-events: none;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  border-right: 1px solid rgba(18, 168, 172, 0.18);
-  opacity: 0.7;
-}
-
 .hero-complexity,
 .hero-complexity .tuning-char {
   color: #eef1f4;
@@ -533,16 +519,6 @@ html[lang="de"] {
   text-shadow:
     0 1px 0 rgba(255,255,255,0.16),
     0 18px 50px rgba(0,0,0,0.28);
-}
-
-@media (max-width: 767px) {
-  .about-hero-material::after {
-    right: 5vw;
-    top: 20vh;
-    width: 42vw;
-    height: 24vh;
-  }
-
 }
 
 /* ===== PROOF Section: Resonance Signature =====
@@ -823,6 +799,12 @@ section[data-journey].dwell-deepened::after {
   50%      { transform: translateY(6px); opacity: 1; }
 }
 
+/* Scribble Wave Draw Animation */
+@keyframes draw-wave {
+  0%   { stroke-dashoffset: 150; }
+  100% { stroke-dashoffset: 0; }
+}
+
 /* Star twinkle for background particles */
 @keyframes star-twinkle {
   0%, 100% { opacity: var(--base-opacity, 0.3); }
@@ -858,4 +840,10 @@ section[data-journey].dwell-deepened::after {
   }
   /* GSAP/Framer Motion timelines respect this via their own reduced-motion
      APIs; this CSS rule covers vanilla CSS animations and transitions. */
+}
+
+@keyframes orb-float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(1.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }

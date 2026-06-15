@@ -16,6 +16,8 @@ import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
+import StandardCanvas from "@/components/StandardCanvas";
+import ArchetypeCanvas from "@/components/ArchetypeCanvas";
 import {
   NON_NEGOTIABLES,
   PARTNERSHIP_DOMAINS,
@@ -31,6 +33,23 @@ gsap.registerPlugin(ScrollTrigger);
 
 type PartnershipArchetype = (typeof PARTNERSHIP_ARCHETYPES)[number];
 type PartnershipSelectionStep = (typeof PARTNERSHIP_SELECTION_STEPS)[number];
+
+function HoverVideo({ src, className = "" }: { src: string; className?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // We expose a parent div to listen to events
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      loop
+      muted
+      playsInline
+      preload="none"
+      className={className}
+    />
+  );
+}
 
 type MagneticButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
@@ -116,19 +135,70 @@ function ParallaxShard({ principle, index }: { principle: string; index: number 
   const yOffset = useTransform(
     scrollYProgress,
     [0, 1],
-    [index % 2 === 0 ? 50 : 100, index % 2 === 0 ? -50 : -100]
+    [index % 2 === 0 ? 30 : 60, index % 2 === 0 ? -30 : -60]
   );
+
+  const renderText = (text: string) => {
+    const delimiters = ["instead of", "so", "without", "—"];
+    for (const delim of delimiters) {
+      if (text.includes(delim)) {
+        const [first, second] = text.split(delim);
+        return (
+          <div className="flex flex-col items-start gap-4 lg:gap-5">
+            <h4 className="text-3xl lg:text-[2.5rem] font-light text-white/90 group-hover/shard:text-white transition-colors duration-500 tracking-tight leading-[1.1]">
+              {first.trim()}
+            </h4>
+            <div className="flex items-center gap-4">
+              <span className="w-12 h-px bg-white/10 group-hover/shard:bg-white/30 transition-colors duration-500" />
+              <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/30 group-hover/shard:text-white/60 transition-colors duration-500">
+                {delim}
+              </span>
+            </div>
+            <p className="text-xl lg:text-2xl font-serif italic text-white/40 group-hover/shard:text-white/70 transition-colors duration-500 pr-4">
+              {second.trim()}
+            </p>
+          </div>
+        );
+      }
+    }
+    return <h4 className="text-3xl lg:text-[2.5rem] font-light text-white/90 leading-[1.1]">{text}</h4>;
+  };
 
   return (
     <motion.div ref={ref} style={{ y: yOffset }} className="group/shard relative h-full">
-      <SpotlightCard className="p-8 h-full flex items-center border border-white/5 bg-[#0a0c12]/80 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover/shards:opacity-20 group-hover/shards:blur-sm hover:!opacity-100 hover:!blur-none hover:scale-[1.02] hover:z-10 hover:border-turquoise/30">
-        <div className="flex items-center gap-6">
-          <span className="w-1.5 h-1.5 bg-turquoise rounded-full shrink-0 group-hover/shard:scale-[3] transition-transform duration-500 shadow-[0_0_15px_rgba(18,168,172,0.8)]" />
-          <p className="text-xl lg:text-2xl font-light text-white/70 group-hover/shard:text-white group-hover/shard:translate-x-2 transition-all duration-500">
-            {principle}
-          </p>
+      <div className="relative overflow-hidden p-10 lg:p-14 h-full flex flex-col justify-between border border-white/5 bg-[#030407]/60 backdrop-blur-xl transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] rounded-2xl group-hover/shards:opacity-30 group-hover/shards:blur-md hover:!opacity-100 hover:!blur-none hover:scale-[1.02] hover:z-20 hover:border-white/20 hover:bg-[#06080d]/80 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+        
+        {/* Outlined Background Number (Correctly anchored to the absolute edge of the card) */}
+        <span 
+          className="absolute -bottom-6 -right-6 text-[14rem] font-black pointer-events-none select-none z-0 tracking-tighter leading-none transition-all duration-700 group-hover/shard:-translate-y-4"
+          style={{
+            WebkitTextFillColor: "transparent",
+            WebkitTextStroke: "1px rgba(255, 255, 255, 0.04)",
+          }}
+        >
+          0{index + 1}
+        </span>
+
+        {/* Top Header Row */}
+        <div className="relative z-10 flex items-center justify-between w-full mb-12">
+          <span className="text-sm font-mono tracking-[0.2em] text-white/20 group-hover/shard:text-white/60 transition-colors duration-500">
+            0{index + 1}
+          </span>
+          <span className="text-white/10 group-hover/shard:text-white/40 transition-colors duration-500">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 0V14M0 7H14" stroke="currentColor" strokeWidth="1"/>
+            </svg>
+          </span>
         </div>
-      </SpotlightCard>
+
+        {/* Content */}
+        <div className="relative z-10 w-full mt-auto">
+          {renderText(principle)}
+        </div>
+
+        {/* Minimal Bottom Edge Accent */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/0 group-hover/shard:bg-white/10 transition-colors duration-700 ease-out" />
+      </div>
     </motion.div>
   );
 }
@@ -175,25 +245,19 @@ function ArchetypeCard({
         });
       }}
     >
-      {/* 3D Abstract Asset */}
-      {arch.image && (
-        <div
-          className="absolute -right-10 -bottom-10 w-full h-full md:w-[120%] md:h-[120%] z-0 opacity-[0.15] group-hover:opacity-[0.35] transition-opacity duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] pointer-events-none mix-blend-screen"
-          style={{
-            transform: "translate(calc(var(--mx, 0) * 0.8), calc(var(--my, 0) * 0.8)) scale(1.05)",
-            maskImage: "radial-gradient(ellipse at center, black 10%, transparent 70%)",
-            WebkitMaskImage: "radial-gradient(ellipse at center, black 10%, transparent 70%)"
-          }}
-        >
-          <Image
-            src={arch.image}
-            alt={arch.title}
-            fill
-            className="object-contain group-hover:scale-110 transition-transform duration-[2000ms] ease-out will-change-transform"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+      {/* Cinematic Background Canvas Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-2xl transition-transform duration-[1500ms] ease-[cubic-bezier(0.19,1,0.22,1)]">
+        <div className="w-full h-full opacity-[0.65] group-hover:opacity-100 group-hover:scale-110 transition-all duration-[2000ms] ease-out will-change-transform">
+          <ArchetypeCanvas index={index} />
         </div>
-      )}
+        {/* Subtle glow overlay that shifts slightly with mouse */}
+        <div 
+          className="absolute inset-0 bg-turquoise/10 mix-blend-color-dodge opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
+          style={{ transform: "translate(calc(var(--mx, 0) * 0.5), calc(var(--my, 0) * 0.5))" }}
+        />
+        {/* Smooth dark gradient overlay for text readability at the bottom */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c12] via-[#0a0c12]/40 to-transparent pointer-events-none" />
+      </div>
 
       <div
         className="pointer-events-none absolute inset-0 z-1 opacity-0 transition-opacity duration-700 group-hover:opacity-100 mix-blend-overlay"
@@ -408,8 +472,11 @@ function EquilibriumSection() {
 
   return (
     <section ref={containerRef} className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5 overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-turquoise/5 blur-[120px] rounded-full pointer-events-none z-0" />
+      {/* Background Glow - Upgraded to Awwwards Premium Liquid Aurora */}
+      <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] pointer-events-none z-0 will-change-transform">
+        <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_22s_linear_infinite_reverse] mix-blend-overlay" />
+      </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-0 relative">
@@ -526,6 +593,69 @@ function EquilibriumSection() {
   );
 }
 
+function StandardsPagination() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      const cards = document.querySelectorAll('.standards-card');
+      if (cards.length === 0) return;
+      
+      let bestIndex = 0;
+      let minDistance = Infinity;
+      
+      // Target is 25% from the left of the screen, ensuring the first aligned card is marked active
+      const targetX = window.innerWidth * 0.25;
+      
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(cardCenter - targetX);
+        if (distance < minDistance) {
+          minDistance = distance;
+          bestIndex = index;
+        }
+      });
+      
+      setActiveIndex(bestIndex);
+    };
+
+    // Run once on mount to set initial state
+    handleUpdate();
+
+    // Listen to GSAP scroll updates
+    window.addEventListener('updateStandardsPagination', handleUpdate);
+
+    // Listen to Native Scroll updates (Mobile)
+    const scrollWrapper = document.querySelector('.standards-scroll-wrapper');
+    scrollWrapper?.addEventListener('scroll', handleUpdate);
+
+    // Listen to resize
+    window.addEventListener('resize', handleUpdate);
+
+    return () => {
+      window.removeEventListener('updateStandardsPagination', handleUpdate);
+      scrollWrapper?.removeEventListener('scroll', handleUpdate);
+      window.removeEventListener('resize', handleUpdate);
+    };
+  }, []);
+
+  const total = NON_NEGOTIABLES.length + 1; // Includes CTA card
+
+  return (
+    <div className="absolute bottom-6 lg:bottom-10 left-8 lg:left-16 z-50 flex items-center gap-3 pointer-events-none">
+      {Array.from({ length: total }).map((_, i) => (
+        <div
+          key={i}
+          className={`h-2.5 rounded-full transition-all duration-500 ${
+            activeIndex === i ? "w-10 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]" : "w-2.5 bg-transparent border border-white/40"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function PartnershipsClient() {
   const t = useTranslations("partnerships.hero");
   const tCtas = useTranslations("partnerships.ctas");
@@ -576,6 +706,8 @@ export default function PartnershipsClient() {
   };
 
   useLayoutEffect(() => {
+    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
+
     const ctx = gsap.context(() => {
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -725,10 +857,8 @@ export default function PartnershipsClient() {
         pageRef.current!,
       )[0] as HTMLElement;
       if (scrollWrapper && window.innerWidth >= 768) {
-        const xOffset = -(scrollWrapper.scrollWidth - window.innerWidth);
-
         gsap.to(scrollWrapper, {
-          x: xOffset,
+          x: () => -(scrollWrapper.scrollWidth - window.innerWidth),
           force3D: true,
           ease: "none",
           scrollTrigger: {
@@ -739,6 +869,9 @@ export default function PartnershipsClient() {
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onUpdate: () => {
+              window.dispatchEvent(new CustomEvent('updateStandardsPagination'));
+            }
           },
         });
       }
@@ -893,10 +1026,38 @@ export default function PartnershipsClient() {
             },
           },
         );
+      } // Restored missing brace!
+      
+      // 10. Awwwards Premium Mouse Parallax for Background Elements
+      if (!reducedMotion) {
+        parallaxHandler = (e: MouseEvent) => {
+          const px = (e.clientX / window.innerWidth - 0.5);
+          const py = (e.clientY / window.innerHeight - 0.5);
+          
+          gsap.to(".about-parallax-target", {
+            x: px * 160, // Dramatically increased movement
+            y: py * 160,
+            duration: 1.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+          
+          gsap.to(".about-liquid-aurora", {
+            x: px * -250, // Massive counter movement
+            y: py * -250,
+            duration: 2.5,
+            ease: "power3.out",
+            overwrite: "auto"
+          });
+        };
+        window.addEventListener("mousemove", parallaxHandler);
       }
     }, pageRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (parallaxHandler) window.removeEventListener("mousemove", parallaxHandler);
+    };
   }, []);
 
   // MOVE 2 (handler) — cursor-follow glow with GSAP quickTo. The glow
@@ -1041,15 +1202,22 @@ export default function PartnershipsClient() {
             }}
           />
 
+          {/* AWWWARDS Premium Liquid Aurora Background */}
+          {/* Increased opacity to 0.40 and reduced blur so it's impossible to miss */}
+          <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
+          </div>
+
           {/* Ghost echo — massive italic "partners." floats behind the
               headline as the section's atmospheric anchor. Editorial
               wallpaper-magazine signature, not a dashboard backdrop. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-[14%] -left-[5vw] z-2 select-none hidden lg:block"
+            className="pointer-events-none absolute top-[14%] -left-[5vw] z-2 select-none"
           >
             <span
-              className="block italic font-light text-white/[0.025] leading-[0.78] tracking-[-0.06em] whitespace-nowrap"
+              className="about-parallax-target block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
               style={{
                 fontFamily: "var(--font-playfair)",
                 fontSize: "clamp(12rem, 24vw, 30rem)",
@@ -1114,22 +1282,22 @@ export default function PartnershipsClient() {
               ground, not the decoration. */}
           <div
             aria-hidden="true"
-            className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-[52%] w-[68vw] max-w-[1180px] aspect-square z-[2] pointer-events-none"
+            className="hidden lg:block absolute left-0 right-0 top-1/2 -translate-y-[52%] w-full h-[120vh] max-h-[1400px] z-[2] pointer-events-none"
             style={{
-              opacity: 0.32,
+              opacity: 0.35,
               maskImage:
-                "radial-gradient(ellipse 75% 60% at center, #000 30%, rgba(0,0,0,0.45) 60%, transparent 88%)",
+                "radial-gradient(ellipse 80% 80% at center, #000 10%, rgba(0,0,0,0.5) 40%, transparent 75%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse 75% 60% at center, #000 30%, rgba(0,0,0,0.45) 60%, transparent 88%)",
+                "radial-gradient(ellipse 80% 80% at center, #000 10%, rgba(0,0,0,0.5) 40%, transparent 75%)",
               mixBlendMode: "screen",
             }}
           >
             <Image
-              src="/partnerships/partnerships-hero-aligned-pair.png"
+              src="/partnerships/partnerships_hero_premium_1781530602705.png"
               alt=""
               fill
-              sizes="(min-width: 1280px) 1180px, 68vw"
-              className="object-contain"
+              sizes="100vw"
+              className="object-cover object-center"
               unoptimized
               priority={false}
             />
@@ -1247,7 +1415,7 @@ export default function PartnershipsClient() {
                 completely different subject so it doesn't echo Pillar
                 05's single profile. */}
 
-            <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10">
+            <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10 drop-shadow-[0_4px_16px_rgba(0,0,0,1)]">
 
               {/* Section label — single italic Playfair line, sits
                   beneath the image as a caption to the visual moment. */}
@@ -1273,7 +1441,7 @@ export default function PartnershipsClient() {
                 ].flatMap(({ label, value }) => [
                   <span
                     key={`label-${label}`}
-                    className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-white font-light"
+                    className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-white font-medium"
                   >
                     {label}
                   </span>,
@@ -1337,18 +1505,11 @@ export default function PartnershipsClient() {
           data-journey="proof"
           className="px-gutter py-[26vh] lg:py-[32vh] bg-[#0c0e14] relative z-10 border-t border-white/5 overflow-hidden"
         >
-          {/* Atmospheric glow — turquoise breath behind the statement.
-              Manifesto-coded "frequency space" rendered as ambient depth
-              so the section isn't flat type-on-black. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[64vw] max-w-[1000px] aspect-square"
-            style={{
-              background:
-                "radial-gradient(circle at center, rgba(18,168,172,0.10) 0%, rgba(18,168,172,0.04) 35%, transparent 65%)",
-              filter: "blur(40px)",
-            }}
-          />
+          {/* Atmospheric glow — Upgraded to Awwwards Premium Liquid Aurora */}
+          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
+            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
+          </div>
 
           <div className="relative max-w-[88rem] mx-auto text-center reveal-up">
             <p
@@ -1448,27 +1609,49 @@ export default function PartnershipsClient() {
         <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto space-y-24">
             {/* TOP: The Principle Statement */}
-            <div className="reveal-up space-y-10">
-              <div>
-                <p className="text-sm tracking-[0.45em] uppercase text-copper/90 font-bold mb-6">
-                  The Principle
+            <div className="reveal-up relative">
+              
+              {/* Vertical Accent Line */}
+              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-turquoise/40 via-petrol/20 to-transparent" />
+
+              <div className="pl-10 lg:pl-16">
+                <div className="flex items-center gap-6 mb-16">
+                  <span className="w-12 h-px bg-white/20" />
+                  <p className="text-[10px] font-mono tracking-[0.4em] uppercase text-turquoise/80">
+                    The Principle
+                  </p>
+                </div>
+
+                <div className="flex flex-col">
+                  <h2 className="text-[clamp(2.5rem,4vw,4rem)] font-light tracking-tight leading-none text-white/90 mb-2">
+                    Partnership is
+                  </h2>
+                  <h2 className="text-[clamp(5rem,9vw,10rem)] font-serif italic tracking-tighter leading-[0.85] text-white">
+                    Alignment
+                  </h2>
+                  
+                  <div className="flex items-center gap-8 mt-10 mb-8 max-w-4xl">
+                    <span className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-light text-white/30 italic">
+                      not
+                    </span>
+                    <span className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent" />
+                  </div>
+
+                  <h2 
+                    className="text-[clamp(4rem,7vw,8rem)] font-black tracking-tighter leading-none uppercase"
+                    style={{
+                      WebkitTextFillColor: "transparent",
+                      WebkitTextStroke: "1px rgba(255, 255, 255, 0.25)",
+                    }}
+                  >
+                    Procurement.
+                  </h2>
+                </div>
+
+                <p className="mt-16 text-2xl lg:text-[2rem] text-white/50 leading-[1.4] font-light max-w-3xl">
+                  We don&apos;t <span className="text-white/90 italic font-serif">&quot;source services.&quot;</span> We select partners who can carry our foundation and protect our standard.
                 </p>
-                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white">
-                  PARTNERSHIP IS
-                  <br />
-                  ALIGNMENT
-                </h2>
-                <div className="w-16 h-1 bg-white mt-8 mb-6" />
-                <h2 className="text-[clamp(3rem,5vw,5.5rem)] font-black tracking-tighter leading-[0.85] uppercase text-white/70">
-                  NOT
-                  <br />
-                  PROCUREMENT.
-                </h2>
               </div>
-              <p className="text-2xl text-white leading-relaxed font-light max-w-2xl">
-                We don&apos;t &quot;source services.&quot; We select partners
-                who can carry our foundation and protect our standard.
-              </p>
             </div>
 
             {/* BOTTOM: Partner Qualities */}
@@ -1512,38 +1695,44 @@ export default function PartnershipsClient() {
           id="standards-section"
           className="bg-black relative z-10 isolate"
         >
+          {/* Pagination Indicators */}
+          <StandardsPagination />
+
           <div className="standards-pin-container h-screen flex flex-col overflow-hidden">
             {/* Section Title Row */}
-            <div className="flex-none flex justify-between items-center px-gutter pt-20 pb-6 reveal-up shrink-0">
-              <div>
-                <p className="text-xs tracking-[0.5em] uppercase text-silver font-bold mb-3">Non-Negotiables</p>
-                <h2 className="text-[clamp(2rem,max(3.5vw,4.5vh),5.5rem)] font-black tracking-tighter leading-[0.82] uppercase text-white">
-                  OUR
-                  <br />
-                  <span className="text-white/70">PARTNERSHIP</span>
-                  <br />
-                  STANDARD
-                </h2>
-              </div>
-              <div className="hidden lg:flex flex-col items-end gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-px bg-white/20" />
-                  <span className="w-2 h-2 rounded-full bg-turquoise animate-pulse" />
-                </div>
-                <p className="text-[10px] tracking-[0.45em] text-white/70 uppercase font-semibold text-right">
-                  Scroll horizontally
-                  <br />
-                  to explore
-                </p>
+            <div className="flex-none flex flex-col justify-start items-start px-gutter pt-24 pb-20 lg:pb-28 reveal-up shrink-0">
+              <h2 className="text-[clamp(3rem,6vw,8rem)] font-serif tracking-tight leading-[0.9] text-white">
+                Our <span className="italic font-light text-white/80">partnership</span> standard.
+              </h2>
+              
+              {/* Elegant Solid Resonance Wave beneath the heading */}
+              <div className="mt-8 lg:mt-10 w-[60vw] max-w-[600px] pointer-events-none">
+                <svg
+                  viewBox="0 0 400 12"
+                  preserveAspectRatio="none"
+                  className="w-full h-3 overflow-visible"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0,6 Q50,2 100,6 T200,6 T300,6 T400,6"
+                    fill="none"
+                    stroke="rgba(18,168,172,0.8)"
+                    strokeWidth="1.5"
+                    vectorEffect="non-scaling-stroke"
+                    strokeDasharray="500"
+                    strokeDashoffset="500"
+                    className="animate-[draw-wave_2.5s_ease-out_forwards]"
+                  />
+                </svg>
               </div>
             </div>
 
             {/* Scroll Wrapper — Flex-1 to fill remaining screen height entirely */}
-            <div className="standards-scroll-wrapper flex-1 min-h-0 flex flex-row items-stretch w-max will-change-transform">
+            <div className="standards-scroll-wrapper flex-1 min-h-0 flex flex-row items-center w-max will-change-transform pb-28 pl-gutter">
               {NON_NEGOTIABLES.map((item, i) => (
                 <div
                   key={i}
-                  className="relative group flex flex-col w-[88vw] md:w-[52vw] lg:w-[38vw] xl:w-[34vw] h-full overflow-hidden cursor-pointer shrink-0 border-r border-white/10"
+                  className="standards-card relative group flex flex-col w-[88vw] md:w-[52vw] lg:w-[38vw] xl:w-[34vw] h-full max-h-[60vh] lg:max-h-[65vh] mr-6 lg:mr-10 last:mr-0 overflow-hidden cursor-pointer shrink-0 rounded-3xl border border-white/10 bg-[#0a0c12] hover:border-white/30 hover:shadow-2xl transition-all duration-700"
                   onMouseMove={(e) => {
                     const el = e.currentTarget;
                     const rect = el.getBoundingClientRect();
@@ -1554,9 +1743,20 @@ export default function PartnershipsClient() {
                       el.style.setProperty("--my", `${y}px`);
                     });
                   }}
+                  onMouseEnter={(e) => {
+                    const video = e.currentTarget.querySelector('video');
+                    if (video) video.play();
+                  }}
+                  onMouseLeave={(e) => {
+                    const video = e.currentTarget.querySelector('video');
+                    if (video) {
+                      video.pause();
+                      video.currentTime = 0;
+                    }
+                  }}
                 >
-                  {/* FULL-BLEED Image — always very visible */}
-                  <div className="absolute inset-0 z-0">
+                  {/* FULL-BLEED Image & Hover Canvas */}
+                  <div className="absolute inset-0 z-0 bg-black">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -1564,79 +1764,60 @@ export default function PartnershipsClient() {
                       sizes="(max-width: 768px) 88vw, (max-width: 1200px) 50vw, 35vw"
                       quality={75}
                       loading="lazy"
-                      className="object-cover scale-[1.08] group-hover:scale-100 transition-transform duration-2500 ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform"
+                      className="object-cover transition-transform duration-[1500ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 w-full h-full bg-[#0a0c12] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-out z-10 pointer-events-none">
+                      <StandardCanvas index={i} />
+                    </div>
                   </div>
 
-                  {/* Multi-layer dramatic gradient overlay to ensure text readability */}
-                  <div className="absolute inset-0 z-1 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                  <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
-                  
-                  {/* Cinematic vignette */}
-                  <div className="absolute inset-0 z-1 opacity-20"
-                    style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%)' }}
-                  />
+
 
                   {/* Mouse-follow Gold Spotlight */}
                   <div
-                    className="absolute inset-0 z-2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                    className="absolute inset-0 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none mix-blend-screen"
                     style={{
-                      background: `radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(10,147,150,0.12), transparent 60%)`,
+                      background: `radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(18,168,172,0.1), transparent 60%)`,
                     }}
                   />
 
-                  {/* Content — Positioned relative inside the h-full flex container */}
-                  <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 border-t-2 border-white/5 group-hover:border-[var(--color-turquoise)]/60 group-hover:-translate-y-[2px] transition-all duration-700 group-hover:shadow-[0_-4px_30px_rgba(10,147,150,0.3),_inset_0_4px_20px_rgba(10,147,150,0.1)]">
-
-                    {/* TOP: Counter + minimal HUD */}
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="w-2 h-2 rounded-full bg-turquoise group-hover:scale-150 transition-transform duration-500" />
-                        <span className="font-mono text-gold text-sm tracking-[0.5em] font-bold">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                      {/* Corner bracket decoration */}
-                      <div className="w-6 h-6 border-t border-r border-white/40 group-hover:border-gold/60 transition-colors duration-700" />
-                    </div>
-
-                    {/* BOTTOM: Title Block */}
-                    <div className="flex flex-col gap-3 mt-auto pb-6">
-                      {/* Gold accent line — expands on hover */}
+                  {/* Bottom Hover Content Reveal */}
+                  <div className="absolute bottom-0 left-0 w-full flex flex-col justify-end p-8 lg:p-10 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] z-40">
+                    {/* Gradient Background Block Behind Text to allow Canvas to show through */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#040608] via-[#040608]/90 to-transparent pointer-events-none -z-10" />
+                    
+                    <div className="flex flex-col gap-3 relative z-10">
+                      {/* Accent Line */}
                       <div className="w-10 h-0.5 bg-turquoise/60 group-hover:w-20 group-hover:bg-turquoise transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] mb-1" />
                       
                       <h3 className="text-[clamp(1.4rem,2.6vw,2.8rem)] font-black tracking-tighter leading-[0.9] text-white uppercase drop-shadow-2xl break-words hyphens-auto">
                         {item.title}
                       </h3>
                       
-                      {/* Description — always visible, high contrast */}
                       <div className="overflow-hidden mb-2">
-                        <p className="text-sm lg:text-base text-white/75 font-light leading-relaxed group-hover:text-white/95 transition-colors duration-700 max-w-sm drop-shadow-md">
+                        <p className="text-sm lg:text-base text-white/75 font-light leading-relaxed max-w-sm drop-shadow-md">
                           {item.desc}
                         </p>
                       </div>
 
-                      {/* Bottom meta row */}
-                      <div className="flex items-center justify-between pt-3 border-t border-white/15 group-hover:border-gold/30 transition-colors duration-700">
+                      {/* Meta Footer */}
+                      <div className="flex items-center justify-start pt-3 border-t border-white/15">
                         <span className="text-[9px] tracking-[0.45em] uppercase text-white/70 font-medium">
                           GOTT WALD Standard
-                        </span>
-                        <span className="text-gold opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-sm">
-                          →
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Giant Watermark Number — behind image overlays */}
-                  <div className="absolute top-[18%] -right-4 text-[10rem] lg:text-[14rem] font-black leading-none text-white/3 group-hover:text-gold/6 group-hover:-translate-y-3 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-[-1]">
+                  {/* Giant Watermark Number (behind image hover states but visible behind video fade) */}
+                  <div className="absolute top-[18%] -right-4 text-[10rem] lg:text-[14rem] font-black leading-none text-white/3 group-hover:text-gold/5 group-hover:-translate-y-3 transition-all duration-1000 ease-[cubic-bezier(0.19,1,0.22,1)] select-none pointer-events-none z-[5]">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                 </div>
               ))}
 
               {/* CTA End Card */}
-              <div className="relative flex flex-col items-center justify-center w-[60vw] md:w-[35vw] lg:w-[22vw] h-full shrink-0 bg-[#0a0a0a] border-t border-white/5 px-10 border-l border-white/10">
+              <div className="standards-card relative flex flex-col items-center justify-center w-[60vw] md:w-[40vw] lg:w-[25vw] h-full max-h-[60vh] lg:max-h-[65vh] mr-[10vw] shrink-0 rounded-3xl bg-[#0a0c12] border border-white/10 px-8 hover:border-white/30 hover:shadow-2xl transition-all duration-700">
                 <div className="w-px h-16 bg-linear-to-b from-transparent via-gold to-transparent mb-6" />
                 <p className="text-center text-xs tracking-[0.4em] uppercase text-white/70 font-bold mb-3">
                   All of These
@@ -1812,9 +1993,25 @@ export default function PartnershipsClient() {
         {/* ── SECTION 10: APPLICATION FORM ── */}
         <section
           id="apply"
-          className="form-section px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10"
+          className="form-section px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10 overflow-hidden"
         >
-          <div className="max-w-4xl mx-auto">
+          {/* Background Awwwards Parallax Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[20%] right-[-5vw] z-0 select-none opacity-50"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.035] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(6rem, 20vw, 24rem)",
+              }}
+            >
+              apply.
+            </span>
+          </div>
+
+          <div className="max-w-4xl mx-auto relative z-10">
             <div className="form-reveal mb-20">
               <p className="text-sm tracking-[0.45em] uppercase text-gold/80 font-bold mb-6">
                 Partnership Application

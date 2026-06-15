@@ -49,31 +49,37 @@ export const NON_NEGOTIABLES = [
     title: "Integrity",
     desc: "Clear ethics. No shortcuts.",
     image: "/images/futuristic_standard_1.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Delivery Proof",
     desc: "References, cases, real outcomes — not promises.",
     image: "/images/futuristic_standard_2.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Systems Thinking",
     desc: "Structure, process hygiene, repeatable quality.",
     image: "/images/futuristic_standard_3.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Discretion",
     desc: "Confidentiality is reflex. No noise. No name-dropping.",
     image: "/images/futuristic_standard_4.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Quality Under Pressure",
     desc: "Pressure reveals class — it doesn't create chaos.",
     image: "/images/futuristic_standard_5.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Values Compatibility",
     desc: "Your work must align with our foundation — and never contradict NATURE — ANIMALS — HUMANS.",
     image: "/images/futuristic_standard_6.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
 ];
 

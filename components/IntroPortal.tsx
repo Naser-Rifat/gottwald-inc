@@ -160,7 +160,7 @@ export default function IntroPortal() {
         {/* Subtitle */}
         <div className="portal-reveal mb-12">
           <span className="text-[12px] sm:text-[14px] tracking-[0.35em] uppercase text-white/80 font-medium">
-            LET'S EXPLORE THE SYSTEM
+            LET&apose; EXPLORE THE SYSTEM
           </span>
         </div>
 
