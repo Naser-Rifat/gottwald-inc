@@ -84,9 +84,6 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                 </span>
               </h1>
               <div className="flex items-center gap-4">
-                <p className="text-gold text-[clamp(0.75rem,0.9vw,0.85rem)] tracking-[0.2em] font-medium uppercase">
-                  Trust. Structure. Performance.
-                </p>
                 <span
                   ref={counterRef}
                   className="text-white/80 text-[clamp(1rem,1.2vw,1.4rem)] font-light opacity-0"
@@ -95,8 +92,8 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
                 </span>
               </div>
             </div>
-
-            <div className="lg:w-[55%] flex flex-col gap-8 text-white/90 text-[clamp(1.1rem,1.4vw,1.6rem)] font-light leading-relaxed max-w-2xl lg:mt-2">
+            
+            <div className="lg:w-[55%] flex flex-col gap-8 text-white/90 text-[clamp(1.05rem,1.3vw,1.4rem)] font-light leading-relaxed max-w-2xl lg:mt-2">
               <p className="text-white/90">
                 We build operating-grade systems for people and strategic assets—when
                 outcomes must be clear, execution must be clean, and performance must
@@ -104,90 +101,38 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
               </p>
 
               <div className="pt-6 mt-2 border-t border-white/20">
-                <p className="text-white/90 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed">
-                  GOTT WALD is not a collection of services. It is a unified
-                  architecture: modular components, one standard, one language of
-                  delivery—built to turn complexity into clarity, clarity into
-                  decisions, and decisions into measurable impact.
+                <p className="text-white/80 leading-relaxed">
+                  GOTT WALD is not a collection of services. It is a unified architecture: modular components, one standard, one language of delivery—built to turn complexity into clarity, clarity into decisions, and decisions into measurable impact.
                 </p>
               </div>
 
-              <div
-                id="our-work-more"
-                className="overflow-hidden transition-[max-height,opacity,margin] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
-                style={{
-                  maxHeight: isExpanded ? "1500px" : "0px",
-                  opacity: isExpanded ? 1 : 0,
-                  marginTop: isExpanded ? "1rem" : "0",
-                }}
-              >
-                <div className="flex flex-col gap-5 text-white/90 text-[clamp(0.95rem,1.1vw,1.2rem)] leading-relaxed max-w-2xl">
-                  <p>
-                    We don&apos;t market partnerships. <br />
-                    <span className="text-white/90">
-                      We operate them.
-                    </span>
-                  </p>
-
-                  <p>
-                    Discreet. Stable. Security-first.
-                    <br />
-                    Confidentiality is not a promise—it is engineered into the
-                    framework.
-                  </p>
-
-                  <p>
-                    We don&apos;t talk about partners or projects, not out of
-                    distance, but out of principle: trust compounds when it is
-                    protected.
-                  </p>
-
-                  <p>
-                    Our matrix scales without losing integrity: components evolve,
-                    new layers can be added, markets can shift—yet the standard
-                    remains.
-                  </p>
-
-                  <p>
-                    At the core is a non-negotiable filter:
-                    <br />
-                    <span className="text-gold font-medium tracking-[0.05em]">
-                      Peace. Love. Harmony — for more Humanity.
-                    </span>
-                  </p>
-
-                  <p>
-                    Skill matters. Character decides.
-                    <br />
-                    Money is not the driver. Money is the result of alignment,
-                    responsibility, and clean execution.
-                  </p>
-
-                  <p>
-                    Explore our pillars below. Each one is a complete component—designed
-                    to stand alone, and engineered to connect into one integrated
-                    operating system.
-                  </p>
-                </div>
+              <div className="pl-6 py-2 border-l-2 border-[#d4af37]/50 bg-gradient-to-r from-white/[0.02] to-transparent">
+                <p className="text-[#d4af37] text-[10px] uppercase font-bold tracking-widest mb-1">Our Approach</p>
+                <p className="text-white/80 text-base mb-1">We don't market partnerships.</p>
+                <p className="text-white font-medium text-xl">We operate them.</p>
               </div>
 
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                aria-expanded={isExpanded}
-                aria-controls="our-work-more"
-                translate="no"
-                className="notranslate group mx-auto flex items-center gap-4 text-[12px] font-bold tracking-[0.2em] uppercase text-white/90 hover:text-white transition-colors mt-4 w-max"
-              >
-                <span className="relative overflow-hidden w-8 h-8 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white/50 group-hover:bg-white/5 transition-all">
-                  <span className="block w-3 h-px bg-current transition-transform duration-500 absolute" />
-                  <span
-                    className={`block w-px h-3 bg-current transition-transform duration-500 absolute ${
-                      isExpanded ? "rotate-90 scale-0" : "rotate-0 scale-100"
-                    }`}
-                  />
-                </span>
-                <span>{isExpanded ? tCommon("showLess") : tCommon("showMore")}</span>
-              </button>
+              <div className="space-y-6">
+                <p className="leading-relaxed text-white/80">
+                  <span className="text-white font-medium tracking-wide">Discreet. Stable. Security-first.</span><br/>
+                  Confidentiality is not a promise—it is engineered into the framework.
+                </p>
+                <p className="leading-relaxed text-white/80">
+                  Our matrix scales without losing integrity: components evolve, new layers can be added, markets can shift—yet the standard remains.
+                </p>
+              </div>
+
+              <div className="p-8 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] relative overflow-hidden group mt-4">
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50" />
+                <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 mb-5">At the core is a non-negotiable filter:</p>
+                <p className="text-[#d4af37] font-medium text-base sm:text-lg leading-relaxed mb-6 drop-shadow-md">
+                  Peace. Love. Harmony — for more Humanity.
+                </p>
+                <p className="leading-relaxed text-white/80 text-sm sm:text-base">
+                  <span className="text-white font-medium block mb-2">Skill matters. Character decides.</span>
+                  Money is not the driver. Money is the result of alignment, responsibility, and clean execution.
+                </p>
+              </div>
             </div>
           </div>
 

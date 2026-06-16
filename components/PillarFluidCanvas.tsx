@@ -35,12 +35,13 @@ void main() {
     float t = uTime * 0.45;
 
     float liquidDist = length(p - mouseP);
-    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
+    // Removed ripple completely to make it a smooth fluid
     float hoverMask = smoothstep(0.5, 0.0, liquidDist);
     
     vec2 safeDir = p - mouseP;
     if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
-    p = p + normalize(safeDir) * ripple * hoverMask;
+    // Subtle warp instead of ripples
+    p = p + normalize(safeDir) * 0.01 * hoverMask;
 
     vec2 source1 = vec2(sin(t * 0.07) * 0.7, 0.25 + cos(t * 0.09) * 0.12);
     float dist1 = length(p - source1);
@@ -56,9 +57,9 @@ void main() {
     float interference = (wave1 + wave2 + wave3) / 2.25;
 
     float mouseDist = length(p - mouseP);
-    float mouseWave = sin(mouseDist * 18.0 - t * 2.0);
     float mouseAttenuation = exp(-mouseDist * 1.6);
-    float mouseResonance = mouseWave * mouseAttenuation;
+    // Removed mouseWave rings, just keeping a smooth resonance glow
+    float mouseResonance = mouseAttenuation * 0.5;
 
     float field = interference + mouseResonance * 0.6;
     float fieldPower = smoothstep(-0.5, 1.0, field);
@@ -113,12 +114,12 @@ void main() {
     float t = uTime * 0.45;
 
     float liquidDist = length(p - mouseP);
-    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
+    // Removed ripple
     float hoverMask = smoothstep(0.5, 0.0, liquidDist);
     
     vec2 safeDir = p - mouseP;
     if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
-    p = p + normalize(safeDir) * ripple * hoverMask;
+    p = p + normalize(safeDir) * 0.01 * hoverMask;
 
     vec2 source1 = vec2(sin(t * 0.07) * 0.6, 0.2);
     vec2 source2 = vec2(cos(t * 0.05) * 0.5, -0.2);
@@ -132,9 +133,9 @@ void main() {
     float interference = (wave1 + wave2) / 1.7;
 
     float mouseDist = length(p - mouseP);
-    float mouseWave = sin(mouseDist * 16.0 - t * 1.8);
     float mouseAttenuation = exp(-mouseDist * 1.6);
-    float mouseResonance = mouseWave * mouseAttenuation;
+    // Removed mouseWave rings
+    float mouseResonance = mouseAttenuation * 0.5;
 
     float field = interference + mouseResonance * 0.6;
     float fieldPower = smoothstep(-0.5, 1.0, field);

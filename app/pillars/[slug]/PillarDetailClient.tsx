@@ -348,6 +348,11 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-30px); }
         }
+        @keyframes slowRotateFloat {
+          0% { transform: translateY(0px) rotate(0deg) scale(1); }
+          50% { transform: translateY(-20px) rotate(3deg) scale(1.03); }
+          100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
       `}} />
       
       {/* ─── Global Atmosphere Overlay (Aurora) ─── */}
@@ -422,9 +427,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       {/* ─── Scroll Track ─── */}
       <div
         ref={trackRef}
-        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10"
+        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10 mix-blend-screen"
       >
-        {/* ═══════ PANEL 1 — Hero ═══════ */}
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
           ref={(el) => registerPanel(el, 0)}
@@ -504,7 +508,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                         style={{
                           fontSize: "clamp(12px, 1vw, 15px)",
                           lineHeight: 1.7,
-                          color: "rgba(255,255,255,0.80)",
+                          color: project.theme.accent,
                           fontWeight: 300,
                         }}
                       >
@@ -623,7 +627,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           </div>
 
           {/* Right: Hero Image (Floating 3D Object) */}
-          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full relative flex items-center justify-center overflow-hidden mix-blend-screen px-4 pb-8 lg:pb-0">
+          <div className="w-full lg:w-[54%] h-[50vh] lg:h-full relative flex items-center justify-center overflow-visible px-4 pb-8 lg:pb-0 z-20 mix-blend-screen">
             {/* TALL Stacked Background Text (Behind Image) */}
             <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none select-none opacity-[0.08]">
               <div 
@@ -638,8 +642,8 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
             {/* Floating Image */}
             <div 
-              className="hero-image relative w-[80vw] lg:w-[50vw] max-w-[800px] aspect-square z-10"
-              style={{ animation: "float 6s ease-in-out infinite" }}
+              className="hero-image relative w-[80vw] lg:w-[50vw] max-w-[800px] aspect-square z-10 mix-blend-screen"
+              style={{ animation: "slowRotateFloat 15s ease-in-out infinite" }}
             >
               {project.image ? (
                 <Image
@@ -647,11 +651,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   alt={project.title}
                   fill
                   sizes="(max-width: 1024px) 80vw, 50vw"
-                  className="object-contain contrast-125 brightness-110"
-                  style={{ 
-                    maskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
-                    WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)'
-                  }}
+                  className="object-contain contrast-150 brightness-[1.15]"
                   priority
                   unoptimized
                   onError={(e) => {

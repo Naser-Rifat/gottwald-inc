@@ -244,7 +244,7 @@ export default function GlobalAuthoritySection() {
       </div>
 
       {/* 3. Bottom Bar: Metrics & Caption */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-[-5%] lg:mt-[-8%]">
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto pointer-events-none mt-[-8%] lg:mt-[-18%]">
         <div className="w-full flex flex-col lg:flex-row justify-between items-end gap-12 pointer-events-auto relative z-30">
           {/* Caption */}
           <div className="flex items-center gap-3 order-2 lg:order-1 lg:mb-[4vh] pt-8 lg:pt-0 w-full lg:w-max">

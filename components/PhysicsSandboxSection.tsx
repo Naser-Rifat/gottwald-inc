@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import Header from "@/components/Header";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 
 export default function PhysicsSandboxSection() {
   const t = useTranslations("home.hero");
@@ -12,6 +13,9 @@ export default function PhysicsSandboxSection() {
   const headerRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
   const scrollBtnRef = useRef<HTMLDivElement>(null);
+
+  // Shift GlobalCanvas background to gold — Home page shifts the GlobalCanvas to Muted Gold
+  usePageColorShift("#cda434");
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -35,7 +39,11 @@ export default function PhysicsSandboxSection() {
       if (orb) gsap.set(orb, { scale: 0, opacity: 0 });
       if (accentLine) gsap.set(accentLine, { scaleX: 0 });
 
-      const tl = gsap.timeline({ delay: 0.3 });
+      // Detect if portal just closed (session flag) for a longer breath delay
+      const fromPortal = sessionStorage.getItem("portal-visited") === "true";
+      const entryDelay = fromPortal ? 1.2 : 0.3;
+
+      const tl = gsap.timeline({ delay: entryDelay });
 
       // Header fades in first
       if (header) {
@@ -227,13 +235,12 @@ export default function PhysicsSandboxSection() {
           {/* Left: Label + Title */}
           <div className="hero-title-block flex flex-col gap-6 lg:gap-8 w-full lg:w-auto">
             <div className="hero-top-label flex items-center gap-3 opacity-0">
-              {/* CI pill */}
-              {/* <span
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-petrol/40 text-gold/85 bg-petrol/[0.06] text-[9px] tracking-[0.2em] font-bold uppercase"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-gold/85 animate-pulse" />
-                Gott Wald Area
-              </span> */}
+              <div className="inline-flex items-center gap-4 opacity-80">
+                <div className="w-8 h-[1px] bg-gold" />
+                <span className="text-[10px] tracking-[0.3em] font-medium uppercase text-white/70">
+                  WHAT THE STANDARD LOOKS LIKE
+                </span>
+              </div>
             </div>
 
             {/* Hero text owned by next-intl. translate="no" keeps Google

@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import BrutalistContactForm from "@/components/BrutalistContactForm";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,9 @@ export default function ContactClient() {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLHeadingElement>(null);
   const separatorRef = useRef<HTMLDivElement>(null);
+
+  // Contact page shifts the GlobalCanvas to Golden Amber
+  usePageColorShift("#b67d33");
 
   useEffect(() => {
     let parallaxHandler: ((e: MouseEvent) => void) | null = null;
@@ -446,6 +450,18 @@ export default function ContactClient() {
           </div>
         </section>
       </main>
+
+      {/* Journey Conclusion Statement */}
+      <section className="relative px-8 md:px-16 pb-32 pt-16 max-w-6xl mx-auto flex flex-col items-center justify-center text-center">
+        <div className="w-[1px] h-24 bg-gradient-to-b from-transparent to-gold/50 mb-12" />
+        <h2 className="font-playfair text-3xl md:text-5xl font-semibold italic text-white/90 mb-6 tracking-wide">
+          The standard has been set.
+        </h2>
+        <p className="font-sans text-xl md:text-2xl font-light text-white/60 max-w-2xl leading-relaxed">
+          The digital journey concludes here. <br />
+          The real-world partnership begins.
+        </p>
+      </section>
 
       <FooterSection />
 

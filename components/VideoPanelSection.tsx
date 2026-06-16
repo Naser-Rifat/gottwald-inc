@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AmbientAurora from "@/components/AmbientAurora";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -149,9 +150,10 @@ export default function VideoPanelSection() {
       id="video-panel-section"
       data-journey="openness"
       aria-label="Company Mission"
-      className="flex flex-col px-gutter w-full min-h-screen py-[15vh]"
+      className="relative flex flex-col px-gutter w-full min-h-screen py-[15vh] overflow-hidden"
     >
-      <div className="about-headers pb-[6vh] md:pb-[8vh]">
+      <AmbientAurora />
+      <div className="relative z-10 about-headers pb-[6vh] md:pb-[8vh]">
         <div className="overflow-hidden w-full">
           {/* translate="no": GT was wrapping each char-mask span in <font> tags
               and translating individual letters, producing garbage like
@@ -188,7 +190,7 @@ export default function VideoPanelSection() {
       </div>
 
       {/* About paragraphs */}
-      <div className="flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
+      <div className="relative z-10 flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
         <p
           ref={descRef}
           className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed font-sans opacity-0 text-white/75 border-l-2 border-silver/35 pl-5"

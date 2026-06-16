@@ -18,6 +18,7 @@ import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
 import StandardCanvas from "@/components/StandardCanvas";
 import ArchetypeCanvas from "@/components/ArchetypeCanvas";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 import {
   NON_NEGOTIABLES,
   PARTNERSHIP_DOMAINS,
@@ -666,6 +667,9 @@ export default function PartnershipsClient() {
   const heroGlowRef = useRef<HTMLDivElement>(null);
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
+
+  // Partnerships page shifts the GlobalCanvas to Deep Petrol
+  usePageColorShift("#0a4c5a");
 
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1326,18 +1330,13 @@ export default function PartnershipsClient() {
                     typographic weight + Playfair italic for the label
                     reads as editorial chapter marker, not AI luxury
                     template (no bold uppercase, no symmetric bracket). */}
-                {/* <div className="flex items-center gap-3 mb-8 lg:mb-10">
-                  <span className="text-gold text-xs lg:text-sm tracking-[0.4em] uppercase font-light">
-                    02 /
+                {/* Signature phrase — The Standard motif */}
+                <div className="inline-flex items-center gap-4 opacity-80 mb-8 lg:mb-10">
+                  <div className="w-8 h-[1px] bg-petrol" />
+                  <span className="text-[10px] tracking-[0.3em] font-medium uppercase text-white/70">
+                    PARTNER WITH THOSE WHO DEFINE IT
                   </span>
-                  <span className="w-12 h-px bg-white" />
-                  <span
-                    className="text-xs lg:text-sm tracking-[0.35em] text-white uppercase font-light"
-                    style={{ fontFamily: "var(--font-playfair)" }}
-                  >
-                    Partnerships
-                  </span>
-                </div> */}
+                </div>
 
               {/* Hero text owned by next-intl. translate="no" keeps GT
                   out so the parallax + scroll-trigger animations don't
@@ -2408,6 +2407,8 @@ export default function PartnershipsClient() {
           nextTitle={tNav("careers")}
           nextHref="/careers"
           prevHref="/about"
+          narrativeLine="Standards aligned. One more door remains."
+          accentColor="#c07840"
         />
       </main>
     </div>

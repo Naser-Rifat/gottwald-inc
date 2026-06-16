@@ -14,6 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 import AboutWaveCanvas from "@/components/AboutWaveCanvas";
 import ShiftCanvas from "@/components/ShiftCanvas";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 
 // color that matches its inner state (per client manifesto): gold = positive /
 // stability, silver = neutral / space, petrol = depth / structure, turquoise =
@@ -142,6 +143,9 @@ export default function AboutClient() {
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const [activeShiftIndex, setActiveShiftIndex] = useState<number>(0);
   const [activeCaseIndex, setActiveCaseIndex] = useState(0);
+
+  // About page shifts the GlobalCanvas to Steel/Silver
+  usePageColorShift("#8b97a2");
 
   const [hoveredEcoIndex, setHoveredEcoIndex] = useState<number | null>(null);
   const ecoCursorRef = useRef<HTMLDivElement>(null);
@@ -678,26 +682,23 @@ export default function AboutClient() {
             tick marks, dashboard stats). Let the typography carry it. */}
         <section
           data-journey="perception"
-          className="hero-section about-hero-material relative w-full min-h-[100svh] bg-[#070c14] overflow-hidden flex flex-col"
+          className="hero-section about-hero-material relative w-full h-[100svh] bg-[#070c14] overflow-hidden flex items-end justify-center"
         >
-          {/* Ambient frequency-field anchor — sits at the lowest z layer,
-              dimmed and screened so the typography stays the focal point.
-              This is the section's bespoke visual signature. */}
+          {/* Ambient frequency-field anchor */}
           <div className="about-visual about-visual--hero pointer-events-none absolute inset-0 z-0 overflow-hidden">
             <AboutWaveCanvas />
           </div>
 
-          {/* Top: minimal brand mark — earns its place because it tells you where you are. */}
-          <div className="hero-frame relative z-10 px-gutter pt-28 md:pt-[7.5rem] lg:pt-32 opacity-0">
-            <div className="flex items-center gap-4">
-            
+          {/* Center — three-line editorial cascade with tension–release rhythm. */}
+          <div className="relative z-10 w-full max-w-[1600px] mx-auto px-gutter pb-[15vh]">
+            {/* Top: minimal brand mark */}
+            <div className="hero-frame flex items-center gap-4 opacity-0 mb-6 lg:mb-8">
+              <div className="w-8 h-[1px] bg-silver" />
+              <span className="text-[10px] tracking-[0.3em] font-medium uppercase text-white/70">
+                THE FIRM THAT SETS THE STANDARD
+              </span>
             </div>
-          </div>
 
-          {/* Center — three-line editorial cascade with tension–release rhythm.
-              Line 1 (setup) light + small, Line 2 (subject) massive + black,
-              Line 3 (resolution) italic + medium. The hierarchy is the design. */}
-          <div className="relative z-10 flex-1 flex flex-col justify-start px-gutter pt-[clamp(3.5rem,9vh,7rem)] pb-12 lg:pb-16">
             <h1
               translate="no"
               className="tuning-headline notranslate w-full max-w-[1600px]"
@@ -724,7 +725,7 @@ export default function AboutClient() {
 
               {/* Single quiet resonance line — the only decorative element,
                   earned because it visualizes the brand's literal frequency word. */}
-              <div className="my-5 lg:my-7 max-w-[22rem] lg:max-w-md pointer-events-none">
+              <div className="my-3 lg:my-4 max-w-[22rem] lg:max-w-md pointer-events-none">
                 <svg
                   viewBox="0 0 400 12"
                   preserveAspectRatio="none"
@@ -755,8 +756,8 @@ export default function AboutClient() {
           </div>
 
           {/* Bottom: single positioning sentence. No stats, no dashboard widget. */}
-          <div className="hero-frame relative z-10 px-gutter pb-10 lg:pb-12 opacity-0">
-            <div className="border-t border-white/[0.05] pt-6 max-w-2xl">
+          <div className="hero-frame relative z-10 px-gutter pb-6 lg:pb-8 opacity-0">
+            <div className="border-t border-white/[0.05] pt-4 max-w-2xl">
               <p className="text-[16px]   font-light text-white/80 leading-[1.7]">
                 If you&apos;re a CEO, founder, or executive — or you run an SME
                 that must grow,{" "}
@@ -1951,6 +1952,8 @@ Mini Case Stories                    </p>
                     key={eco.name}
                     onMouseEnter={(e) => {
                       setHoveredEcoIndex(index);
+                      // Trigger a cinematic pulse in the GlobalCanvas background
+                      window.dispatchEvent(new CustomEvent("canvas-pulse"));
                       if (ecoCursorRef.current) {
                         // Instantly snap to mouse position to prevent top-left corner flash on scroll-hover
                         gsap.set(ecoCursorRef.current, {
@@ -2172,6 +2175,8 @@ Mini Case Stories                    </p>
         nextTitle={tNav("partnerships")}
         nextHref="/partnerships"
         prevHref="/"
+        narrativeLine="You know who we are. Now, the alliance."
+        accentColor="#006d84"
       />
     </div>
   );

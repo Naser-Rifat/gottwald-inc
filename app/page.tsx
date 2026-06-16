@@ -37,6 +37,10 @@ const PillarsTilesSection = dynamic(
   () => import("@/components/PillarTilesSection"),
   { ssr: true },
 );
+const HomeIntroSection = dynamic(
+  () => import("@/components/HomeIntroSection"),
+  { ssr: true },
+);
 const GlobalAuthoritySection = dynamic(
   () => import("@/components/GlobalAuthoritySection"),
   { ssr: true },
@@ -70,13 +74,19 @@ export default async function Home() {
         
         {/* <HeldBreath /> */}
         <VideoPanelSection />
+        <HomeIntroSection />
         <PillarsTilesSection pillars={pillars} />
         {/* <HeldBreath /> */}
         <GlobalAuthoritySection />
         {/* <HeldBreath /> */}
         <StrategicInquirySection />
         <FooterSection />
-        <NextChapterTransition nextTitle={tNav("about")} nextHref="/about" />
+        <NextChapterTransition 
+          nextTitle={tNav("about")} 
+          nextHref="/about"
+          narrativeLine="The foundation is set. Now, the philosophy."
+          accentColor="#b8c0cc"
+        />
       </div>
 
       <CustomScrollbar />

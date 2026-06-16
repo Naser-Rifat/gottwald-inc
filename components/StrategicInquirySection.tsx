@@ -243,8 +243,8 @@ export default function StrategicInquirySection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start relative">
           {/* Left — massive editorial headline. "INITIATE STRATEGIC"
               massive sans, "Alignment." Playfair italic turquoise accent. */}
-          <div className="lg:col-span-6 relative">
-            <h2 className="strategic-reveal text-[clamp(4rem,8.6vw,11rem)] font-black leading-[0.83] tracking-[-0.055em] text-white uppercase opacity-0">
+          <div className="lg:col-span-7 relative">
+            <h2 className="strategic-reveal text-[clamp(3.5rem,6.5vw,8.5rem)] font-black leading-[0.83] tracking-[-0.055em] text-white uppercase opacity-0">
               Initiate <br />
               Strategic
               {/* Overflow-hidden mask + inner span ref. GSAP raises the
@@ -256,7 +256,7 @@ export default function StrategicInquirySection() {
               <span className="block pt-2 pb-[0.18em] overflow-hidden">
                 <span
                   ref={alignmentRef}
-                  className="block text-[0.78em] normal-case leading-[1] tracking-[-0.04em] text-turquoise"
+                  className="block text-[0.85em] normal-case leading-[1] tracking-[-0.04em] text-turquoise"
                   style={{
                     fontFamily: "var(--font-playfair)",
                     fontStyle: "italic",
@@ -276,7 +276,7 @@ export default function StrategicInquirySection() {
               disclosure folds inline as italic em-dash continuation; CTA
               reads as the closing editorial verse in confident sans, not
               theatrical Playfair. */}
-          <div className="strategic-reveal lg:col-span-6 lg:pt-4 flex flex-col gap-8 opacity-0">
+          <div className="strategic-reveal lg:col-span-5 lg:pt-4 flex flex-col gap-8 opacity-0">
             {/* Lead — dramatically larger than body. The scale jump alone
                 signals the chapter opening; no decorative marker needed.
                 Default view's ONLY visible body line, Pentagram-style
@@ -290,19 +290,13 @@ export default function StrategicInquirySection() {
               </strong>
             </p>
 
-            {/* Standalone discover-more — italic editorial link sitting
-                below the lead paragraph in default view. Reveals body +
-                operating principle + expanded clauses on click. */}
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
-              className="self-start italic font-light text-turquoise/90 hover:text-turquoise underline decoration-turquoise/35 hover:decoration-turquoise/80 underline-offset-[6px] decoration-1 transition-colors duration-300 cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-turquoise/60 focus-visible:outline-offset-4 rounded-xs"
-              style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(1.05rem, 1.2vw, 1.25rem)",
-              }}
+              className="group flex items-center gap-3 self-start text-[10px] tracking-[0.25em] uppercase font-medium text-white/50 hover:text-white transition-colors duration-300 focus:outline-none mt-2"
             >
-              {expanded ? "show less" : "discover more"}
+              <span className="w-6 h-[1px] bg-white/30 group-hover:bg-white/80 transition-colors" />
+              <span>{expanded ? "SHOW LESS" : "DISCOVER MORE"}</span>
             </button>
 
             {/* Progressive disclosure — body + operating principle + the
@@ -346,23 +340,11 @@ export default function StrategicInquirySection() {
               </div>
             </div>
 
-            {/* Section signature rule — gold→petrol horizontal gradient */}
-            <div className="mt-6 mb-4">
-              <span
-                aria-hidden="true"
-                className="block h-px w-24 lg:w-32 bg-gradient-to-r from-gold/70 to-petrol/55"
-              />
-            </div>
-
-            {/* Closing editorial verse — CTA in confident sans uppercase
-                with light weight. Boosted scale + longer hairline +
-                slightly heavier gold lit segment so it reads as the
-                section's conclusion, not a quiet whisper. The
-                gold-growing hairline is the eye-catcher moment. */}
+            {/* Closing editorial verse — CTA in confident sans uppercase */}
             <div
               onMouseMove={handleCtaMouseMove}
               onMouseLeave={handleCtaMouseLeave}
-              className="inline-block self-start"
+              className="inline-block self-start mt-6 lg:mt-10"
             >
               <Link
                 ref={ctaRef}
