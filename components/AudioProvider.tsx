@@ -73,6 +73,22 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Listen for "audio-start" from the IntroPortal's START EXPERIENCE button
+  useEffect(() => {
+    const handleAudioStart = () => {
+      setIsPlaying(true);
+      if (!initedRef.current) {
+        // initAudio will be called after state update triggers re-render
+        // We need to init directly here since the ref isn't set yet
+        setTimeout(() => {
+          if (!initedRef.current) initAudio(true);
+        }, 50);
+      }
+    };
+    window.addEventListener("audio-start", handleAudioStart);
+    return () => window.removeEventListener("audio-start", handleAudioStart);
+  }, []);
+
   const initAudio = useCallback(async (startAmbient = globalShouldPlay) => {
     if (initedRef.current) return;
     initedRef.current = true;

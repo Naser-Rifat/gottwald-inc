@@ -8,15 +8,29 @@ const JOURNEY_STEPS = [
   { href: "/",              label: "Home",         chapter: "01", color: "#cda434" }, // Muted Gold
   { href: "/about",        label: "About",        chapter: "02", color: "#8b97a2" }, // Steel/Silver
   { href: "/partnerships", label: "Partnerships", chapter: "03", color: "#0a4c5a" }, // Deep Petrol
-  { href: "/careers",      label: "Careers",      chapter: "04", color: "#0f8b8d" }, // Turquoise
+  { href: "/careers",      label: "Careers",      chapter: "04", color: "#e69b65" }, // Luminous Copper
+  { href: "/contact",      label: "Contact",      chapter: "05", color: "#12a8ac" }, // Trust Turquoise
 ];
 
 export default function JourneyIndicator() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [introActive, setIntroActive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    
+    // Hide indicator on home page until the portal/loader is dismissed
+    if (window.location.pathname === "/") {
+      setIntroActive(true);
+      const handleStart = () => setIntroActive(false);
+      window.addEventListener("portal-start", handleStart);
+      window.addEventListener("loading-complete", handleStart);
+      return () => {
+        window.removeEventListener("portal-start", handleStart);
+        window.removeEventListener("loading-complete", handleStart);
+      };
+    }
   }, []);
 
   // Simple, robust path matching
@@ -27,8 +41,8 @@ export default function JourneyIndicator() {
     currentIndex = JOURNEY_STEPS.findIndex((s, i) => i > 0 && pathname.startsWith(s.href));
   }
 
-  // Don't render on pages outside the journey or before hydration
-  if (!mounted || currentIndex === -1) return null;
+  // Don't render on pages outside the journey, before hydration, or during intro portal
+  if (!mounted || currentIndex === -1 || introActive) return null;
 
   const current = JOURNEY_STEPS[currentIndex];
 

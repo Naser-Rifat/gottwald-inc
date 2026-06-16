@@ -176,12 +176,5 @@ export default function LivingEnvironment() {
     );
   }, []);
 
-  return (
-    <>
-
-
-      {/* Ambient frequency toggle — bottom-right corner. Default OFF. */}
-      <FrequencyEngine />
-    </>
-  );
+  return null;
 }

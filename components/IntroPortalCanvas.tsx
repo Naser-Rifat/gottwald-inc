@@ -26,13 +26,13 @@ const PortalMaterial = () => {
       // Wormhole zoom and speed acceleration
       gsap.to(materialRef.current.uniforms.uZoom, {
         value: 0.05, // Zoom way into the center
-        duration: 1.5,
+        duration: 3.5,
         ease: "power3.in"
       });
       
       gsap.to(materialRef.current.uniforms.uOffsetZ, {
         value: 5.0, // Fly forward rapidly
-        duration: 1.5,
+        duration: 3.5,
         ease: "power3.in"
       });
     };

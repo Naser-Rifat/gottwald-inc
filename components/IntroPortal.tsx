@@ -1,35 +1,58 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import IntroPortalCanvas from "./IntroPortalCanvas";
+
+// Module-level flag: survives client-side navigation, resets on full reload.
+let introDismissed = false;
 
 export default function IntroPortal() {
   const portalRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isReturnVisit, setIsReturnVisit] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Handle hydration
   useEffect(() => {
-    setMounted(true);
+    setIsClient(true);
+    if (sessionStorage.getItem("portal-visited") === "true") {
+      introDismissed = true;
+      setIsReturnVisit(true);
+      // Wait for loading-complete to dispatch portal-start
+    }
   }, []);
 
   // Listen to the global loading progress from loadingGroup.ts
   useEffect(() => {
-    const handleComplete = () => setIsLoaded(true);
+    const handleProgress = (e: any) => {
+      setProgress(e.detail);
+    };
 
+    const handleComplete = () => {
+      // Small delay ensures the loader is mounted before transitioning to opacity-0
+      setTimeout(() => {
+        setIsLoaded(true);
+        if (sessionStorage.getItem("portal-visited") === "true") {
+          window.dispatchEvent(new CustomEvent("portal-start"));
+        }
+      }, 50);
+    };
+
+    window.addEventListener("loading-progress", handleProgress);
     window.addEventListener("loading-complete", handleComplete);
     return () => {
+      window.removeEventListener("loading-progress", handleProgress);
       window.removeEventListener("loading-complete", handleComplete);
     };
   }, []);
 
-  // Stop scrolling while portal is active
+  // Stop scrolling while portal is active or loading
   useEffect(() => {
-    if (mounted && isVisible) {
+    if (isClient && isVisible && !isLoaded) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -37,11 +60,11 @@ export default function IntroPortal() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mounted, isVisible]);
+  }, [isClient, isVisible, isLoaded]);
 
   // Entrance animation for the canvas background
   useEffect(() => {
-    if (!mounted || !isVisible || !portalRef.current) return;
+    if (!isClient || !isVisible || !portalRef.current) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -60,7 +83,7 @@ export default function IntroPortal() {
     }, portalRef);
 
     return () => ctx.revert();
-  }, [mounted, isVisible]);
+  }, [isClient, isVisible]);
 
   // Entrance animation for the text content (triggers when loading is complete)
   useEffect(() => {
@@ -82,9 +105,10 @@ export default function IntroPortal() {
     return () => ctx.revert();
   }, [isLoaded]);
 
-  const handleStart = () => {
-    // Mark that portal was visited so Home hero adds a breath delay
+  // Shared portal exit animation
+  const dismissPortal = () => {
     sessionStorage.setItem("portal-visited", "true");
+    introDismissed = true;
 
     // Trigger wormhole shader animation
     window.dispatchEvent(new CustomEvent("portal-start"));
@@ -109,7 +133,7 @@ export default function IntroPortal() {
         opacity: 0,
         duration: 0.4,
         ease: "power2.in"
-      }, "+=0.9"); // Wait 0.9s for the zoom to swallow the screen
+      }, "+=2.9");
       
       // Background fades out
       tl.to(portalRef.current, {
@@ -120,7 +144,58 @@ export default function IntroPortal() {
     }, portalRef);
   };
 
-  if (!mounted || !isVisible) return null;
+  // START EXPERIENCE — enter with sound ON
+  const handleStart = () => {
+    window.dispatchEvent(new CustomEvent("audio-start"));
+    dismissPortal();
+  };
+
+  // ENTER QUIETLY — enter with sound OFF
+  const handleEnterQuietly = () => {
+    dismissPortal();
+  };
+
+  if (!isClient) return null;
+  
+  if (isReturnVisit) {
+    return (
+      <div
+        className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#070c14] transition-opacity duration-1000 ${
+          isLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+      >
+        {/* Premium Minimal Circular Progress Loader */}
+        <div className="relative flex flex-col items-center justify-center w-full h-full bg-[#05060A]">
+          <div className="relative flex items-center justify-center w-28 h-28">
+            {/* Background Ring */}
+            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
+              {/* Active Progress Ring */}
+              <circle
+                cx="50"
+                cy="50"
+                r="46"
+                fill="none"
+                stroke="#f4f6f9"
+                strokeWidth="0.5"
+                strokeLinecap="round"
+                strokeDasharray="289.026"
+                strokeDashoffset={289.026 - (289.026 * progress) / 100}
+                className="transition-all duration-200 ease-out shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+              />
+            </svg>
+            
+            {/* Real-time Percentage */}
+            <span className="text-[12px] font-sans tracking-wide text-[#f4f6f9] opacity-90">
+              {progress}%
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isVisible) return null;
 
   return (
     <div
@@ -182,7 +257,7 @@ export default function IntroPortal() {
         </div>
 
         {/* Skip Link */}
-        <div className="portal-reveal cursor-pointer group" onClick={handleStart}>
+        <div className="portal-reveal cursor-pointer group" onClick={handleEnterQuietly}>
           <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/40 group-hover:text-white/70 transition-colors">
             ENTER QUIETLY
           </span>
