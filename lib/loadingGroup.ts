@@ -46,6 +46,11 @@ export default class LoadingGroup extends THREE.Group {
     if (gc) gc.style.opacity = "0";
 
     this.onDoneLoadSequence = onDoneLoadSequence;
+    
+    // Fast-track the loading animation if the user has already visited
+    if (typeof window !== "undefined" && sessionStorage.getItem("portal-visited") === "true") {
+      this.CINEMATIC_MINIMUM_DURATION = 0.5;
+    }
 
     // Track only the target, don't update UI directly here anymore.
     THREE.DefaultLoadingManager.onProgress = (

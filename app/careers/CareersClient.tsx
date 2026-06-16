@@ -576,7 +576,7 @@ export default function CareersClient() {
                 className="scroll-fill-text text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8 text-transparent"
                 style={{
                   WebkitTextStroke: "1px rgba(184,192,204,0.4)",
-                  backgroundImage: "linear-gradient(90deg, #fff 50%, transparent 50%)",
+                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
                   backgroundSize: "200% 100%",
                   backgroundPosition: "100% 0",
                   WebkitBackgroundClip: "text",
@@ -625,57 +625,69 @@ export default function CareersClient() {
         {/* ── ROLES BY PILLAR (ACCORDION) ── */}
         <section className="px-gutter py-[15vh] border-t border-white/5 bg-[#070c14] relative overflow-hidden">
           {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
-          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#c07840] via-[#b8c0cc] to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#b8c0cc] to-[#c07840] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
 
-          <div className="max-w-5xl mx-auto relative z-10">
-            <div className="mb-20 reveal-text text-center">
-              <span className="text-md tracking-[0.5em] uppercase text-copper/80 font-medium block mb-4">
-                ARCHITECTURE
-              </span>
-              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
-                ROLES BY PILLAR
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[400px_1fr] xl:grid-cols-[500px_1fr] gap-16 items-start">
+            {/* Left Column: Title */}
+            <div className="reveal-text sticky top-[20vh]">
+              <div className="inline-flex items-center gap-4 opacity-80 mb-8">
+                <div className="w-8 h-[1px] bg-copper" />
+                <span className="text-[10px] tracking-[0.3em] font-medium uppercase text-white/70">
+                  Architecture
+                </span>
+              </div>
+              <h2 className="text-[clamp(4rem,7vw,7rem)] font-black tracking-tighter uppercase flex flex-col relative isolate">
+                <div className="relative z-[20] leading-[0.85] text-white">ROLES BY</div>
+                <div className="relative z-[10] leading-[0.85] text-transparent -mt-2" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}>PILLAR</div>
               </h2>
+              <p className="mt-8 text-white/60 font-light text-xl max-w-md" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
+                We structure our ecosystem across five distinct pillars. Find where your expertise creates the most impact.
+              </p>
             </div>
 
-            <div className="flex flex-col border-t border-white/10 stagger-group">
+            {/* Right Column: Glassmorphic Accordion */}
+            <div className="flex flex-col gap-4 stagger-group w-full max-w-[850px] ml-auto">
               {PILLARS.map((pillar, i) => (
                 <div
                   key={i}
-                  className={`stagger-item border-b border-white/10 group transition-all duration-500 ${
+                  className={`stagger-item rounded-2xl border backdrop-blur-md overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
                     openPillar === i
-                      ? "border-l-2 border-l-copper bg-white/[0.02]"
-                      : "border-l-2 border-l-transparent"
+                      ? "border-copper/40 bg-white/[0.04] shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+                      : "border-white/5 bg-white/[0.015] hover:bg-white/[0.03] hover:border-white/10"
                   }`}
                 >
                   <button
                     onClick={() =>
                       setOpenPillar(openPillar === i ? null : i)
                     }
-                    className="w-full py-8 md:py-12 flex items-center justify-between text-left focus:outline-none pl-4 md:pl-6 group/btn"
+                    className="w-full p-6 md:p-8 flex items-center justify-between text-left focus:outline-none group/btn relative"
                   >
-                    <div className="flex items-start md:items-center pr-4 md:pr-8 flex-1">
-                      <span className={`text-2xl md:text-4xl font-light transition-all duration-500 w-12 md:w-20 shrink-0 ${openPillar === i ? "text-silver scale-125 drop-shadow-[0_0_15px_rgba(184,192,204,0.6)]" : "text-white/20 group-hover/btn:text-copper"}`}>
+                    {/* Active left indicator */}
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-copper transition-transform duration-500 origin-left ${openPillar === i ? "scale-x-100" : "scale-x-0 group-hover/btn:scale-x-100 group-hover/btn:bg-white/20"}`} />
+                    
+                    <div className="flex items-center gap-6 md:gap-10 pr-4 flex-1">
+                      <span className={`text-2xl md:text-4xl font-light transition-colors duration-500 w-8 md:w-12 shrink-0 ${openPillar === i ? "text-copper" : "text-white/20 group-hover/btn:text-white/60"}`}>
                         {pillar.letter}
                       </span>
-                      <h3 className={`text-xl md:text-3xl font-medium tracking-tight transition-transform duration-500 leading-tight ${openPillar === i ? "translate-x-6 text-white" : "group-hover/btn:translate-x-4 text-white/80"}`}>
+                      <h3 className={`text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 leading-tight ${openPillar === i ? "text-white" : "text-white/70 group-hover/btn:text-white"}`}>
                         {pillar.title}
                       </h3>
                     </div>
                     <div
-                      className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
-                       ${openPillar === i ? "border-silver bg-silver text-black shadow-[0_0_15px_rgba(184,192,204,0.4)] -rotate-180" : "border-white/20 text-white/50 group-hover/btn:border-white/60"}
+                      className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0
+                       ${openPillar === i ? "border-copper bg-copper text-black shadow-[0_0_15px_rgba(192,120,64,0.4)] -rotate-180" : "border-white/10 text-white/50 group-hover/btn:border-white/30 group-hover/btn:text-white"}
                      `}
                     >
                       <svg
-                        width="12"
-                        height="12"
+                        width="14"
+                        height="14"
                         viewBox="0 0 14 14"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="1.5"
                         strokeLinecap="round"
                       >
                         <path
@@ -693,15 +705,14 @@ export default function CareersClient() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden"
+                        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
                       >
-                        <div className="pl-4 md:pl-20 flex flex-col md:flex-row gap-12 pt-4 pb-12">
+                        <div className="p-6 pt-0 md:p-8 md:pt-0 flex flex-col md:flex-row gap-10 md:pl-[6.5rem]">
                           <div className="flex-1">
-                            <h4 className="text-md tracking-[0.2em] text-copper uppercase mb-6 font-bold">
+                            <h4 className="text-xs tracking-[0.2em] text-copper uppercase mb-5 font-bold">
                               Role Profiles
                             </h4>
-                            <ul className="flex flex-col gap-3 font-light text-white/60 leading-relaxed">
+                            <ul className="flex flex-col gap-4 font-light text-white/70">
                               {pillar.roles.map((role, idx) => (
                                 <motion.li 
                                   key={idx} 
@@ -709,10 +720,10 @@ export default function CareersClient() {
                                   animate={{ x: 0, opacity: 1 }}
                                   exit={{ x: -10, opacity: 0 }}
                                   transition={{ delay: 0.05 + (idx * 0.03), duration: 0.4 }}
-                                  className="flex items-center gap-3"
+                                  className="flex items-center gap-4"
                                 >
-                                  <span className="w-4 h-px bg-silver/30 shrink-0" />
-                                  <span>{role}</span>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-copper/50 shadow-[0_0_8px_rgba(192,120,64,0.6)] shrink-0" />
+                                  <span className="text-lg">{role}</span>
                                 </motion.li>
                               ))}
                             </ul>
@@ -722,12 +733,13 @@ export default function CareersClient() {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 20, opacity: 0 }}
                             transition={{ delay: 0.2, duration: 0.5 }}
-                            className="w-full md:w-1/3 p-8 border border-white/10 bg-white/5 rounded-2xl h-fit pr-4 shadow-[0_15px_35px_rgba(0,0,0,0.5)] border-t border-t-white/10 border-l border-l-white/10"
+                            className="w-full md:w-[45%] p-6 md:p-8 bg-black/40 border border-white/5 rounded-xl h-fit relative overflow-hidden"
                           >
-                            <h4 className="text-md tracking-[0.2em] text-copper/80 uppercase mb-4 font-bold">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-copper/10 blur-[40px] rounded-full pointer-events-none" />
+                            <h4 className="text-xs tracking-[0.2em] text-copper/80 uppercase mb-4 font-bold relative z-10">
                               Impact Profile
                             </h4>
-                            <p className="text-white font-medium tracking-wide">
+                            <p className="text-white/90 text-lg font-light leading-relaxed relative z-10" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
                               &quot;{pillar.impact}&quot;
                             </p>
                           </motion.div>

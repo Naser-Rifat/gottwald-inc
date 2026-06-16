@@ -1208,7 +1208,7 @@ export default function PartnershipsClient() {
 
           {/* AWWWARDS Premium Liquid Aurora Background */}
           {/* Increased opacity to 0.40 and reduced blur so it's impossible to miss */}
-          <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+          <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -1260,14 +1260,14 @@ export default function PartnershipsClient() {
                 <path
                   d="M0,100 Q100,40 200,100 T400,100 T600,100 T800,100 T1000,100 T1200,100 T1400,100 T1600,100"
                   fill="none"
-                  stroke="rgba(18, 168, 172, 0.18)"
+                  stroke="rgba(212, 175, 55, 0.15)"
                   strokeWidth="1"
                   vectorEffect="non-scaling-stroke"
                 />
                 <path
                   d="M0,130 Q100,90 200,130 T400,130 T600,130 T800,130 T1000,130 T1200,130 T1400,130 T1600,130"
                   fill="none"
-                  stroke="rgba(18, 168, 172, 0.09)"
+                  stroke="rgba(212, 175, 55, 0.08)"
                   strokeWidth="0.8"
                   vectorEffect="non-scaling-stroke"
                 />
@@ -1275,37 +1275,7 @@ export default function PartnershipsClient() {
             </div>
           </div>
 
-          {/* ALIGNED-PAIR — atmospheric centerpiece. Two cyan wireframe
-              profiles flank the entire hero composition; the frequency
-              wave between their eyes runs across the page BEHIND the
-              headline at roughly its baseline. Headline, tagline, and
-              stats live INSIDE the image's frequency field, not next
-              to it. Heavy vignette mask removes all rectangular boundary;
-              low opacity (~32%) lets content read on top. The image is
-              the brand's concept made atmosphere — partnership as the
-              ground, not the decoration. */}
-          <div
-            aria-hidden="true"
-            className="hidden lg:block absolute left-0 right-0 top-1/2 -translate-y-[52%] w-full h-[120vh] max-h-[1400px] z-[2] pointer-events-none"
-            style={{
-              opacity: 0.35,
-              maskImage:
-                "radial-gradient(ellipse 80% 80% at center, #000 10%, rgba(0,0,0,0.5) 40%, transparent 75%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 80% 80% at center, #000 10%, rgba(0,0,0,0.5) 40%, transparent 75%)",
-              mixBlendMode: "screen",
-            }}
-          >
-            <Image
-              src="/partnerships/partnerships_hero_premium_1781530602705.png"
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover object-center"
-              unoptimized
-              priority={false}
-            />
-          </div>
+
 
           <div
             ref={heroTextRef}
@@ -1414,7 +1384,14 @@ export default function PartnershipsClient() {
                 completely different subject so it doesn't echo Pillar
                 05's single profile. */}
 
-            <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10 drop-shadow-[0_4px_16px_rgba(0,0,0,1)]">
+            <div className="hero-reveal hidden lg:flex flex-col self-end gap-8 lg:gap-10 p-8 lg:p-10 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md relative overflow-hidden drop-shadow-2xl">
+              {/* Top edge glow */}
+              <div
+                className="absolute top-0 left-0 w-full h-px pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)",
+                }}
+              />
 
               {/* Section label — single italic Playfair line, sits
                   beneath the image as a caption to the visual moment. */}
@@ -1505,7 +1482,7 @@ export default function PartnershipsClient() {
           className="px-gutter py-[26vh] lg:py-[32vh] bg-[#0c0e14] relative z-10 border-t border-white/5 overflow-hidden"
         >
           {/* Atmospheric glow — Upgraded to Awwwards Premium Liquid Aurora */}
-          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] z-0 will-change-transform pointer-events-none">
+          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -1521,18 +1498,32 @@ export default function PartnershipsClient() {
               GOTT WALD is not a marketplace.
             </p>
 
-            <p 
-              className="scroll-fill-text text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent"
-              style={{
-                WebkitTextStroke: "1px rgba(255,255,255,0.2)",
-                backgroundImage: "linear-gradient(90deg, #fff 50%, transparent 50%)",
-                backgroundSize: "200% 100%",
-                backgroundPosition: "100% 0",
-                WebkitBackgroundClip: "text",
-              }}
-            >
-              GOTT WALD is a standard.
-            </p>
+            <div className="flex flex-col items-center justify-center w-full">
+              <div 
+                className="scroll-fill-text inline-block text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent whitespace-nowrap"
+                style={{
+                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
+                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
+                  backgroundSize: "200% 100%",
+                  backgroundPosition: "100% 0",
+                  WebkitBackgroundClip: "text",
+                }}
+              >
+                GOTT WALD
+              </div>
+              <div 
+                className="scroll-fill-text inline-block text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent whitespace-nowrap"
+                style={{
+                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
+                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
+                  backgroundSize: "200% 100%",
+                  backgroundPosition: "100% 0",
+                  WebkitBackgroundClip: "text",
+                }}
+              >
+                IS A STANDARD.
+              </div>
+            </div>
 
             {/* 5-frequency hairline — gold→silver→petrol→turquoise→copper,
                 same gradient as the hero accent line. Section's
@@ -1637,10 +1628,13 @@ export default function PartnershipsClient() {
                   </div>
 
                   <h2 
-                    className="text-[clamp(4rem,7vw,8rem)] font-black tracking-tighter leading-none uppercase"
+                    className="scroll-fill-text inline-block text-[clamp(4rem,7vw,8rem)] font-black tracking-tighter leading-none uppercase text-transparent whitespace-nowrap"
                     style={{
-                      WebkitTextFillColor: "transparent",
                       WebkitTextStroke: "1px rgba(255, 255, 255, 0.25)",
+                      backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
+                      backgroundSize: "200% 100%",
+                      backgroundPosition: "100% 0",
+                      WebkitBackgroundClip: "text",
                     }}
                   >
                     Procurement.

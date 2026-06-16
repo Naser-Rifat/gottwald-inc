@@ -95,43 +95,43 @@ const ECOSYSTEM_FREQUENCIES: ReadonlyArray<{
   },
 ];
 
-const PILLARS_DATA= [
-              {
-                num: "01",
-                principle: "CLARITY",
-                title: "We remove noise until only truth remains",
-                desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence.",
-                image: "/about/pillar_clarity_premium_1781530185774.png",
-              },
-              {
-                num: "02",
-                principle: "LIGHTNESS",
-                title: "We make decisions light again",
-                desc: 'When a system becomes clear, decisions almost make themselves. Not because it\'s "easy," but because it is finally ordered.',
-                image: "/about/pillar_lightness_premium_1781530200059.png",
-              },
-              {
-                num: "03",
-                principle: "SIGNAL",
-                title: "We build signal, not volume",
-                desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately.",
-                image: "/about/pillar_signal_premium_1781530213416.png",
-              },
-              {
-                num: "04",
-                principle: "INFRASTRUCTURE",
-                title: "We treat technology as infrastructure",
-                desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure.",
-                image: "/about/pillar_infrastructure_premium_1781530227488.png",
-              },
-              {
-                num: "05",
-                principle: "PRESENCE",
-                title: "We strengthen the human behind the system",
-                desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable.",
-                image: "/about/pillar_presence_premium_1781530240970.png",
-              },
-            ]
+const PILLARS_DATA = [
+  {
+    num: "01",
+    principle: "CLARITY",
+    title: "We remove noise until only truth remains",
+    desc: "Most problems aren't complex — they're just hidden. We reveal what truly drives the system: root cause, leverage, sequence.",
+    image: "/about/pillar_signal_premium_1781530213416.png",
+  },
+  {
+    num: "02",
+    principle: "LIGHTNESS",
+    title: "We make decisions light again",
+    desc: 'When a system becomes clear, decisions almost make themselves. Not because it\'s "easy," but because it is finally ordered.',
+    image: "/about/pillar_lightness_premium_1781530200059.png",
+  },
+  {
+    num: "03",
+    principle: "SIGNAL",
+    title: "We build signal, not volume",
+    desc: "Marketing is not a campaign. It's Trust & Demand Infrastructure: positioning, proof architecture, messaging, conversion — built so premium clients and top talent take you seriously immediately.",
+    image: "/about/pillar_presence_premium_1781530240970.png",
+  },
+  {
+    num: "04",
+    principle: "INFRASTRUCTURE",
+    title: "We treat technology as infrastructure",
+    desc: "Websites are not business cards. They are discovery, trust, conversion, scale — including SEO and AI indexing. With IT Solutions 2030, we transform outdated presences into future-ready digital infrastructure.",
+    image: "/about/pillar_infrastructure_premium_1781530227488.png",
+  },
+  {
+    num: "05",
+    principle: "PRESENCE",
+    title: "We strengthen the human behind the system",
+    desc: "Because the best strategy fails when the person behind it is burning out or drifting. Coaching & Mentoring with us means regulation, focus, clarity, identity — so performance becomes sustainable.",
+    image: "/about/pillar_clarity_premium_1781530185774.png",
+  },
+];
 
 export default function AboutClient() {
   // Page-scoped namespace: t("hero.line1"), t("manifesto.title"), etc.
@@ -160,11 +160,11 @@ export default function AboutClient() {
           duration: 0.6,
           ease: "power3.out",
         });
-        
+
         // Inner image parallax
-        const px = (e.clientX / window.innerWidth) - 0.5;
-        const py = (e.clientY / window.innerHeight) - 0.5;
-        const imgs = ecoCursorRef.current.querySelectorAll('img');
+        const px = e.clientX / window.innerWidth - 0.5;
+        const py = e.clientY / window.innerHeight - 0.5;
+        const imgs = ecoCursorRef.current.querySelectorAll("img");
         gsap.to(imgs, {
           x: px * -100, // Opposite direction parallax
           y: py * -100,
@@ -174,17 +174,23 @@ export default function AboutClient() {
         });
       }
     };
-    
+
     if (hoveredEcoIndex !== null) {
       window.addEventListener("mousemove", handleMouseMove);
     } else {
       // Reset parallax on mouse leave
       if (ecoCursorRef.current) {
-        const imgs = ecoCursorRef.current.querySelectorAll('img');
-        gsap.to(imgs, { x: 0, y: 0, scale: 1, duration: 0.8, ease: "power2.out" });
+        const imgs = ecoCursorRef.current.querySelectorAll("img");
+        gsap.to(imgs, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        });
       }
     }
-    
+
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [hoveredEcoIndex]);
 
@@ -330,7 +336,9 @@ export default function AboutClient() {
 
       // Frequency wave draws in — literal visualization of the brand's
       // "frequency" language sitting between the two display lines.
-      const wavePath = document.querySelector(".frequency-wave") as SVGPathElement | null;
+      const wavePath = document.querySelector(
+        ".frequency-wave",
+      ) as SVGPathElement | null;
       if (wavePath) {
         const len = wavePath.getTotalLength();
         gsap.set(wavePath, { strokeDasharray: len, strokeDashoffset: len });
@@ -341,7 +349,9 @@ export default function AboutClient() {
           ease: "power3.inOut",
         });
       }
-      const echoPath = document.querySelector(".frequency-wave-echo") as SVGPathElement | null;
+      const echoPath = document.querySelector(
+        ".frequency-wave-echo",
+      ) as SVGPathElement | null;
       if (echoPath) {
         const len = echoPath.getTotalLength();
         gsap.set(echoPath, { strokeDasharray: len, strokeDashoffset: len });
@@ -394,7 +404,8 @@ export default function AboutClient() {
         // imagery that "breathes" with the scroll. Combined with the
         // headline parallax above (drifts up), the eye gets two opposing
         // motion vectors that create cinematic depth.
-        gsap.fromTo(".hero-bg-image",
+        gsap.fromTo(
+          ".hero-bg-image",
           { yPercent: -8, scale: 1.05 },
           {
             yPercent: 14,
@@ -409,7 +420,8 @@ export default function AboutClient() {
           },
         );
 
-        gsap.fromTo(".patron-craft-img",
+        gsap.fromTo(
+          ".patron-craft-img",
           { yPercent: -8, scale: 1.06 },
           {
             yPercent: 10,
@@ -424,7 +436,8 @@ export default function AboutClient() {
           },
         );
 
-        gsap.fromTo(".living-system-img",
+        gsap.fromTo(
+          ".living-system-img",
           { yPercent: -4, scale: 1.04 },
           {
             yPercent: 4,
@@ -438,7 +451,6 @@ export default function AboutClient() {
             },
           },
         );
-
       }
 
       // 3. Reveal Elements on Scroll — Grouped Batching for High Performance
@@ -456,7 +468,7 @@ export default function AboutClient() {
               stagger: 0.1,
               force3D: true,
               clearProps: "transform",
-            }
+            },
           );
         },
         once: true,
@@ -466,9 +478,8 @@ export default function AboutClient() {
       // scrollable range (`top top` → `bottom bottom`). Using percentage-based
       // triggers on the full outer wrapper previously delayed the final
       // handoffs until after the sticky stage had started leaving the viewport.
-      const pillarSection = document.querySelector<HTMLElement>(
-        ".about-pillars-pin",
-      );
+      const pillarSection =
+        document.querySelector<HTMLElement>(".about-pillars-pin");
       if (pillarSection && !reducedMotion) {
         const frames = gsap.utils.toArray<HTMLElement>(
           pillarSection.querySelectorAll(".pillar-stage-frame"),
@@ -485,8 +496,7 @@ export default function AboutClient() {
         gsap.set(frames[0], { opacity: 1, y: 0 });
 
         const updatePillarChrome = (index: number) => {
-          if (counter)
-            counter.textContent = String(index + 1).padStart(2, "0");
+          if (counter) counter.textContent = String(index + 1).padStart(2, "0");
           dots.forEach((dot, dotIndex) => {
             dot.style.backgroundColor =
               dotIndex <= index
@@ -507,7 +517,9 @@ export default function AboutClient() {
                 Math.min(total - 1, Math.round(progress * (total - 1))),
               );
               // Animate vertical progress bar: grows from 20% → 100% as all pillars scroll through
-              const progressBar = pillarSection.querySelector<HTMLElement>(".pillar-progress-bar");
+              const progressBar = pillarSection.querySelector<HTMLElement>(
+                ".pillar-progress-bar",
+              );
               if (progressBar) {
                 progressBar.style.height = `${20 + progress * 80}%`;
               }
@@ -546,9 +558,13 @@ export default function AboutClient() {
       }
 
       // 3.8 SHIFTS WATERMARK PARALLAX
-      const proofSection = document.querySelector('section[data-journey="proof"]');
+      const proofSection = document.querySelector(
+        'section[data-journey="proof"]',
+      );
       if (proofSection && !reducedMotion) {
-        const shiftsWatermark = proofSection.querySelector(".about-shifts-watermark");
+        const shiftsWatermark = proofSection.querySelector(
+          ".about-shifts-watermark",
+        );
         if (shiftsWatermark) {
           gsap.fromTo(
             shiftsWatermark,
@@ -562,7 +578,7 @@ export default function AboutClient() {
                 end: "bottom top",
                 scrub: true,
               },
-            }
+            },
           );
         }
       }
@@ -588,7 +604,6 @@ export default function AboutClient() {
             },
           },
         );
-
       }
 
       // 5. Magnetic CTA — pulls toward the cursor within a 220px radius.
@@ -629,23 +644,23 @@ export default function AboutClient() {
       let parallaxHandler: ((e: MouseEvent) => void) | null = null;
       if (!reducedMotion) {
         parallaxHandler = (e: MouseEvent) => {
-          const px = (e.clientX / window.innerWidth - 0.5);
-          const py = (e.clientY / window.innerHeight - 0.5);
-          
+          const px = e.clientX / window.innerWidth - 0.5;
+          const py = e.clientY / window.innerHeight - 0.5;
+
           gsap.to(".about-parallax-target", {
             x: px * 120, // Increased movement so it's very obvious
             y: py * 120,
             duration: 1.5,
             ease: "power2.out",
-            overwrite: "auto"
+            overwrite: "auto",
           });
-          
+
           gsap.to(".about-liquid-aurora", {
             x: px * -200, // Counter-movement
             y: py * -200,
             duration: 2.5,
             ease: "power3.out",
-            overwrite: "auto"
+            overwrite: "auto",
           });
         };
         window.addEventListener("mousemove", parallaxHandler);
@@ -654,7 +669,8 @@ export default function AboutClient() {
 
     return () => {
       ctx.revert();
-      if (magneticHandler) window.removeEventListener("mousemove", magneticHandler);
+      if (magneticHandler)
+        window.removeEventListener("mousemove", magneticHandler);
       // Clean up parallax handler
       const ph = (window as any)._parallaxHandler;
       if (ph) window.removeEventListener("mousemove", ph);
@@ -666,11 +682,13 @@ export default function AboutClient() {
       ref={pageRef}
       className="bg-[#070c14] min-h-screen text-white/80 font-sans overflow-x-clip selection:bg-gold/20 selection:text-white"
     >
-      <div className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 pointer-events-auto ${
-        headerScrolled
-          ? "bg-[#070c14]/85 backdrop-blur-md border-b border-white/[0.04]"
-          : "bg-transparent"
-      }`}>
+      <div
+        className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 pointer-events-auto ${
+          headerScrolled
+            ? "bg-[#070c14]/85 backdrop-blur-md border-b border-white/[0.04]"
+            : "bg-transparent"
+        }`}
+      >
         <div className="px-gutter">
           <Header />
         </div>
@@ -707,7 +725,10 @@ export default function AboutClient() {
               <div className="overflow-hidden mb-1 lg:mb-2">
                 <span
                   className="tuning-line block font-light uppercase text-white/60 leading-[1.05] tracking-[-0.015em] whitespace-nowrap"
-                  style={{ fontSize: "calc(clamp(2.2rem, 6.5vw, 92px) * var(--heading-scale))" }}
+                  style={{
+                    fontSize:
+                      "calc(clamp(2.2rem, 6.5vw, 92px) * var(--heading-scale))",
+                  }}
                   data-line="1"
                 >
                   {t("hero.line1")}
@@ -716,7 +737,10 @@ export default function AboutClient() {
               <div className="overflow-hidden">
                 <span
                   className="tuning-line hero-complexity block font-black uppercase leading-[0.86] tracking-[-0.045em] whitespace-nowrap"
-                  style={{ fontSize: "calc(clamp(3.5rem, 11.5vw, 168px) * var(--heading-scale))" }}
+                  style={{
+                    fontSize:
+                      "calc(clamp(3.5rem, 11.5vw, 168px) * var(--heading-scale))",
+                  }}
                   data-line="2"
                 >
                   {t("hero.line2")}
@@ -746,23 +770,26 @@ export default function AboutClient() {
               <div className="overflow-hidden">
                 <span
                   className="tuning-line block font-light italic text-white/85 leading-[1.0] tracking-[-0.005em] whitespace-nowrap"
-                  style={{ fontSize: "calc(clamp(1.8rem, 4.8vw, 70px) * var(--heading-scale))" }}
+                  style={{
+                    fontSize:
+                      "calc(clamp(1.8rem, 4.8vw, 70px) * var(--heading-scale))",
+                  }}
                   data-line="3"
                 >
                   {t("hero.line3")}
                 </span>
               </div>
             </h1>
-          </div>
 
-          {/* Bottom: single positioning sentence. No stats, no dashboard widget. */}
-          <div className="hero-frame relative z-10 px-gutter pb-6 lg:pb-8 opacity-0">
-            <div className="border-t border-white/[0.05] pt-4 max-w-2xl">
-              <p className="text-[16px]   font-light text-white/80 leading-[1.7]">
-                If you&apos;re a CEO, founder, or executive — or you run an SME
-                that must grow,{" "}
-                <span className="text-white">you know this moment.</span>
-              </p>
+            {/* Bottom-right: single positioning sentence */}
+            <div className="hero-frame opacity-0 mt-10 lg:mt-14 flex justify-end">
+              <div className="border-t border-white/[0.08] pt-5 max-w-sm lg:max-w-md text-right">
+                <p className="text-[15px] lg:text-[16px] font-light text-white/80 leading-[1.7]">
+                  If you&apos;re a CEO, founder, or executive — or you run an
+                  SME that must grow,{" "}
+                  <span className="text-white">you know this moment.</span>
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -777,14 +804,18 @@ export default function AboutClient() {
           className="about-atmosphere bg-[#070c14] relative z-10 py-[14vh] lg:py-[18vh] overflow-hidden"
         >
           <div className="max-w-[1400px] mx-auto px-gutter relative z-10 w-full">
-
             {/* Block 1 — The Observation. Left, sets the scene. */}
             <div className="reveal-text max-w-4xl mb-[11vh] lg:mb-[13vh]">
               <p
                 className="font-light leading-[1.2] tracking-[-0.015em]"
-                style={{ fontSize: "calc(clamp(1.75rem, 3.6vw, 3.4rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.75rem, 3.6vw, 3.4rem) * var(--heading-scale))",
+                }}
               >
-                <span className="text-white/55">You can feel there&apos;s more possible</span>
+                <span className="text-white/55">
+                  You can feel there&apos;s more possible
+                </span>
                 <span className="text-white/40">…</span>
                 <span className="block mt-3 text-white/95 italic font-light">
                   yet something in the system keeps draining energy.
@@ -796,13 +827,20 @@ export default function AboutClient() {
             <div className="reveal-text max-w-3xl ml-auto mr-0 mb-[11vh] lg:mb-[13vh] pr-0 lg:pr-12">
               <p
                 className="font-light leading-[1.3] tracking-[-0.012em] text-white/55"
-                style={{ fontSize: "calc(clamp(1.45rem, 2.8vw, 2.6rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.45rem, 2.8vw, 2.6rem) * var(--heading-scale))",
+                }}
               >
                 Too many topics,{" "}
-                <span className="text-white/95 font-normal">not enough sequence.</span>
+                <span className="text-white/95 font-normal">
+                  not enough sequence.
+                </span>
                 <br />
                 Too much noise,{" "}
-                <span className="text-white/95 font-normal">not enough truth.</span>
+                <span className="text-white/95 font-normal">
+                  not enough truth.
+                </span>
               </p>
             </div>
 
@@ -810,12 +848,17 @@ export default function AboutClient() {
             <div className="reveal-text max-w-4xl mb-[10vh] lg:mb-[12vh]">
               <p
                 className="font-light leading-[1.18] tracking-[-0.018em] text-white/55"
-                style={{ fontSize: "calc(clamp(1.85rem, 3.9vw, 3.6rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.85rem, 3.9vw, 3.6rem) * var(--heading-scale))",
+                }}
               >
                 And even though everyone is smart,
                 <span className="block mt-2">
                   it doesn&apos;t get lighter —{" "}
-                  <span className="text-white/95 font-normal">it just gets fuller.</span>
+                  <span className="text-white/95 font-normal">
+                    it just gets fuller.
+                  </span>
                 </span>
               </p>
             </div>
@@ -842,12 +885,14 @@ export default function AboutClient() {
               </div>
               <p
                 className="font-light italic text-white/95 text-right leading-[1.05] tracking-[-0.018em]"
-                style={{ fontSize: "calc(clamp(1.85rem, 4.2vw, 3.4rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.85rem, 4.2vw, 3.4rem) * var(--heading-scale))",
+                }}
               >
                 That&apos;s where our work begins.
               </p>
             </div>
-
           </div>
         </section>
 
@@ -862,21 +907,29 @@ export default function AboutClient() {
         >
           {/* German copy is owned by next-intl (about.manifesto.*) so GT must
               skip the manifesto + axis block to avoid double-translation. */}
-          <div translate="no" className="notranslate max-w-[1400px] mx-auto relative z-10">
-
+          <div
+            translate="no"
+            className="notranslate max-w-[1400px] mx-auto relative z-10"
+          >
             {/* Block 1 — Foundation Statement. Left-aligned title with
                 right-indented elaboration body. Creates editorial dialogue. */}
             <div className="reveal-text mb-[12vh] lg:mb-[14vh]">
               <h2
                 className="font-light text-white leading-[1.15] tracking-[-0.018em] max-w-4xl"
-                style={{ fontSize: "calc(clamp(1.8rem, 3.6vw, 3.2rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.8rem, 3.6vw, 3.2rem) * var(--heading-scale))",
+                }}
               >
                 {t("manifesto.title")}
               </h2>
               <div className="mt-10 lg:mt-14 ml-auto max-w-2xl pl-0 lg:pl-8">
                 <p
                   className="font-light text-white/65 leading-[1.55] tracking-[-0.005em]"
-                  style={{ fontSize: "calc(clamp(1.05rem, 1.5vw, 1.45rem) * var(--heading-scale))" }}
+                  style={{
+                    fontSize:
+                      "calc(clamp(1.05rem, 1.5vw, 1.45rem) * var(--heading-scale))",
+                  }}
                 >
                   {t("manifesto.body")}
                 </p>
@@ -894,9 +947,9 @@ export default function AboutClient() {
                 </p>
                 <div className="w-full">
                   {[
-                    { word: t("manifesto.nature"),  num: "I" },
+                    { word: t("manifesto.nature"), num: "I" },
                     { word: t("manifesto.animals"), num: "II" },
-                    { word: t("manifesto.humans"),  num: "III" },
+                    { word: t("manifesto.humans"), num: "III" },
                   ].map((it) => (
                     <div
                       key={it.num}
@@ -907,7 +960,10 @@ export default function AboutClient() {
                       </span>
                       <span
                         className="font-light text-white/95 tracking-[-0.022em] leading-none whitespace-nowrap"
-                        style={{ fontSize: "calc(clamp(2rem, 5vw, 4.4rem) * var(--heading-scale))" }}
+                        style={{
+                          fontSize:
+                            "calc(clamp(2rem, 5vw, 4.4rem) * var(--heading-scale))",
+                        }}
                       >
                         {it.word}
                       </span>
@@ -952,18 +1008,24 @@ export default function AboutClient() {
               </div>
               <h3
                 className="font-black text-white leading-[0.92] tracking-[-0.04em]"
-                style={{ fontSize: "calc(clamp(2.3rem, 6.2vw, 90px) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(2.3rem, 6.2vw, 90px) * var(--heading-scale))",
+                }}
               >
                 We don&apos;t optimize parts.
               </h3>
               <p
                 className="mt-6 lg:mt-8 font-light italic text-white/75 leading-[1.3] tracking-[-0.01em]"
-                style={{ fontSize: "calc(clamp(1.2rem, 2.2vw, 2rem) * var(--heading-scale))" }}
+                style={{
+                  fontSize:
+                    "calc(clamp(1.2rem, 2.2vw, 2rem) * var(--heading-scale))",
+                }}
               >
-                We redesign the system — until &quot;solved&quot; is felt in real life.
+                We redesign the system — until &quot;solved&quot; is felt in
+                real life.
               </p>
             </div>
-
           </div>
         </section>
 
@@ -974,10 +1036,10 @@ export default function AboutClient() {
               What we stand for
             </p>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-start">
-              
               <div className="reveal-text space-y-10 lg:col-span-8">
                 <h3 className="text-[clamp(2.5rem,5vw,5.5rem)] font-light leading-[1.02] tracking-[-0.035em] text-white/90">
-                  We believe in something radical — <br className="hidden md:block" />
+                  We believe in something radical —{" "}
+                  <br className="hidden md:block" />
                   <span className="font-light italic tracking-[-0.02em] text-turquoise/80 mt-2 block">
                     and practical:
                   </span>
@@ -987,18 +1049,23 @@ export default function AboutClient() {
                   inevitable. Not &quot;someday.&quot; Not &quot;when
                   there&apos;s time.&quot;
                 </p>
-                
+
                 <ul className="pt-4 max-w-4xl border-t border-white/[0.08]">
                   {[
                     "But in a way that lets a CEO breathe again.",
                     "In a way that helps founders know what comes first.",
-                    "In a way that lets teams deliver with focus — and systems carry instead of pull."
+                    "In a way that lets teams deliver with focus — and systems carry instead of pull.",
                   ].map((text, idx) => (
-                    <li key={idx} className="flex gap-5 items-start py-5 border-b border-white/[0.07]">
+                    <li
+                      key={idx}
+                      className="flex gap-5 items-start py-5 border-b border-white/[0.07]"
+                    >
                       <span className="font-mono text-[10px] tracking-[0.25em] text-gold/55 mt-1.5 shrink-0">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
-                      <p className="text-lg text-white/75 font-light leading-relaxed">{text}</p>
+                      <p className="text-lg text-white/75 font-light leading-relaxed">
+                        {text}
+                      </p>
                     </li>
                   ))}
                 </ul>
@@ -1014,20 +1081,19 @@ export default function AboutClient() {
                     solved.
                   </strong>
                 </h4>
-                
+
                 <div className="border-t border-turquoise/45 pt-6 mb-8 max-w-md">
                   <p className="text-xl md:text-2xl font-light tracking-[0.02em] text-white/90 leading-[1.4]">
-                    &quot;Solved&quot; means you feel it on Monday morning, not in
-                    a pitch.
+                    &quot;Solved&quot; means you feel it on Monday morning, not
+                    in a pitch.
                   </p>
                 </div>
-                
+
                 <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
                   Less friction. Clearer decisions. Higher speed. More calm in
                   the system.
                 </p>
               </div>
-
             </div>
           </div>
         </section>
@@ -1048,9 +1114,7 @@ export default function AboutClient() {
 
               <h3 className="text-[clamp(3rem,5vw,6rem)] font-light leading-[1.05] tracking-tight text-white/80 space-y-1">
                 <div className="overflow-hidden">
-                  <span className="block">
-                    The world is full of
-                  </span>
+                  <span className="block">The world is full of</span>
                 </div>
                 <div className="overflow-hidden">
                   <span className="block md:pl-4 text-white">
@@ -1078,7 +1142,6 @@ export default function AboutClient() {
                 </div>
               </h3>
             </div>
-
           </div>
         </section>
 
@@ -1095,7 +1158,6 @@ export default function AboutClient() {
           style={{ height: "500vh" }}
         >
           <div className="about-pillars-stage sticky top-0 h-screen overflow-hidden">
-
             {/* Vertical turquoise progress bar — left edge signature */}
             <div className="absolute left-0 top-0 bottom-0 w-px z-30 pointer-events-none">
               <div
@@ -1153,12 +1215,9 @@ export default function AboutClient() {
 
                 {/* Right half — editorial typography, centered in readable zone */}
                 <div className="absolute right-0 top-0 bottom-0 w-[54vw] lg:w-[56vw] flex flex-col justify-center pl-8 lg:pl-16 pr-8 lg:pr-24 z-10 pt-[10vh] pb-[14vh]">
-
                   {/* Principle number + name */}
                   <div className="flex items-center gap-4 mb-10 lg:mb-14">
-                    <span
-                      className="font-mono text-[10px] tracking-[0.4em] text-turquoise/60"
-                    >
+                    <span className="font-mono text-[10px] tracking-[0.4em] text-turquoise/60">
                       {pillar.num}
                     </span>
                     <span className="w-12 h-px bg-turquoise/30" />
@@ -1171,7 +1230,8 @@ export default function AboutClient() {
                   <h4
                     className="font-light leading-[0.95] tracking-[-0.034em] text-white mb-10 lg:mb-14"
                     style={{
-                      fontSize: "calc(clamp(2.8rem, 6.2vw, 6.4rem) * var(--heading-scale))",
+                      fontSize:
+                        "calc(clamp(2.8rem, 6.2vw, 6.4rem) * var(--heading-scale))",
                     }}
                   >
                     {pillar.title}.
@@ -1186,9 +1246,6 @@ export default function AboutClient() {
                   </p>
                 </div>
               </div>
-
-
-
             ))}
 
             {/* Bottom — chapter progress bar, one segment per pillar */}
@@ -1229,7 +1286,7 @@ export default function AboutClient() {
               <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
               <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-copper to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
             </div>
-            
+
             <div className="absolute inset-0 proof-grain opacity-[0.22]" />
             {/* Corner index mark — Swiss editorial tick that establishes
                 "measured section" tone before the eye reaches the headline. */}
@@ -1267,8 +1324,8 @@ export default function AboutClient() {
                 </div>
                 <div className="lg:col-span-4 lg:pl-10 lg:border-l border-white/[0.08] pb-2">
                   <p className="text-[clamp(1rem,1.2vw,1.2rem)] font-light text-white/60 leading-[1.6] max-w-md">
-                    Outcomes — not loudness. Numbers when they measure
-                    something real.
+                    Outcomes — not loudness. Numbers when they measure something
+                    real.
                   </p>
                 </div>
               </div>
@@ -1487,44 +1544,47 @@ export default function AboutClient() {
                 </span>
               </div>
 
-
               {(() => {
                 const shifts = [
                   {
                     subject: "Decision gridlock",
                     verb: "dissolves.",
-                    context: "Clear priorities, clear ownership, fewer open loops.",
+                    context:
+                      "Clear priorities, clear ownership, fewer open loops.",
                     image: "/images/shifts/decision.png",
                   },
                   {
                     subject: "Execution becomes",
                     verb: "predictable.",
-                    context: 'Projects are not "felt." They are led with SSOT, sequence, and standards.',
+                    context:
+                      'Projects are not "felt." They are led with SSOT, sequence, and standards.',
                     image: "/images/shifts/execution.png",
                   },
                   {
                     subject: "Visibility becomes",
                     verb: "plan-able.",
-                    context: "Messaging locks in. Proof is structured. Conversion rises because trust forms faster.",
+                    context:
+                      "Messaging locks in. Proof is structured. Conversion rises because trust forms faster.",
                     image: "/images/shifts/visibility.png",
                   },
                   {
                     subject: "Digital presence becomes",
                     verb: "powerful.",
-                    context: "Performance, indexability, structure. Website as operating system, not brochure.",
+                    context:
+                      "Performance, indexability, structure. Website as operating system, not brochure.",
                     image: "/images/shifts/digital.png",
                   },
                   {
                     subject: "Leadership state",
                     verb: "stabilizes.",
-                    context: "More calm, more focus, better decisions — without self-loss.",
+                    context:
+                      "More calm, more focus, better decisions — without self-loss.",
                     image: "/images/shifts/leadership.png",
                   },
                 ];
                 const romans = ["i", "ii", "iii", "iv", "v"];
                 return (
-                  <div className="relative z-10 max-w-[1400px] grid lg:grid-cols-12 gap-8 lg:gap-20">     
-                    
+                  <div className="relative z-10 max-w-[1400px] grid lg:grid-cols-12 gap-8 lg:gap-20">
                     {/* Left Sticky Image Column */}
                     <div className="lg:col-span-5 relative hidden lg:block">
                       <div className="sticky top-[15vh] w-[80%] mx-auto aspect-square flex items-center justify-center pointer-events-none">
@@ -1541,17 +1601,23 @@ export default function AboutClient() {
                             key={idx}
                             data-shift-index={idx}
                             className={`shift-article group relative grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start py-16 lg:py-24 border-t border-white/[0.08] transition-all duration-700 cursor-default ${
-                              isActive ? "opacity-100" : "opacity-30 hover:opacity-50"
+                              isActive
+                                ? "opacity-100"
+                                : "opacity-30 hover:opacity-50"
                             }`}
                           >
                             {/* Interactive sliding line indicator */}
-                            <div 
-                              className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise/40 to-transparent transition-transform duration-1000 origin-left" 
-                              style={{ transform: isActive ? "scaleX(1)" : "scaleX(0)" }}
+                            <div
+                              className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-turquoise/40 to-transparent transition-transform duration-1000 origin-left"
+                              style={{
+                                transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                              }}
                             />
 
                             {/* Marginalia */}
-                            <div className={`lg:col-span-1 pt-2 lg:pt-[0.6em] transition-transform duration-700 ${isActive ? "translate-x-2" : "translate-x-0"}`}>
+                            <div
+                              className={`lg:col-span-1 pt-2 lg:pt-[0.6em] transition-transform duration-700 ${isActive ? "translate-x-2" : "translate-x-0"}`}
+                            >
                               <span
                                 className={`block italic text-lg transition-colors duration-500 leading-none ${isActive ? "text-turquoise" : "text-white/30"}`}
                                 style={{ fontFamily: "var(--font-playfair)" }}
@@ -1561,12 +1627,17 @@ export default function AboutClient() {
                             </div>
 
                             {/* Statement */}
-                            <div className={`lg:col-span-11 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isActive ? "translate-x-4" : "translate-x-0"}`}>
+                            <div
+                              className={`lg:col-span-11 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isActive ? "translate-x-4" : "translate-x-0"}`}
+                            >
                               <h4 className="font-light text-white mb-6">
-                                <span className={`block text-3xl lg:text-[2.5rem] leading-[1.1] tracking-[-0.02em] transition-colors duration-500 ${isActive ? "text-white" : "text-white/60"}`}>
+                                <span
+                                  className={`block text-3xl lg:text-[2.5rem] leading-[1.1] tracking-[-0.02em] transition-colors duration-500 ${isActive ? "text-white" : "text-white/60"}`}
+                                >
                                   {item.subject}
                                 </span>
-                                <span className={`block italic text-5xl lg:text-[4.5rem] leading-[1.0] tracking-[-0.035em] mt-3 lg:mt-4 transition-colors duration-500 ${isActive ? "text-turquoise" : "text-white/40"}`}
+                                <span
+                                  className={`block italic text-5xl lg:text-[4.5rem] leading-[1.0] tracking-[-0.035em] mt-3 lg:mt-4 transition-colors duration-500 ${isActive ? "text-turquoise" : "text-white/40"}`}
                                   style={{ fontFamily: "var(--font-playfair)" }}
                                 >
                                   {item.verb}
@@ -1588,7 +1659,6 @@ export default function AboutClient() {
                 );
               })()}
             </div>
-            
           </div>
         </section>
 
@@ -1706,7 +1776,8 @@ export default function AboutClient() {
                   <div className="flex items-center gap-6 mb-6">
                     <div className="w-12 h-px bg-gold/40" />
                     <p className="text-[11px] tracking-[0.35em] uppercase text-gold font-bold">
-Mini Case Stories                    </p>
+                      Mini Case Stories{" "}
+                    </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end mb-16 lg:mb-20">
                     <div className="lg:col-span-7">
@@ -1734,27 +1805,31 @@ Mini Case Stories                    </p>
                           fontSize: "clamp(1rem, 1.2vw, 1.2rem)",
                         }}
                       >
-                        Five short readings — not case studies dressed up
-                        as proof. Each is a mirror.
+                        Five short readings — not case studies dressed up as
+                        proof. Each is a mirror.
                       </p>
                     </div>
                   </div>
 
                   {/* True Awwwards-Winning Editorial Carousel */}
                   <div className="w-full flex items-stretch justify-center gap-4 md:gap-8 mt-16 mb-12 h-full">
-                    
                     {/* Left Navigation Pill */}
                     <button
-                      onClick={() => setActiveCaseIndex((prev) => (prev === 0 ? cases.length - 1 : prev - 1))}
+                      onClick={() =>
+                        setActiveCaseIndex((prev) =>
+                          prev === 0 ? cases.length - 1 : prev - 1,
+                        )
+                      }
                       className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
                       aria-label="Previous Case"
                     >
-                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:-translate-x-1 transition-all duration-500">←</span>
+                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:-translate-x-1 transition-all duration-500">
+                        ←
+                      </span>
                     </button>
 
                     {/* Main Content Glass Card */}
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-[400px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 relative bg-white/[0.02] backdrop-blur-2xl">
-                      
                       {/* Subtle Internal Ambient Glow */}
                       <div className="absolute top-0 right-0 w-[60%] h-full bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-turquoise/5 via-transparent to-transparent pointer-events-none" />
 
@@ -1763,8 +1838,8 @@ Mini Case Stories                    </p>
                         <div className="flex-1 flex items-center justify-center md:justify-start mb-8 md:mb-0">
                           {cases[activeCaseIndex].mark ? (
                             <div className="relative w-full max-w-[220px] aspect-square opacity-90 drop-shadow-lg mix-blend-screen transition-all duration-700">
-                              <Image 
-                                src={cases[activeCaseIndex].mark!} 
+                              <Image
+                                src={cases[activeCaseIndex].mark!}
                                 alt={cases[activeCaseIndex].title}
                                 fill
                                 className="object-contain"
@@ -1772,11 +1847,13 @@ Mini Case Stories                    </p>
                             </div>
                           ) : (
                             <div className="w-32 h-32 rounded-full border border-dashed border-white/20 flex items-center justify-center">
-                              <span className="text-white/20 font-playfair italic text-2xl">{romans[activeCaseIndex]}.</span>
+                              <span className="text-white/20 font-playfair italic text-2xl">
+                                {romans[activeCaseIndex]}.
+                              </span>
                             </div>
                           )}
                         </div>
-                        
+
                         <div className="flex flex-col gap-2 mt-auto">
                           <p className="text-white font-sans text-xl font-light tracking-wide">
                             {cases[activeCaseIndex].title.split(" — ")[1]}
@@ -1791,12 +1868,20 @@ Mini Case Stories                    </p>
                       <div className="md:col-span-7 lg:col-span-8 p-8 md:p-16 lg:p-20 flex items-center relative z-10">
                         <div className="relative">
                           {/* Elegant editorial quote mark */}
-                          <span className="absolute -top-12 -left-8 text-white/10 font-playfair text-[8rem] leading-none select-none pointer-events-none">"</span>
-                          
+                          <span className="absolute -top-12 -left-8 text-white/10 font-playfair text-[8rem] leading-none select-none pointer-events-none">
+                            "
+                          </span>
+
                           <p className="font-playfair text-[clamp(1.2rem,1.8vw,1.6rem)] leading-[1.7] text-white/60 relative z-10">
-                            <span className="text-white/90">"{cases[activeCaseIndex].before} </span>
-                            <span className="text-turquoise italic">{cases[activeCaseIndex].intervention} </span>
-                            <span className="text-white/90">{cases[activeCaseIndex].after}"</span>
+                            <span className="text-white/90">
+                              "{cases[activeCaseIndex].before}{" "}
+                            </span>
+                            <span className="text-turquoise italic">
+                              {cases[activeCaseIndex].intervention}{" "}
+                            </span>
+                            <span className="text-white/90">
+                              {cases[activeCaseIndex].after}"
+                            </span>
                           </p>
                         </div>
                       </div>
@@ -1804,13 +1889,18 @@ Mini Case Stories                    </p>
 
                     {/* Right Navigation Pill */}
                     <button
-                      onClick={() => setActiveCaseIndex((prev) => (prev === cases.length - 1 ? 0 : prev + 1))}
+                      onClick={() =>
+                        setActiveCaseIndex((prev) =>
+                          prev === cases.length - 1 ? 0 : prev + 1,
+                        )
+                      }
                       className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
                       aria-label="Next Case"
                     >
-                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-500">→</span>
+                      <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-500">
+                        →
+                      </span>
                     </button>
-
                   </div>
                 </div>
               </section>
@@ -1820,8 +1910,7 @@ Mini Case Stories                    </p>
                   right column. No ghost numerals, no alternating
                   flip-flop, no turquoise eyebrow rules. Hairline
                   divider between cases is the only separator. */}
-                  {/* [REMOVED] Original list format is gone. Replaced by the carousel above. */}
-              
+              {/* [REMOVED] Original list format is gone. Replaced by the carousel above. */}
             </>
           );
         })()}
@@ -1831,17 +1920,23 @@ Mini Case Stories                    </p>
             ----------------------------------------------------------------- */}
         <section className="about-atmosphere bg-[#070c14] relative px-gutter py-[12vh] lg:py-[18vh]">
           <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-            
             {/* Left Side: Radical & Practical */}
             <div className="lg:col-span-7">
               <h2 className="text-white leading-[0.95] tracking-tight mb-8 md:mb-12">
-                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">We believe in something</span>
-                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">radical —</span>
-                <span className="block italic text-turquoise font-light mt-2 text-[clamp(3.2rem,5vw,5.2rem)] tracking-tight">and practical:</span>
+                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">
+                  We believe in something
+                </span>
+                <span className="block font-light text-[clamp(2.8rem,4.5vw,4.8rem)]">
+                  radical —
+                </span>
+                <span className="block italic text-turquoise font-light mt-2 text-[clamp(3.2rem,5vw,5.2rem)] tracking-tight">
+                  and practical:
+                </span>
               </h2>
-              
+
               <p className="text-silver/60 font-light text-[clamp(1.1rem,1.3vw,1.25rem)] leading-[1.6] max-w-[48ch] mb-16 lg:mb-20">
-                When structure becomes visible, the right solution becomes inevitable. Not "someday." Not "when there's time."
+                When structure becomes visible, the right solution becomes
+                inevitable. Not "someday." Not "when there's time."
               </p>
 
               {/* Numbered Points (Only inner dividers, no outer borders) */}
@@ -1849,11 +1944,18 @@ Mini Case Stories                    </p>
                 {[
                   "But in a way that lets a CEO breathe again.",
                   "In a way that helps founders know what comes first.",
-                  "In a way that lets teams deliver with focus — and systems carry instead of pull."
+                  "In a way that lets teams deliver with focus — and systems carry instead of pull.",
                 ].map((text, i, arr) => (
-                  <div key={i} className={`flex items-center gap-8 py-6 group ${i !== arr.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
-                    <span className="text-[#c09e50] font-mono text-[11px] tracking-[0.2em] font-bold">0{i + 1}</span>
-                    <span className="text-silver/60 font-light text-[clamp(0.95rem,1.1vw,1.1rem)]">{text}</span>
+                  <div
+                    key={i}
+                    className={`flex items-center gap-8 py-6 group ${i !== arr.length - 1 ? "border-b border-white/[0.04]" : ""}`}
+                  >
+                    <span className="text-[#c09e50] font-mono text-[11px] tracking-[0.2em] font-bold">
+                      0{i + 1}
+                    </span>
+                    <span className="text-silver/60 font-light text-[clamp(0.95rem,1.1vw,1.1rem)]">
+                      {text}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -1862,9 +1964,15 @@ Mini Case Stories                    </p>
             {/* Right Side: Solved means solved */}
             <div className="lg:col-span-5 lg:pl-16 lg:border-l border-white/[0.06] pt-4 lg:pt-0">
               <div className="flex flex-col mb-10 md:mb-12">
-                <span className="text-silver/50 font-extralight leading-[0.9] tracking-tight text-[clamp(4rem,6vw,6.5rem)]">Solved</span>
-                <span className="text-silver/30 font-light leading-none text-xl md:text-2xl mt-5 mb-3">means</span>
-                <span className="text-white font-black leading-[0.85] tracking-tighter text-[clamp(4.5rem,7vw,8rem)]">solved.</span>
+                <span className="text-silver/50 font-extralight leading-[0.9] tracking-tight text-[clamp(4rem,6vw,6.5rem)]">
+                  Solved
+                </span>
+                <span className="text-silver/30 font-light leading-none text-xl md:text-2xl mt-5 mb-3">
+                  means
+                </span>
+                <span className="text-white font-black leading-[0.85] tracking-tighter text-[clamp(4.5rem,7vw,8rem)]">
+                  solved.
+                </span>
               </div>
 
               {/* Faint turquoise gradient divider */}
@@ -1875,11 +1983,11 @@ Mini Case Stories                    </p>
                   "Solved" means you feel it on Monday morning, not in a pitch.
                 </p>
                 <p className="text-silver/40 font-light text-[clamp(0.95rem,1.1vw,1.05rem)] leading-[1.6]">
-                  Less friction. Clearer decisions. Higher speed. More calm in the system.
+                  Less friction. Clearer decisions. Higher speed. More calm in
+                  the system.
                 </p>
               </div>
             </div>
-
           </div>
         </section>
 
@@ -1926,7 +2034,8 @@ Mini Case Stories                    </p>
                 className="fixed top-0 left-0 w-[24vw] aspect-[4/3] pointer-events-none z-50 rounded-lg overflow-hidden -translate-x-1/2 -translate-y-1/2 opacity-0 scale-95 transition-all duration-500 ease-out will-change-transform shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-white/10"
                 style={{
                   opacity: hoveredEcoIndex !== null ? 1 : 0,
-                  transform: hoveredEcoIndex !== null ? "scale(1)" : "scale(0.95)",
+                  transform:
+                    hoveredEcoIndex !== null ? "scale(1)" : "scale(0.95)",
                   visibility: hoveredEcoIndex !== null ? "visible" : "hidden",
                 }}
               >
@@ -1945,8 +2054,9 @@ Mini Case Stories                    </p>
 
               {ECOSYSTEM_FREQUENCIES.map((eco, index) => {
                 const isHovered = hoveredEcoIndex === index;
-                const isSiblingHovered = hoveredEcoIndex !== null && hoveredEcoIndex !== index;
-                
+                const isSiblingHovered =
+                  hoveredEcoIndex !== null && hoveredEcoIndex !== index;
+
                 return (
                   <article
                     key={eco.name}
@@ -1967,26 +2077,34 @@ Mini Case Stories                    </p>
                       isHovered ? "border-white/20" : "border-white/[0.07]"
                     } ${isSiblingHovered ? "opacity-20 grayscale" : "opacity-100"}`}
                   >
-                    <span className={`md:col-span-1 font-mono text-[10px] tracking-[0.25em] pt-2 transition-colors duration-500 relative z-20 mix-blend-difference ${isHovered ? "text-white/60" : "text-white/25"}`}>
+                    <span
+                      className={`md:col-span-1 font-mono text-[10px] tracking-[0.25em] pt-2 transition-colors duration-500 relative z-20 mix-blend-difference ${isHovered ? "text-white/60" : "text-white/25"}`}
+                    >
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <h3 
+                    <h3
                       className={`md:col-span-5 text-[clamp(1.5rem,2.6vw,2.8rem)] leading-[1.05] tracking-[-0.025em] font-light relative z-20 mix-blend-difference transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
-                        isHovered ? "text-white translate-x-4" : "text-white/90 translate-x-0"
+                        isHovered
+                          ? "text-white translate-x-4"
+                          : "text-white/90 translate-x-0"
                       }`}
                     >
                       {eco.name}
                     </h3>
                     <p
                       className={`col-start-2 md:col-start-auto md:col-span-2 mt-3 md:mt-2 text-[10px] uppercase transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] relative z-20 mix-blend-difference ${FREQUENCY_TONE_CLASSES[eco.tone]} ${
-                        isHovered ? "tracking-[0.5em] font-medium" : "tracking-[0.3em]"
+                        isHovered
+                          ? "tracking-[0.5em] font-medium"
+                          : "tracking-[0.3em]"
                       }`}
                     >
                       {eco.frequency}
                     </p>
-                    <p 
+                    <p
                       className={`col-start-2 md:col-start-auto md:col-span-4 mt-3 md:mt-1 text-base md:text-lg font-light leading-[1.55] relative z-20 mix-blend-difference transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
-                        isHovered ? "text-white/95 translate-x-2" : "text-white/70 translate-x-0"
+                        isHovered
+                          ? "text-white/95 translate-x-2"
+                          : "text-white/70 translate-x-0"
                       }`}
                     >
                       {eco.desc}
@@ -2048,10 +2166,13 @@ Mini Case Stories                    </p>
                   </p>
                   <p className="text-[clamp(1.2rem,1.5vw,1.5rem)] text-white/80 font-light leading-relaxed max-w-lg">
                     GOTT WALD is not built on trends. It is built on principles.
-                    <br/><span className="text-white italic mt-2 block">Timeless. Durable. Non-negotiable.</span>
+                    <br />
+                    <span className="text-white italic mt-2 block">
+                      Timeless. Durable. Non-negotiable.
+                    </span>
                   </p>
                 </div>
-                
+
                 <ul className="flex flex-col border-t border-white/10">
                   {[
                     { core: "Love", meaning: "as the measure" },
@@ -2061,7 +2182,10 @@ Mini Case Stories                    </p>
                     { core: "Empathy", meaning: "as the capability" },
                     { core: "Service", meaning: "as lived responsibility" },
                   ].map((val, idx) => (
-                    <li key={idx} className="flex items-center justify-between border-b border-white/5 py-6 group cursor-default">
+                    <li
+                      key={idx}
+                      className="flex items-center justify-between border-b border-white/5 py-6 group cursor-default"
+                    >
                       <span className="font-semibold uppercase tracking-[0.04em] text-2xl md:text-3xl text-white group-hover:text-turquoise transition-colors duration-500">
                         {val.core}
                       </span>
@@ -2071,11 +2195,13 @@ Mini Case Stories                    </p>
                     </li>
                   ))}
                 </ul>
-                
+
                 <div className="border-l border-turquoise/40 pl-6 py-2">
                   <p className="text-lg font-light text-white/90">
                     This is not a slogan.
-                    <strong className="block font-normal text-turquoise mt-1">This is lived reality.</strong>
+                    <strong className="block font-normal text-turquoise mt-1">
+                      This is lived reality.
+                    </strong>
                   </p>
                 </div>
               </div>
@@ -2087,28 +2213,33 @@ Mini Case Stories                    </p>
                     A rare gift
                   </p>
                   <p className="text-[clamp(1.2rem,1.4vw,1.5rem)] text-white/95 font-light leading-relaxed max-w-lg">
-                    The PATRON carries a rare gift: a reader of people, a feeler,
-                    a gatherer. The PATRON sees you before you&apos;ve fully
-                    organized yourself.
+                    The PATRON carries a rare gift: a reader of people, a
+                    feeler, a gatherer. The PATRON sees you before you&apos;ve
+                    fully organized yourself.
                   </p>
                 </div>
 
                 <div className="relative py-10 lg:py-14 border-y border-turquoise/25 overflow-hidden group">
                   <div className="relative z-10">
                     <p className="text-white/95 font-light leading-[1.25] text-2xl md:text-4xl tracking-tight mb-10">
-                      &quot;Nothing here is performed, <br className="hidden lg:block"/>
-                      <span className="text-turquoise/85">everything here is held.&quot;</span>
+                      &quot;Nothing here is performed,{" "}
+                      <br className="hidden lg:block" />
+                      <span className="text-turquoise/85">
+                        everything here is held.&quot;
+                      </span>
                     </p>
-                    
+
                     <ul className="space-y-4">
                       {[
                         "Conflict becomes clear.",
                         "Disorder becomes direction.",
-                        "Pressure becomes purpose."
+                        "Pressure becomes purpose.",
                       ].map((effect, idx) => (
                         <li key={idx} className="flex gap-4 items-center">
                           <div className="w-[1px] h-4 bg-turquoise/50" />
-                          <p className="text-lg text-white/90 font-light tracking-wide">{effect}</p>
+                          <p className="text-lg text-white/90 font-light tracking-wide">
+                            {effect}
+                          </p>
                         </li>
                       ))}
                     </ul>
