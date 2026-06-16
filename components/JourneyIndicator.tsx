@@ -1,0 +1,113 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+const JOURNEY_STEPS = [
+  { href: "/",              label: "Home",         chapter: "01", color: "#cda434" }, // Muted Gold
+  { href: "/about",        label: "About",        chapter: "02", color: "#8b97a2" }, // Steel/Silver
+  { href: "/partnerships", label: "Partnerships", chapter: "03", color: "#0a4c5a" }, // Deep Petrol
+  { href: "/careers",      label: "Careers",      chapter: "04", color: "#0f8b8d" }, // Turquoise
+];
+
+export default function JourneyIndicator() {
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Simple, robust path matching
+  let currentIndex = -1;
+  if (pathname === "/" || pathname === "") {
+    currentIndex = 0;
+  } else {
+    currentIndex = JOURNEY_STEPS.findIndex((s, i) => i > 0 && pathname.startsWith(s.href));
+  }
+
+  // Don't render on pages outside the journey or before hydration
+  if (!mounted || currentIndex === -1) return null;
+
+  const current = JOURNEY_STEPS[currentIndex];
+
+  return (
+    <div className="fixed left-6 top-1/2 -translate-y-1/2 z-[200] flex-col items-center gap-2 pointer-events-none select-none hidden lg:flex">
+      
+      {/* Chapter number */}
+      <span
+        className="text-[9px] font-mono tracking-[0.3em] uppercase mb-2 transition-all duration-700"
+        style={{ color: current.color }}
+      >
+        {current.chapter}
+      </span>
+
+      {/* Dots Container */}
+      <div className="relative flex flex-col items-center gap-4 pointer-events-auto py-2">
+        
+        {/* Background Track Line */}
+        <div className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-px bg-white/10 z-0" />
+        
+        {/* Animated Progress Line */}
+        <div 
+          className="absolute left-1/2 top-3 -translate-x-1/2 w-[2px] z-0 transition-all duration-700 ease-out"
+          style={{
+            height: `calc(${(currentIndex / (JOURNEY_STEPS.length - 1)) * 100}% - 24px)`,
+            minHeight: currentIndex === 0 ? "0px" : undefined,
+            backgroundColor: current.color,
+            boxShadow: `0 0 10px ${current.color}`
+          }}
+        />
+
+        {JOURNEY_STEPS.map((step, i) => {
+          const isActive = i === currentIndex;
+          const isPast = i <= currentIndex;
+
+          return (
+            <Link
+              key={step.href}
+              href={step.href}
+              title={`Go to ${step.label}`}
+              className="relative flex items-center justify-center group z-10 w-4 h-4"
+            >
+              <span
+                className="block rounded-full transition-all duration-500"
+                style={{
+                  width: isActive ? "8px" : "5px",
+                  height: isActive ? "8px" : "5px",
+                  backgroundColor: isActive
+                    ? current.color
+                    : isPast
+                      ? current.color
+                      : "#1a1a1a",
+                  border: isPast && !isActive ? `1px solid ${current.color}80` : "none",
+                  boxShadow: isActive
+                    ? `0 0 12px ${current.color}, 0 0 6px ${current.color}`
+                    : "none",
+                  flexShrink: 0,
+                }}
+              />
+              {/* Hover label */}
+              <span
+                className="absolute left-6 text-[9px] font-mono tracking-[0.2em] uppercase whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                style={{ color: isActive ? current.color : "rgba(255,255,255,0.6)" }}
+              >
+                {step.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Gradient tail */}
+      <div
+        className="w-px mt-2 transition-all duration-700"
+        style={{
+          height: "28px",
+          background: `linear-gradient(to bottom, ${current.color}60, transparent)`,
+        }}
+      />
+    </div>
+  );
+}

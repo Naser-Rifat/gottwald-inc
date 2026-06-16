@@ -14,6 +14,8 @@ interface NextChapterProps {
   nextTitle: string;
   nextHref: string;
   prevHref?: string;
+  narrativeLine?: string;
+  accentColor?: string;
 }
 
 /**
@@ -37,6 +39,8 @@ export default function NextChapterTransition({
   nextTitle,
   nextHref,
   prevHref,
+  narrativeLine,
+  accentColor = "#b8c0cc",
 }: NextChapterProps) {
   const t = useTranslations("common");
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -280,13 +284,21 @@ export default function NextChapterTransition({
       <section className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-20">
         {/* Massive Interactive Title Container */}
         <div className="relative w-full h-full flex flex-col justify-center items-center">
-          <div className="absolute top-[20vh] text-center w-full">
-            {/* Eyebrow owned by next-intl. translate="no" keeps GT out so
-                "Next Chapter" doesn't get double-translated by both i18n and
-                GT during a language switch. */}
+          <div className="absolute top-[20vh] text-center w-full flex flex-col items-center gap-4">
+            {/* Optional Narrative Line — closing statement for this page */}
+            {narrativeLine && (
+              <p
+                className="text-[11px] tracking-[0.4em] uppercase font-light max-w-xs mx-auto leading-relaxed"
+                style={{ color: accentColor + "70" }}
+              >
+                {narrativeLine}
+              </p>
+            )}
+            {/* Eyebrow */}
             <span
               translate="no"
-              className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold text-white/75"
+              className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold"
+              style={{ color: accentColor + "cc" }}
             >
               {t("nextChapter")}
             </span>
@@ -316,8 +328,8 @@ export default function NextChapterTransition({
             <div className="w-full h-px bg-white/14 relative origin-left">
               <div
                 ref={barRef}
-                className="absolute top-0 left-0 w-full h-full bg-white/80 origin-left will-change-transform"
-                style={{ transform: "scaleX(0)" }}
+                className="absolute top-0 left-0 w-full h-full origin-left will-change-transform"
+                style={{ transform: "scaleX(0)", backgroundColor: accentColor }}
               />
             </div>
             {/* Percentage */}

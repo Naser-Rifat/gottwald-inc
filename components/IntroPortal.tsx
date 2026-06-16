@@ -83,6 +83,9 @@ export default function IntroPortal() {
   }, [isLoaded]);
 
   const handleStart = () => {
+    // Mark that portal was visited so Home hero adds a breath delay
+    sessionStorage.setItem("portal-visited", "true");
+
     // Trigger wormhole shader animation
     window.dispatchEvent(new CustomEvent("portal-start"));
     
@@ -160,7 +163,7 @@ export default function IntroPortal() {
         {/* Subtitle */}
         <div className="portal-reveal mb-12">
           <span className="text-[12px] sm:text-[14px] tracking-[0.35em] uppercase text-white/80 font-medium">
-            LET&apose; EXPLORE THE SYSTEM
+            EST. 2024 &nbsp;·&nbsp; TBILISI, GEORGIA
           </span>
         </div>
 
@@ -180,8 +183,8 @@ export default function IntroPortal() {
 
         {/* Skip Link */}
         <div className="portal-reveal cursor-pointer group" onClick={handleStart}>
-          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/60 group-hover:text-white transition-colors">
-            SKIP & SHOW SERVICES
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/40 group-hover:text-white/70 transition-colors">
+            ENTER QUIETLY
           </span>
         </div>
 

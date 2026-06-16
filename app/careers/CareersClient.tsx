@@ -11,6 +11,7 @@ import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
 import CareersCanvas from "@/components/CareersCanvas";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -210,6 +211,9 @@ export default function CareersClient() {
   const [openPillar, setOpenPillar] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  // Careers page shifts the GlobalCanvas to Turquoise
+  usePageColorShift("#0f8b8d");
 
 
 
@@ -427,6 +431,17 @@ export default function CareersClient() {
 
           {/* ── CONTENT — Original Layout over Mountain Background ── */}
           <div className="relative z-30 w-full max-w-7xl mx-auto px-gutter pb-[15vh]">
+            
+            {/* Signature phrase — The Standard motif */}
+            <div className="flex items-center gap-3 mb-8 opacity-80 reveal-text">
+              <div className="inline-flex items-center gap-4 opacity-80">
+                <div className="w-8 h-[1px] bg-[#0f8b8d]" />
+                <span className="text-[10px] tracking-[0.3em] font-medium uppercase text-white/70">
+                  JOIN THE PEOPLE WHO HOLD THE STANDARD
+                </span>
+              </div>
+            </div>
+
             {/* Hero headline — left aligned */}
               <h1
               ref={heroRef}
@@ -1082,12 +1097,26 @@ export default function CareersClient() {
         </section>
       </main>
 
+      {/* Journey Conclusion Statement */}
+      <section className="relative px-8 md:px-16 pb-32 pt-16 max-w-6xl mx-auto flex flex-col items-center justify-center text-center">
+        <div className="w-[1px] h-24 bg-gradient-to-b from-transparent to-turquoise/50 mb-12" />
+        <h2 className="font-playfair text-3xl md:text-5xl font-semibold italic text-white/90 mb-6 tracking-wide">
+          If this felt normal, you belong here.
+        </h2>
+        <p className="font-sans text-xl md:text-2xl font-light text-white/60 max-w-2xl leading-relaxed">
+          The digital journey concludes here. <br />
+          The real-world partnership begins.
+        </p>
+      </section>
+
       <FooterSection />
 
       <NextChapterTransition
         nextTitle={tNav("contact")}
         nextHref="/contact"
         prevHref="/partnerships"
+        narrativeLine="If you've read this far — you already understand us."
+        accentColor="#c07840"
       />
 
     </div>

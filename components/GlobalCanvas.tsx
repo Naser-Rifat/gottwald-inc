@@ -32,94 +32,113 @@ uniform vec3 uColorBase;
 uniform vec3 uColorPetrol;
 uniform vec3 uColorTurquoise;
 uniform vec3 uColorGold;
+uniform vec3 uColorPage; // Page-specific accent tint
+uniform float uPulse; // Pulse intensity
 
 varying vec2 vUv;
+
+// 2D Random
+vec2 random2(vec2 st){
+    st = vec2( dot(st,vec2(127.1,311.7)),
+              dot(st,vec2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(st)*43758.5453123);
+}
+
+// 2D Noise
+float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix( mix( dot( random2(i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ),
+                     dot( random2(i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+                mix( dot( random2(i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ),
+                     dot( random2(i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+}
+
+// Fractal Brownian Motion
+#define NUM_OCTAVES 5
+float fbm ( in vec2 _st) {
+    float v = 0.0;
+    float a = 0.5;
+    vec2 shift = vec2(100.0);
+    // Rotate to reduce axial bias
+    mat2 rot = mat2(cos(0.5), sin(0.5),
+                    -sin(0.5), cos(0.50));
+    for (int i = 0; i < NUM_OCTAVES; ++i) {
+        v += a * noise(_st);
+        _st = rot * _st * 2.0 + shift;
+        a *= 0.5;
+    }
+    return v;
+}
 
 void main() {
     vec2 st = gl_FragCoord.xy / uResolution.xy;
     float aspect = uResolution.x / uResolution.y;
-    // Centered, aspect-corrected so wave fronts stay circular
+    // Centered, aspect-corrected
     vec2 p = (st - 0.5) * vec2(aspect, 1.0);
-
     vec2 mouseP = (uMouse - 0.5) * vec2(aspect, 1.0);
 
-    // Slow restrained time — premium stillness, no frenetic motion
-    float t = uTime * 0.45;
+    // Premium ultra-slow motion
+    float t = uTime * 0.12;
 
-    // ── Liquid Ripple Distortion (like the project tiles) ──
+    // Fluid distortion around mouse
     float liquidDist = length(p - mouseP);
-    // Intense ripple frequency and speed
-    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
-    float hoverMask = smoothstep(0.5, 0.0, liquidDist);
+    float hoverMask = smoothstep(0.6, 0.0, liquidDist);
+    vec2 safeDir = normalize(p - mouseP + 0.0001);
     
-    vec2 safeDir = p - mouseP;
-    if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
+    // Base coordinates for the liquid smoke
+    vec2 uv = p * 2.5; // Scale of the smoke
     
-    // Distort the coordinate space for the rest of the shader
-    p = p + normalize(safeDir) * ripple * hoverMask;
+    // Add mouse push to the UVs
+    uv += safeDir * hoverMask * 0.15 * sin(t * 5.0);
 
-    // ── Wave Source 1: drifts across the upper region ──
-    vec2 source1 = vec2(sin(t * 0.07) * 0.7, 0.25 + cos(t * 0.09) * 0.12);
-    float dist1 = length(p - source1);
-    float wave1 = sin(dist1 * 11.0 - t * 0.6);
+    // Domain warping (Liquid smoke effect)
+    vec2 q = vec2(0.);
+    q.x = fbm( uv + 0.00*t);
+    q.y = fbm( uv + vec2(1.0));
 
-    // ── Wave Source 2: drifts across the lower region ──
-    vec2 source2 = vec2(cos(t * 0.05) * 0.6, -0.25 + sin(t * 0.08) * 0.12);
-    float dist2 = length(p - source2);
-    float wave2 = sin(dist2 * 8.0 + t * 0.5) * 0.7;
+    vec2 r = vec2(0.);
+    r.x = fbm( uv + 1.0*q + vec2(1.7,9.2)+ 0.15*t );
+    r.y = fbm( uv + 1.0*q + vec2(8.3,2.8)+ 0.126*t);
 
-    // ── Wave Source 3: slow central anchor pulse ──
-    float dist3 = length(p);
-    float wave3 = sin(dist3 * 5.0 - t * 0.35) * 0.55;
+    float f = fbm(uv+r);
 
-    // Interference field — the "orchestra" composition
-    float interference = (wave1 + wave2 + wave3) / 2.25;
+    // Normalize FBM value roughly from [-1, 1] to [0, 1]
+    float field = (f + 1.0) * 0.5;
 
-    // ── Mouse as additional frequency emitter ──
-    float mouseDist = length(p - mouseP);
-    float mouseWave = sin(mouseDist * 18.0 - t * 2.0);
-    float mouseAttenuation = exp(-mouseDist * 1.6);
-    float mouseResonance = mouseWave * mouseAttenuation;
-
-    // Combined field
-    float field = interference + mouseResonance * 0.6;
-    float fieldPower = smoothstep(-0.5, 1.0, field);
-
-    // ── Particle dots at wave peaks — Awwwards-style elegance ──
-    vec2 gridP = p * 9.0;
-    vec2 gridFract = fract(gridP) - 0.5;
-    float dotMask = 1.0 - smoothstep(0.0, 0.07, length(gridFract));
-    float dotIntensity = smoothstep(0.55, 0.95, field) * dotMask;
-
-    // Slow ambient breathing — orchestral inhale/exhale
-    float breathe = sin(t * 0.2) * 0.5 + 0.5;
+    // Slow ambient breathing
+    float breathe = sin(t * 1.5) * 0.5 + 0.5;
 
     // ── Compose color ──
     vec3 color = uColorBase;
 
-    // Petrol body — the deep mid-tone of the field
-    color = mix(color, uColorPetrol, fieldPower * 0.5);
+    // 1. Base Cloud: Deep Petrol
+    color = mix(color, uColorPetrol, smoothstep(0.1, 0.8, field) * 0.75);
 
-    // Turquoise on wave peaks — the brand's eye-catcher accent
-    float peak = smoothstep(0.4, 1.0, field);
-    color = mix(color, uColorTurquoise, peak * 0.55);
+    // 2. Page Accent: Sharp rims instead of broad cloudy washes (prevents swampy green/brown mix)
+    // We mix the page color over the brighter parts of the cloud
+    float pageMask = smoothstep(0.45, 0.9, field);
+    color = mix(color, uColorPage, pageMask * 0.6);
 
-    // Gold filaments at the sharpest peaks — prestige warmth
-    float goldFilament = smoothstep(0.72, 1.0, field) * (0.6 + 0.4 * breathe);
-    color += uColorGold * goldFilament * 0.2;
+    // 3. Turquoise Highlights for depth
+    color += uColorTurquoise * smoothstep(0.6, 0.95, field) * 0.3;
 
-    // Particle dots — turquoise twinkle at peaks
-    color += uColorTurquoise * dotIntensity * 0.7;
+    // 4. Signature Gold Filaments at the extreme peaks
+    float goldMask = smoothstep(0.75, 1.0, field) * (0.8 + 0.2 * breathe);
+    color += uColorGold * goldMask * 0.4;
 
-    // Mouse resonance — turquoise radiating outward
-    color += uColorTurquoise * abs(mouseResonance) * 0.3;
+    // 5. Mouse resonance
+    float mouseGlow = exp(-liquidDist * 2.5);
+    color += uColorTurquoise * mouseGlow * 0.2;
+    color += uColorPage * exp(-liquidDist * 5.0) * 0.15; // Mouse center glow is page color
 
-    // Soft gold warmth around the cursor
-    color += uColorGold * mouseAttenuation * 0.07;
+    // 6. Pulse effect (triggered on navigation/clicks)
+    color += uColorPage * (uPulse * 0.4) * smoothstep(0.3, 0.8, field);
 
-    // Subtle radial vignette — depth focus, premium feel
+    // 7. Subtle cinematic vignette
     float vignetteDist = length(p) * 1.35;
-    float mask = 1.0 - smoothstep(0.5, 1.15, vignetteDist) * 0.55;
+    float mask = 1.0 - smoothstep(0.5, 1.35, vignetteDist) * 0.7;
     color *= mask;
 
     color = max(color, vec3(0.0));
@@ -137,63 +156,87 @@ uniform vec3 uColorBase;
 uniform vec3 uColorPetrol;
 uniform vec3 uColorTurquoise;
 uniform vec3 uColorGold;
+uniform vec3 uColorPage;
+uniform float uPulse;
 
-varying vec2 vUv;
+// 2D Random
+vec2 random2Mobile(vec2 st){
+    st = vec2( dot(st,vec2(127.1,311.7)),
+              dot(st,vec2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(st)*43758.5453123);
+}
+
+// 2D Noise
+float noiseMobile(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix( mix( dot( random2Mobile(i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ),
+                     dot( random2Mobile(i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+                mix( dot( random2Mobile(i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ),
+                     dot( random2Mobile(i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+}
+
+// Mobile FBM - Fewer octaves for performance
+#define NUM_OCTAVES_MOBILE 3
+float fbmMobile ( in vec2 _st) {
+    float v = 0.0;
+    float a = 0.5;
+    vec2 shift = vec2(100.0);
+    mat2 rot = mat2(cos(0.5), sin(0.5),
+                    -sin(0.5), cos(0.50));
+    for (int i = 0; i < NUM_OCTAVES_MOBILE; ++i) {
+        v += a * noiseMobile(_st);
+        _st = rot * _st * 2.0 + shift;
+        a *= 0.5;
+    }
+    return v;
+}
 
 void main() {
     vec2 st = gl_FragCoord.xy / uResolution.xy;
     float aspect = uResolution.x / uResolution.y;
     vec2 p = (st - 0.5) * vec2(aspect, 1.0);
-
     vec2 mouseP = (uMouse - 0.5) * vec2(aspect, 1.0);
 
-    float t = uTime * 0.45;
-
-    // ── Liquid Ripple Distortion ──
+    float t = uTime * 0.12;
     float liquidDist = length(p - mouseP);
-    float ripple = sin(liquidDist * 40.0 - uTime * 10.0) * 0.03;
-    float hoverMask = smoothstep(0.5, 0.0, liquidDist);
     
-    vec2 safeDir = p - mouseP;
-    if (length(safeDir) < 0.0001) safeDir = vec2(0.0001, 0.0);
-    p = p + normalize(safeDir) * ripple * hoverMask;
+    vec2 uv = p * 2.0; // Slightly larger scale on mobile
 
-    // Two drifting wave sources (mobile budget)
-    vec2 source1 = vec2(sin(t * 0.07) * 0.6, 0.2);
-    vec2 source2 = vec2(cos(t * 0.05) * 0.5, -0.2);
+    vec2 q = vec2(0.);
+    q.x = fbmMobile( uv + 0.00*t);
+    q.y = fbmMobile( uv + vec2(1.0));
 
-    float dist1 = length(p - source1);
-    float dist2 = length(p - source2);
+    vec2 r = vec2(0.);
+    r.x = fbmMobile( uv + 1.0*q + vec2(1.7,9.2)+ 0.15*t );
+    r.y = fbmMobile( uv + 1.0*q + vec2(8.3,2.8)+ 0.126*t);
 
-    float wave1 = sin(dist1 * 10.0 - t * 0.6);
-    float wave2 = sin(dist2 * 8.0 + t * 0.5) * 0.7;
-
-    float interference = (wave1 + wave2) / 1.7;
-
-    float mouseDist = length(p - mouseP);
-    float mouseWave = sin(mouseDist * 16.0 - t * 1.8);
-    float mouseAttenuation = exp(-mouseDist * 1.6);
-    float mouseResonance = mouseWave * mouseAttenuation;
-
-    float field = interference + mouseResonance * 0.6;
-    float fieldPower = smoothstep(-0.5, 1.0, field);
-
-    float breathe = sin(t * 0.2) * 0.5 + 0.5;
+    float f = fbmMobile(uv+r);
+    float field = (f + 1.0) * 0.5;
 
     vec3 color = uColorBase;
-    color = mix(color, uColorPetrol, fieldPower * 0.5);
 
-    float peak = smoothstep(0.4, 1.0, field);
-    color = mix(color, uColorTurquoise, peak * 0.5);
+    // 1. Base Cloud: Deep Petrol
+    color = mix(color, uColorPetrol, smoothstep(0.1, 0.8, field) * 0.75);
 
-    float goldFilament = smoothstep(0.75, 1.0, field) * (0.6 + 0.4 * breathe);
-    color += uColorGold * goldFilament * 0.16;
+    // 2. Page Accent
+    float pageMask = smoothstep(0.45, 0.9, field);
+    color = mix(color, uColorPage, pageMask * 0.6);
 
-    color += uColorTurquoise * abs(mouseResonance) * 0.28;
-    color += uColorGold * mouseAttenuation * 0.06;
+    // 3. Turquoise Highlights
+    color += uColorTurquoise * smoothstep(0.6, 0.95, field) * 0.3;
 
+    // 4. Mouse resonance
+    float mouseGlow = exp(-liquidDist * 2.5);
+    color += uColorTurquoise * mouseGlow * 0.15;
+
+    // 5. Pulse effect
+    color += uColorPage * (uPulse * 0.4) * smoothstep(0.3, 0.8, field);
+
+    // 6. Subtle vignette
     float vignetteDist = length(p) * 1.35;
-    float mask = 1.0 - smoothstep(0.5, 1.15, vignetteDist) * 0.5;
+    float mask = 1.0 - smoothstep(0.5, 1.35, vignetteDist) * 0.7;
     color *= mask;
 
     color = max(color, vec3(0.0));
@@ -244,6 +287,10 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const mousePosRef = useRef(new THREE.Vector2(0.5, 0.5));
 
+  // Page-specific accent color target (lerped smoothly in useFrame)
+  const targetAccentRef = useRef(new THREE.Color("#cda434")); // default Muted Gold
+  const currentAccentRef = useRef(new THREE.Color("#cda434"));
+
   // Choose shader based on device tier
   const fragShader = isMobile ? fragmentShaderMobile : fragmentShaderDesktop;
 
@@ -259,9 +306,11 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
       },
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uColorBase: { value: new THREE.Color("#070c14") },
-      uColorPetrol: { value: new THREE.Color("#006d84") },
-      uColorTurquoise: { value: new THREE.Color("#12a8ac") },
-      uColorGold: { value: new THREE.Color("#d4af37") },
+      uColorPetrol: { value: new THREE.Color("#0a4c5a") },
+      uColorTurquoise: { value: new THREE.Color("#0f8b8d") },
+      uColorGold: { value: new THREE.Color("#cda434") },
+      uColorPage: { value: new THREE.Color("#cda434") }, // starts muted gold (Home)
+      uPulse: { value: 0 },
     }),
     [],
   );
@@ -278,6 +327,32 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // Listen for page-color-shift events dispatched by each page on mount
+  useEffect(() => {
+    const handleColorShift = (e: Event) => {
+      const { color } = (e as CustomEvent).detail;
+      if (color) targetAccentRef.current.set(color);
+    };
+    const handlePulse = () => {
+      // Create a temporary pulse value using GSAP if available, or just standard React state equivalent
+      // Since we don't have direct access to gsap here easily without adding imports, we can use a ref
+      pulseTargetRef.current = 1.0;
+      setTimeout(() => {
+        pulseTargetRef.current = 0.0;
+      }, 100);
+    };
+    
+    window.addEventListener("page-color-shift", handleColorShift);
+    window.addEventListener("canvas-pulse", handlePulse);
+    return () => {
+      window.removeEventListener("page-color-shift", handleColorShift);
+      window.removeEventListener("canvas-pulse", handlePulse);
+    };
+  }, []);
+
+  const pulseTargetRef = useRef(0);
+  const currentPulseRef = useRef(0);
+
   useFrame((state) => {
     if (!materialRef.current) return;
     materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
@@ -286,6 +361,25 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
       state.size.height,
     );
     materialRef.current.uniforms.uMouse.value.lerp(mousePosRef.current, 0.04);
+
+    // Smoothly interpolate page accent color toward target
+    const current = currentAccentRef.current;
+    const target = targetAccentRef.current;
+    const dist = Math.abs(current.r - target.r) + Math.abs(current.g - target.g) + Math.abs(current.b - target.b);
+    
+    if (dist > 0.001) {
+      current.lerp(target, 0.025);
+      // Drive uColorPage uniform (the dedicated page-tint uniform in the shader)
+      materialRef.current.uniforms.uColorPage.value.copy(current);
+    }
+    
+    // Animate pulse
+    if (Math.abs(currentPulseRef.current - pulseTargetRef.current) > 0.001) {
+      // Faster attack, slower decay
+      const speed = pulseTargetRef.current > currentPulseRef.current ? 0.2 : 0.03;
+      currentPulseRef.current += (pulseTargetRef.current - currentPulseRef.current) * speed;
+      materialRef.current.uniforms.uPulse.value = currentPulseRef.current;
+    }
   });
 
   return (
