@@ -156,7 +156,7 @@ export default function GlobalAuthoritySection() {
       </div>
 
       {/* 2. Map Section — mask ONLY on the SVG layer, HUD lives outside the mask */}
-      <div className="relative w-full my-[-8%] md:my-[-5%]">
+      <div className="relative w-full mt-24 md:mt-[-5%] mb-[-8%] md:mb-[-5%]">
 
         {/* 2a. Map Base */}
         <div className="relative inset-x-0 w-full z-0 pointer-events-none flex items-center justify-center overflow-hidden">
@@ -192,14 +192,14 @@ export default function GlobalAuthoritySection() {
               {/* Text located exactly where it was in the HUD design */}
               <div className="absolute top-1/2 left-full items-center -translate-y-1/2 flex items-center pointer-events-none z-10 w-max">
                 {/* Delicate Horizontal connecting line */}
-                <div className="w-12 md:w-20 h-[1px] bg-gradient-to-r from-[#cda434]/60 to-transparent" />
+                <div className="w-6 md:w-12 lg:w-20 h-[1px] bg-gradient-to-r from-[#cda434]/60 to-transparent" />
                 
                 {/* Box-less pure typography, placed exactly at the end of the line */}
                 <div className="flex flex-col items-start relative -ml-2">
                   {/* Invisible halo for perfect readability */}
                   <div className="absolute inset-0 bg-[#020b14]/90 blur-2xl rounded-[100px] -z-10 scale-[1.3]" />
-                  <p className="text-[#cda434] tracking-[0.4em] uppercase text-[10px] font-bold whitespace-nowrap mb-1">01 — HEAD OFFICE</p>
-                  <p className="text-white font-sans text-2xl lg:text-3xl tracking-wide whitespace-nowrap font-light drop-shadow-md">Tbilisi, Georgia</p>
+                  <p className="text-[#cda434] tracking-[0.4em] uppercase text-[8px] md:text-[10px] font-bold whitespace-nowrap mb-1">01 — HEAD OFFICE</p>
+                  <p className="text-white font-sans text-xl md:text-2xl lg:text-3xl tracking-wide whitespace-nowrap font-light drop-shadow-md">Tbilisi, Georgia</p>
                 </div>
               </div>
             </div>
@@ -207,21 +207,21 @@ export default function GlobalAuthoritySection() {
             {/* 2. DACH Hubs (Munich Anchored) */}
             <div className="absolute top-[25.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group z-20">
               {/* Delicate Vertical connecting line */}
-              <div className="absolute bottom-full mb-2 w-[1px] h-12 lg:h-16 bg-gradient-to-t from-turquoise/60 via-turquoise/20 to-transparent" />
+              <div className="absolute bottom-full mb-2 w-[1px] h-6 md:h-12 lg:h-16 bg-gradient-to-t from-turquoise/60 via-turquoise/20 to-transparent" />
               
               <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_15px_rgba(255,255,255,1)] z-10 relative">
                 <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" style={{ animationDuration: "4s" }} />
               </div>
               
               {/* Text positioned exactly where it was in the HUD design (High Above) */}
-              <div className="absolute bottom-full mb-12 lg:mb-16 flex flex-col items-center pointer-events-none z-10 w-max">
+              <div className="absolute bottom-full mb-8 md:mb-12 lg:mb-16 flex flex-col items-center pointer-events-none z-10 w-max">
                 {/* Box-less pure typography */}
                 <div className="flex flex-col items-center relative">
                   {/* Invisible halo for perfect readability */}
                   <div className="absolute inset-0 bg-[#020b14]/90 blur-2xl rounded-[100px] -z-10 scale-[1.3]" />
-                  <p className="text-white/80 tracking-[0.4em] uppercase text-[10px] font-bold whitespace-nowrap mb-1">02 — STRATEGIC HUBS</p>
-                  <p className="text-turquoise font-sans font-medium text-3xl lg:text-4xl tracking-wide whitespace-nowrap mb-2 drop-shadow-md">DACH Region</p>
-                  <p className="text-white/90 tracking-[0.3em] uppercase text-[10px] font-bold whitespace-nowrap flex items-center gap-3">
+                  <p className="text-white/80 tracking-[0.4em] uppercase text-[8px] md:text-[10px] font-bold whitespace-nowrap mb-1">02 — STRATEGIC HUBS</p>
+                  <p className="text-turquoise font-sans font-medium text-2xl md:text-3xl lg:text-4xl tracking-wide whitespace-nowrap mb-1 md:mb-2 drop-shadow-md">DACH Region</p>
+                  <p className="text-white/90 tracking-[0.3em] uppercase text-[7px] md:text-[10px] font-bold whitespace-nowrap flex items-center gap-3">
                     GERMANY / AUSTRIA / SWITZERLAND
                   </p>
                 </div>

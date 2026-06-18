@@ -153,65 +153,67 @@ export default function VideoPanelSection() {
       className="relative flex flex-col px-gutter w-full min-h-screen py-[15vh] overflow-hidden"
     >
       <AmbientAurora />
-      <div className="relative z-10 about-headers pb-[6vh] md:pb-[8vh]">
-        <div className="overflow-hidden w-full">
-          {/* translate="no": GT was wrapping each char-mask span in <font> tags
-              and translating individual letters, producing garbage like
-              "PEACEDIE LOVEDIE HARMONY". i18n owns the text now; the useEffect
-              re-splits when locale changes. */}
-          <h2
-            ref={toplineRef}
-            id="h1-topline"
-            translate="no"
-            className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white uppercase tracking-tight leading-[0.95]"
-          >
-            {topline}
-          </h2>
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col relative z-10">
+        <div className="relative z-10 about-headers pb-[6vh] md:pb-[8vh]">
+          <div className="overflow-hidden w-full">
+            {/* translate="no": GT was wrapping each char-mask span in <font> tags
+                and translating individual letters, producing garbage like
+                "PEACEDIE LOVEDIE HARMONY". i18n owns the text now; the useEffect
+                re-splits when locale changes. */}
+            <h2
+              ref={toplineRef}
+              id="h1-topline"
+              translate="no"
+              className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white uppercase tracking-tight leading-[0.95]"
+            >
+              {topline}
+            </h2>
+          </div>
+          {/* Underline accent — petrol depth → gold positive (no double
+              turquoise so the brand "eye-catcher" stays rare). */}
+          <div
+            className="w-full max-w-[60vw] h-px mt-3 mb-3"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(0,109,132,0.65) 0%, rgba(184,192,204,0.32) 50%, rgba(212,175,55,0.4) 100%)",
+            }}
+          />
+          <div className="overflow-hidden w-full">
+            <h2
+              ref={taglineRef}
+              id="h1-tagline"
+              translate="no"
+              className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white tracking-tight uppercase leading-[0.95]"
+            >
+              {tagline}
+            </h2>
+          </div>
         </div>
-        {/* Underline accent — petrol depth → gold positive (no double
-            turquoise so the brand "eye-catcher" stays rare). */}
-        <div
-          className="w-full max-w-[60vw] h-px mt-3 mb-3"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,109,132,0.65) 0%, rgba(184,192,204,0.32) 50%, rgba(212,175,55,0.4) 100%)",
-          }}
-        />
-        <div className="overflow-hidden w-full">
-          <h2
-            ref={taglineRef}
-            id="h1-tagline"
-            translate="no"
-            className="notranslate text-[clamp(1.8rem,7vw,7rem)] mb-0 text-white tracking-tight uppercase leading-[0.95]"
-          >
-            {tagline}
-          </h2>
-        </div>
-      </div>
 
-      {/* About paragraphs */}
-      <div className="relative z-10 flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
-        <p
-          ref={descRef}
-          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed font-sans opacity-0 text-white/75 border-l-2 border-silver/35 pl-5"
-        >
-          GOTT WALD is not a collection of services. It is a unified
-          architecture: modular components, one standard, one language of
-          delivery—built to turn complexity into clarity, clarity into
-          decisions, and decisions into measurable impact.
-        </p>
-        <div
-          ref={ctaRef}
-          className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 leading-relaxed text-white/50 font-sans opacity-0"
-        >
-          <Link
-            href="/about"
-            translate="no"
-            className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium tracking-[0.02em] transition-all duration-300 mt-4 px-5.5 bg-turquoise/10 border border-turquoise/35 text-turquoise/95 hover:bg-turquoise/20 hover:border-turquoise/60"
+        {/* About paragraphs */}
+        <div className="relative z-10 flex flex-col items-start md:items-end pb-[8vh] md:pb-[10vh]">
+          <p
+            ref={descRef}
+            className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed font-sans opacity-0 text-white/75 border-l-2 border-silver/35 pl-5"
           >
-            <span>{t("aboutCta")}</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
-          </Link>
+            GOTT WALD is not a collection of services. It is a unified
+            architecture: modular components, one standard, one language of
+            delivery—built to turn complexity into clarity, clarity into
+            decisions, and decisions into measurable impact.
+          </p>
+          <div
+            ref={ctaRef}
+            className="w-full sm:w-[70%] md:w-[55%] xl:w-[40%] mb-8 leading-relaxed text-white/50 font-sans opacity-0"
+          >
+            <Link
+              href="/about"
+              translate="no"
+              className="notranslate h-11 w-fit rounded-full flex items-center gap-2.5 uppercase text-sm font-medium tracking-[0.02em] transition-all duration-300 mt-4 px-5.5 bg-turquoise/10 border border-turquoise/35 text-turquoise/95 hover:bg-turquoise/20 hover:border-turquoise/60"
+            >
+              <span>{t("aboutCta")}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-turquoise" />
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -182,11 +182,11 @@ export default function PillarTilesSection({ pillars }: PillarTilesSectionProps)
 
             {/* Left Anchored 3D Asset */}
             {pillar.image && (
-              <div 
-                className="absolute inset-y-0 left-0 flex items-center justify-start pointer-events-auto z-20 w-[50%] overflow-visible mix-blend-screen"
+              <div
+                className="absolute inset-y-0 left-0 flex items-center justify-center lg:justify-start pointer-events-auto z-20 w-full lg:w-[50%] overflow-visible mix-blend-screen opacity-20 lg:opacity-100 -translate-y-[15vh] lg:translate-y-0"
               >
                 <div 
-                  className="relative w-[120%] h-[120%] max-h-[1000px] max-w-[1000px]"
+                   className="relative w-[140%] h-[140%] lg:w-[120%] lg:h-[120%] max-h-[1000px] max-w-[1000px]"
                   style={{ animation: "slowRotateFloat 15s ease-in-out infinite" }}
                 >
                   <Image 
@@ -220,7 +220,7 @@ export default function PillarTilesSection({ pillars }: PillarTilesSectionProps)
             )}
 
             {/* Right Anchored Content: Glassmorphic Card & Title */}
-            <div className="absolute inset-y-0 right-6 sm:right-12 md:right-20 flex flex-col justify-center max-w-[90%] sm:max-w-[480px] pointer-events-auto z-30">
+            <div className="absolute inset-y-0 right-6 sm:right-12 lg:right-20 flex flex-col justify-center max-w-[90%] sm:max-w-[480px] lg:max-w-[500px] pointer-events-auto z-30">
               {/* Title Section */}
               <div className="flex flex-col gap-2 mb-8 ml-2">
                 <span className="text-[10px] sm:text-[11px] tracking-[0.4em] text-[#d4af37] uppercase font-bold drop-shadow-md">

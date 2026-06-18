@@ -230,7 +230,7 @@ export default function PhysicsSandboxSection() {
         className="relative w-full h-screen flex flex-col pointer-events-none text-white overflow-hidden pb-[8vh] sm:pb-[10vh] px-gutter"
         style={{ perspective: "1000px" }}
       >
-      <div className="flex-1 flex items-end z-10 relative w-full mx-auto pointer-events-auto">
+      <div className="flex-1 flex items-end z-10 relative w-full max-w-[1600px] mx-auto pointer-events-auto">
         <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12 lg:gap-8">
           {/* Left: Label + Title */}
           <div className="hero-title-block flex flex-col gap-6 lg:gap-8 w-full lg:w-auto">

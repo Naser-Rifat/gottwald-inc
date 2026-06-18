@@ -1188,33 +1188,32 @@ export default function AboutClient() {
                 className="pillar-stage-frame absolute inset-0"
                 style={{ opacity: i === 0 ? 1 : 0 }}
               >
-                {/* Full-height image — left 50% of viewport. Bleeds edge-to-edge vertically. */}
+                {/* Full-height image — full width on mobile (watermark), left 50% on desktop. */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-0 top-0 bottom-0 w-[50vw] lg:w-[46vw] z-[1] overflow-hidden"
+                  className="pointer-events-none absolute left-0 top-0 bottom-0 w-full md:w-[50vw] lg:w-[46vw] z-[1] overflow-hidden opacity-[0.12] md:opacity-100"
                 >
                   {/* Turquoise scan-line image — screen blend keeps it luminous */}
                   <Image
                     src={pillar.image}
                     alt=""
                     fill
-                    sizes="50vw"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-contain object-center"
                     style={{
                       mixBlendMode: "screen",
-                      opacity: 0.92,
                       filter: "brightness(1.08) saturate(1.12)",
                     }}
                     priority={i === 0}
                   />
-                  {/* Right edge fade — bleeds image into text zone */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#070c14]" />
+                  {/* Right edge fade — bleeds image into text zone on desktop */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#070c14] hidden md:block" />
                   {/* Subtle vignette top + bottom */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#070c14]/40 via-transparent to-[#070c14]/40" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#070c14]/60 md:from-[#070c14]/40 via-transparent to-[#070c14]/60 md:to-[#070c14]/40" />
                 </div>
 
-                {/* Right half — editorial typography, centered in readable zone */}
-                <div className="absolute right-0 top-0 bottom-0 w-[54vw] lg:w-[56vw] flex flex-col justify-center pl-8 lg:pl-16 pr-8 lg:pr-24 z-10 pt-[10vh] pb-[14vh]">
+                {/* Right half — full width on mobile, right anchored on desktop */}
+                <div className="absolute right-0 top-0 bottom-0 w-full md:w-[54vw] lg:w-[56vw] flex flex-col justify-center px-6 sm:px-12 md:pl-8 lg:pl-16 md:pr-8 lg:pr-24 z-10 pt-[10vh] pb-[14vh]">
                   {/* Principle number + name */}
                   <div className="flex items-center gap-4 mb-10 lg:mb-14">
                     <span className="font-mono text-[10px] tracking-[0.4em] text-turquoise/60">
@@ -1812,15 +1811,15 @@ export default function AboutClient() {
                   </div>
 
                   {/* True Awwwards-Winning Editorial Carousel */}
-                  <div className="w-full flex items-stretch justify-center gap-4 md:gap-8 mt-16 mb-12 h-full">
-                    {/* Left Navigation Pill */}
+                  <div className="w-full flex flex-col md:flex-row items-stretch justify-center gap-4 md:gap-8 mt-8 md:mt-16 mb-12 h-full">
+                    {/* Left Navigation Pill (Desktop) */}
                     <button
                       onClick={() =>
                         setActiveCaseIndex((prev) =>
                           prev === 0 ? cases.length - 1 : prev - 1,
                         )
                       }
-                      className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
+                      className="group hidden md:flex w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
                       aria-label="Previous Case"
                     >
                       <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:-translate-x-1 transition-all duration-500">
@@ -1829,7 +1828,7 @@ export default function AboutClient() {
                     </button>
 
                     {/* Main Content Glass Card */}
-                    <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-[400px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 relative bg-white/[0.02] backdrop-blur-2xl">
+                    <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-12 min-h-[400px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 relative bg-white/[0.02] backdrop-blur-2xl">
                       {/* Subtle Internal Ambient Glow */}
                       <div className="absolute top-0 right-0 w-[60%] h-full bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-turquoise/5 via-transparent to-transparent pointer-events-none" />
 
@@ -1887,20 +1886,46 @@ export default function AboutClient() {
                       </div>
                     </div>
 
-                    {/* Right Navigation Pill */}
+                    {/* Right Navigation Pill (Desktop) */}
                     <button
                       onClick={() =>
                         setActiveCaseIndex((prev) =>
                           prev === cases.length - 1 ? 0 : prev + 1,
                         )
                       }
-                      className="group w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
+                      className="group hidden md:flex w-12 md:w-16 h-auto min-h-[300px] border border-white/10 rounded-full flex-col items-center justify-center hover:bg-white/[0.03] hover:border-white/30 transition-all duration-500 focus-visible:outline-1 focus-visible:outline-turquoise"
                       aria-label="Next Case"
                     >
                       <span className="text-white/40 text-2xl font-light group-hover:text-white group-hover:translate-x-1 transition-all duration-500">
                         →
                       </span>
                     </button>
+
+                    {/* Mobile Navigation Row (Mobile Only) */}
+                    <div className="flex md:hidden items-center justify-center gap-4 w-full">
+                      <button
+                        onClick={() =>
+                          setActiveCaseIndex((prev) =>
+                            prev === 0 ? cases.length - 1 : prev - 1,
+                          )
+                        }
+                        className="w-14 h-14 border border-white/10 rounded-full flex items-center justify-center bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                        aria-label="Previous Case"
+                      >
+                        <span className="text-white/60 text-xl font-light">←</span>
+                      </button>
+                      <button
+                        onClick={() =>
+                          setActiveCaseIndex((prev) =>
+                            prev === cases.length - 1 ? 0 : prev + 1,
+                          )
+                        }
+                        className="w-14 h-14 border border-white/10 rounded-full flex items-center justify-center bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                        aria-label="Next Case"
+                      >
+                        <span className="text-white/60 text-xl font-light">→</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </section>
