@@ -24,7 +24,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`flex items-center justify-between w-full transition-all duration-500 ${
+      <header className={`flex items-center justify-between w-full max-w-[1600px] mx-auto transition-all duration-500 ${
         scrolled ? "pt-5 pb-5" : "pt-12 pb-4"
       }`}>
         {/* ── Brand ── */}
@@ -44,7 +44,7 @@ export default function Header() {
         </Link>
 
         {/* ── Right Controls ── */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Audio Toggle — animated equalizer */}
           <AudioToggle />
 
@@ -53,10 +53,9 @@ export default function Header() {
           <Link
             href="/partnerships#apply"
             translate="no"
-            className="notranslate hidden sm:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
-                       tracking-[0.02em] transition-all duration-300
+            className="notranslate hidden lg:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
+                       tracking-[0.02em] transition-all duration-300 px-5
                        border border-turquoise/35 text-turquoise bg-turquoise/5 hover:border-turquoise/70 hover:bg-turquoise/12 hover:text-white"
-            style={{ padding: "0 20px 0 22px" }}
           >
             <span>{t("apply")}</span>
             <span className="text-xs">→</span>
@@ -66,28 +65,26 @@ export default function Header() {
           <Link
             href="/contact"
             translate="no"
-            className="notranslate h-[46px] rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
-                       tracking-[0.02em] transition-colors
+            className="notranslate hidden md:flex h-[46px] rounded-full items-center gap-2.5 uppercase text-sm font-medium
+                       tracking-[0.02em] transition-colors px-5
                        bg-white/8 text-white hover:bg-white/15 hover:shadow-[0_0_12px_rgba(18,168,172,0.3)]"
-            style={{ padding: "0 18px 0 22px" }}
           >
             <span>{t("letsTalk")}</span>
-            <span className="w-[6px] h-[6px] rounded-full bg-turquoise shadow-[0_0_8px_rgba(18,168,172,0.6)] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-turquoise shadow-[0_0_8px_rgba(18,168,172,0.6)] animate-pulse" />
           </Link>
 
           {/* MENU pill */}
           <button
             onClick={() => setMenuOpen(true)}
             translate="no"
-            className="notranslate h-[46px] rounded-full flex items-center gap-2.5 uppercase text-sm font-medium
+            className="notranslate h-10 sm:h-[46px] px-4 sm:px-5 rounded-full flex items-center gap-2 sm:gap-2.5 uppercase text-xs sm:text-sm font-medium
                        tracking-[0.02em] transition-colors
                        bg-white/10 text-white hover:bg-white/15"
-            style={{ padding: "0 18px 0 22px" }}
           >
             <span>{t("menu")}</span>
             <span className="flex items-center gap-[3px]">
-              <span className="w-[5px] h-[5px] rounded-full bg-white/60" />
-              <span className="w-[5px] h-[5px] rounded-full bg-white/60" />
+              <span className="w-1 h-1 sm:w-[5px] sm:h-[5px] rounded-full bg-white/60" />
+              <span className="w-1 h-1 sm:w-[5px] sm:h-[5px] rounded-full bg-white/60" />
             </span>
           </button>
         </div>

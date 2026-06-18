@@ -56,7 +56,7 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
   const initedRef = useRef(false);
 
   // 1. Determine if current route is allowed to play audio
-  const isAllowedRoute = pathname === "/" || pathname === "/partnerships";
+  const isAllowedRoute = true; // Ambient audio now allowed globally across all pages
   
   // 2. The actual global play state is combination of user's pref + route allowance
   const globalShouldPlay = isPlaying && isAllowedRoute;

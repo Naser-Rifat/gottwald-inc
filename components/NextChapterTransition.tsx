@@ -310,8 +310,14 @@ export default function NextChapterTransition({
           <h2
             ref={titleRef}
             translate="no"
-            className="notranslate text-[15vw] leading-[0.92] font-black tracking-[-0.04em] uppercase text-center will-change-transform whitespace-nowrap text-white/88"
-            style={{ opacity: 0.3 }}
+            className="notranslate leading-[0.92] uppercase text-center will-change-transform whitespace-nowrap text-white/88"
+            style={{ 
+              fontFamily: "var(--font-serif), Georgia, serif",
+              fontSize: "clamp(3rem, 10vw, 11rem)",
+              fontWeight: 400,
+              letterSpacing: "-0.04em",
+              opacity: 0.3 
+            }}
           >
             {nextTitle}
           </h2>

@@ -628,17 +628,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
 
           {/* Right: Hero Image (Floating 3D Object) */}
           <div className="w-full lg:w-[54%] h-[50vh] lg:h-full relative flex items-center justify-center overflow-visible px-4 pb-8 lg:pb-0 z-20 mix-blend-screen">
-            {/* TALL Stacked Background Text (Behind Image) */}
-            <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none select-none opacity-[0.08]">
-              <div 
-                className="flex flex-col items-center justify-center text-[15vw] lg:text-[10vw] font-black uppercase leading-[0.85] tracking-widest text-white"
-                style={{ transform: 'scaleY(2)' }}
-              >
-                {project.title.split(' ').map((word, i) => (
-                  <span key={i}>{word}</span>
-                ))}
-              </div>
-            </div>
+            {/* Removed the background text that was conflicting with the glowing 3D object */}
 
             {/* Floating Image */}
             <div 

@@ -19,17 +19,17 @@ export default function HorizontalScroll({ children }: HorizontalScrollProps) {
     const wrapper = wrapperRef.current;
     if (!container || !wrapper) return;
 
-    const totalWidth = wrapper.scrollWidth - window.innerWidth;
+    const getTotalWidth = () => wrapper.scrollWidth - window.innerWidth;
 
     const ctx = gsap.context(() => {
       gsap.to(wrapper, {
-        x: -totalWidth,
+        x: () => -getTotalWidth(),
         ease: "none",
         scrollTrigger: {
           trigger: container,
           pin: true,
           scrub: 1,
-          end: () => `+=${totalWidth}`,
+          end: () => `+=${getTotalWidth()}`,
           invalidateOnRefresh: true,
         },
       });
