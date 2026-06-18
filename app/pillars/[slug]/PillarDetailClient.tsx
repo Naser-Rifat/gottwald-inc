@@ -59,7 +59,6 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     return { ...project, offers: normalizedOffers };
   }, [project]);
 
-  console.log(enrichedProject);
 
   const registerPanel = useCallback((el: HTMLElement | null, idx: number) => {
     if (el) panelRefs.current[idx] = el;
@@ -670,6 +669,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           const panelIdx = i + (hasOffers ? 2 : 1);
           switch (block.type) {
             case "showcase":
+            case "image":
               return (
                 <ShowcaseBlock
                   key={i}
@@ -710,6 +710,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 />
               );
             case "fullbleed":
+            case "video":
               return (
                 <FullbleedBlock
                   key={i}
@@ -720,6 +721,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                 />
               );
             case "rich-text":
+            case "quote":
               return (
                 <RichTextBlock
                   key={i}
@@ -737,7 +739,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         {/* ═══════ LAST PANEL — Next Project ═══════ */}
         <section
           ref={(el) =>
-            registerPanel(el, (project.contentBlocks?.length || 0) + 1)
+            registerPanel(
+              el,
+              (enrichedProject.contentBlocks?.length || 0) +
+                (enrichedProject.offers && enrichedProject.offers.length > 0
+                  ? 2
+                  : 1),
+            )
           }
           className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden relative"
           style={{
@@ -911,12 +919,13 @@ function revealPanel(panel: HTMLElement) {
   if (image) {
     tl.fromTo(
       image,
-      { clipPath: "inset(0 100% 0 0)", scale: 1.06 },
+      { clipPath: "inset(0 100% 0 0 round 32px)", scale: 1.06 },
       {
-        clipPath: "inset(0 0% 0 0)",
+        clipPath: "inset(0 0% 0 0 round 32px)",
         scale: 1,
         duration: 1.4,
         ease: "power4.inOut",
+        clearProps: "clipPath,transform",
       },
       0,
     );
@@ -1067,7 +1076,7 @@ function ImageFallback({ idx, accentHex }: { idx: number; accentHex: string }) {
         className="absolute inset-0"
         style={{
           border: `1px solid ${hexToRgba(accentHex, 0.05)}`,
-          borderRadius: "12px",
+          borderRadius: "inherit",
         }}
       />
     </div>
@@ -1463,7 +1472,7 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
           <div
             className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
-              clipPath: "inset(0 100% 0 0)",
+              clipPath: "inset(0 100% 0 0 round 32px)",
               boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
@@ -1577,7 +1586,7 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
             <div
               className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
               style={{
-                clipPath: "inset(0 100% 0 0)",
+                clipPath: "inset(0 100% 0 0 round 32px)",
                 boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
               }}
             >
@@ -1698,7 +1707,7 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
           <div
             className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
-              clipPath: "inset(0 100% 0 0)",
+              clipPath: "inset(0 100% 0 0 round 32px)",
               boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
             }}
           >
@@ -1773,7 +1782,7 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
           <div
             className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
-              clipPath: "inset(0 100% 0 0)",
+              clipPath: "inset(0 100% 0 0 round 32px)",
               boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
             }}
           >
@@ -1888,7 +1897,7 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
           <div
             className="panel-image relative w-full lg:max-w-[1050px] flex-1 min-h-[40vh] rounded-[32px] overflow-hidden"
             style={{
-              clipPath: "inset(0 100% 0 0)",
+              clipPath: "inset(0 100% 0 0 round 32px)",
               boxShadow: `0 24px 80px ${hexToRgba(bgHex, 0.6)}`,
             }}
           >
@@ -2045,7 +2054,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
               <div
                 className="panel-image relative w-full h-full min-h-[40vh] rounded-[32px] overflow-hidden"
                 style={{
-                  clipPath: "inset(0 100% 0 0)",
+                  clipPath: "inset(0 100% 0 0 round 32px)",
                   boxShadow: `0 20px 60px ${hexToRgba(bgHex, 0.4)}`,
                 }}
               >

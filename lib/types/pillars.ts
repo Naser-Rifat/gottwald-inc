@@ -2,11 +2,12 @@ export type ContentBlockTheme = "light" | "dark";
 
 export interface ContentBlock {
   id?: string;
-  type: "showcase" | "case-study" | "feature" | "stats" | "fullbleed" | "rich-text" | "image" | "video";
+  type: "showcase" | "case-study" | "feature" | "stats" | "fullbleed" | "rich-text" | "image" | "video" | "quote";
   theme?: ContentBlockTheme;
   heading?: string;
   body?: string;
   image?: string;
+
   videoUrl?: string;
   stats?: { value: string; label: string }[];
   cta?: { label: string; href: string };
