@@ -202,7 +202,7 @@ export default function ContactClient() {
         className="fixed inset-0 pointer-events-none -z-10"
         style={{
           background:
-            "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(6,6,6,0.88) 0%, rgba(6,6,6,0.7) 50%, rgba(6,6,6,0.5) 100%)",
+            "radial-gradient(ellipse 120% 80% at 50% 40%, rgba(6,6,6,0.3) 0%, rgba(6,6,6,0.15) 50%, transparent 100%)",
         }}
       />
 
@@ -237,7 +237,7 @@ export default function ContactClient() {
       </div>
 
       {/* AWWWARDS Premium Liquid Aurora Background (Turquoise & Gold) */}
-      <div className="contact-liquid-aurora fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] md:w-[80vw] md:h-[80vw] max-w-[1400px] max-h-[1400px] rounded-full mix-blend-screen opacity-[0.25] blur-[100px] z-[-5] will-change-transform pointer-events-none">
+      <div className="contact-liquid-aurora fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] md:w-[80vw] md:h-[80vw] max-w-[1400px] max-h-[1400px] rounded-full mix-blend-screen opacity-[0.05] blur-[120px] z-[-5] will-change-transform pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#12a8ac] via-transparent to-[#d4af37] rounded-full animate-[spin_20s_linear_infinite]" />
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#d4af37] to-[#12a8ac] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
       </div>
@@ -283,23 +283,14 @@ export default function ContactClient() {
             ref={heroTextRef}
             translate="no"
             aria-label={`${t("line1")} ${t("line2")}`}
-            className="notranslate leading-[0.8] font-black uppercase tracking-tighter flex flex-col"
+            className="notranslate leading-[0.85] font-black uppercase tracking-tighter flex flex-col"
             style={{
-              fontSize:
-                "calc(clamp(4rem, 14vw, 16rem) * var(--heading-scale))",
+              fontSize: "clamp(5rem, 14vw, 16rem)",
             }}
           >
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
               <span
-                className="hero-line block will-change-transform origin-left drop-shadow-lg"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.7) 50%, #ffffff 100%)",
-                  backgroundSize: "200% 100%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
+                className="hero-line block will-change-transform origin-left drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] text-white/95"
               >
                 {t("line1")}
               </span>
@@ -307,15 +298,8 @@ export default function ContactClient() {
             {' '}
             <span className="overflow-hidden block py-4 -my-4 pr-12 -mr-12">
               <span
-                className="hero-line block will-change-transform origin-left drop-shadow-lg"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(135deg, #ffffff 0%, rgba(18,168,172,0.7) 50%, #ffffff 100%)",
-                  backgroundSize: "200% 100%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
+                className="hero-line block will-change-transform origin-left text-transparent"
+                style={{ WebkitTextStroke: "2px rgba(255, 255, 255, 0.25)" }}
               >
                 {t("line2")}
               </span>
@@ -372,7 +356,13 @@ export default function ContactClient() {
           </div>
           {/* Left Column: Direct Inquiries — Glassmorphic Card (#4) */}
           <div className="lg:col-span-4 flex flex-col gap-2">
-            <div className="fade-up-element p-8 lg:p-10 rounded-lg border border-white/10 bg-white/[0.03] backdrop-blur-md relative overflow-hidden">
+            <div className="fade-up-element p-8 lg:p-10 rounded-3xl border border-white/10 bg-[#0a0c12]/60 backdrop-blur-3xl shadow-2xl relative overflow-hidden group hover:border-white/20 transition-colors duration-700">
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.04),_transparent_60%)] pointer-events-none rounded-3xl" />
+              {/* Ultra-subtle Film Grain */}
+              <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-soft-light rounded-3xl overflow-hidden" 
+                   style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }} 
+              />
               {/* Subtle turquoise edge glow */}
               <div
                 className="absolute top-0 left-0 w-full h-px pointer-events-none"
@@ -587,7 +577,13 @@ export default function ContactClient() {
 
           {/* Right Column: Form — Glassmorphic Container (#5) */}
           <div className="lg:col-span-7 lg:col-start-6">
-            <div className="fade-up-element p-8 lg:p-12 rounded-sm border border-white/[0.08] bg-white/[0.02] backdrop-blur-sm relative overflow-hidden">
+            <div className="fade-up-element p-8 lg:p-12 rounded-3xl border border-white/[0.08] bg-[#0a0c12]/60 backdrop-blur-3xl shadow-2xl relative overflow-hidden group hover:border-white/20 transition-all duration-700">
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(18,168,172,0.05),_transparent_60%)] pointer-events-none rounded-3xl" />
+              {/* Ultra-subtle Film Grain */}
+              <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-soft-light rounded-3xl overflow-hidden" 
+                   style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }} 
+              />
               {/* Top edge glow */}
               <div
                 className="absolute top-0 left-0 w-full h-px pointer-events-none"
@@ -637,7 +633,10 @@ export default function ContactClient() {
       {/* Journey Conclusion Statement */}
       <section className="relative px-8 md:px-16 pb-32 pt-16 max-w-6xl mx-auto flex flex-col items-center justify-center text-center">
         <div className="w-[1px] h-24 bg-gradient-to-b from-transparent to-gold/50 mb-12" />
-        <h2 className="font-playfair text-3xl md:text-5xl font-semibold italic text-white/90 mb-6 tracking-wide">
+        <h2 
+          className="font-light italic tracking-tight text-white/90 mb-6"
+          style={{ fontSize: "clamp(3rem, 6vw, 6rem)", fontFamily: "var(--font-playfair)" }}
+        >
           The standard has been set.
         </h2>
         <p className="font-sans text-xl md:text-2xl font-light text-white/60 max-w-2xl leading-relaxed">

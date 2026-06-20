@@ -472,9 +472,9 @@ function EquilibriumSection() {
   const yTransform = useTransform(scrollYProgress, [0, 1], [-80, 80]);
 
   return (
-    <section ref={containerRef} className="px-gutter py-[20vh] bg-[#020202] relative z-10 border-t border-white/5 overflow-hidden">
-      {/* Background Glow - Upgraded to Awwwards Premium Liquid Aurora */}
-      <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.40] blur-[100px] pointer-events-none z-0 will-change-transform">
+    <section ref={containerRef} className="px-gutter py-[20vh] bg-transparent relative z-10 border-t border-white/5 overflow-hidden">
+      {/* Background Glow - Dimmed to let the real WebGL canvas shine through */}
+      <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.05] blur-[120px] pointer-events-none z-0 will-change-transform">
         <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_22s_linear_infinite_reverse] mix-blend-overlay" />
       </div>
@@ -668,8 +668,8 @@ export default function PartnershipsClient() {
   const accordionWrapperRef = useRef<HTMLDivElement>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
-  // Partnerships page shifts the GlobalCanvas to Deep Petrol
-  usePageColorShift("#0a4c5a");
+  // Partnerships page shifts the GlobalCanvas to Deep Obsidian Petrol
+  usePageColorShift("#020508");
 
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1207,8 +1207,8 @@ export default function PartnershipsClient() {
           />
 
           {/* AWWWARDS Premium Liquid Aurora Background */}
-          {/* Increased opacity to 0.40 and reduced blur so it's impossible to miss */}
-          <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
+          {/* Drastically reduced opacity so it stays a subtle premium glow instead of a bright green swamp */}
+          <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.06] blur-[120px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -1479,15 +1479,11 @@ export default function PartnershipsClient() {
             below ties this beat to the hero's orchestra. */}
         <section
           data-journey="proof"
-          className="px-gutter py-[26vh] lg:py-[32vh] bg-[#0c0e14] relative z-10 border-t border-white/5 overflow-hidden"
+          className="px-gutter py-[26vh] lg:py-[32vh] bg-transparent relative z-10 border-t border-white/5 overflow-hidden"
         >
-          {/* Atmospheric glow — Upgraded to Awwwards Premium Liquid Aurora */}
-          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
-            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
-          </div>
-
-          <div className="relative max-w-[88rem] mx-auto text-center reveal-up">
+          {/* Background is now pure transparent to let the premium WebGL fluid canvas shine through behind the monumental text */}
+          
+          <div className="relative max-w-[88rem] mx-auto text-center reveal-up z-10">
             <p
               className="text-[clamp(1.7rem,3.8vw,4.4rem)] font-light leading-[1.18] tracking-[-0.018em] text-white/72 mb-8 lg:mb-12"
               style={{
@@ -1499,30 +1495,15 @@ export default function PartnershipsClient() {
             </p>
 
             <div className="flex flex-col items-center justify-center w-full">
-              <div 
-                className="scroll-fill-text inline-block text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent whitespace-nowrap"
-                style={{
-                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
-                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                  backgroundPosition: "100% 0",
-                  WebkitBackgroundClip: "text",
-                }}
+              <h2 
+                className="font-black leading-[0.85] tracking-[-0.04em] uppercase"
+                style={{ fontSize: "clamp(4rem, 10vw, 12rem)" }}
               >
-                GOTT WALD
-              </div>
-              <div 
-                className="scroll-fill-text inline-block text-[clamp(2.8rem,8vw,11rem)] font-black leading-[0.92] tracking-[-0.045em] uppercase text-transparent whitespace-nowrap"
-                style={{
-                  WebkitTextStroke: "1px rgba(255,255,255,0.2)",
-                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                  backgroundPosition: "100% 0",
-                  WebkitBackgroundClip: "text",
-                }}
-              >
-                IS A STANDARD.
-              </div>
+                <span className="block text-white opacity-95">GOTT WALD</span>
+                <span className="block bg-gradient-to-r from-white via-white/70 to-white/20 bg-clip-text text-transparent">
+                  IS A STANDARD.
+                </span>
+              </h2>
             </div>
 
             {/* 5-frequency hairline — gold→silver→petrol→turquoise→copper,
@@ -1553,9 +1534,25 @@ export default function PartnershipsClient() {
         {/* ── SECTION 3: 7-LINE MANIFESTO ── */}
         <section
           id="manifesto"
-          className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5"
+          className="px-gutter py-[18vh] bg-[#020305] relative z-10 border-t border-white/5 overflow-hidden"
         >
-          <div className="max-w-6xl mx-auto">
+          {/* Awwwards Editorial Background */}
+          <div 
+            className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[70vw] max-w-[1200px] aspect-square pointer-events-none hidden lg:block opacity-[0.45] mix-blend-screen grayscale-[30%]"
+            style={{
+              maskImage: 'radial-gradient(circle at center, black 20%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(circle at center, black 20%, transparent 70%)'
+            }}
+          >
+            <Image
+              src="/images/partnership_manifesto_bg.png"
+              alt="Liquid Obsidian"
+              fill
+              className="object-cover object-center"
+            />
+          </div>
+
+          <div className="max-w-6xl mx-auto relative z-10">
             <div className="reveal-up mb-20">
               <p className="text-sm tracking-[0.45em] uppercase text-gold/90 font-bold mb-4">
                 Our Foundation
@@ -1596,7 +1593,7 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 4: PARTNERSHIP PRINCIPLE ── */}
-        <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
+        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
           <div className="max-w-6xl mx-auto space-y-24">
             {/* TOP: The Principle Statement */}
             <div className="reveal-up relative">
@@ -1613,28 +1610,34 @@ export default function PartnershipsClient() {
                 </div>
 
                 <div className="flex flex-col">
-                  <h2 className="text-[clamp(2.5rem,4vw,4rem)] font-light tracking-tight leading-none text-white/90 mb-2">
+                  <h2 
+                    className="font-light tracking-tight leading-none text-white/90 mb-2"
+                    style={{ fontSize: "clamp(2.5rem, 4vw, 4rem)" }}
+                  >
                     Partnership is
                   </h2>
-                  <h2 className="text-[clamp(5rem,9vw,10rem)] font-serif italic tracking-tighter leading-[0.85] text-white">
+                  <h2 
+                    className="font-serif italic tracking-tighter leading-[0.85] text-white"
+                    style={{ fontSize: "clamp(6rem, 11vw, 12rem)" }}
+                  >
                     Alignment
                   </h2>
                   
                   <div className="flex items-center gap-8 mt-10 mb-8 max-w-4xl">
-                    <span className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-light text-white/30 italic">
+                    <span 
+                      className="font-light text-white/30 italic"
+                      style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.5rem)", fontFamily: "var(--font-playfair)" }}
+                    >
                       not
                     </span>
                     <span className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent" />
                   </div>
 
                   <h2 
-                    className="scroll-fill-text inline-block text-[clamp(4rem,7vw,8rem)] font-black tracking-tighter leading-none uppercase text-transparent whitespace-nowrap"
-                    style={{
-                      WebkitTextStroke: "1px rgba(255, 255, 255, 0.25)",
-                      backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
-                      backgroundSize: "200% 100%",
-                      backgroundPosition: "100% 0",
-                      WebkitBackgroundClip: "text",
+                    className="inline-block font-black tracking-normal leading-[0.9] uppercase text-transparent whitespace-nowrap"
+                    style={{ 
+                      fontSize: "clamp(5rem, 9vw, 11rem)",
+                      WebkitTextStroke: "2px rgba(255, 255, 255, 0.18)"
                     }}
                   >
                     Procurement.
@@ -1662,8 +1665,24 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 5: WHO WE'RE LOOKING FOR ── */}
-        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5">
-          <div className="max-w-6xl mx-auto">
+        <section className="px-gutter py-[18vh] bg-[#010101] relative z-10 border-t border-white/5 overflow-hidden">
+          {/* Architectural Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[30%] left-[-5vw] z-0 select-none opacity-40 mix-blend-overlay"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(8rem, 25vw, 30rem)",
+              }}
+            >
+              alliance.
+            </span>
+          </div>
+
+          <div className="max-w-6xl mx-auto relative z-10">
             <div className="reveal-up mb-20">
               <p className="text-sm tracking-[0.45em] uppercase text-copper/90 font-bold mb-6">
                 Who We&apos;re Looking For
@@ -1686,7 +1705,7 @@ export default function PartnershipsClient() {
         {/* ── SECTION 6: NON-NEGOTIABLES (HORIZONTAL SCROLL) ── */}
         <section
           id="standards-section"
-          className="bg-black relative z-10 isolate"
+          className="bg-transparent relative z-10 isolate"
         >
           {/* Pagination Indicators */}
           <StandardsPagination />
@@ -1835,7 +1854,23 @@ export default function PartnershipsClient() {
         <EquilibriumSection />
 
         {/* ── SECTION 8: DOMAINS ACCORDION ── */}
-        <section className="px-gutter py-[20vh] bg-[#000] relative z-10 border-t border-white/5 overflow-hidden">
+        <section className="px-gutter py-[20vh] bg-[#030406] relative z-10 border-t border-white/5 overflow-hidden">
+          {/* Awwwards Editorial Background */}
+          <div 
+            className="absolute left-[-15%] top-1/3 -translate-y-1/2 w-[70vw] max-w-[1200px] aspect-square pointer-events-none hidden lg:block opacity-[0.35] mix-blend-screen grayscale-[20%]"
+            style={{
+              maskImage: 'radial-gradient(circle at center, black 10%, transparent 65%)',
+              WebkitMaskImage: 'radial-gradient(circle at center, black 10%, transparent 65%)'
+            }}
+          >
+            <Image
+              src="/images/partnership_domains_bg.png"
+              alt="Brutalist Gold Veins"
+              fill
+              className="object-cover object-center"
+            />
+          </div>
+
           {/* Subtle Cyber Grid Background */}
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
                style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "40px 40px" }} 
@@ -1966,8 +2001,24 @@ export default function PartnershipsClient() {
         </section>
 
         {/* ── SECTION 9: SELECTION PROCESS ── */}
-        <section className="px-gutter py-[18vh] bg-[#020202] relative z-10 border-t border-white/5">
-          <div className="max-w-6xl mx-auto">
+        <section className="px-gutter py-[18vh] bg-transparent relative z-10 border-t border-white/5 overflow-hidden">
+          {/* Architectural Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[40%] right-[-10vw] z-0 select-none opacity-40 mix-blend-overlay"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(8rem, 25vw, 30rem)",
+              }}
+            >
+              standards.
+            </span>
+          </div>
+
+          <div className="max-w-6xl mx-auto relative z-10">
             <div className="reveal-up mb-20">
               <p className="text-sm tracking-[0.45em] uppercase text-gold/80 font-bold mb-6">
                 How It Works
@@ -1986,7 +2037,7 @@ export default function PartnershipsClient() {
         {/* ── SECTION 10: APPLICATION FORM ── */}
         <section
           id="apply"
-          className="form-section px-gutter py-[20vh] bg-[#050505] relative z-10 border-t border-white/10 overflow-hidden"
+          className="form-section px-gutter py-[20vh] bg-transparent relative z-10 border-t border-white/10 overflow-hidden"
         >
           {/* Background Awwwards Parallax Watermark */}
           <div
@@ -2029,10 +2080,17 @@ export default function PartnershipsClient() {
 
             <form
               ref={formRef}
-              className="form-reveal flex flex-col gap-12"
+              className="form-reveal flex flex-col gap-12 relative bg-[#0a0c12]/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 md:p-16 lg:p-20 hover:border-white/20 transition-all duration-700 shadow-2xl"
               onSubmit={handleFormSubmit}
             >
-              <Honeypot />
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(18,168,172,0.05),_transparent_60%)] pointer-events-none rounded-3xl" />
+              {/* Ultra-subtle Film Grain */}
+              <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-soft-light rounded-3xl overflow-hidden" 
+                   style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }} 
+              />
+              <div className="relative z-10 flex flex-col gap-12">
+                <Honeypot />
 
               {/* Group 1: Company + Website */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -2387,6 +2445,7 @@ export default function PartnershipsClient() {
                   confidentiality.
                 </p>
               )}
+              </div>
             </form>
           </div>
         </section>

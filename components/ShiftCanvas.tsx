@@ -189,7 +189,7 @@ function SceneManager({ activeIndex }: { activeIndex: number }) {
       
       {/* Exaggerated Floating Effect */}
       <Float speed={1.5} rotationIntensity={1} floatIntensity={2} floatingRange={[-0.2, 0.2]}>
-        <group scale={0.35}>
+        <group scale={1.2}>
           <DecisionVisual color={COLORS[0]} active={activeIndex === 0} />
           <ExecutionVisual color={COLORS[1]} active={activeIndex === 1} />
           <VisibilityVisual color={COLORS[2]} active={activeIndex === 2} />

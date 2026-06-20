@@ -563,9 +563,27 @@ export default function CareersClient() {
         </section>
 
         {/* ── WHO WE'RE LOOKING FOR ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden">
+        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]">
+          
+          {/* AWWWARDS Ghost Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[30%] left-[-5vw] z-0 select-none opacity-40 mix-blend-overlay"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(8rem, 20vw, 24rem)",
+              }}
+            >
+              culture.
+            </span>
+          </div>
+
           {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
-          <div className="about-liquid-aurora absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.35] blur-[100px] z-0 will-change-transform pointer-events-none">
+          {/* Opacity drastically reduced to prevent radioactive glow */}
+          <div className="about-liquid-aurora absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.06] blur-[120px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tl from-[#c07840] via-transparent to-[#b8c0cc] rounded-full animate-[spin_20s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#b8c0cc] to-[#c07840] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -573,16 +591,13 @@ export default function CareersClient() {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center relative z-10">
             <div className="flex-1">
               <h2 
-                className="scroll-fill-text text-[clamp(3rem,6vw,6rem)] leading-[0.9] tracking-tighter font-bold uppercase mb-8 text-transparent"
-                style={{
-                  WebkitTextStroke: "1px rgba(184,192,204,0.4)",
-                  backgroundImage: "linear-gradient(90deg, #fff 40%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 60%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                  backgroundPosition: "100% 0",
-                  WebkitBackgroundClip: "text",
-                }}
+                className="font-black tracking-tighter leading-none uppercase mb-8"
+                style={{ fontSize: "clamp(3rem, 6vw, 6rem)" }}
               >
-                WHO WE&apos;RE <br /> LOOKING FOR
+                <span className="block text-white opacity-95 drop-shadow-2xl">WHO WE&apos;RE</span>
+                <span className="block text-transparent" style={{ WebkitTextStroke: "1.5px rgba(255, 255, 255, 0.2)" }}>
+                  LOOKING FOR
+                </span>
               </h2>
               <p className="text-white/80 italic text-lg border-l border-copper pl-6 mt-12">
                 &quot;If this feels &apos;normal&apos; to you, you&apos;re
@@ -623,9 +638,9 @@ export default function CareersClient() {
         </section>
 
         {/* ── ROLES BY PILLAR (ACCORDION) ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5 bg-[#070c14] relative overflow-hidden">
+        <section className="px-gutter py-[15vh] border-t border-white/5 bg-[#030508] relative overflow-hidden">
           {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
-          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.15] blur-[100px] z-0 will-change-transform pointer-events-none">
+          <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.05] blur-[120px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#c07840] via-[#b8c0cc] to-transparent rounded-full animate-[spin_18s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#b8c0cc] to-[#c07840] rounded-full animate-[spin_25s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -639,9 +654,12 @@ export default function CareersClient() {
                   Architecture
                 </span>
               </div>
-              <h2 className="text-[clamp(4rem,7vw,7rem)] font-black tracking-tighter uppercase flex flex-col relative isolate">
-                <div className="relative z-[20] leading-[0.85] text-white">ROLES BY</div>
-                <div className="relative z-[10] leading-[0.85] text-transparent -mt-2" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}>PILLAR</div>
+              <h2 
+                className="font-black tracking-tighter uppercase flex flex-col relative isolate"
+                style={{ fontSize: "clamp(4.5rem, 8vw, 8rem)" }}
+              >
+                <div className="relative z-[20] leading-[0.85] text-white opacity-95 drop-shadow-2xl">ROLES BY</div>
+                <div className="relative z-[10] leading-[0.85] text-transparent -mt-2" style={{ WebkitTextStroke: "2px rgba(255,255,255,0.2)" }}>PILLAR</div>
               </h2>
               <p className="mt-8 text-white/60 font-light text-xl max-w-md" style={{ fontFamily: "var(--font-playfair)", fontStyle: "italic" }}>
                 We structure our ecosystem across five distinct pillars. Find where your expertise creates the most impact.
@@ -754,9 +772,26 @@ export default function CareersClient() {
         </section>
 
         {/* ── PROCESS & WHAT YOU'LL FIND ── */}
-        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden">
+        <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]">
+          
+          {/* AWWWARDS Ghost Watermark */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[50%] right-[-5vw] -translate-y-1/2 z-0 select-none opacity-30 mix-blend-overlay"
+          >
+            <span
+              className="about-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(8rem, 20vw, 24rem)",
+              }}
+            >
+              impact.
+            </span>
+          </div>
+
           {/* AWWWARDS Premium Liquid Aurora Background (Copper & Silver) */}
-          <div className="about-liquid-aurora absolute top-[50%] left-[-20%] -translate-y-1/2 w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.35] blur-[120px] z-0 will-change-transform pointer-events-none">
+          <div className="about-liquid-aurora absolute top-[50%] left-[-20%] -translate-y-1/2 w-[80vw] h-[80vw] rounded-full mix-blend-screen opacity-[0.06] blur-[120px] z-0 will-change-transform pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#b8c0cc] via-transparent to-[#c07840] rounded-full animate-[spin_22s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-[#c07840] to-[#b8c0cc] rounded-full animate-[spin_28s_linear_infinite_reverse] mix-blend-overlay" />
           </div>
@@ -853,8 +888,8 @@ export default function CareersClient() {
         </section>
 
         {/* ── APPLICATION FORM ── (#9 — copper border + glow) */}
-        {/* #7 — Application form — transparent bg, let fluid show through */}
-        <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20 overflow-hidden bg-[#050505]">
+        {/* #7 — Application form — Premium Executive Clearance Level */}
+        <section id="apply" className="px-gutter py-[15vh] relative border-t border-copper/20 overflow-hidden bg-[#020304]">
           {/* Background Awwwards Parallax Watermark */}
           <div
             aria-hidden="true"
@@ -879,23 +914,35 @@ export default function CareersClient() {
                 "radial-gradient(ellipse at center top, rgba(192,120,64,0.06) 0%, transparent 70%)",
             }}
           />
-          <div className="max-w-3xl mx-auto reveal-text relative z-10">
-            <div className="mb-16">
-              <span className="text-md tracking-[0.5em] uppercase text-copper font-medium block mb-4">
+          <div className="max-w-4xl mx-auto reveal-text relative z-10">
+            <div className="mb-16 text-center">
+              <span className="text-sm tracking-[0.5em] uppercase text-copper font-medium block mb-4">
                 INITIATE
               </span>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6">
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-6 text-white drop-shadow-xl">
                 APPLICATION
               </h2>
-              <p className="text-white/80 font-light text-lg">
+              <p className="text-white/70 font-light text-xl">
                 Keep it clear and proof-based. If there&apos;s a fit, we&apos;ll
                 reach out.
               </p>
             </div>
 
+            <div className="relative p-10 md:p-16 rounded-[2rem] border border-white/[0.05] shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden">
+              {/* Premium Frosted Glass Background */}
+              <div className="absolute inset-0 bg-white/[0.015] backdrop-blur-2xl z-0" />
+              
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(192,120,64,0.05),_transparent_60%)] pointer-events-none rounded-[2rem]" />
+              
+              {/* Ultra-subtle Film Grain */}
+              <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-soft-light rounded-[2rem] overflow-hidden" 
+                   style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }}>
+              </div>
+
             <form
               ref={formRef}
-              className="flex flex-col gap-10"
+              className="flex flex-col gap-10 relative z-10 form-section"
               onSubmit={handleFormSubmit}
             >
               <Honeypot />
@@ -1105,6 +1152,7 @@ export default function CareersClient() {
                 )}
               </div>
             </form>
+            </div>
           </div>
         </section>
       </main>

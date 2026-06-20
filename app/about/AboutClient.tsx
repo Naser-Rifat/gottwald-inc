@@ -803,6 +803,22 @@ export default function AboutClient() {
           data-journey="openness"
           className="about-atmosphere bg-[#070c14] relative z-10 py-[14vh] lg:py-[18vh] overflow-hidden"
         >
+          {/* Awwwards Editorial Intervention: Asymmetrical Depth Marker */}
+          <div 
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-[45vw] max-w-[800px] aspect-square pointer-events-none hidden lg:block opacity-[0.45] mix-blend-screen"
+            style={{
+              maskImage: 'radial-gradient(circle at center, black 20%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(circle at center, black 20%, transparent 70%)'
+            }}
+          >
+            <Image
+              src="/about/about_diagnostic_editorial.png"
+              alt="Editorial abstract"
+              fill
+              className="object-cover object-center grayscale-[20%]"
+            />
+          </div>
+
           <div className="max-w-[1400px] mx-auto px-gutter relative z-10 w-full">
             {/* Block 1 — The Observation. Left, sets the scene. */}
             <div className="reveal-text max-w-4xl mb-[11vh] lg:mb-[13vh]">
@@ -974,7 +990,11 @@ export default function AboutClient() {
 
               <div
                 aria-hidden="true"
-                className="living-system-visual about-visual about-visual--living pointer-events-none hidden lg:block lg:col-span-5 relative aspect-[4/5] overflow-hidden"
+                className="living-system-visual about-visual about-visual--living pointer-events-none hidden lg:block lg:col-span-5 relative aspect-[4/5] overflow-hidden opacity-[0.8]"
+                style={{
+                  maskImage: 'radial-gradient(circle at center, black 40%, transparent 85%)',
+                  WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 85%)'
+                }}
               >
                 <Image
                   src="/images/about_axis_abstract_ci.webp"
@@ -1029,74 +1049,7 @@ export default function AboutClient() {
           </div>
         </section>
 
-        {/* WHAT WE STAND FOR */}
-        <section className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04]">
-          <div className="max-w-[1400px] mx-auto relative z-10">
-            <p className="reveal-text text-[10px] tracking-[0.42em] uppercase text-turquoise/75 font-light mb-14">
-              What we stand for
-            </p>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-start">
-              <div className="reveal-text space-y-10 lg:col-span-8">
-                <h3 className="text-[clamp(2.5rem,5vw,5.5rem)] font-light leading-[1.02] tracking-[-0.035em] text-white/90">
-                  We believe in something radical —{" "}
-                  <br className="hidden md:block" />
-                  <span className="font-light italic tracking-[-0.02em] text-turquoise/80 mt-2 block">
-                    and practical:
-                  </span>
-                </h3>
-                <p className="text-[clamp(1.2rem,2vw,1.5rem)] text-white/80 leading-relaxed font-light max-w-xl">
-                  When structure becomes visible, the right solution becomes
-                  inevitable. Not &quot;someday.&quot; Not &quot;when
-                  there&apos;s time.&quot;
-                </p>
 
-                <ul className="pt-4 max-w-4xl border-t border-white/[0.08]">
-                  {[
-                    "But in a way that lets a CEO breathe again.",
-                    "In a way that helps founders know what comes first.",
-                    "In a way that lets teams deliver with focus — and systems carry instead of pull.",
-                  ].map((text, idx) => (
-                    <li
-                      key={idx}
-                      className="flex gap-5 items-start py-5 border-b border-white/[0.07]"
-                    >
-                      <span className="font-mono text-[10px] tracking-[0.25em] text-gold/55 mt-1.5 shrink-0">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <p className="text-lg text-white/75 font-light leading-relaxed">
-                        {text}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="reveal-text lg:col-span-4 lg:mt-[8vh] lg:border-l border-white/[0.08] lg:pl-10 flex flex-col justify-center relative">
-                <h4 className="text-[clamp(3.5rem,6vw,7rem)] font-light text-white/55 mb-10 leading-[0.86] tracking-[-0.055em]">
-                  Solved
-                  <span className="block text-[0.42em] leading-[1.1] tracking-[-0.02em] text-white/35 mt-4">
-                    means
-                  </span>
-                  <strong className="text-white font-semibold block">
-                    solved.
-                  </strong>
-                </h4>
-
-                <div className="border-t border-turquoise/45 pt-6 mb-8 max-w-md">
-                  <p className="text-xl md:text-2xl font-light tracking-[0.02em] text-white/90 leading-[1.4]">
-                    &quot;Solved&quot; means you feel it on Monday morning, not
-                    in a pitch.
-                  </p>
-                </div>
-
-                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
-                  Less friction. Clearer decisions. Higher speed. More calm in
-                  the system.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* 5 PILLARS (WHAT WE DO DIFFERENTLY) */}
         <section
@@ -1987,7 +1940,17 @@ export default function AboutClient() {
             </div>
 
             {/* Right Side: Solved means solved */}
-            <div className="lg:col-span-5 lg:pl-16 lg:border-l border-white/[0.06] pt-4 lg:pt-0">
+            <div className="lg:col-span-5 lg:pl-16 lg:border-l border-white/[0.06] pt-4 lg:pt-0 relative">
+              {/* Awwwards Editorial Intervention: The Depth Anchor */}
+              <div className="absolute top-1/2 left-[10%] -translate-y-1/2 w-[200%] aspect-square pointer-events-none z-[-1] hidden lg:block opacity-[0.15] mix-blend-screen blur-[2px]">
+                <Image
+                  src="/about/about_solved_anchor.png"
+                  alt="Depth Anchor"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
               <div className="flex flex-col mb-10 md:mb-12">
                 <span className="text-silver/50 font-extralight leading-[0.9] tracking-tight text-[clamp(4rem,6vw,6.5rem)]">
                   Solved
