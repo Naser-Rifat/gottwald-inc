@@ -440,7 +440,7 @@ export default function GlobalCanvas() {
     <div
       ref={containerRef}
       id="global-fluid-canvas"
-      className="fixed inset-0 w-screen h-screen pointer-events-none -z-20 bg-black"
+      className="fixed inset-0 w-full h-full pointer-events-none -z-20 bg-black"
       style={{ overflow: "hidden" }}
     >
       <Canvas

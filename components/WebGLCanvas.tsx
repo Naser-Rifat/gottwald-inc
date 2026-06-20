@@ -33,7 +33,7 @@ export default function WebGLCanvas() {
 
   return (
     <div ref={containerRef} suppressHydrationWarning>
-      <canvas id="canvas" className="fixed inset-0 w-screen h-screen -z-10" />
+      <canvas id="canvas" className="fixed inset-0 w-full h-full -z-10" />
     </div>
   );
 }
