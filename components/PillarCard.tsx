@@ -131,6 +131,24 @@ export default function PillarCard({
     return () => ctx.revert();
   }, [index]);
 
+  const handleMouseEnter = useCallback(() => {
+    const cursor = document.getElementById('custom-cursor');
+    if (cursor) {
+      gsap.to(cursor, {
+        width: "80px",
+        height: "80px",
+        backgroundColor: "rgba(255,255,255,0.1)",
+        borderColor: "rgba(255,255,255,0.4)",
+        duration: 0.4,
+        ease: "back.out(1.5)",
+      });
+      const text = cursor.querySelector('span');
+      if (text) {
+        gsap.to(text, { opacity: 1, duration: 0.3 });
+      }
+    }
+  }, []);
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const card = cardRef.current;
     const image = imageRef.current;
@@ -179,119 +197,147 @@ export default function PillarCard({
       duration: 0.4,
       overwrite: "auto",
     });
+    
+    // Reset custom cursor
+    const cursor = document.getElementById('custom-cursor');
+    if (cursor) {
+      gsap.to(cursor, {
+        width: "12px",
+        height: "12px",
+        backgroundColor: "rgba(255,255,255,0.5)",
+        borderColor: "rgba(255,255,255,0.2)",
+        duration: 0.4,
+        ease: "power3.out",
+      });
+      const text = cursor.querySelector('span');
+      if (text) {
+        gsap.to(text, { opacity: 0, duration: 0.2 });
+      }
+    }
   }, []);
 
   return (
     <Link
       ref={cardRef}
       href={`/pillars/${pillar.slug}`}
-      className={`group cursor-pointer block ${className}`}
-      style={{ perspective: "800px" }}
+      className={`group cursor-pointer block w-full relative ${className}`}
+      style={{ perspective: "1000px" }}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Background Glow Layer (Theme Accent) */}
+      <div 
+        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-40 transition-opacity duration-700 blur-[80px]"
+        style={{ 
+          background: `radial-gradient(circle at center, ${pillar.theme?.accent || '#d4af37'}80 0%, transparent 70%)`,
+          transform: 'scale(1.1)'
+        }}
+      />
+
       <div
         id={`tile-${index + 1}`}
         ref={imageWrapRef}
-        className={`relative overflow-hidden rounded-xl ${imageClassName} transition-shadow duration-500`}
-        style={{ clipPath: "inset(100% 0 0 0)", minHeight: "180px" }}
+        className={`relative z-10 overflow-hidden rounded-2xl ${imageClassName} transition-all duration-700 bg-white/[0.02] border border-white/5 backdrop-blur-md group-hover:border-white/15`}
+        style={{ clipPath: "inset(100% 0 0 0)", minHeight: "180px", boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
       >
         <div
           ref={imageRef}
-          className="w-full h-full relative"
+          className="w-full h-full relative p-[1px]"
           style={{
             willChange: "transform",
             transformStyle: "preserve-3d",
           }}
         >
-          {/* 1. Base Dark Background / Texture (Fallback) */}
-          <div className="dom-image-layer absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000">
-            {/* Multi-stop gradient background */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
-              }}
-            />
-
-            {/* Subtle diagonal scan line texture */}
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
-                backgroundSize: "6px 6px",
-              }}
-            />
-          </div>
-
-          {/* 2. Image Layer (Sits above background) */}
-          {pillar.image && (
-            <div className="dom-image-layer absolute inset-0 z-10 transition-opacity duration-1000">
-              <Image
-                src={pillar.image}
-                alt={pillar.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority={index < 4}
-                quality={100}
-                onError={(e) => {
-                  const img = e.target as HTMLImageElement;
-                  img.style.display = "none";
-                }}
-              />
-              {/* Metallic Tint Overlay for Visual Pop */}
-              <div 
-                className="absolute inset-0 pointer-events-none mix-blend-color"
+          {/* Inner glass wrapper */}
+          <div className="w-full h-full relative rounded-2xl overflow-hidden bg-black/20">
+            {/* 1. Base Dark Background / Texture */}
+            <div className="dom-image-layer absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000">
+              <div
+                className="absolute inset-0"
                 style={{
-                  background: "linear-gradient(135deg, rgba(18,168,172,0.18) 0%, rgba(0,109,132,0.18) 48%, rgba(184,192,204,0.12) 100%)"
+                  background:
+                    "linear-gradient(135deg, #0c1018 0%, #0a0e16 30%, #0d111b 60%, #08090e 100%)",
                 }}
               />
-              <div 
-                className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-40"
+              <div
+                className="absolute inset-0 opacity-[0.03]"
                 style={{
-                  background: "linear-gradient(45deg, rgba(18,168,172,0.4) 0%, transparent 100%)"
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                  backgroundSize: "6px 6px",
                 }}
               />
-              {/* Optional: Add a dark gradient at bottom for text readability if image exists */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent pointer-events-none mix-blend-multiply" />
-              <div className={`absolute inset-x-0 top-0 h-0.5 pointer-events-none transition-colors ${TONE_HAIRLINE[tone]}`} />
-            </div>
-          )}
-
-          {/* 3. Foreground Text / Accents (Sits above background and image) */}
-          <div className="absolute inset-0 pointer-events-none select-none z-20">
-            {/* Large index number — editorial hero */}
-            <div className="absolute top-6 right-6 sm:top-8 sm:right-8 mix-blend-screen">
-              <span
-                className="text-white/[0.15] font-black leading-none tracking-tighter"
-                style={{ fontSize: "clamp(5rem, 10vw, 12rem)" }}
-              >
-                {String(index + 1).padStart(2, "0")}
-              </span>
             </div>
 
-            {/* Bottom content — title integrated into the card */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 drop-shadow-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`w-1.5 h-1.5 rounded-full transition-shadow ${TONE_DOT[tone]} group-hover:shadow-[0_0_8px_rgba(18,168,172,0.6)]`} />
-                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-white/80 uppercase font-bold drop-shadow-md">
-                  Pillar {String(index + 1).padStart(2, "0")}
+            {/* 2. Image Layer */}
+            {pillar.image && (
+              <div className="dom-image-layer absolute inset-0 z-10 transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100">
+                <Image
+                  src={pillar.image}
+                  alt={pillar.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={index < 4}
+                  quality={100}
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                  }}
+                />
+                
+                {/* Dynamic Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent pointer-events-none opacity-90 group-hover:opacity-70 transition-opacity duration-500" />
+                
+                {/* Top Theme Hairline */}
+                <div 
+                  className="absolute inset-x-0 top-0 h-[2px] pointer-events-none transition-all duration-500 opacity-30 group-hover:opacity-100" 
+                  style={{ background: `linear-gradient(90deg, transparent, ${pillar.theme?.accent || '#d4af37'}, transparent)` }}
+                />
+              </div>
+            )}
+
+            {/* 3. Foreground Content */}
+            <div className="absolute inset-0 pointer-events-none select-none z-20 flex flex-col justify-between p-6 sm:p-10">
+              
+              {/* Top Layer: Index Number placed beautifully */}
+              <div className="flex justify-end items-start w-full transform group-hover:translate-y-[-10px] transition-transform duration-700 ease-out">
+                <span
+                  className="font-black leading-none tracking-tighter mix-blend-overlay"
+                  style={{ 
+                    fontSize: "clamp(6rem, 12vw, 15rem)", 
+                    color: "rgba(255,255,255,0.08)",
+                    WebkitTextStroke: "1px rgba(255,255,255,0.05)"
+                  }}
+                >
+                  {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              {/* <p className="text-white text-[clamp(1rem,2vw,1.5rem)] font-semibold tracking-tight leading-snug line-clamp-2">
-                {pillar.title}
-              </p> */}
-            </div>
-          </div>
 
-          {/* Hover overlay — on top of everything */}
-          <div
-            ref={overlayRef}
-            className="absolute inset-0 pointer-events-none opacity-0 z-30"
-          />
+              {/* Bottom Layer: Meta info */}
+              <div className="flex flex-col gap-2 transform group-hover:translate-y-[-5px] transition-transform duration-500 ease-out">
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-2 h-2 rounded-full transition-shadow duration-300" 
+                    style={{ 
+                      backgroundColor: pillar.theme?.accent || '#d4af37',
+                      boxShadow: `0 0 10px ${pillar.theme?.accent || '#d4af37'}80` 
+                    }} 
+                  />
+                  <span className="text-[10px] sm:text-[11px] tracking-[0.4em] text-white/60 group-hover:text-white/90 uppercase font-bold transition-colors duration-300">
+                    Pillar {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Hover overlay — cursor follow glow */}
+            <div
+              ref={overlayRef}
+              className="absolute inset-0 pointer-events-none opacity-0 z-30 mix-blend-screen"
+            />
+          </div>
         </div>
       </div>
 
