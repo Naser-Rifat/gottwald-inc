@@ -87,7 +87,7 @@ export default function PillarListRow({ pillar, index }: PillarListRowProps) {
                   <div key={i} className="flex items-center gap-3">
                     <span className="w-1 h-1 rounded-full bg-white/30 group-hover:bg-[#d4af37] transition-colors duration-300" />
                     <span className="text-white/60 text-sm tracking-wide font-light group-hover:text-white/90 transition-colors duration-300">
-                      {block.title}
+                      {block.heading}
                     </span>
                   </div>
                 ))}
