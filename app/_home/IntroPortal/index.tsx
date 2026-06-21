@@ -10,7 +10,7 @@ import gsap from "gsap";
 // paint (loading screen / portal shell) ships without Three.js. Return
 // visitors render <ReturnVisitLoader/> instead and never load this code
 // at all. ssr:false because Three.js requires window/WebGL.
-const IntroPortalCanvas = dynamic(() => import("@/components/IntroPortalCanvas"), {
+const IntroPortalCanvas = dynamic(() => import("./IntroPortalCanvas"), {
   ssr: false,
 });
 

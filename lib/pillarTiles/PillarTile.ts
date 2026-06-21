@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
-import { getDeviceTier } from "@/lib/deviceTier";
+
 import { getDebugGui } from "../debugGui";
 import { projectTileFrag } from "../shaders/projectTileFrag";
 import { projectTileVert } from "../shaders/projectTileVert";
@@ -133,8 +132,8 @@ export default class ProjectTile extends THREE.Group {
     const xAbs = e.clientX - rect.left;
     const yAbs = e.clientY - rect.top;
 
-    let x = xAbs / rect.width;
-    let y = yAbs / rect.height;
+    const x = xAbs / rect.width;
+    const y = yAbs / rect.height;
 
     // Snap the actual uMouse value instantly to avoid the ripple flying in from 999,999
     this.uMouse.value.set(x, 1.0 - y);
@@ -147,8 +146,8 @@ export default class ProjectTile extends THREE.Group {
     const xAbs = e.clientX - rect.left;
     const yAbs = e.clientY - rect.top;
 
-    let x = xAbs / rect.width;
-    let y = yAbs / rect.height;
+    const x = xAbs / rect.width;
+    const y = yAbs / rect.height;
 
     this.targetMouse.set(x, 1.0 - y); // WebGL y is flipped
   };
