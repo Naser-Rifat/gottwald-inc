@@ -1,30 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import IntroPortalCanvas from "./IntroPortalCanvas";
 
-// Module-level flag: survives client-side navigation, resets on full reload.
-let introDismissed = false;
+const noopSubscribe = () => () => {};
+const getTrue = () => true;
+const getFalse = () => false;
+const getPortalVisited = () =>
+  sessionStorage.getItem("portal-visited") === "true";
 
 export default function IntroPortal() {
+  const router = useRouter();
   const portalRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useSyncExternalStore(noopSubscribe, getTrue, getFalse);
+  const isReturnVisit = useSyncExternalStore(
+    noopSubscribe,
+    getPortalVisited,
+    getFalse,
+  );
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isReturnVisit, setIsReturnVisit] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    setIsClient(true);
-    if (sessionStorage.getItem("portal-visited") === "true") {
-      introDismissed = true;
-      setIsReturnVisit(true);
-      // Wait for loading-complete to dispatch portal-start
-    }
-  }, []);
 
   // Listen to the global loading progress from loadingGroup.ts
   useEffect(() => {
@@ -108,7 +108,6 @@ export default function IntroPortal() {
   // Shared portal exit animation
   const dismissPortal = () => {
     sessionStorage.setItem("portal-visited", "true");
-    introDismissed = true;
 
     // Trigger wormhole shader animation
     window.dispatchEvent(new CustomEvent("portal-start"));
@@ -153,6 +152,14 @@ export default function IntroPortal() {
   // ENTER QUIETLY — enter with sound OFF
   const handleEnterQuietly = () => {
     dismissPortal();
+  };
+
+  // VIEW WORK — skip intro and go to our work
+  const handleViewWork = () => {
+    dismissPortal();
+    setTimeout(() => {
+      router.push('/our-work');
+    }, 800); // wait for portal exit animation to almost finish
   };
 
   if (!isClient) return null;
@@ -256,13 +263,12 @@ export default function IntroPortal() {
           </div>
         </div>
 
-        {/* Skip Link */}
-        <div className="portal-reveal cursor-pointer group" onClick={handleEnterQuietly}>
-          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/40 group-hover:text-white/70 transition-colors">
-            ENTER QUIETLY
+        {/* Skip Link - Combined Action */}
+        <div className="portal-reveal cursor-pointer group" onClick={handleViewWork}>
+          <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.1em] text-white/80 group-hover:text-white transition-colors">
+            SKIP INTRO & SHOW OUR WORK
           </span>
         </div>
-
       </div>
     </div>
   );
