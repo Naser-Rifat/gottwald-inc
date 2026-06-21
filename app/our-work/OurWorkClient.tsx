@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Pillar } from "@/lib/types/pillars";
-import PillarFluidCanvas from "@/components/PillarFluidCanvas";
+import AuroraCanvasBg from "@/components/AuroraCanvasBg";
 import FooterSection from "@/components/FooterSection";
 
 import { useGhostCursor } from "./_hooks/useGhostCursor";
@@ -75,12 +75,7 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
       style={{ cursor: "none" }}
     >
       <div className="absolute inset-0 pointer-events-none opacity-80 transition-colors duration-1000">
-        <PillarFluidCanvas
-          colorBase={currentColors.base}
-          colorPetrol={currentColors.petrol}
-          colorTurquoise={currentColors.turquoise}
-          className="absolute inset-0 mix-blend-screen"
-        />
+        <AuroraCanvasBg colorHex={currentColors.turquoise} />
       </div>
 
       <TopNavigation
