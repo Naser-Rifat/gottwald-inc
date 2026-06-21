@@ -219,7 +219,7 @@ export default function PillarCard({
   return (
     <Link
       ref={cardRef}
-      href={`/pillars/${pillar.slug}`}
+      href={`/our-work/${pillar.slug}`}
       className={`group cursor-pointer block w-full relative ${className}`}
       style={{ perspective: "1000px" }}
       onMouseEnter={handleMouseEnter}

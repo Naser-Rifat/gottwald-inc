@@ -23,8 +23,8 @@ function resolveLabel(href: string): string {
   const [basePath] = href.split("#");
   if (ROUTE_LABELS[basePath]) return ROUTE_LABELS[basePath];
 
-  // Dynamic pillar routes: "/pillars/my-slug" → "MY SLUG"
-  const pillarMatch = basePath.match(/^\/pillars\/(.+)$/);
+  // Dynamic pillar routes: "/our-work/my-slug" → "MY SLUG"
+  const pillarMatch = basePath.match(/^\/our-work\/(.+)$/);
   if (pillarMatch) {
     return pillarMatch[1].replace(/-/g, " ").toUpperCase();
   }
@@ -44,7 +44,16 @@ export default function GlobalPageLoader() {
   const counterRef = useRef<HTMLSpanElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const labelTextRef = useRef<HTMLHeadingElement>(null);
-  const lineProgressRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null);
+
+  // Track previous route for dynamic back buttons
+  useEffect(() => {
+    const current = sessionStorage.getItem("gw_current_route");
+    if (current && current !== pathname) {
+      sessionStorage.setItem("gw_previous_route", current);
+    }
+    sessionStorage.setItem("gw_current_route", pathname);
+  }, [pathname]);
 
   // Rigid State Tracking
   const isTransitioning = useRef(false);
@@ -78,7 +87,7 @@ export default function GlobalPageLoader() {
     gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
     gsap.set(curtainRef.current, { yPercent: 0 });
     gsap.set([counterRef.current, labelRef.current], { opacity: 1, y: 0 });
-    gsap.set(lineProgressRef.current, { scaleX: 0, transformOrigin: "left center" });
+    gsap.set(circleRef.current, { strokeDashoffset: 289.026 });
 
     if (activeTimeline.current) activeTimeline.current.kill();
 
@@ -99,8 +108,11 @@ export default function GlobalPageLoader() {
       duration: 1.4,
       ease: "power2.inOut",
       onUpdate: () => {
-        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
-        if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+        if (circleRef.current) {
+          const p = progressObj.current.val;
+          circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+        }
       },
     });
 
@@ -182,7 +194,7 @@ export default function GlobalPageLoader() {
       // Instantly cover viewport to avoid old-page flash during route start.
       gsap.set(curtainRef.current, { yPercent: 0 });
       gsap.set([counterRef.current, labelRef.current], { opacity: 0, y: 20 });
-      gsap.set(lineProgressRef.current, { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(circleRef.current, { strokeDashoffset: 289.026 });
 
       progressObj.current.val = 0;
       
@@ -215,8 +227,11 @@ export default function GlobalPageLoader() {
         duration: 1.0,
         ease: "power2.out",
         onUpdate: () => {
-          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
-          if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+          if (circleRef.current) {
+            const p = progressObj.current.val;
+            circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+          }
         },
         onComplete: () => {
           // 4. Slow creep 90→98 so the counter doesn't look frozen while waiting
@@ -225,8 +240,11 @@ export default function GlobalPageLoader() {
             duration: 6,
             ease: "power1.out",
             onUpdate: () => {
-              if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
-              if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+              if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+              if (circleRef.current) {
+                const p = progressObj.current.val;
+                circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+              }
             },
           });
         },
@@ -284,8 +302,11 @@ export default function GlobalPageLoader() {
       duration: 0.4,
       ease: "power2.inOut",
       onUpdate: () => {
-        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val)).padStart(3, "0");
-        if (lineProgressRef.current) gsap.set(lineProgressRef.current, { scaleX: progressObj.current.val / 100 });
+        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+        if (circleRef.current) {
+          const p = progressObj.current.val;
+          circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+        }
       },
     });
 
@@ -352,47 +373,58 @@ export default function GlobalPageLoader() {
           <span className="w-10 h-px bg-gold/40" />
         </div>
 
-        {/* Center label */}
+        {/* Center Minimal Ring & Label */}
         <div
           ref={labelRef}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-6 pointer-events-none"
+          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
         >
-          <span className="font-mono text-white/20 text-[9px] lg:text-[10px] tracking-[0.6em] uppercase select-none">
-            Loading
-          </span>
+          {/* Small Premium Circular Loader */}
+          <div className="relative flex items-center justify-center w-28 h-28">
+            {/* Background Ring */}
+            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
+              {/* Active Progress Ring */}
+              <circle
+                ref={circleRef}
+                cx="50"
+                cy="50"
+                r="46"
+                fill="none"
+                stroke="#d4af37"
+                strokeWidth="0.5"
+                strokeLinecap="round"
+                strokeDasharray="289.026"
+                strokeDashoffset="289.026"
+                className="transition-[stroke-dashoffset] duration-150 ease-out"
+              />
+            </svg>
+            
+            {/* Center Percentage */}
+            <div className="flex items-baseline gap-[2px]">
+              <span
+                ref={counterRef}
+                className="font-mono text-white/90 text-sm font-medium tabular-nums select-none"
+              >
+                0
+              </span>
+              <span className="font-mono text-white/50 text-[10px] select-none">
+                %
+              </span>
+            </div>
+          </div>
+
+          {/* Minimal Page Route Label */}
           <h2
             ref={labelTextRef}
-            className="text-white text-[clamp(2rem,6vw,5.5rem)] font-black tracking-[-0.04em] uppercase leading-none select-none"
+            className="text-white/40 text-[10px] lg:text-[11px] font-mono tracking-[0.5em] uppercase mt-8 select-none"
           >
             HOME
           </h2>
-          {/* Progress bar */}
-          <div className="w-40 lg:w-72 h-px bg-white/10 relative overflow-hidden mt-2">
-            <div
-              ref={lineProgressRef}
-              className="absolute top-0 left-0 h-full w-full bg-gold"
-              style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
-            />
-          </div>
-        </div>
-
-        {/* Counter — bottom left */}
-        <div className="absolute bottom-8 left-8 lg:bottom-12 lg:left-12 flex items-end gap-1.5">
-          <span
-            ref={counterRef}
-            className="font-mono text-white text-[clamp(4rem,10vw,10rem)] font-light leading-none tabular-nums select-none"
-            style={{ letterSpacing: "-0.05em" }}
-          >
-            000
-          </span>
-          <span className="font-mono text-white/25 text-2xl pb-3 select-none">
-            %
-          </span>
         </div>
 
         {/* Bottom right — pathname */}
-        <div className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 opacity-25 select-none">
-          <span className="font-mono text-xs tracking-[0.4em] uppercase text-white">
+        <div className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 opacity-30 select-none">
+          <span className="font-mono text-[9px] lg:text-[10px] tracking-[0.4em] uppercase text-white/70">
             Gottwald Holding
           </span>
         </div>

@@ -58,7 +58,7 @@ export default function PillarListRow({ pillar, index }: PillarListRowProps) {
     <>
       <Link
         ref={rowRef}
-        href={`/pillars/${pillar.slug}`}
+        href={`/our-work/${pillar.slug}`}
         className="block w-full group py-10 sm:py-16 border-t border-white/15 cursor-pointer relative"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
