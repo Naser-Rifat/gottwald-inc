@@ -2,7 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useCallback, useMemo, useState } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState, useSyncExternalStore } from "react";
+
+// Stable references required by useSyncExternalStore — returning a fresh
+// object literal would trigger an infinite re-render loop.
+const BACK_TO_HOME = { href: "/", label: "Home" } as const;
+const BACK_TO_WORK = { href: "/our-work", label: "Our Work" } as const;
+
+const noopSubscribe = () => () => {};
+const getBackTargetFromSession = () =>
+  sessionStorage.getItem("gw_previous_route") === "/"
+    ? BACK_TO_HOME
+    : BACK_TO_WORK;
+const getBackTargetSSR = () => BACK_TO_WORK;
 import gsap from "gsap";
 import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
 import { useRouter } from "next/navigation";
@@ -50,17 +62,13 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const progressWrapRef = useRef<HTMLDivElement>(null);
 
-  // Dynamic back button state
-  const [backTarget, setBackTarget] = useState({ href: "/our-work", label: "Our Work" });
-
-  useEffect(() => {
-    const prev = sessionStorage.getItem("gw_previous_route");
-    if (prev === "/") {
-      setBackTarget({ href: "/", label: "Home" });
-    } else {
-      setBackTarget({ href: "/our-work", label: "Our Work" });
-    }
-  }, []);
+  // Back button destination — derived from sessionStorage on the client,
+  // defaults to "/our-work" on the server snapshot for hydration safety.
+  const backTarget = useSyncExternalStore(
+    noopSubscribe,
+    getBackTargetFromSession,
+    getBackTargetSSR,
+  );
   const progressRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const isLeavingRef = useRef(false);

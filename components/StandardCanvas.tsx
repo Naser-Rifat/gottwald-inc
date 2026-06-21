@@ -14,7 +14,7 @@ import {
   Edges,
   Cone
 } from '@react-three/drei';
-import { useRef, useMemo } from 'react';
+import { useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const COLORS = {
@@ -60,7 +60,7 @@ function IntegrityVisual() {
           </Box>
         </Box>
       </Float>
-      <rectAreaLight width={5} height={5} color={COLORS.cyan} intensity={2} position={[0, 2, -2]} lookAt={[0, 0, 0] as any} />
+      <rectAreaLight width={5} height={5} color={COLORS.cyan} intensity={2} position={[0, 2, -2]} lookAt={[0, 0, 0] as unknown as THREE.Vector3} />
     </group>
   );
 }
@@ -200,13 +200,15 @@ function PressureVisual() {
   const coreRef = useRef<THREE.Mesh>(null);
   
   const particlesCount = 300;
-  const positions = useMemo(() => {
+  // useState (not useMemo) so React can't re-run the initializer; React 19's
+  // purity rule blocks Math.random in useMemo since useMemo is a hint, not a guarantee.
+  const [positions] = useState(() => {
     const pos = new Float32Array(particlesCount * 3);
-    for(let i=0; i<particlesCount*3; i++) {
+    for (let i = 0; i < particlesCount * 3; i++) {
       pos[i] = (Math.random() - 0.5) * 8;
     }
     return pos;
-  }, []);
+  });
   
   const pointsRef = useRef<THREE.Points>(null);
 

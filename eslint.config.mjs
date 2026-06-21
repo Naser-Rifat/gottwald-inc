@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Sub-project with its own package.json, tsconfig, and eslint config —
+    // it lints itself; don't double-lint with parent rules.
+    "gottwald-admin/**",
   ]),
 ]);
 

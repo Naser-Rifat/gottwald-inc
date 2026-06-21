@@ -4,20 +4,22 @@ import { getTranslations } from "next-intl/server";
 import { getPillars } from "@/lib/api/pillars";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
+// Shared chrome / utilities
 import JsonLd from "@/components/JsonLd";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import PagingScript from "@/components/PagingScript";
 import WebGLCanvasLoader from "@/components/WebGLCanvasLoader";
-import IntroPortal from "@/components/IntroPortal";
-
-import PhysicsSandboxSection from "@/components/PhysicsSandboxSection";
-import VideoPanelSection from "@/components/VideoPanelSection";
-import HomeIntroSection from "@/components/HomeIntroSection";
-import PillarTilesSection from "@/components/PillarTilesSection";
-import GlobalAuthoritySection from "@/components/GlobalAuthoritySection";
-import StrategicInquirySection from "@/components/StrategicInquirySection";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
+
+// Home-only sections (private to this route)
+import IntroPortal from "./_home/IntroPortal";
+import PhysicsSandboxSection from "./_home/PhysicsSandboxSection";
+import VideoPanelSection from "./_home/VideoPanelSection";
+import HomeIntroSection from "./_home/HomeIntroSection";
+import PillarTilesSection from "./_home/PillarTilesSection";
+import GlobalAuthoritySection from "./_home/GlobalAuthoritySection";
+import StrategicInquirySection from "./_home/StrategicInquirySection";
 
 const HOME_DESCRIPTION =
   "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.";

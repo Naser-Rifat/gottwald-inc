@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Pillar } from "@/lib/types/pillars";
 
+import AuroraCanvasBg from "@/components/AuroraCanvasBg";
+
 interface PillarSlideProps {
   pillar: Pillar;
   /** 1-indexed; drives the `.slide-N` className read by useScrollTimeline. */
@@ -57,6 +59,37 @@ export default function PillarSlide({
               <span className="sr-only">Learn more about {pillar.title}</span>
             </Link>
           </div>
+        </div>
+      )}
+
+      {/* Default Dark Glow (No image fallback) */}
+      {!pillar.image && (
+        <div className="absolute inset-y-0 left-0 flex items-center justify-center lg:justify-start pointer-events-auto z-20 w-full lg:w-[50%] -translate-y-[5vh] lg:translate-y-0">
+          <Link
+            href={`/our-work/${pillar.slug}`}
+            className="relative w-[300px] sm:w-[400px] md:w-[460px] aspect-[4/5] rounded-xl overflow-hidden cursor-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] group border border-white/10"
+            onMouseEnter={onHover}
+            onMouseLeave={onUnhover}
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#050505] to-[#121212] flex items-center justify-center">
+              <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(255,255,255,.12) 2px, rgba(255,255,255,.12) 3px)",
+                  backgroundSize: "6px 6px",
+                }}
+              />
+            </div>
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+               <span className="text-[12px] tracking-[0.4em] text-white/50 uppercase font-bold mb-4">
+                 Explore Pillar
+               </span>
+               <h3 className="text-3xl font-bold uppercase tracking-tight text-white drop-shadow-md">
+                 {pillar.title}
+               </h3>
+            </div>
+          </Link>
         </div>
       )}
 

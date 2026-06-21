@@ -94,7 +94,7 @@ export default function PillarListRow({ pillar, index }: PillarListRowProps) {
               </div>
             ) : (
               <p className="text-white/60 text-base font-light leading-relaxed max-w-sm">
-                {pillar.shortDescription}
+                {pillar.description}
               </p>
             )}
           </div>

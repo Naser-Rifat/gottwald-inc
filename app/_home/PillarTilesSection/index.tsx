@@ -5,6 +5,7 @@ import gsap from "gsap";
 
 import type { Pillar } from "@/lib/types/pillars";
 import PillarFluidCanvas from "@/components/PillarFluidCanvas";
+import AuroraCanvasBg from "@/components/AuroraCanvasBg";
 
 import { useScrollTimeline } from "./_hooks/useScrollTimeline";
 import { useFollowCursor } from "./_hooks/useFollowCursor";
@@ -94,13 +95,8 @@ export default function PillarTilesSection({
       id="project-tiles-section"
       className="relative w-full h-screen overflow-hidden flex items-center justify-center text-white bg-[#0a0808]"
     >
-      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen opacity-60">
-        <PillarFluidCanvas
-          colorBase="#000000"
-          colorPetrol={currentAurora?.[0] || "#006d84"}
-          colorTurquoise={currentAurora?.[1] || "#12a8ac"}
-          className="absolute inset-0 z-0 pointer-events-none mix-blend-screen opacity-100 transition-colors duration-1000"
-        />
+      <div className="absolute inset-0 z-0 overflow-hidden opacity-100">
+        <AuroraCanvasBg />
       </div>
 
       <ProgressIndicator

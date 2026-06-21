@@ -73,22 +73,6 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Listen for "audio-start" from the IntroPortal's START EXPERIENCE button
-  useEffect(() => {
-    const handleAudioStart = () => {
-      setIsPlaying(true);
-      if (!initedRef.current) {
-        // initAudio will be called after state update triggers re-render
-        // We need to init directly here since the ref isn't set yet
-        setTimeout(() => {
-          if (!initedRef.current) initAudio(true);
-        }, 50);
-      }
-    };
-    window.addEventListener("audio-start", handleAudioStart);
-    return () => window.removeEventListener("audio-start", handleAudioStart);
-  }, []);
-
   const initAudio = useCallback(async (startAmbient = globalShouldPlay) => {
     if (initedRef.current) return;
     initedRef.current = true;
@@ -142,6 +126,22 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
       initedRef.current = false; // Allow retry
     }
   }, [globalShouldPlay]);
+
+  // Listen for "audio-start" from the IntroPortal's START EXPERIENCE button.
+  // Declared after `initAudio` so the closure capture is past the TDZ.
+  useEffect(() => {
+    const handleAudioStart = () => {
+      setIsPlaying(true);
+      if (!initedRef.current) {
+        // setTimeout gives setIsPlaying time to flush before init runs.
+        setTimeout(() => {
+          if (!initedRef.current) initAudio(true);
+        }, 50);
+      }
+    };
+    window.addEventListener("audio-start", handleAudioStart);
+    return () => window.removeEventListener("audio-start", handleAudioStart);
+  }, [initAudio]);
 
   // Fade in/out strictly based on combined globalShouldPlay state
   useEffect(() => {

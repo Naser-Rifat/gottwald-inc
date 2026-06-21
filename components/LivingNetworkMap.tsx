@@ -45,8 +45,8 @@ export default function LivingNetworkMap() {
 
     // Set high-DPI canvas resolution
     const dpr = window.devicePixelRatio || 1;
-    let cw = container.clientWidth;
-    let ch = container.clientHeight;
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
 
     canvas.width = cw * dpr;
     canvas.height = ch * dpr;

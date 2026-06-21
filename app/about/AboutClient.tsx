@@ -672,7 +672,8 @@ export default function AboutClient() {
       if (magneticHandler)
         window.removeEventListener("mousemove", magneticHandler);
       // Clean up parallax handler
-      const ph = (window as any)._parallaxHandler;
+      const ph = (window as Window & { _parallaxHandler?: (e: MouseEvent) => void })
+        ._parallaxHandler;
       if (ph) window.removeEventListener("mousemove", ph);
     };
   }, []);
@@ -1914,7 +1915,7 @@ export default function AboutClient() {
 
               <p className="text-silver/60 font-light text-[clamp(1.1rem,1.3vw,1.25rem)] leading-[1.6] max-w-[48ch] mb-16 lg:mb-20">
                 When structure becomes visible, the right solution becomes
-                inevitable. Not "someday." Not "when there's time."
+                inevitable. Not &ldquo;someday.&rdquo; Not &ldquo;when there&rsquo;s time.&rdquo;
               </p>
 
               {/* Numbered Points (Only inner dividers, no outer borders) */}
@@ -1968,7 +1969,7 @@ export default function AboutClient() {
 
               <div className="flex flex-col gap-8 pr-4">
                 <p className="text-silver/60 font-light text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.6]">
-                  "Solved" means you feel it on Monday morning, not in a pitch.
+                  &ldquo;Solved&rdquo; means you feel it on Monday morning, not in a pitch.
                 </p>
                 <p className="text-silver/40 font-light text-[clamp(0.95rem,1.1vw,1.05rem)] leading-[1.6]">
                   Less friction. Clearer decisions. Higher speed. More calm in
