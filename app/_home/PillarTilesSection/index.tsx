@@ -96,7 +96,7 @@ export default function PillarTilesSection({
       className="relative w-full h-screen overflow-hidden flex items-center justify-center text-white bg-[#0a0808]"
     >
       <div className="absolute inset-0 z-0 overflow-hidden opacity-100">
-        <AuroraCanvasBg />
+        <AuroraCanvasBg colorHex={currentAurora[0]} />
       </div>
 
       <ProgressIndicator
