@@ -55,14 +55,17 @@ const GlobalFamilySphere = () => {
 
   useFrame((state, delta) => {
     if (!pointsRef.current) return;
-    
-    // Smooth mouse interpolation
+
     mouseSmooth.current.lerp(mouseTarget.current, 0.05);
-    
-    // Update uniforms
+
+    // Three.js uniforms are mutable WebGL state handles — mutating their
+    // .value inside useFrame is the canonical r3f pattern. React 19's
+    // immutability rule doesn't accommodate this idiom.
+    /* eslint-disable react-hooks/immutability */
     uniforms.uTime.value = state.clock.elapsedTime;
     uniforms.uMouse.value.copy(mouseSmooth.current);
-    
+    /* eslint-enable react-hooks/immutability */
+
     // Elegant, slow cinematic rotation
     pointsRef.current.rotation.y += delta * 0.06;
     pointsRef.current.rotation.x += delta * 0.025;

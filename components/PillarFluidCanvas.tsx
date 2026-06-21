@@ -194,7 +194,12 @@ const FluidPlane = ({ isMobile, colorPetrol, colorTurquoise, colorBase }: { isMo
   const mousePosRef = useRef(new THREE.Vector2(0.5, 0.5));
   const fragShader = isMobile ? fragmentShaderMobile : fragmentShaderDesktop;
 
-  const uniforms = useMemo(() => ({
+  // WebGL uniforms — created once via useState's lazy initializer so the
+  // shader keeps a stable handle. Initial colors come from the first
+  // render's props; the useEffect below keeps them in sync afterward.
+  // useState (not useMemo) avoids the preserve-manual-memoization rule
+  // and never re-runs the initializer.
+  const [uniforms] = useState(() => ({
     uTime: { value: 0 },
     uResolution: {
       value: new THREE.Vector2(
@@ -207,7 +212,7 @@ const FluidPlane = ({ isMobile, colorPetrol, colorTurquoise, colorBase }: { isMo
     uColorPetrol: { value: new THREE.Color(colorPetrol) },
     uColorTurquoise: { value: new THREE.Color(colorTurquoise) },
     uColorGold: { value: new THREE.Color("#d4af37") },
-  }), []);
+  }));
 
   useEffect(() => {
     uniforms.uColorBase.value.set(colorBase);

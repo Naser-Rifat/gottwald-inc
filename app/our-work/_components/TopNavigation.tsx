@@ -25,7 +25,7 @@ export default function TopNavigation({
   return (
     <>
       <div
-        className="fixed top-0 left-0 right-0 w-full max-w-[1600px] mx-auto z-50 px-6 md:px-8 py-5 pointer-events-auto flex items-center justify-between"
+        className="fixed top-0 left-0 right-0 w-full max-w-[1600px] mx-auto z-50 px-6 md:px-8 pt-10 pb-4 pointer-events-auto flex items-center justify-between"
         onMouseEnter={onReset}
       >
         {/* ── Brand Logo ── */}

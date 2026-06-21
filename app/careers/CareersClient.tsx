@@ -135,7 +135,21 @@ const PILLARS = [
   },
 ];
 
-function MagneticButton({ children, className = "", onClick, disabled, type = "button" }: any) {
+interface MagneticButtonProps {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+}
+
+function MagneticButton({
+  children,
+  className = "",
+  onClick,
+  disabled,
+  type = "button",
+}: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 

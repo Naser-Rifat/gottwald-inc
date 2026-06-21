@@ -2,7 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+
+const noopSubscribe = () => () => {};
+const getTrue = () => true;
+const getFalse = () => false;
 
 const JOURNEY_STEPS = [
   { href: "/",              label: "Home",         chapter: "01", color: "#cda434" }, // Muted Gold
@@ -14,23 +18,25 @@ const JOURNEY_STEPS = [
 
 export default function JourneyIndicator() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  const [introActive, setIntroActive] = useState(false);
+  // Hydration-safe "did mount" — false on SSR, true after first client render.
+  const mounted = useSyncExternalStore(noopSubscribe, getTrue, getFalse);
+  // Initial value is derived from the route, not set in an effect — the
+  // home page starts with the portal showing, every other route starts ready.
+  const [introActive, setIntroActive] = useState(
+    pathname === "/" || pathname === "",
+  );
 
   useEffect(() => {
-    setMounted(true);
-    
-    // Hide indicator on home page until the portal/loader is dismissed
-    if (window.location.pathname === "/") {
-      setIntroActive(true);
-      const handleStart = () => setIntroActive(false);
-      window.addEventListener("portal-start", handleStart);
-      window.addEventListener("loading-complete", handleStart);
-      return () => {
-        window.removeEventListener("portal-start", handleStart);
-        window.removeEventListener("loading-complete", handleStart);
-      };
-    }
+    // Only the home page emits portal-start / loading-complete. On other
+    // routes the listener never fires, but introActive is already false.
+    if (window.location.pathname !== "/") return;
+    const handleStart = () => setIntroActive(false);
+    window.addEventListener("portal-start", handleStart);
+    window.addEventListener("loading-complete", handleStart);
+    return () => {
+      window.removeEventListener("portal-start", handleStart);
+      window.removeEventListener("loading-complete", handleStart);
+    };
   }, []);
 
   // Simple, robust path matching

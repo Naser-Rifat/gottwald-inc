@@ -1,6 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+
+// Subscribe to (prefers-reduced-motion) without setState-in-effect cascades.
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const subscribeReducedMotion = (cb: () => void) => {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener?.("change", cb);
+  return () => mq.removeEventListener?.("change", cb);
+};
+const getMotionAvailable = () =>
+  !window.matchMedia(REDUCED_MOTION_QUERY).matches;
+const getMotionAvailableSSR = () => true;
 
 /**
  * Frequency Engine — manifesto-faithful ambient sound layer.
@@ -19,20 +31,17 @@ import { useEffect, useRef, useState } from "react";
  */
 export default function FrequencyEngine() {
   const [enabled, setEnabled] = useState(false);
-  const [available, setAvailable] = useState(true);
+  // Reduced-motion preference is a proxy for "wants less stimulus" — when
+  // active, the audio engine is disabled. Subscribing via useSyncExternalStore
+  // is hydration-safe and skips the cascading setState-in-effect.
+  const available = useSyncExternalStore(
+    subscribeReducedMotion,
+    getMotionAvailable,
+    getMotionAvailableSSR,
+  );
   const ctxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
   const nodesRef = useRef<Array<OscillatorNode>>([]);
-
-  // Respect user's reduced-motion preference as a proxy for "wants less stimulus"
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setAvailable(!mq.matches);
-    const handler = () => setAvailable(!mq.matches);
-    mq.addEventListener?.("change", handler);
-    return () => mq.removeEventListener?.("change", handler);
-  }, []);
 
   useEffect(() => {
     if (!enabled) {

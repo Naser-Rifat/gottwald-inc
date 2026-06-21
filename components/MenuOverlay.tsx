@@ -267,29 +267,30 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       />
       {/* ── Header Area ── */}
       <div className="flex justify-between items-center menu-fade-in flex-none">
-        {/* 'G' Logo Circle */}
-        <button
-          onClick={() => closeMenu()}
-          className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300"
+        {/* 'G' Logo Circle (Navigates to Home) */}
+        <a
+          href="/"
+          onClick={(e) => handleLinkClick(e, "/")}
+          className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer"
           style={{
             borderColor: "rgba(18,168,172,0.3)",
             color: "rgba(18,168,172,0.7)",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.8)";
-            (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,1)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 16px rgba(18,168,172,0.2)";
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.8)";
+            (e.currentTarget as HTMLAnchorElement).style.color = "rgba(18,168,172,1)";
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 16px rgba(18,168,172,0.2)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(18,168,172,0.3)";
-            (e.currentTarget as HTMLButtonElement).style.color = "rgba(18,168,172,0.7)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(18,168,172,0.3)";
+            (e.currentTarget as HTMLAnchorElement).style.color = "rgba(18,168,172,0.7)";
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
           }}
         >
           <span className="text-[10px] font-bold tracking-widest mt-px">
             G
           </span>
-        </button>
+        </a>
 
         {/* CLOSE Button */}
         <button

@@ -13,7 +13,7 @@ import {
   Edges,
   MeshDistortMaterial
 } from '@react-three/drei';
-import { useRef, useMemo } from 'react';
+import { useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const COLORS = {
@@ -63,20 +63,27 @@ function DeliveryVisual() {
     }
   });
 
+  // Stable per-mount random positions + colors for the 60 streaking boxes.
+  // useState initializer runs exactly once, so the stream looks consistent
+  // across re-renders (React 19's purity rule rejects Math.random in JSX/useMemo).
+  const [boxes] = useState(() =>
+    Array.from({ length: 60 }, (_, i) => ({
+      key: i,
+      position: [
+        (Math.random() - 0.5) * 6,
+        (Math.random() - 0.5) * 6,
+        (Math.random() - 0.5) * 12 - 6,
+      ] as [number, number, number],
+      color: Math.random() > 0.5 ? COLORS.turquoise : COLORS.silver,
+    })),
+  );
+
   return (
     <group>
       <group ref={group}>
-        {Array.from({ length: 60 }).map((_, i) => (
-          <Box 
-            key={i} 
-            args={[0.06, 0.06, 2.5]} 
-            position={[
-              (Math.random() - 0.5) * 6, 
-              (Math.random() - 0.5) * 6, 
-              (Math.random() - 0.5) * 12 - 6
-            ]}
-          >
-            <meshBasicMaterial color={Math.random() > 0.5 ? COLORS.turquoise : COLORS.silver} transparent opacity={0.9} />
+        {boxes.map((box) => (
+          <Box key={box.key} args={[0.06, 0.06, 2.5]} position={box.position}>
+            <meshBasicMaterial color={box.color} transparent opacity={0.9} />
           </Box>
         ))}
       </group>
@@ -155,17 +162,21 @@ function LocalVisual() {
     }
   });
 
-  const nodes = useMemo(() => {
-    const pos = [];
-    for(let i=0; i<14; i++) {
-      pos.push(new THREE.Vector3(
-        (Math.random() - 0.5) * 4.5,
-        (Math.random() - 0.5) * 4.5,
-        (Math.random() - 0.5) * 4.5
-      ));
+  // useState (not useMemo) so React can't re-run the initializer and shuffle
+  // node positions; React 19's purity rule blocks Math.random in useMemo.
+  const [nodes] = useState(() => {
+    const pos: THREE.Vector3[] = [];
+    for (let i = 0; i < 14; i++) {
+      pos.push(
+        new THREE.Vector3(
+          (Math.random() - 0.5) * 4.5,
+          (Math.random() - 0.5) * 4.5,
+          (Math.random() - 0.5) * 4.5,
+        ),
+      );
     }
     return pos;
-  }, []);
+  });
 
   return (
     <Float speed={1} floatIntensity={0.5}>

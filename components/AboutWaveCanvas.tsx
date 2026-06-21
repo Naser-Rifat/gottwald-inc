@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -44,16 +44,19 @@ const ManifestoMatrixFlow = ({
   const mouseStrength = useRef(0);
   const { viewport, size } = useThree();
 
-  const uniforms = useMemo(() => ({
+  // WebGL uniforms are mutable handles. useState's lazy initializer runs
+  // once per mount and returns a stable reference that the shader and
+  // useFrame share. Initial colors come from the first render's props;
+  // the useEffect below keeps them in sync on prop change.
+  const [uniforms] = useState(() => ({
     uTime:          { value: 0 },
     uMouse:         { value: new THREE.Vector2(0, 0) },
     uMouseStrength: { value: 0 },
     uColorPetrol:   { value: new THREE.Color(colorPetrol) },
     uColorSignal:   { value: new THREE.Color(colorSignal) },
     uColorSilver:   { value: new THREE.Color(colorSilver) },
-  }), []);
+  }));
 
-  // Update uniforms when props change
   useEffect(() => {
     uniforms.uColorPetrol.value.set(colorPetrol);
     uniforms.uColorSignal.value.set(colorSignal);
@@ -79,14 +82,18 @@ const ManifestoMatrixFlow = ({
   }, [viewport, size]);
 
   useFrame((state) => {
-    // Update uniforms — increased speed for a more dynamic, flowing data feel
+    // Three.js uniforms are mutable WebGL state handles — mutating their
+    // .value properties inside useFrame is the canonical react-three-fiber
+    // pattern. React 19's immutability rule doesn't accommodate this, so
+    // we disable it locally with the rationale documented here.
+    /* eslint-disable react-hooks/immutability */
     uniforms.uTime.value = state.clock.elapsedTime * 0.95;
-    
-    // Smooth mouse interpolation
+
     mouseSmooth.current.lerp(mouseTarget.current, 0.05);
     uniforms.uMouse.value.copy(mouseSmooth.current);
     mouseStrength.current *= 0.95; // Decay
     uniforms.uMouseStrength.value = mouseStrength.current;
+    /* eslint-enable react-hooks/immutability */
 
     const tilt = Math.sin(state.clock.elapsedTime * 0.2) * 0.05; // Slightly faster tilt
     
