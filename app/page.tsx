@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { getPillars } from "@/lib/api/pillars";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 // Shared chrome / utilities
@@ -9,17 +10,35 @@ import JsonLd from "@/components/JsonLd";
 import CustomScrollbar from "@/components/CustomScrollbar";
 import PagingScript from "@/components/PagingScript";
 import WebGLCanvasLoader from "@/components/WebGLCanvasLoader";
-import FooterSection from "@/components/FooterSection";
-import NextChapterTransition from "@/components/NextChapterTransition";
 
 // Home-only sections (private to this route)
+// Above-the-fold sections stay statically imported so they render
+// immediately on first paint with no extra round-trip.
 import IntroPortal from "./_home/IntroPortal";
 import PhysicsSandboxSection from "./_home/PhysicsSandboxSection";
 import VideoPanelSection from "./_home/VideoPanelSection";
 import HomeIntroSection from "./_home/HomeIntroSection";
-import PillarTilesSection from "./_home/PillarTilesSection";
-import GlobalAuthoritySection from "./_home/GlobalAuthoritySection";
-import StrategicInquirySection from "./_home/StrategicInquirySection";
+
+// PillarTilesAsync is a server component that calls getPillars() inside
+// itself, so its data fetch streams in parallel with the rest of the
+// page instead of blocking the initial HTML response. See the file for
+// the full rationale.
+import PillarTilesAsync from "./_home/PillarTilesAsync";
+
+// Below-the-fold: dynamic-import to split each section's client JS into
+// its own chunk. Next.js still SSRs the markup (ssr defaults to true) so
+// SEO and the initial HTML are unchanged — only the hydration JS is
+// deferred until the section actually mounts on the client.
+const GlobalAuthoritySection = dynamic(
+  () => import("./_home/GlobalAuthoritySection"),
+);
+const StrategicInquirySection = dynamic(
+  () => import("./_home/StrategicInquirySection"),
+);
+const FooterSection = dynamic(() => import("@/components/FooterSection"));
+const NextChapterTransition = dynamic(
+  () => import("@/components/NextChapterTransition"),
+);
 
 const HOME_DESCRIPTION =
   "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.";
@@ -46,10 +65,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [pillars, tNav] = await Promise.all([
-    getPillars(),
-    getTranslations("nav"),
-  ]);
+  // Only translations are awaited at the page level. They're a local JSON
+  // lookup (no network), so cost is sub-millisecond. The pillars data
+  // (which takes ~800ms over the wire) is fetched inside PillarTilesAsync
+  // behind a <Suspense>, so the rest of the page streams instantly.
+  const tNav = await getTranslations("nav");
 
   return (
     <>
@@ -62,7 +82,22 @@ export default async function Home() {
         <PhysicsSandboxSection />
         <VideoPanelSection />
         <HomeIntroSection />
-        <PillarTilesSection pillars={pillars} />
+
+        {/* PillarTilesSection waits on a ~800ms API round-trip; wrapping
+            it in <Suspense> lets every section before AND after it stream
+            without blocking. The fallback reserves the full screen height
+            so the page doesn't reflow when the pillar tiles arrive. */}
+        <Suspense
+          fallback={
+            <div
+              aria-hidden
+              className="w-full h-screen bg-[#0a0808]"
+            />
+          }
+        >
+          <PillarTilesAsync />
+        </Suspense>
+
         <GlobalAuthoritySection />
         <StrategicInquirySection />
         <FooterSection />

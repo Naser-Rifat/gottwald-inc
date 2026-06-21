@@ -212,9 +212,13 @@ function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
 const FETCH_TIMEOUT_MS = 12_000;
 
 // ─── ISR Revalidation interval (seconds) ────────────────────────────────────
-// How long Next.js serves a cached page before checking for fresh data.
-// 30s = new pillars appear within 30 seconds on list pages.
-const REVALIDATE_SECONDS = 30;
+// Pillars are content that changes weekly at most, not minute-by-minute.
+// A 30s window meant nearly every fresh visitor paid the ~800ms API round-trip
+// as a blocking SSR cost. 1800s (30 min) batches first-visitor cost down to
+// twice per hour at the absolute worst — and on-demand revalidation via the
+// PILLARS_CACHE_TAG (see /api/revalidate) still lets the admin push updates
+// instantly without waiting for the window to expire.
+const REVALIDATE_SECONDS = 1800;
 
 async function apiFetch<T>(
   endpoint: string,

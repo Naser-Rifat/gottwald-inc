@@ -25,6 +25,8 @@ export default class HomeScene {
   public scrollVelocity = 0;
   private lastScrollY = 0;
 
+  private visibilityHandler?: () => void;
+
   constructor() {
     this.resizeHandler = () => this.onWindowResized();
 
@@ -38,6 +40,20 @@ export default class HomeScene {
 
     window.addEventListener("resize", this.resizeHandler);
     window.addEventListener("mousemove", this.onMouseMove);
+
+    // Hard-stop the animation loop when the tab is hidden. Browsers
+    // throttle rAF to ~1 Hz on hidden tabs already, but explicitly
+    // calling setAnimationLoop(null) skips even that 1-Hz render and
+    // releases GPU/CPU completely until the tab is visible again.
+    this.visibilityHandler = () => {
+      if (this.isDisposed || !this.renderer) return;
+      if (document.visibilityState === "visible") {
+        this.renderer.setAnimationLoop(this.animate);
+      } else {
+        this.renderer.setAnimationLoop(null);
+      }
+    };
+    document.addEventListener("visibilitychange", this.visibilityHandler);
 
     if (process.env.NODE_ENV === "development") {
       this.initDebug();
@@ -206,6 +222,9 @@ export default class HomeScene {
     // 2. Remove all event listeners
     window.removeEventListener("resize", this.resizeHandler);
     window.removeEventListener("mousemove", this.onMouseMove);
+    if (this.visibilityHandler) {
+      document.removeEventListener("visibilitychange", this.visibilityHandler);
+    }
     if (this.environmentLoadHandler) {
       window.removeEventListener("scroll", this.environmentLoadHandler);
       window.removeEventListener("pointerdown", this.environmentLoadHandler);

@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Pillar } from "@/lib/types/pillars";
 
-import AuroraCanvasBg from "@/components/AuroraCanvasBg";
-
 interface PillarSlideProps {
   pillar: Pillar;
   /** 1-indexed; drives the `.slide-N` className read by useScrollTimeline. */
@@ -46,7 +44,8 @@ export default function PillarSlide({
               fill
               className="object-contain contrast-150 brightness-[1.15]"
               sizes="(max-width: 768px) 100vw, 50vw"
-              quality={100}
+              quality={80}
+              {...(slideIndex === 1 ? { priority: true } : { loading: "lazy" as const })}
             />
 
             {/* Invisible hover target — shows/hides the ghost cursor */}

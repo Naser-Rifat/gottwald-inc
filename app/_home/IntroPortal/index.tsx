@@ -2,9 +2,17 @@
 
 import { useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 
-import IntroPortalCanvas from "@/components/IntroPortalCanvas";
+// IntroPortalCanvas pulls in three + @react-three/fiber (~600KB). Dynamic
+// import keeps that out of the initial home-page JS chunk so the first
+// paint (loading screen / portal shell) ships without Three.js. Return
+// visitors render <ReturnVisitLoader/> instead and never load this code
+// at all. ssr:false because Three.js requires window/WebGL.
+const IntroPortalCanvas = dynamic(() => import("@/components/IntroPortalCanvas"), {
+  ssr: false,
+});
 
 import { useLoadingProgress } from "./_hooks/useLoadingProgress";
 import { useBodyScrollLock } from "./_hooks/useBodyScrollLock";

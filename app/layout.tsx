@@ -1,21 +1,42 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
+import dynamic from "next/dynamic";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
-import GlobalCanvasLoader from "@/components/GlobalCanvasLoader";
+
+// First-paint critical: small components that must run before paint
+// (DOM patches, route cleanup, the loading screen, the global noise
+// overlay) stay statically imported.
 import NoiseOverlay from "@/components/NoiseOverlay";
 import RouteCleanup from "@/components/RouteCleanup";
 import DomSafetyPatch from "@/components/DomSafetyPatch";
 import PageLoader from "@/components/PageLoader";
 import AudioProvider from "@/components/AudioProvider";
-import CookieManager from "@/components/CookieManager";
-import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
-import ResonanceCursor from "@/components/ResonanceCursor";
-import LivingEnvironment from "@/components/LivingEnvironment";
-import LiquidClickEffect from "@/components/LiquidClickEffect";
-import JourneyIndicator from "@/components/JourneyIndicator";
+
+// Non-critical: dynamic-import everything that runs after first paint or
+// only reacts to user interaction. This moves ~800 lines of client JS
+// (CookieManager, GoogleTranslate widget, cursor/click effects, the
+// living-environment orchestration, etc.) off the layout's hydration
+// bundle and into per-component chunks that load after the page is
+// interactive. Default ssr:true keeps the markup in the streamed HTML.
+const GlobalCanvasLoader = dynamic(
+  () => import("@/components/GlobalCanvasLoader"),
+);
+const CookieManager = dynamic(() => import("@/components/CookieManager"));
+const GoogleTranslateRoot = dynamic(
+  () => import("@/components/GoogleTranslateRoot"),
+);
+const LivingEnvironment = dynamic(
+  () => import("@/components/LivingEnvironment"),
+);
+const LiquidClickEffect = dynamic(
+  () => import("@/components/LiquidClickEffect"),
+);
+const JourneyIndicator = dynamic(
+  () => import("@/components/JourneyIndicator"),
+);
 import {
   SITE_URL,
   SITE_NAME,
@@ -44,10 +65,13 @@ const satoshi = localFont({
   preload: true,
 });
 
+// Playfair weights trimmed to what's actually used across the site.
+// Dropped 800 — confirmed unused on Playfair-styled elements. Kept 600
+// because CareersClient uses `font-playfair font-semibold italic`.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "900"],
   variable: "--font-playfair",
   display: "swap",
 });
