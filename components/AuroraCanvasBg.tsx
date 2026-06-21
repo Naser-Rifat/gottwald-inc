@@ -106,21 +106,20 @@ const FRAGMENT_SHADER = `
   }
 `;
 
+const hexToRgb = (hex: string): [number, number, number] => {
+  let c = hex.replace("#", "");
+  if (c.length === 3) c = c.split("").map((ch) => ch + ch).join("");
+  return [
+    (parseInt(c.substring(0, 2), 16) / 255) || 0.0,
+    (parseInt(c.substring(2, 4), 16) / 255) || 0.5,
+    (parseInt(c.substring(4, 6), 16) / 255) || 0.5,
+  ];
+};
+
 export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const hexToRgb = (hex: string) => {
-    let c = hex.replace("#", "");
-    if (c.length === 3) c = c.split("").map((ch) => ch + ch).join("");
-    return [
-      (parseInt(c.substring(0, 2), 16) / 255) || 0.0,
-      (parseInt(c.substring(2, 4), 16) / 255) || 0.5,
-      (parseInt(c.substring(4, 6), 16) / 255) || 0.5,
-    ];
-  };
-
-  const targetRGB = useRef(hexToRgb(colorHex));
-  const currentRGB = useRef(hexToRgb(colorHex));
+  const targetRGB = useRef<[number, number, number]>(hexToRgb(colorHex));
+  const currentRGB = useRef<[number, number, number]>(hexToRgb(colorHex));
 
   useEffect(() => {
     targetRGB.current = hexToRgb(colorHex);
@@ -129,7 +128,11 @@ export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: st
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
+    const gl = canvas.getContext("webgl", {
+      alpha: false,
+      antialias: true,
+      powerPreference: "high-performance",
+    });
     if (!gl) return;
 
     const compileShader = (type: number, source: string) => {
@@ -178,20 +181,32 @@ export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: st
     const uResLocation = gl.getUniformLocation(program, "u_resolution");
     const uThemeColorLocation = gl.getUniformLocation(program, "u_themeColor");
 
-    let animationFrameId: number;
-    let startTime = performance.now();
+    let animationFrameId = 0;
+    const startTime = performance.now();
+    let isVisible = true;
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const resize = () => {
+    const applyResize = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio, 2);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uResLocation, canvas.width, canvas.height);
+      const w = Math.max(1, Math.floor(rect.width * dpr));
+      const h = Math.max(1, Math.floor(rect.height * dpr));
+      if (canvas.width === w && canvas.height === h) return;
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(uResLocation, w, h);
     };
 
-    window.addEventListener("resize", resize);
-    resize();
+    // Debounced resize — rapid resize storms (rotate, devtools, etc.)
+    // would otherwise recalculate dpr+viewport on every event.
+    const resize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyResize, 120);
+    };
+
+    window.addEventListener("resize", resize, { passive: true });
+    applyResize();
 
     const render = (time: number) => {
       const uTime = (time - startTime) * 0.001;
@@ -213,11 +228,41 @@ export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: st
       animationFrameId = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    const startLoop = () => {
+      if (animationFrameId) return;
+      animationFrameId = requestAnimationFrame(render);
+    };
+    const stopLoop = () => {
+      if (!animationFrameId) return;
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+    };
+
+    // Pause the loop when the canvas is off-screen or the tab is hidden.
+    // The shader is fragment-heavy; not rendering when nobody can see it
+    // frees the GPU for the section actually in view.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && document.visibilityState === "visible") startLoop();
+        else stopLoop();
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(canvas);
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && isVisible) startLoop();
+      else stopLoop();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      observer.disconnect();
+      if (resizeTimer) clearTimeout(resizeTimer);
+      stopLoop();
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);

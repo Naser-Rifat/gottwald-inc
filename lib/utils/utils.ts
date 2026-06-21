@@ -189,7 +189,11 @@ export function createVideoTexture(
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
-  video.preload = "metadata";
+  // "auto" lets the browser start buffering as soon as src is assigned. The
+  // IntersectionObserver below only assigns src when the viewer is within
+  // 1400px of the section, so "auto" still respects deferred loading — it
+  // just means: once we DO start, prefetch the whole stream, don't dribble.
+  video.preload = "auto";
 
   // Pick the first source the browser claims it can play. canPlayType returns
   // "probably" / "maybe" / "" — anything non-empty is good enough to attempt.
@@ -217,7 +221,11 @@ export function createVideoTexture(
     });
   };
 
-  // Defer play until the video section is actually in view
+  // Defer play until the video section is actually in view.
+  // rootMargin widened to 1400px (was 700px): the optimised video is ~8 MB
+  // on a fast desktop link, but on a 3G mobile connection that's still
+  // 6-8 seconds. Starting the fetch earlier means the video is more likely
+  // to be ready to play by the time the section reveals.
   const startAnchor = document.getElementById("video-panel-start");
   if (startAnchor) {
     const observer = new IntersectionObserver(
@@ -228,7 +236,7 @@ export function createVideoTexture(
           video.pause();
         }
       },
-      { rootMargin: "700px 0px" }, // Start loading before reveal without joining initial page load
+      { rootMargin: "1400px 0px" },
     );
     observer.observe(startAnchor);
   } else {

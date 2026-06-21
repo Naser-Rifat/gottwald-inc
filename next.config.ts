@@ -73,6 +73,23 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
 
+  experimental: {
+    // Per-import tree-shaking for libs that ship many entry points.
+    // Without this, a single `import { useFrame } from "@react-three/fiber"`
+    // can pull in the entire library because of broad re-exports. With it,
+    // Next.js rewrites the import to the deep path that webpack can
+    // tree-shake cleanly. Documented as safe by Next.js for these libs.
+    optimizePackageImports: [
+      "gsap",
+      "framer-motion",
+      "@react-three/fiber",
+      "@react-three/drei",
+      "@react-three/postprocessing",
+      "lucide-react",
+      "next-intl",
+    ],
+  },
+
   async headers() {
     return [
       {

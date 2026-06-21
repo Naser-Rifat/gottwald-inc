@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 export default function AmbientAurora() {
+  const rootRef = useRef<HTMLDivElement>(null);
   const auroraRef1 = useRef<HTMLDivElement>(null);
   const auroraRef2 = useRef<HTMLDivElement>(null);
   const auroraRef3 = useRef<HTMLDivElement>(null);
@@ -12,9 +13,10 @@ export default function AmbientAurora() {
     // Slow, breathing organic movements using GSAP
     if (!auroraRef1.current || !auroraRef2.current || !auroraRef3.current) return;
 
+    const tweens: gsap.core.Tween[] = [];
     const ctx = gsap.context(() => {
       // Petrol blob
-      gsap.to(auroraRef1.current, {
+      tweens.push(gsap.to(auroraRef1.current, {
         xPercent: 30,
         yPercent: 20,
         scale: 1.2,
@@ -23,10 +25,10 @@ export default function AmbientAurora() {
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
-      });
+      }));
 
       // Turquoise blob
-      gsap.to(auroraRef2.current, {
+      tweens.push(gsap.to(auroraRef2.current, {
         xPercent: -30,
         yPercent: -15,
         scale: 1.5,
@@ -35,10 +37,10 @@ export default function AmbientAurora() {
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
-      });
+      }));
 
       // Gold blob
-      gsap.to(auroraRef3.current, {
+      tweens.push(gsap.to(auroraRef3.current, {
         xPercent: 15,
         yPercent: -25,
         scale: 1.1,
@@ -46,14 +48,34 @@ export default function AmbientAurora() {
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
-      });
+      }));
     });
 
-    return () => ctx.revert();
+    // Pause the infinite tweens when the section is off-screen. The blobs
+    // are big blurred radial gradients — running their transform animation
+    // while invisible still costs paint/composite work.
+    const root = rootRef.current;
+    let observer: IntersectionObserver | null = null;
+    if (root) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          tweens.forEach((t) =>
+            entry.isIntersecting ? t.resume() : t.pause(),
+          );
+        },
+        { threshold: 0.01 },
+      );
+      observer.observe(root);
+    }
+
+    return () => {
+      observer?.disconnect();
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div ref={rootRef} className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Mask */}
       <div className="absolute inset-0 bg-black/40 z-20 backdrop-blur-3xl" />
       

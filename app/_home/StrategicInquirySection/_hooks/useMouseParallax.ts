@@ -29,22 +29,43 @@ export function useMouseParallax(
     const section = sectionRef.current;
     if (!section) return;
 
-    const handleMove = (e: MouseEvent) => {
+    // rAF-gated mousemove: many DOM mousemove events fire per frame; we
+    // only need one GSAP write per paint. clientX/Y are sampled inside
+    // the rAF callback to keep the latest cursor position.
+    let rafId = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let pending = false;
+
+    const flush = () => {
+      pending = false;
       const w = window.innerWidth;
       const h = window.innerHeight;
       for (const layer of layersRef.current) {
         const el = layer.ref.current;
         if (!el) continue;
         gsap.to(el, {
-          x: (e.clientX / w - 0.5) * layer.intensity,
-          y: (e.clientY / h - 0.5) * layer.intensity,
+          x: (lastX / w - 0.5) * layer.intensity,
+          y: (lastY / h - 0.5) * layer.intensity,
           duration: layer.duration ?? 1.5,
           ease: layer.ease ?? "power2.out",
+          overwrite: "auto",
         });
       }
     };
 
-    section.addEventListener("mousemove", handleMove);
-    return () => section.removeEventListener("mousemove", handleMove);
+    const handleMove = (e: MouseEvent) => {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (pending) return;
+      pending = true;
+      rafId = requestAnimationFrame(flush);
+    };
+
+    section.addEventListener("mousemove", handleMove, { passive: true });
+    return () => {
+      section.removeEventListener("mousemove", handleMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [sectionRef]);
 }

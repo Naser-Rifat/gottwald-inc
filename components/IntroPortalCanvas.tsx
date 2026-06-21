@@ -7,7 +7,7 @@ import gsap from 'gsap';
 
 const PortalMaterial = () => {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const { viewport } = useThree();
+  const { viewport, size } = useThree();
 
   const uniforms = useMemo(
     () => ({
@@ -19,17 +19,23 @@ const PortalMaterial = () => {
     []
   );
 
+  // uResolution only changes on viewport size/dpr changes — updating it
+  // every frame inside useFrame burned CPU for no visual difference.
+  useEffect(() => {
+    uniforms.uResolution.value.set(size.width * viewport.dpr, size.height * viewport.dpr);
+  }, [size.width, size.height, viewport.dpr, uniforms]);
+
   useEffect(() => {
     const handlePortalStart = () => {
       if (!materialRef.current) return;
-      
+
       // Wormhole zoom and speed acceleration
       gsap.to(materialRef.current.uniforms.uZoom, {
         value: 0.05, // Zoom way into the center
         duration: 3.5,
         ease: "power3.in"
       });
-      
+
       gsap.to(materialRef.current.uniforms.uOffsetZ, {
         value: 5.0, // Fly forward rapidly
         duration: 3.5,
@@ -44,10 +50,6 @@ const PortalMaterial = () => {
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      materialRef.current.uniforms.uResolution.value.set(
-        state.size.width * state.viewport.dpr,
-        state.size.height * state.viewport.dpr
-      );
     }
   });
 
@@ -225,7 +227,12 @@ export default function IntroPortalCanvas() {
     <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
       <Canvas
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-        dpr={[1, 2]}
+        // dpr cap 1.5: retina 2.0 is fragment-shader expensive and the soft
+        // noise shader is visually identical at 1.5. antialias off because
+        // a fullscreen quad has no geometry edges to alias. alpha kept on
+        // because the parent uses mix-blend-screen compositing.
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, powerPreference: "high-performance", alpha: true }}
       >
         <PortalMaterial />
       </Canvas>
