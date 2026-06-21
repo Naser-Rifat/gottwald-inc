@@ -41,7 +41,7 @@ export async function GET() {
   const pillarLines = pillars
     .map(
       (p) =>
-        `- [${p.title}](${SITE_URL}/pillars/${p.slug})${p.description ? `: ${p.description}` : ""}`,
+        `- [${p.title}](${SITE_URL}/our-work/${p.slug})${p.description ? `: ${p.description}` : ""}`,
     )
     .join("\n");
 
