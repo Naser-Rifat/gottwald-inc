@@ -1,7 +1,7 @@
 /**
  * Pillar FAQs — keyed by pillar slug.
  *
- * Emitted as FAQPage JSON-LD on each /pillars/[slug] page so that
+ * Emitted as FAQPage JSON-LD on each /our-work/[slug] page so that
  * AI systems (ChatGPT, Perplexity, Claude, Gemini) and search engines
  * can extract and cite GOTT WALD content when users ask related questions.
  *

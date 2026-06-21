@@ -45,20 +45,22 @@ export default function TopNavigation({
         </Link>
 
         {/* ── Center Slide Navigation Pills ── */}
-        <div className="hidden lg:flex items-center gap-3 xl:gap-6 cursor-pointer flex-wrap justify-center max-w-[50%]">
-          {items.map((item, idx) => (
-            <button
-              key={idx}
-              onClick={() => onSelect(idx)}
-              className={`transition-all duration-300 uppercase text-[10px] xl:text-[11px] tracking-[0.15em] whitespace-nowrap ${
-                activeIndex === idx
-                  ? "text-white font-medium opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
-                  : "text-white/35 font-light hover:text-white/70"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
+        <div className="hidden lg:flex flex-1 items-center gap-3 xl:gap-5 cursor-pointer justify-center px-4 overflow-hidden mask-image-[linear-gradient(to_right,transparent,black_20px,black_calc(100%-20px),transparent)]">
+          <div className="flex items-center gap-3 xl:gap-5 flex-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden overflow-x-auto max-w-full">
+            {items.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => onSelect(idx)}
+                className={`transition-all duration-300 uppercase text-[10px] xl:text-[11px] tracking-[0.15em] whitespace-nowrap flex-shrink-0 ${
+                  activeIndex === idx
+                    ? "text-white font-medium opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                    : "text-white/35 font-light hover:text-white/70"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Right Controls ── */}
