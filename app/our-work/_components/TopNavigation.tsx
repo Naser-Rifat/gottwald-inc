@@ -25,7 +25,7 @@ export default function TopNavigation({
   return (
     <>
       <div
-        className="fixed top-0 left-0 w-full z-50 px-6 md:px-8 py-5 pointer-events-auto flex items-center justify-between"
+        className="fixed top-0 left-0 right-0 w-full max-w-[1600px] mx-auto z-50 px-6 md:px-8 py-5 pointer-events-auto flex items-center justify-between"
         onMouseEnter={onReset}
       >
         {/* ── Brand Logo ── */}
@@ -45,12 +45,12 @@ export default function TopNavigation({
         </Link>
 
         {/* ── Center Slide Navigation Pills ── */}
-        <div className="hidden lg:flex items-center gap-6 cursor-pointer">
+        <div className="hidden lg:flex items-center gap-3 xl:gap-6 cursor-pointer flex-wrap justify-center max-w-[50%]">
           {items.map((item, idx) => (
             <button
               key={idx}
               onClick={() => onSelect(idx)}
-              className={`transition-all duration-300 uppercase text-[11px] tracking-[0.15em] ${
+              className={`transition-all duration-300 uppercase text-[10px] xl:text-[11px] tracking-[0.15em] whitespace-nowrap ${
                 activeIndex === idx
                   ? "text-white font-medium opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
                   : "text-white/35 font-light hover:text-white/70"

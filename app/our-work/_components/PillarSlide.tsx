@@ -39,7 +39,7 @@ export default function PillarSlide({
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none mix-blend-screen">
-        <div className="relative w-full max-w-[28vw] min-w-[320px] aspect-[1/2] pointer-events-none">
+        <div className="relative w-full max-w-[28vw] min-w-[280px] sm:min-w-[320px] aspect-[1/2] pointer-events-none">
           {pillar.image ? (
             <Image
               src={pillar.image}
