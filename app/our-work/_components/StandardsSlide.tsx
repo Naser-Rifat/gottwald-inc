@@ -29,21 +29,40 @@ export default function StandardsSlide({ onMouseEnter }: StandardsSlideProps) {
             {coreStandards.map((std, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-6 md:gap-10 cursor-pointer group py-6 md:py-8 border-b border-white/10 last:border-b-0"
+                className="flex flex-col border-b border-white/10 last:border-b-0 cursor-pointer group"
                 onMouseEnter={() => setActiveStandard(idx)}
+                onClick={() => setActiveStandard(idx)}
               >
-                <span className={`font-mono text-[13px] md:text-[15px] uppercase tracking-[0.2em] font-bold transition-colors duration-500 w-8 drop-shadow-sm ${activeStandard === idx ? "text-[#d4af37]" : "text-white/30 group-hover:text-[#d4af37]/70"}`}>
-                  0{idx + 1}
-                </span>
-                <h3 className={`font-sans text-[clamp(2rem,4.5vw,5.5rem)] leading-none font-bold tracking-tight uppercase transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] origin-left drop-shadow-lg ${activeStandard === idx ? "text-white scale-100 opacity-100" : "text-white/20 scale-[0.98] opacity-60 group-hover:text-white/60"}`}>
-                  {std.title}
-                </h3>
+                <div className="flex items-center gap-6 md:gap-10 py-6 md:py-8">
+                  <span className={`font-mono text-[13px] md:text-[15px] uppercase tracking-[0.2em] font-bold transition-colors duration-500 w-8 drop-shadow-sm ${activeStandard === idx ? "text-[#d4af37]" : "text-white/30 group-hover:text-[#d4af37]/70"}`}>
+                    0{idx + 1}
+                  </span>
+                  <h3 className={`font-sans text-[clamp(1.8rem,4.5vw,5.5rem)] leading-none font-bold tracking-tight uppercase transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] origin-left drop-shadow-lg ${activeStandard === idx ? "text-white scale-100 opacity-100" : "text-white/20 scale-[0.98] opacity-60 group-hover:text-white/60"}`}>
+                    {std.title}
+                  </h3>
+                </div>
+
+                {/* Mobile/Tablet Inline Content (Accordion) */}
+                <div 
+                  className={`lg:hidden overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    activeStandard === idx ? "max-h-[800px] opacity-100 pb-8" : "max-h-0 opacity-0 pb-0"
+                  }`}
+                >
+                  <div className="pl-[56px] md:pl-[72px] border-l-2 border-[#d4af37]/40 ml-4 md:ml-5">
+                    <h4 className="text-white/95 text-[1.4rem] md:text-[1.8rem] font-playfair font-normal leading-[1.2] mb-4 drop-shadow-md">
+                      {std.subtitle}
+                    </h4>
+                    <p className="text-white/85 text-[1rem] md:text-[1.1rem] leading-[1.7] font-sans font-normal max-w-lg whitespace-pre-line drop-shadow-sm">
+                      {std.text}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="w-full lg:w-[45%] flex flex-col justify-center min-h-[400px] z-10 relative">
+        <div className="hidden lg:flex w-[45%] flex-col justify-center min-h-[400px] z-10 relative">
           {coreStandards.map((std, idx) => (
             <div
               key={idx}

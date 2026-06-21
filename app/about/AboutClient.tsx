@@ -1821,18 +1821,18 @@ export default function AboutClient() {
                         <div className="relative">
                           {/* Elegant editorial quote mark */}
                           <span className="absolute -top-12 -left-8 text-white/10 font-playfair text-[8rem] leading-none select-none pointer-events-none">
-                            "
+                            &quot;
                           </span>
 
                           <p className="font-playfair text-[clamp(1.2rem,1.8vw,1.6rem)] leading-[1.7] text-white/60 relative z-10">
                             <span className="text-white/90">
-                              "{cases[activeCaseIndex].before}{" "}
+                              &quot;{cases[activeCaseIndex].before}{" "}
                             </span>
                             <span className="text-turquoise italic">
                               {cases[activeCaseIndex].intervention}{" "}
                             </span>
                             <span className="text-white/90">
-                              {cases[activeCaseIndex].after}"
+                              {cases[activeCaseIndex].after}&quot;
                             </span>
                           </p>
                         </div>
