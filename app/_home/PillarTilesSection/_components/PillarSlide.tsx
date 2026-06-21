@@ -71,7 +71,12 @@ export default function PillarSlide({
             onMouseEnter={onHover}
             onMouseLeave={onUnhover}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#050505] to-[#121212] flex items-center justify-center">
+            <div 
+              className="absolute inset-0 flex items-center justify-center transition-opacity duration-700 opacity-60 group-hover:opacity-100"
+              style={{
+                background: `radial-gradient(circle at top right, ${pillar.theme?.accent || '#ffffff'}22 0%, #050505 70%)`
+              }}
+            >
               <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
@@ -81,6 +86,10 @@ export default function PillarSlide({
                 }}
               />
             </div>
+            <div 
+              className="absolute inset-0 rounded-xl border border-white/5 opacity-50 group-hover:opacity-100 group-hover:border-white/20 transition-all duration-500 z-20 pointer-events-none"
+              style={{ borderColor: `${pillar.theme?.accent || '#ffffff'}33` }}
+            />
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8 text-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                <span className="text-[12px] tracking-[0.4em] text-white/50 uppercase font-bold mb-4">
                  Explore Pillar
@@ -96,7 +105,10 @@ export default function PillarSlide({
       {/* Right-anchored content: title + glassmorphic description card */}
       <div className="absolute inset-y-0 right-6 sm:right-12 lg:right-20 flex flex-col justify-center max-w-[90%] sm:max-w-[480px] lg:max-w-[500px] pointer-events-auto z-30">
         <div className="flex flex-col gap-2 mb-8 ml-2">
-          <span className="text-[10px] sm:text-[11px] tracking-[0.4em] text-[#d4af37] uppercase font-bold drop-shadow-md">
+          <span 
+            className="text-[10px] sm:text-[11px] tracking-[0.4em] uppercase font-bold drop-shadow-md transition-colors duration-700"
+            style={{ color: pillar.theme?.accent || '#d4af37' }}
+          >
             Pillar {String(slideIndex).padStart(2, "0")}
           </span>
           <h3 className="text-4xl sm:text-6xl font-bold uppercase leading-[1.05] tracking-tight drop-shadow-lg text-white">

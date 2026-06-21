@@ -62,6 +62,8 @@ const FRAGMENT_SHADER = `
     return smoothstep(0.995, 1.0, n);
   }
 
+  uniform vec3 u_themeColor;
+
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution.xy;
     vec2 p = uv;
@@ -73,16 +75,15 @@ const FRAGMENT_SHADER = `
     vec2 q, r;
     float n = pattern(p, q, r);
 
-    // --- Color Palette (uxbert DZRT Slide Dark Premium) ---
-    // Deep dark teal/green background 
-    vec3 bgBase = vec3(0.01, 0.025, 0.035); 
+    // Deep dark background derived from theme
+    vec3 bgBase = u_themeColor * 0.05; 
     
-    // Soft Aurora Colors: Deep Teal and Mint Green
-    vec3 colTeal = vec3(0.02, 0.30, 0.30);
-    vec3 colMint = vec3(0.04, 0.45, 0.35);
+    // Soft Aurora Colors derived from theme
+    vec3 col1 = u_themeColor * 0.5;
+    vec3 col2 = u_themeColor * 1.5;
 
     // Mix the aurora colors softly
-    vec3 auroraColor = mix(colTeal, colMint, clamp(r.y * 1.5, 0.0, 1.0));
+    vec3 auroraColor = mix(col1, col2, clamp(r.y * 1.5, 0.0, 1.0));
     
     // Shape the foggy clouds: Lower threshold so it's wider and visible, but keep it soft
     float cloudMask = smoothstep(0.25, 0.9, n);
@@ -105,8 +106,25 @@ const FRAGMENT_SHADER = `
   }
 `;
 
-export default function AuroraCanvasBg() {
+export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const hexToRgb = (hex: string) => {
+    let c = hex.replace("#", "");
+    if (c.length === 3) c = c.split("").map((ch) => ch + ch).join("");
+    return [
+      (parseInt(c.substring(0, 2), 16) / 255) || 0.0,
+      (parseInt(c.substring(2, 4), 16) / 255) || 0.5,
+      (parseInt(c.substring(4, 6), 16) / 255) || 0.5,
+    ];
+  };
+
+  const targetRGB = useRef(hexToRgb(colorHex));
+  const currentRGB = useRef(hexToRgb(colorHex));
+
+  useEffect(() => {
+    targetRGB.current = hexToRgb(colorHex);
+  }, [colorHex]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -158,6 +176,7 @@ export default function AuroraCanvasBg() {
 
     const uTimeLocation = gl.getUniformLocation(program, "u_time");
     const uResLocation = gl.getUniformLocation(program, "u_resolution");
+    const uThemeColorLocation = gl.getUniformLocation(program, "u_themeColor");
 
     let animationFrameId: number;
     let startTime = performance.now();
@@ -177,6 +196,19 @@ export default function AuroraCanvasBg() {
     const render = (time: number) => {
       const uTime = (time - startTime) * 0.001;
       gl.uniform1f(uTimeLocation, uTime);
+
+      // Smooth color interpolation
+      currentRGB.current[0] += (targetRGB.current[0] - currentRGB.current[0]) * 0.03;
+      currentRGB.current[1] += (targetRGB.current[1] - currentRGB.current[1]) * 0.03;
+      currentRGB.current[2] += (targetRGB.current[2] - currentRGB.current[2]) * 0.03;
+
+      gl.uniform3f(
+        uThemeColorLocation,
+        currentRGB.current[0],
+        currentRGB.current[1],
+        currentRGB.current[2]
+      );
+
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       animationFrameId = requestAnimationFrame(render);
     };
