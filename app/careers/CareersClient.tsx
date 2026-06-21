@@ -10,7 +10,7 @@ import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
-import CareersCanvas from "@/components/CareersCanvas";
+import CareersCanvas from "./_components/CareersCanvas";
 import { usePageColorShift } from "@/lib/usePageColorShift";
 
 gsap.registerPlugin(ScrollTrigger);

@@ -16,8 +16,8 @@ import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import NextChapterTransition from "@/components/NextChapterTransition";
 import Honeypot from "@/components/Honeypot";
-import StandardCanvas from "@/components/StandardCanvas";
-import ArchetypeCanvas from "@/components/ArchetypeCanvas";
+import StandardCanvas from "./_components/StandardCanvas";
+import ArchetypeCanvas from "./_components/ArchetypeCanvas";
 import { usePageColorShift } from "@/lib/usePageColorShift";
 import {
   NON_NEGOTIABLES,
