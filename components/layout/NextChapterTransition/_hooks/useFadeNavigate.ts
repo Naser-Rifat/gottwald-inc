@@ -2,10 +2,7 @@
 
 import { useCallback, type RefObject } from "react";
 import { useRouter } from "next/navigation";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 const FADE_IN_MS = 350;
 const SETTLE_MS = 500;

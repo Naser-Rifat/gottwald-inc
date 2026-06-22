@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap-bootstrap";
 
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
@@ -13,8 +12,6 @@ import HeroSection from "./_components/HeroSection";
 import ContactInfoCard from "./_components/ContactInfoCard";
 import ContactFormCard from "./_components/ContactFormCard";
 import ConclusionSection from "./_components/ConclusionSection";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * ContactClient — orchestrator for the /contact route.

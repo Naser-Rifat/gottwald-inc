@@ -1,16 +1,13 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap-bootstrap";
 
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
 
 import HeroSection from "./_components/HeroSection";
 import EntityGridSection from "./_components/EntityGridSection";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * EntityGridClient — orchestrator for the /entity-grid route.

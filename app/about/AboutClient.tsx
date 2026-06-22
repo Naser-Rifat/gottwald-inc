@@ -3,8 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
@@ -22,9 +21,6 @@ import RadicalPracticalSection from "./_components/RadicalPracticalSection";
 import EcosystemSection from "./_components/EcosystemSection";
 import PatronSection from "./_components/PatronSection";
 import CtaSection from "./_components/CtaSection";
-
-gsap.registerPlugin(ScrollTrigger);
-
 /**
  * AboutClient — orchestrator for the About page.
  *
