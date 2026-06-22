@@ -8,6 +8,7 @@ import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
 import NextChapterTransition from "@/components/layout/NextChapterTransition";
 import { usePageColorShift } from "@/lib/usePageColorShift";
+import { useBackgroundMouseParallax } from "@/lib/useBackgroundMouseParallax";
 
 import HeroSection from "./_components/HeroSection";
 import WaysToJoinSection from "./_components/WaysToJoinSection";
@@ -82,9 +83,15 @@ export default function CareersClient() {
     }
   };
 
-  useEffect(() => {
-    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
+  // Background mouse parallax (watermark + aurora drift) — rAF-gated,
+  // passive listener, reduced-motion aware. Replaces the inlined
+  // 60+ tweens/sec mousemove handler that used to live in this effect.
+  useBackgroundMouseParallax([
+    { selector: ".about-parallax-target", intensity: 160, duration: 1.5, ease: "power2.out" },
+    { selector: ".about-liquid-aurora", intensity: -250, duration: 2.5, ease: "power3.out" },
+  ]);
 
+  useEffect(() => {
     const ctx = gsap.context(() => {
       // WeakSet guards against re-firing: Google Translate mutates text
       // nodes when the user switches language, which can trigger
@@ -138,8 +145,13 @@ export default function CareersClient() {
         );
       });
 
-      // Hero breathing pulse
-      if (heroRef.current) {
+      // Hero breathing pulse — skip under reduced-motion (infinite
+      // scale loop is exactly the kind of thing vestibular-sensitive
+      // users want off).
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      if (heroRef.current && !reducedMotion) {
         gsap.to(heroRef.current, {
           scale: 1.008,
           duration: 4,
@@ -193,39 +205,12 @@ export default function CareersClient() {
         },
       );
 
-      // Premium mouse parallax for the watermark + liquid aurora layers.
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      if (!reducedMotion) {
-        parallaxHandler = (e: MouseEvent) => {
-          const px = e.clientX / window.innerWidth - 0.5;
-          const py = e.clientY / window.innerHeight - 0.5;
-
-          gsap.to(".about-parallax-target", {
-            x: px * 160,
-            y: py * 160,
-            duration: 1.5,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          gsap.to(".about-liquid-aurora", {
-            x: px * -250,
-            y: py * -250,
-            duration: 2.5,
-            ease: "power3.out",
-            overwrite: "auto",
-          });
-        };
-        window.addEventListener("mousemove", parallaxHandler);
-      }
+      // Background mouse parallax is handled by useBackgroundMouseParallax
+      // (called outside this effect); it's rAF-gated and passive.
     }, pageRef);
 
     return () => {
       ctx.revert();
-      if (parallaxHandler)
-        window.removeEventListener("mousemove", parallaxHandler);
     };
   }, []);
 

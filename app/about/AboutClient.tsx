@@ -9,6 +9,7 @@ import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
 import NextChapterTransition from "@/components/layout/NextChapterTransition";
 import { usePageColorShift } from "@/lib/usePageColorShift";
+import { useBackgroundMouseParallax } from "@/lib/useBackgroundMouseParallax";
 
 import HeroSection from "./_components/HeroSection";
 import NarrativeCadenceSection from "./_components/NarrativeCadenceSection";
@@ -81,7 +82,7 @@ export default function AboutClient() {
     };
 
     if (hoveredEcoIndex !== null) {
-      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mousemove", handleMouseMove, { passive: true });
     } else if (ecoCursorRef.current) {
       // Reset parallax on mouse leave.
       const imgs = ecoCursorRef.current.querySelectorAll("img");
@@ -183,11 +184,19 @@ export default function AboutClient() {
   //   .about-shifts-watermark / .about-parallax-target / .about-liquid-aurora
   //                                                  → mouse + scroll parallax
   //   .cta-section / .cta-reveal / .magnetic-cta     → footer choreography
+  // Site-wide background parallax (watermark + aurora drift toward the
+  // cursor). Lives outside the gsap.context because its listener is on
+  // `window`, not on a GSAP-tracked element. Honours reduced-motion
+  // internally and is rAF-gated.
+  useBackgroundMouseParallax([
+    { selector: ".about-parallax-target", intensity: 120, duration: 1.5, ease: "power2.out" },
+    { selector: ".about-liquid-aurora", intensity: -200, duration: 2.5, ease: "power3.out" },
+  ]);
+
   useLayoutEffect(() => {
     // Magnetic-button window listener lives outside ctx so we can detach it
     // cleanly; ctx.revert() only tears down GSAP-managed tweens.
     let magneticHandler: ((e: MouseEvent) => void) | null = null;
-    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
 
     const ctx = gsap.context(() => {
       const reducedMotion = window.matchMedia(
@@ -540,41 +549,17 @@ export default function AboutClient() {
             });
           }
         };
-        window.addEventListener("mousemove", magneticHandler);
+        window.addEventListener("mousemove", magneticHandler, { passive: true });
       }
 
-      // 7. Premium mouse parallax for background elements.
-      if (!reducedMotion) {
-        parallaxHandler = (e: MouseEvent) => {
-          const px = e.clientX / window.innerWidth - 0.5;
-          const py = e.clientY / window.innerHeight - 0.5;
-
-          gsap.to(".about-parallax-target", {
-            x: px * 120,
-            y: py * 120,
-            duration: 1.5,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          gsap.to(".about-liquid-aurora", {
-            x: px * -200,
-            y: py * -200,
-            duration: 2.5,
-            ease: "power3.out",
-            overwrite: "auto",
-          });
-        };
-        window.addEventListener("mousemove", parallaxHandler);
-      }
+      // Background mouse parallax is handled by useBackgroundMouseParallax
+      // (called outside this effect); it's rAF-gated and passive.
     }, pageRef);
 
     return () => {
       ctx.revert();
       if (magneticHandler)
         window.removeEventListener("mousemove", magneticHandler);
-      if (parallaxHandler)
-        window.removeEventListener("mousemove", parallaxHandler);
     };
   }, []);
 

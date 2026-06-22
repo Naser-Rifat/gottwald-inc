@@ -50,9 +50,11 @@ export default function StandardsPagination() {
     window.addEventListener("updateStandardsPagination", handleUpdate);
 
     // Native scroll fallback for mobile (where the pin is disabled).
+    // Both scroll + resize are read-only handlers (just call setState);
+    // passive prevents the browser from waiting on us before scrolling.
     const scrollWrapper = document.querySelector(".standards-scroll-wrapper");
-    scrollWrapper?.addEventListener("scroll", handleUpdate);
-    window.addEventListener("resize", handleUpdate);
+    scrollWrapper?.addEventListener("scroll", handleUpdate, { passive: true });
+    window.addEventListener("resize", handleUpdate, { passive: true });
 
     return () => {
       window.removeEventListener("updateStandardsPagination", handleUpdate);

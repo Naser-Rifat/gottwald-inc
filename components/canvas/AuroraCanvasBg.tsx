@@ -205,6 +205,8 @@ export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: st
       resizeTimer = setTimeout(applyResize, 120);
     };
 
+    const resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(canvas);
     window.addEventListener("resize", resize, { passive: true });
     applyResize();
 
@@ -261,6 +263,7 @@ export default function AuroraCanvasBg({ colorHex = "#023c3c" }: { colorHex?: st
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", handleVisibility);
       observer.disconnect();
+      resizeObserver.disconnect();
       if (resizeTimer) clearTimeout(resizeTimer);
       stopLoop();
       gl.deleteProgram(program);

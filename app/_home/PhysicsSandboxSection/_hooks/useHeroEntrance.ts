@@ -120,9 +120,16 @@ export function useHeroEntrance({
       }
 
       // ── Continuous ambient tweens ───────────────────────────────────
+      // All four loops below are decorative (orb-ring rotations, orb-glow
+      // breathing, scroll-arrow bob). Under prefers-reduced-motion we
+      // skip them entirely — the IntersectionObserver block below has
+      // nothing to pause/resume when the array is empty.
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
       const infiniteTweens: gsap.core.Tween[] = [];
 
-      if (orb) {
+      if (orb && !reducedMotion) {
         infiniteTweens.push(
           gsap.to(orb.querySelector(".orb-ring-1"), {
             rotation: 360,
@@ -148,7 +155,7 @@ export function useHeroEntrance({
       }
 
       const arrow = hero.querySelector(".hero-scroll svg");
-      if (arrow) {
+      if (arrow && !reducedMotion) {
         infiniteTweens.push(
           gsap.to(arrow, {
             y: 4,

@@ -25,7 +25,7 @@ export function useFollowCursor<T extends HTMLElement = HTMLDivElement>() {
       });
     };
 
-    window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("mousemove", moveCursor, { passive: true });
     return () => window.removeEventListener("mousemove", moveCursor);
   }, []);
 

@@ -13,6 +13,13 @@ export default function AmbientAurora() {
     // Slow, breathing organic movements using GSAP
     if (!auroraRef1.current || !auroraRef2.current || !auroraRef3.current) return;
 
+    // Skip entirely under reduced-motion. The blobs are decorative; with
+    // the OS preference set, leaving them static is the correct choice.
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) return;
+
     const tweens: gsap.core.Tween[] = [];
     const ctx = gsap.context(() => {
       // Petrol blob

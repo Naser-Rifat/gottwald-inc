@@ -8,6 +8,7 @@ import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
 import NextChapterTransition from "@/components/layout/NextChapterTransition";
 import { usePageColorShift } from "@/lib/usePageColorShift";
+import { useBackgroundMouseParallax } from "@/lib/useBackgroundMouseParallax";
 
 import HeroSection from "./_components/HeroSection";
 import ProofSection from "./_components/ProofSection";
@@ -57,6 +58,13 @@ export default function PartnershipsClient() {
   // Partnerships page tints the GlobalCanvas to Deep Obsidian Petrol.
   usePageColorShift("#020508");
 
+  // Background mouse parallax (watermark + aurora drift) — rAF-gated,
+  // passive, reduced-motion aware. Replaces the inlined mousemove handler.
+  useBackgroundMouseParallax([
+    { selector: ".about-parallax-target", intensity: 160, duration: 1.5, ease: "power2.out" },
+    { selector: ".about-liquid-aurora", intensity: -250, duration: 2.5, ease: "power3.out" },
+  ]);
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
@@ -90,8 +98,6 @@ export default function PartnershipsClient() {
   };
 
   useLayoutEffect(() => {
-    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
-
     const ctx = gsap.context(() => {
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -173,12 +179,16 @@ export default function PartnershipsClient() {
           },
         });
 
-        // Scroll indicator loop
-        gsap.fromTo(
-          gsap.utils.toArray(".scroll-indicator-line", pageRef.current!),
-          { yPercent: -100 },
-          { yPercent: 400, duration: 2, repeat: -1, ease: "none" },
-        );
+        // Scroll indicator loop — skipped under reduced-motion (the
+        // unending top-to-bottom translate is exactly what the OS
+        // preference is meant to silence).
+        if (!reducedMotion) {
+          gsap.fromTo(
+            gsap.utils.toArray(".scroll-indicator-line", pageRef.current!),
+            { yPercent: -100 },
+            { yPercent: 400, duration: 2, repeat: -1, ease: "none" },
+          );
+        }
 
         // Hero container fade/scale on scroll out
         gsap.to(heroTextRef.current, {
@@ -412,36 +422,13 @@ export default function PartnershipsClient() {
         );
       }
 
-      // 10. Background mouse parallax — watermark + liquid aurora.
-      if (!reducedMotion) {
-        parallaxHandler = (e: MouseEvent) => {
-          const px = e.clientX / window.innerWidth - 0.5;
-          const py = e.clientY / window.innerHeight - 0.5;
-
-          gsap.to(".about-parallax-target", {
-            x: px * 160,
-            y: py * 160,
-            duration: 1.5,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          gsap.to(".about-liquid-aurora", {
-            x: px * -250,
-            y: py * -250,
-            duration: 2.5,
-            ease: "power3.out",
-            overwrite: "auto",
-          });
-        };
-        window.addEventListener("mousemove", parallaxHandler);
-      }
+      // 10. Background mouse parallax is handled by
+      //     useBackgroundMouseParallax (called outside this effect);
+      //     it's rAF-gated and passive.
     }, pageRef);
 
     return () => {
       ctx.revert();
-      if (parallaxHandler)
-        window.removeEventListener("mousemove", parallaxHandler);
     };
   }, []);
 

@@ -237,7 +237,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       };
 
       outer.addEventListener("wheel", onWheel, { passive: false });
-      window.addEventListener("resize", recalc);
+      window.addEventListener("resize", recalc, { passive: true });
       raf = requestAnimationFrame(animate);
 
       return () => {
