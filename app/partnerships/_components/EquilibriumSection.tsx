@@ -7,6 +7,7 @@ import {
   PARTNER_BENEFITS,
   PARTNER_EXPECTATIONS,
 } from "@/lib/partnershipData";
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
 
 /**
  * Two-column "what partners get / what we expect" diptych with a
@@ -24,6 +25,11 @@ export default function EquilibriumSection() {
     target: containerRef,
     offset: ["start end", "end start"],
   });
+
+  // Pause the spinning aurora blob behind this section when scrolled
+  // off-screen — the blob is a 90vw blurred element with two
+  // counter-rotating gradients that otherwise recomposite every frame.
+  usePauseAnimationsOffscreen(containerRef);
 
   const yTransform = useTransform(scrollYProgress, [0, 1], [-80, 80]);
 

@@ -1,6 +1,9 @@
 "use client";
 
+import { useRef } from "react";
+
 import { APPLICATION_PROCESS, FIND_HERE } from "../_data/process";
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
 
 /**
  * Two-column proof block:
@@ -12,8 +15,14 @@ import { APPLICATION_PROCESS, FIND_HERE } from "../_data/process";
  *    badges.
  */
 export default function ProcessSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  usePauseAnimationsOffscreen(sectionRef);
+
   return (
-    <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]">
+    <section
+      ref={sectionRef}
+      className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]"
+    >
       {/* Ghost watermark */}
       <div
         aria-hidden="true"

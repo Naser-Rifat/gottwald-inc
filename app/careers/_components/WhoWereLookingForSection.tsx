@@ -1,5 +1,9 @@
 "use client";
 
+import { useRef } from "react";
+
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
+
 const TRAITS = [
   "think in outcomes (not tasks)",
   "communicate cleanly (no fog, no ego)",
@@ -15,8 +19,14 @@ const TRAITS = [
  * watermark + copper/silver liquid aurora float behind the content.
  */
 export default function WhoWereLookingForSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  usePauseAnimationsOffscreen(sectionRef);
+
   return (
-    <section className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]">
+    <section
+      ref={sectionRef}
+      className="px-gutter py-[15vh] border-t border-white/5 relative overflow-hidden bg-[#050505]"
+    >
       {/* Ghost watermark */}
       <div
         aria-hidden="true"

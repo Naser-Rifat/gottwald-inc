@@ -1,9 +1,12 @@
 "use client";
 
+import { useRef } from "react";
+
 import ShiftCanvas from "./ShiftCanvas";
 
 import { PROOF_PHASES } from "../_data/proofPhases";
 import { SHIFTS, SHIFT_ROMANS } from "../_data/shifts";
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
 
 interface OutcomesSectionProps {
   /** Index of the currently active proof phase (0..2). */
@@ -35,8 +38,16 @@ export default function OutcomesSection({
   setActiveProofPhase,
   activeShiftIndex,
 }: OutcomesSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Pause the spinning aurora blob behind this section when scrolled
+  // off-screen — see the hook for the rationale (large blurred
+  // composite layers are expensive even when not in view).
+  usePauseAnimationsOffscreen(sectionRef);
+
   return (
     <section
+      ref={sectionRef}
       data-journey="proof"
       className="about-atmosphere py-[14vh] lg:py-[18vh] px-gutter relative bg-[#070c14] border-y border-white/[0.04]"
     >

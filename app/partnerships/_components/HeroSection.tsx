@@ -1,7 +1,14 @@
 "use client";
 
-import { type Ref } from "react";
+import {
+  useCallback,
+  useRef,
+  type Ref,
+  type RefObject,
+} from "react";
 import { useTranslations } from "next-intl";
+
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
 
 interface HeroSectionProps {
   /** Section root ref — parent attaches the cursor-follow glow handler
@@ -42,9 +49,32 @@ export default function HeroSection({
   const t = useTranslations("partnerships.hero");
   const tCtas = useTranslations("partnerships.ctas");
 
+  // Local ref for the IntersectionObserver pause hook. The parent's
+  // forwarded `sectionRef` is also used (for the cursor-glow handler);
+  // a callback ref merges both so they point at the same <section>.
+  const innerSectionRef = useRef<HTMLElement>(null);
+  usePauseAnimationsOffscreen(innerSectionRef);
+
+  const setSectionRef = useCallback(
+    (el: HTMLElement | null) => {
+      innerSectionRef.current = el;
+      if (typeof sectionRef === "function") {
+        sectionRef(el);
+      } else if (sectionRef) {
+        // Forwarded RefObject — writing `.current` is the documented
+        // ref-forwarding pattern. react-hooks/immutability flags it as
+        // a false positive (the rule models normal values, not refs),
+        // so silence it for this one assignment.
+        // eslint-disable-next-line react-hooks/immutability
+        (sectionRef as RefObject<HTMLElement | null>).current = el;
+      }
+    },
+    [sectionRef],
+  );
+
   return (
     <section
-      ref={sectionRef}
+      ref={setSectionRef}
       className="min-h-screen w-full flex flex-col justify-end relative bg-transparent overflow-hidden pt-32 lg:pt-40"
     >
       <div
