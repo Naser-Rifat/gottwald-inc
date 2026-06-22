@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import Header from "@/components/Header";
-import FooterSection from "@/components/FooterSection";
-import NextChapterTransition from "@/components/NextChapterTransition";
+import Header from "@/components/layout/Header";
+import FooterSection from "@/components/layout/FooterSection";
+import NextChapterTransition from "@/components/layout/NextChapterTransition";
 import { usePageColorShift } from "@/lib/usePageColorShift";
 
 import HeroSection from "./_components/HeroSection";

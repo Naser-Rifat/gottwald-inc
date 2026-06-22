@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 
-import AmbientAurora from "@/components/AmbientAurora";
+import AmbientAurora from "@/components/canvas/AmbientAurora";
 
 import { useSplitTextReveal } from "./_hooks/useSplitTextReveal";
 import { useScrollFadeIn } from "./_hooks/useScrollFadeIn";

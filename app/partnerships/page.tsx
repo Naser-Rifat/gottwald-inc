@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import PartnershipsClient from "./PartnershipsClient";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import {
   breadcrumbJsonLd,
   faqJsonLd,

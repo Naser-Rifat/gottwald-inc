@@ -18,7 +18,7 @@ const getBackTargetSSR = () => BACK_TO_WORK;
 import gsap from "gsap";
 import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
 import { useRouter } from "next/navigation";
-import AuroraCanvasBg from "@/components/AuroraCanvasBg";
+import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — matched to homepage globals.css
    ───────────────────────────────────────────────────────────── */

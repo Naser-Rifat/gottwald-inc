@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import FrequencyEngine from "./FrequencyEngine";
 
 /**
  * LivingEnvironment — site-wide manifesto wiring.
@@ -11,7 +10,6 @@ import FrequencyEngine from "./FrequencyEngine";
  *  - Drives the orchestration thread's pace from scroll velocity (Move D)
  *  - Tracks section dwell and adds .dwell-deepened (Move B)
  *  - Seeds per-visit animation phase offsets (Move E)
- *  - Renders the orchestration thread (right rail) and FrequencyEngine toggle
  *
  * Single source of truth for the "living frequency space" behaviors. Pages
  * don't re-implement these. The orchestration thread reads section

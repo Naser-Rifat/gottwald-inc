@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import MenuOverlay from "./MenuOverlay";
 import Image from "next/image";
 import logo from "@/public/logo.png";
-import AudioToggle from "./AudioToggle";
-import GoogleTranslate from "./GoogleTranslate";
+import AudioToggle from "@/components/system/AudioToggle";
+import GoogleTranslate from "@/components/system/GoogleTranslate";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

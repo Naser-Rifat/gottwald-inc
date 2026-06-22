@@ -6,10 +6,10 @@ import { getTranslations } from "next-intl/server";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 // Shared chrome / utilities
-import JsonLd from "@/components/JsonLd";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import PagingScript from "@/components/PagingScript";
-import WebGLCanvasLoader from "@/components/WebGLCanvasLoader";
+import JsonLd from "@/components/system/JsonLd";
+import CustomScrollbar from "@/components/layout/CustomScrollbar";
+import PagingScript from "@/components/system/PagingScript";
+import WebGLCanvasLoader from "@/components/canvas/WebGLCanvasLoader";
 
 // Home-only sections (private to this route)
 // Above-the-fold sections stay statically imported so they render
@@ -35,9 +35,9 @@ const GlobalAuthoritySection = dynamic(
 const StrategicInquirySection = dynamic(
   () => import("./_home/StrategicInquirySection"),
 );
-const FooterSection = dynamic(() => import("@/components/FooterSection"));
+const FooterSection = dynamic(() => import("@/components/layout/FooterSection"));
 const NextChapterTransition = dynamic(
-  () => import("@/components/NextChapterTransition"),
+  () => import("@/components/layout/NextChapterTransition"),
 );
 
 const HOME_DESCRIPTION =

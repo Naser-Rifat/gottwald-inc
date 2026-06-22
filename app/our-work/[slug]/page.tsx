@@ -6,7 +6,7 @@ import {
   getAllPillarSlugs,
 } from "@/lib/api/pillars";
 import PillarsDetailClient from "./PillarDetailClient";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import {
   breadcrumbJsonLd,
   pillarServiceJsonLd,

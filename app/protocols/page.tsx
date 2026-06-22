@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
-import FooterSection from "@/components/FooterSection";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import JsonLd from "@/components/JsonLd";
+import Header from "@/components/layout/Header";
+import FooterSection from "@/components/layout/FooterSection";
+import CustomScrollbar from "@/components/layout/CustomScrollbar";
+import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 const PROTOCOLS_DESCRIPTION =

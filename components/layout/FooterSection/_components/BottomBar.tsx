@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import CookieSettingsTrigger from "@/components/CookieSettingsTrigger";
+import CookieSettingsTrigger from "@/components/system/CookieSettingsTrigger";
 import { legalLinks } from "../_data/legalLinks";
 
 const LEGAL_LINK_CLASS =

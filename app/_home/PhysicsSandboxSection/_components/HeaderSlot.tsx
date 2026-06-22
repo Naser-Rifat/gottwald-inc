@@ -1,7 +1,7 @@
 "use client";
 
 import type { Ref } from "react";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
 
 interface HeaderSlotProps {
   /** Ref consumed by useHeroEntrance to fade the header in. */

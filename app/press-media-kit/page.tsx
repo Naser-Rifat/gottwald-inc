@@ -1,4 +1,4 @@
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import PressMediaKitClient from "./PressMediaKitClient";
 
