@@ -9,11 +9,11 @@ import "./globals.css";
 // First-paint critical: small components that must run before paint
 // (DOM patches, route cleanup, the loading screen, the global noise
 // overlay) stay statically imported.
-import NoiseOverlay from "@/components/NoiseOverlay";
-import RouteCleanup from "@/components/RouteCleanup";
-import DomSafetyPatch from "@/components/DomSafetyPatch";
-import PageLoader from "@/components/PageLoader";
-import AudioProvider from "@/components/AudioProvider";
+import NoiseOverlay from "@/components/layout/NoiseOverlay";
+import RouteCleanup from "@/components/system/RouteCleanup";
+import DomSafetyPatch from "@/components/system/DomSafetyPatch";
+import PageLoader from "@/components/system/PageLoader";
+import AudioProvider from "@/components/system/AudioProvider";
 
 // Non-critical: dynamic-import everything that runs after first paint or
 // only reacts to user interaction. This moves ~800 lines of client JS
@@ -22,20 +22,20 @@ import AudioProvider from "@/components/AudioProvider";
 // bundle and into per-component chunks that load after the page is
 // interactive. Default ssr:true keeps the markup in the streamed HTML.
 const GlobalCanvasLoader = dynamic(
-  () => import("@/components/GlobalCanvasLoader"),
+  () => import("@/components/canvas/GlobalCanvasLoader"),
 );
-const CookieManager = dynamic(() => import("@/components/CookieManager"));
+const CookieManager = dynamic(() => import("@/components/system/CookieManager"));
 const GoogleTranslateRoot = dynamic(
-  () => import("@/components/GoogleTranslateRoot"),
+  () => import("@/components/system/GoogleTranslateRoot"),
 );
 const LivingEnvironment = dynamic(
-  () => import("@/components/LivingEnvironment"),
+  () => import("@/components/system/LivingEnvironment"),
 );
 const LiquidClickEffect = dynamic(
-  () => import("@/components/LiquidClickEffect"),
+  () => import("@/components/system/LiquidClickEffect"),
 );
 const JourneyIndicator = dynamic(
-  () => import("@/components/JourneyIndicator"),
+  () => import("@/components/system/JourneyIndicator"),
 );
 import {
   SITE_URL,

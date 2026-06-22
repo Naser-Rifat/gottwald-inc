@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
-import Honeypot from "@/components/Honeypot";
-import { useAudio } from "@/components/AudioProvider";
+import Honeypot from "@/components/form/Honeypot";
+import { useAudio } from "@/components/system/AudioProvider";
 
 interface BrutalistContactFormProps {
   /** Optional subject injected into the hidden field to identify the source */

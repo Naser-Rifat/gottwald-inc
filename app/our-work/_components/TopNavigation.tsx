@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import AudioToggle from "@/components/AudioToggle";
-import MenuOverlay from "@/components/MenuOverlay";
+import AudioToggle from "@/components/system/AudioToggle";
+import MenuOverlay from "@/components/layout/MenuOverlay";
 import logo from "@/public/logo.png";
 import { useState } from "react";
 

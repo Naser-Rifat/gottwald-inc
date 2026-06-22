@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useAudio } from "@/components/AudioProvider";
+import { useAudio } from "@/components/system/AudioProvider";
 
 // Storage uses document.cookie (not localStorage) so Next.js
 // Middleware/SSR can read the acknowledgment before rendering HTML.

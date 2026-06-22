@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 
 import type { Pillar } from "@/lib/types/pillars";
-import AuroraCanvasBg from "@/components/AuroraCanvasBg";
+import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
 
 import { useScrollTimeline } from "./_hooks/useScrollTimeline";
 import { useFollowCursor } from "./_hooks/useFollowCursor";

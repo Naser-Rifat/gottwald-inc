@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import type { Pillar } from "@/lib/types/pillars";
-import AuroraCanvasBg from "@/components/AuroraCanvasBg";
-import FooterSection from "@/components/FooterSection";
+import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
+import FooterSection from "@/components/layout/FooterSection";
 
 import { useGhostCursor } from "./_hooks/useGhostCursor";
 import { useActiveSnapSection } from "./_hooks/useActiveSnapSection";
