@@ -1,8 +1,10 @@
 "use client";
 
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { PILLARS } from "../_data/pillars";
+import { usePauseAnimationsOffscreen } from "@/lib/usePauseAnimationsOffscreen";
 
 interface RolesByPillarSectionProps {
   /** Index of the currently open pillar, or `null` if all collapsed. */
@@ -26,8 +28,14 @@ export default function RolesByPillarSection({
   openPillar,
   setOpenPillar,
 }: RolesByPillarSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  usePauseAnimationsOffscreen(sectionRef);
+
   return (
-    <section className="px-gutter py-[15vh] border-t border-white/5 bg-[#030508] relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="px-gutter py-[15vh] border-t border-white/5 bg-[#030508] relative overflow-hidden"
+    >
       {/* Premium liquid aurora background (copper & silver) */}
       <div className="about-liquid-aurora absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[70vw] md:h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full mix-blend-screen opacity-[0.05] blur-[120px] z-0 will-change-transform pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#c07840] via-[#b8c0cc] to-transparent rounded-full animate-[spin_18s_linear_infinite]" />

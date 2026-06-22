@@ -56,12 +56,17 @@ function normalizeOffers(input: unknown): Offer[] {
   return [];
 }
 
+import { usePageColorShift } from "@/lib/usePageColorShift";
+
 export default function PillarDetailClient({ project, nextProject }: Props) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const progressWrapRef = useRef<HTMLDivElement>(null);
+
+  // Update the global canvas color to match this pillar's theme
+  usePageColorShift(project.theme.accent);
 
   // Back button destination — derived from sessionStorage on the client,
   // defaults to "/our-work" on the server snapshot for hydration safety.
@@ -2116,7 +2121,7 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                 <div
                   className="absolute inset-0"
                   style={{
-                    backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 48px, ${hexToRgba(accentHex, 0.035)} 48px, ${hexToRgba(accentHex, 0.035)} 49px)`,
+                    backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 48px, ${hexToRgba(accentHex, 0.015)} 48px, ${hexToRgba(accentHex, 0.015)} 49px)`,
                   }}
                 />
                 <div className="absolute bottom-8 right-8 flex flex-col gap-2">
