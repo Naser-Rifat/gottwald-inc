@@ -71,7 +71,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  productionBrowserSourceMaps: true,
+  // Sentry's webpack plugin generates + uploads sourcemaps on its own
+  // (see sentryWebpackOptions below), so we don't need Next.js to ALSO
+  // emit `.js.map` files alongside every chunk and serve them publicly.
+  // Setting this to false saves a meaningful slice of the build output
+  // (the .map files routinely exceed their .js siblings in size) and
+  // keeps DevTools from auto-fetching them on every page load.
+  productionBrowserSourceMaps: false,
 
   experimental: {
     // Per-import tree-shaking for libs that ship many entry points.
