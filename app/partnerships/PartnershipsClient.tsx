@@ -2,8 +2,7 @@
 
 import { useLayoutEffect, useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
@@ -20,9 +19,6 @@ import EquilibriumSection from "./_components/EquilibriumSection";
 import DomainsAccordionSection from "./_components/DomainsAccordionSection";
 import SelectionProcessSection from "./_components/SelectionProcessSection";
 import ApplicationFormSection from "./_components/ApplicationFormSection";
-
-gsap.registerPlugin(ScrollTrigger);
-
 /**
  * PartnershipsClient — orchestrator for /partnerships.
  *

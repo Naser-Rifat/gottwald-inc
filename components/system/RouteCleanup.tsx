@@ -2,12 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import gsap from "gsap";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 /**
  * RouteCleanup — global per-route lifecycle guard

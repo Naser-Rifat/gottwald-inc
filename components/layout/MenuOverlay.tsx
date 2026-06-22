@@ -2,14 +2,10 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLocale, useTranslations } from "next-intl";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { gsap, ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 interface MenuOverlayProps {
   isOpen: boolean;

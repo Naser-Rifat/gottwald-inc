@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { gsap } from "@/lib/gsap-bootstrap";
 
 interface UseEntranceRevealArgs {
   sectionRef: RefObject<HTMLElement | null>;

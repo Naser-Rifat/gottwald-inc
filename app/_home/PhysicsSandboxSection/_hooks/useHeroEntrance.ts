@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { gsap } from "@/lib/gsap-bootstrap";
 
 interface UseHeroEntranceArgs {
   heroRef: RefObject<HTMLElement | null>;

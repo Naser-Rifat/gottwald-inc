@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap-bootstrap";
 
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
@@ -17,9 +16,6 @@ import RolesByPillarSection from "./_components/RolesByPillarSection";
 import ProcessSection from "./_components/ProcessSection";
 import ApplicationFormSection from "./_components/ApplicationFormSection";
 import ConclusionSection from "./_components/ConclusionSection";
-
-gsap.registerPlugin(ScrollTrigger);
-
 /**
  * CareersClient — orchestrator for /careers.
  *
