@@ -22,7 +22,7 @@ const FRAGMENT_SHADER = `
     return fract(sin(n) * 43758.5453123);
   }
 
-  // 2D Noise
+  // 2D Value Noise
   float noise(in vec2 x) {
     vec2 p = floor(x);
     vec2 f = fract(x);
@@ -32,34 +32,26 @@ const FRAGMENT_SHADER = `
                mix(hash(n + 57.0), hash(n + 58.0), f.x), f.y);
   }
 
-  // Fractional Brownian Motion (fBm) - using fewer octaves for softer shapes
+  // Rotation matrix to break up grid alignment in noise
+  const mat2 m = mat2(0.8, 0.6, -0.6, 0.8);
+
+  // Fractional Brownian Motion (fBm) with rotation for organic shapes
   float fbm(vec2 p) {
     float f = 0.0;
     float w = 0.5;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
       f += w * noise(p);
-      p *= 2.0;
+      p = m * p * 2.0;
       w *= 0.5;
     }
     return f;
   }
 
-  // Domain Warping for the extremely smooth, fluid, foggy aurora
-  float pattern(in vec2 p, out vec2 q, out vec2 r) {
-    q.x = fbm(p + vec2(0.0, 0.0) + u_time * 0.02);
-    q.y = fbm(p + vec2(5.2, 1.3) - u_time * 0.015);
-
-    r.x = fbm(p + 4.0 * q + vec2(1.7, 9.2) + u_time * 0.03);
-    r.y = fbm(p + 4.0 * q + vec2(8.3, 2.8) - u_time * 0.02);
-
-    return fbm(p + 2.0 * r);
-  }
-
-  // Star generation (Extremely subtle, faint)
+  // Star generation (Sparse and faint)
   float getStars(vec2 uv) {
     vec2 p = uv * 400.0;
     float n = noise(p + u_time * 0.001);
-    return smoothstep(0.995, 1.0, n);
+    return smoothstep(0.99, 1.0, n);
   }
 
   uniform vec3 u_themeColor;
@@ -69,38 +61,65 @@ const FRAGMENT_SHADER = `
     vec2 p = uv;
     p.x *= u_resolution.x / u_resolution.y;
     
-    // Scale down coordinates so the aurora clouds are massive and soft
-    p *= 1.5;
+    // Dynamic sky color: deep dark night sky, very slight tint from the theme color
+    vec3 skyDark = vec3(0.01, 0.01, 0.015);
+    vec3 skyLight = vec3(0.015, 0.02, 0.03) + u_themeColor * 0.05;
+    vec3 skyColor = mix(skyLight, skyDark, uv.y);
 
-    vec2 q, r;
-    float n = pattern(p, q, r);
+    float auroraIntensity = 0.0;
 
-    // Deep dark background derived from theme
-    vec3 bgBase = u_themeColor * 0.05; 
-    
-    // Soft Aurora Colors derived from theme
-    vec3 col1 = u_themeColor * 0.5;
-    vec3 col2 = u_themeColor * 1.5;
+    // 2.5D Aurora Volume Generation
+    // Iterate over 'z' to create multiple layers with 3D perspective and parallax
+    for(float i = 1.0; i < 6.0; i += 1.0) {
+      float z = i * 0.25; // Depth: 0.25, 0.50, 0.75, 1.00, 1.25
+      float t = u_time * 0.04 + z * 5.0; // Time offset per layer
+      
+      // Perspective scaling: farther layers are stretched wider and move differently
+      float x = p.x * (1.0 + z) + t;
+      
+      // Massive sweeping arcs crossing the sky
+      float curve = sin(x * 1.5) * 0.15 + sin(x * 0.5 - t * 0.5) * 0.2;
+      curve += fbm(vec2(x * 0.8, t * 0.2)) * 0.15;
+      
+      // Spread the layers vertically so they aren't all on one line.
+      // Closer layers (low z) are lower on the screen, farther layers (high z) are higher.
+      float baseHeight = z * 0.35 + curve;
 
-    // Mix the aurora colors softly
-    vec3 auroraColor = mix(col1, col2, clamp(r.y * 1.5, 0.0, 1.0));
-    
-    // Shape the foggy clouds: Lower threshold so it's wider and visible, but keep it soft
-    float cloudMask = smoothstep(0.25, 0.9, n);
+      // Soft vertical striations (rays) flowing upwards
+      float rays = fbm(vec2(x * 2.0, p.y * 0.3 - t * 0.2));
+      rays *= fbm(vec2(x * 3.5 + t, p.y * 0.1));
+      rays = smoothstep(0.1, 0.9, rays); // Contrast boost
 
-    // Fade the edges slightly
-    float edgeFade = smoothstep(-0.2, 0.3, uv.y) * smoothstep(1.2, 0.5, uv.y);
-    
-    // Composite: Additive blending of soft glowing fog
-    vec3 finalColor = bgBase + (auroraColor * cloudMask * edgeFade * 0.9);
+      // Distance from the base height
+      float dist = uv.y - baseHeight;
 
-    // Add very faint stars 
+      // Realistic aurora physics: sharp bottom edge, beautiful tall exponential fade upwards
+      float bottomFade = smoothstep(-0.06, 0.02, dist);
+      float topFade = exp(-max(dist, 0.0) * 4.0); 
+
+      // Cluster mask to break into distinct patches
+      float clusterMask = smoothstep(0.3, 0.8, noise(vec2(x * 1.2, z * 10.0)));
+
+      float intensity = bottomFade * topFade * rays * clusterMask;
+      
+      // Accumulate intensity, simulating atmospheric perspective (farther = dimmer)
+      auroraIntensity += intensity * (1.0 - z * 0.2) * 1.5;
+    }
+
+    // Strictly limit the intensity to prevent blowout.
+    // By keeping it within 0.0 to 1.5, we ensure it never turns pure white.
+    float safeIntensity = clamp(auroraIntensity, 0.0, 1.5);
+
+    // Colorize strictly with the exact theme color. No white mixing, no HDR tone mapping distortion.
+    // This guarantees the user sees EXACTLY the vibrant real color of the theme.
+    vec3 auroraGlow = u_themeColor * safeIntensity * 1.4;
+
+    // Composite the aurora over the dynamic sky
+    vec3 finalColor = skyColor + auroraGlow;
+
+    // Add faint stars, hiding them where the aurora is very bright
     float stars = getStars(uv);
-    finalColor += vec3(stars * 0.15); 
-
-    // Heavy vignette for premium moody look
-    float vignette = uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y);
-    finalColor *= clamp(pow(vignette * 15.0, 0.35), 0.0, 1.0);
+    finalColor += vec3(stars * 0.3) * (1.0 - smoothstep(0.1, 0.6, auroraIntensity));
 
     gl_FragColor = vec4(finalColor, 1.0);
   }
@@ -109,10 +128,15 @@ const FRAGMENT_SHADER = `
 const hexToRgb = (hex: string): [number, number, number] => {
   let c = hex.replace("#", "");
   if (c.length === 3) c = c.split("").map((ch) => ch + ch).join("");
+  
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+
   return [
-    (parseInt(c.substring(0, 2), 16) / 255) || 0.0,
-    (parseInt(c.substring(2, 4), 16) / 255) || 0.5,
-    (parseInt(c.substring(4, 6), 16) / 255) || 0.5,
+    isNaN(r) ? 0.0 : r / 255,
+    isNaN(g) ? 0.5 : g / 255,
+    isNaN(b) ? 0.5 : b / 255,
   ];
 };
 
