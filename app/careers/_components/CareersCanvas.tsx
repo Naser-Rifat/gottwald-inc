@@ -49,7 +49,7 @@ const GlobalFamilySphere = () => {
         (-(e.clientY / size.height) * 2 + 1) * viewport.height
       );
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, [viewport, size]);
 

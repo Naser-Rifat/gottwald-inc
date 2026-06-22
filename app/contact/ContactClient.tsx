@@ -6,6 +6,7 @@ import { gsap } from "@/lib/gsap-bootstrap";
 import Header from "@/components/layout/Header";
 import FooterSection from "@/components/layout/FooterSection";
 import { usePageColorShift } from "@/lib/usePageColorShift";
+import { useBackgroundMouseParallax } from "@/lib/useBackgroundMouseParallax";
 
 import BackgroundLayers from "./_components/BackgroundLayers";
 import HeroSection from "./_components/HeroSection";
@@ -36,10 +37,22 @@ export default function ContactClient() {
   // Contact page shifts the GlobalCanvas to Golden Amber.
   usePageColorShift("#b67d33");
 
-  useEffect(() => {
-    let parallaxHandler: ((e: MouseEvent) => void) | null = null;
+  // Background mouse parallax (watermark + aurora) — rAF-gated, passive,
+  // reduced-motion aware. Replaces the inlined mousemove handler.
+  useBackgroundMouseParallax([
+    { selector: ".contact-parallax-target", intensity: 160, duration: 1.5, ease: "power2.out" },
+    { selector: ".contact-liquid-aurora", intensity: -250, duration: 2.5, ease: "power3.out" },
+  ]);
 
+  useEffect(() => {
     const ctx = gsap.context(() => {
+      // Hoisted once for the entire context — any future motion-sensitive
+      // tween in this block can read this without re-querying matchMedia
+      // or shadowing inside a nested scope.
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       // 1. Hero text reveal — clip-path slide up with light rotation.
       if (heroTextRef.current) {
         const lines = heroTextRef.current.querySelectorAll(".hero-line span");
@@ -57,15 +70,19 @@ export default function ContactClient() {
           },
         );
 
-        // Hero breathing pulse.
-        gsap.to(heroTextRef.current, {
-          scale: 1.008,
-          duration: 4,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          transformOrigin: "left center",
-        });
+        // Hero breathing pulse — skipped under reduced-motion (the
+        // scale-1.008 infinite loop is exactly what the OS preference is
+        // meant to silence).
+        if (!reducedMotion) {
+          gsap.to(heroTextRef.current, {
+            scale: 1.008,
+            duration: 4,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            transformOrigin: "left center",
+          });
+        }
       }
 
       // 2. Form & details fade up.
@@ -129,39 +146,12 @@ export default function ContactClient() {
         },
       );
 
-      // 6. Background mouse parallax — drives the watermark + aurora.
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      if (!reducedMotion) {
-        parallaxHandler = (e: MouseEvent) => {
-          const px = e.clientX / window.innerWidth - 0.5;
-          const py = e.clientY / window.innerHeight - 0.5;
-
-          gsap.to(".contact-parallax-target", {
-            x: px * 160,
-            y: py * 160,
-            duration: 1.5,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          gsap.to(".contact-liquid-aurora", {
-            x: px * -250,
-            y: py * -250,
-            duration: 2.5,
-            ease: "power3.out",
-            overwrite: "auto",
-          });
-        };
-        window.addEventListener("mousemove", parallaxHandler);
-      }
+      // Background mouse parallax is handled by useBackgroundMouseParallax
+      // (called outside this effect); it's rAF-gated and passive.
     }, containerRef);
 
     return () => {
       ctx.revert();
-      if (parallaxHandler)
-        window.removeEventListener("mousemove", parallaxHandler);
     };
   }, []);
 

@@ -73,8 +73,8 @@ const ManifestoMatrixFlow = ({
       mouseStrength.current = 1.0;
     };
     const onLeave = () => { mouseStrength.current = 0; };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseleave", onLeave);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mouseleave", onLeave, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
