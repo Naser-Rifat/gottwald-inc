@@ -3,6 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
 import { gsap, ScrollTrigger } from "@/lib/gsap-bootstrap";
@@ -264,7 +265,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       {/* ── Header Area ── */}
       <div className="flex justify-between items-center menu-fade-in flex-none">
         {/* 'G' Logo Circle (Navigates to Home) */}
-        <a
+        <Link
           href="/"
           onClick={(e) => handleLinkClick(e, "/")}
           className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer"
@@ -286,7 +287,7 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
           <span className="text-[10px] font-bold tracking-widest mt-px">
             G
           </span>
-        </a>
+        </Link>
 
         {/* CLOSE Button */}
         <button
