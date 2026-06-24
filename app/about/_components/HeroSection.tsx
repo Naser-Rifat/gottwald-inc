@@ -1,8 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 
-import AboutWaveCanvas from "./AboutWaveCanvas";
+// Heavy WebGL canvas (~250KB of Three.js + R3F + 22,500-particle shader).
+// Deferring it off the critical path lets the hero text paint first, which
+// fixes the about-page LCP regression Lighthouse flagged. The wrapper div
+// already sets bg-[#020509], so there's no visual flash while it loads.
+const AboutWaveCanvas = dynamic(() => import("./AboutWaveCanvas"), {
+  ssr: false,
+});
 
 /**
  * Opening hero: three-line editorial cascade ("tension–release") over

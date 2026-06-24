@@ -172,6 +172,12 @@ export const metadata: Metadata = {
     // en self-reference; when /de/ ships, the helper automatically adds it.
     languages: hreflangAlternates("/"),
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? "",
+    },
+  },
 };
 
 export default async function RootLayout({

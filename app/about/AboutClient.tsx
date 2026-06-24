@@ -229,19 +229,23 @@ export default function AboutClient() {
         if (reducedMotion) {
           gsap.set(chars, { yPercent: 0, opacity: 1, scaleY: 1 });
         } else {
+          // CWV-aware tuning: chars start visible (no opacity:0) so the
+          // SSR-painted text remains a valid LCP candidate. The "tuning"
+          // feel comes from a quick scale + y micro-shift rather than a
+          // hide-and-reveal — keeps the brand cadence without pushing
+          // LCP past Lighthouse's 2.5s threshold.
           gsap.fromTo(
             chars,
-            { yPercent: 105, opacity: 0, scaleY: 0.6 },
+            { yPercent: 18, scaleY: 0.82 },
             {
               yPercent: 0,
-              opacity: 1,
               scaleY: 1,
-              duration: 1.5,
-              stagger: 0.015,
-              ease: "elastic.out(1, 0.65)",
-              delay: 0.15 + idx * 0.16,
+              duration: 0.7,
+              stagger: 0.012,
+              ease: "power3.out",
+              delay: idx * 0.06,
               force3D: true,
-              clearProps: "willChange",
+              clearProps: "willChange,transform",
             },
           );
         }
@@ -618,7 +622,7 @@ export default function AboutClient() {
         nextHref="/partnerships"
         prevHref="/"
         narrativeLine="You know who we are. Now, the alliance."
-        accentColor="#006d84"
+        accentColor="#12a8ac"
       />
     </div>
   );
