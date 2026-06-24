@@ -362,9 +362,6 @@ export default function GlobalPageLoader() {
           }}
         />
 
-        {/* Gold horizontal split line */}
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-white/5 -translate-y-1/2" />
-
         {/* Top brand mark */}
         <div className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-4 opacity-50">
           <span className="font-mono text-gold text-xs tracking-[0.5em] uppercase font-bold">

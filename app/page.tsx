@@ -91,7 +91,7 @@ export default async function Home() {
           fallback={
             <div
               aria-hidden
-              className="w-full h-screen bg-[#0a0808]"
+              className="w-full h-screen bg-transparent"
             />
           }
         >

@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 
 import type { Pillar } from "@/lib/types/pillars";
-import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 
 import { useScrollTimeline } from "./_hooks/useScrollTimeline";
 import { useFollowCursor } from "./_hooks/useFollowCursor";
@@ -88,15 +88,16 @@ export default function PillarTilesSection({
 
   const currentAurora = auroraColors[activeSlide];
 
+  // Drive the layout's singleton aurora color
+  usePageColorShift(currentAurora[0]);
+
   return (
     <section
       ref={sectionRef}
       id="project-tiles-section"
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center text-white bg-[#0a0808]"
+      className="relative w-full h-screen overflow-hidden flex items-center justify-center text-white bg-transparent"
     >
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-100">
-        <AuroraCanvasBg colorHex={currentAurora[0]} />
-      </div>
+      {/* Aurora color is driven by usePageColorShift via the layout singleton */}
 
       <ProgressIndicator
         activeIndex={activeSlide}

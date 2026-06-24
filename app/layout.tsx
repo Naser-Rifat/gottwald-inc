@@ -37,6 +37,8 @@ const LiquidClickEffect = dynamic(
 const JourneyIndicator = dynamic(
   () => import("@/components/system/JourneyIndicator"),
 );
+
+
 import {
   SITE_URL,
   SITE_NAME,

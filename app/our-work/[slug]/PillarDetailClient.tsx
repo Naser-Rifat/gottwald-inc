@@ -18,7 +18,7 @@ const getBackTargetSSR = () => BACK_TO_WORK;
 import gsap from "gsap";
 import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
 import { useRouter } from "next/navigation";
-import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
+
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — matched to homepage globals.css
    ───────────────────────────────────────────────────────────── */
@@ -381,10 +381,6 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
         }
       `}} />
       
-      {/* ─── Global Atmosphere Overlay (Aurora) ─── */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <AuroraCanvasBg colorHex={project.theme.accent} />
-      </div>
       {/* ─── Top Fade Protection ─── */}
       <div className="fixed top-0 left-0 w-full h-32 z-40 bg-gradient-to-b from-[#0a0c10]/90 via-[#0a0c10]/50 to-transparent pointer-events-none" />
 
@@ -451,7 +447,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
       {/* ─── Scroll Track ─── */}
       <div
         ref={trackRef}
-        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10 mix-blend-screen"
+        className="flex flex-col lg:flex-row lg:h-screen lg:items-stretch opacity-100 will-change-transform relative z-10"
       >
         {/* ═══════ PANEL 1 — Hero ═══════ */}
         <section
@@ -665,7 +661,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   alt={project.title}
                   fill
                   sizes="(max-width: 1024px) 80vw, 50vw"
-                  className="object-contain contrast-150 brightness-[1.15]"
+                  className="object-contain"
                   priority
                   unoptimized
                   onError={(e) => {
