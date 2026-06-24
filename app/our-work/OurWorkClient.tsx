@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Pillar } from "@/lib/types/pillars";
-import AuroraCanvasBg from "@/components/canvas/AuroraCanvasBg";
+import { usePageColorShift } from "@/lib/usePageColorShift";
 import FooterSection from "@/components/layout/FooterSection";
 
 import { useGhostCursor } from "./_hooks/useGhostCursor";
@@ -69,14 +69,15 @@ export default function OurWorkClient({ pillars }: OurWorkClientProps) {
   const currentColors = slideColors[activeSlide] ?? slideColors[0];
   const resetHover = () => setHoveredSlug(null);
 
+  // Drive the layout's singleton aurora color
+  usePageColorShift(currentColors.turquoise);
+
   return (
     <div
-      className="bg-[#050505] h-screen w-full overflow-hidden text-white selection:bg-white selection:text-black relative font-sans"
+      className="bg-transparent h-screen w-full overflow-hidden text-white selection:bg-white selection:text-black relative font-sans"
       style={{ cursor: "none" }}
     >
-      <div className="absolute inset-0 pointer-events-none opacity-80 transition-colors duration-1000">
-        <AuroraCanvasBg colorHex={currentColors.turquoise} />
-      </div>
+
 
       <TopNavigation
         items={navItems}
