@@ -145,7 +145,7 @@ export default function OutcomesSection({
                     key={idx}
                     type="button"
                     aria-pressed={isActive}
-                    aria-label={`Phase ${idx + 1}: ${phase.days} days — ${phase.title}`}
+
                     onClick={() => setActiveProofPhase(idx)}
                     onMouseEnter={() => setActiveProofPhase(idx)}
                     onFocus={() => setActiveProofPhase(idx)}

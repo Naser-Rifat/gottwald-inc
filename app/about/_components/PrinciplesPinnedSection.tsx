@@ -42,9 +42,9 @@ export default function PrinciplesPinnedSection() {
               5 Principles
             </p>
             <span className="hidden md:block flex-1 h-px bg-gradient-to-r from-turquoise/12 to-transparent" />
-            <p className="text-[11px] tracking-[0.32em] uppercase text-white/30 font-mono">
+            <p className="text-[11px] tracking-[0.32em] uppercase text-white/60 font-mono">
               <span className="text-turquoise pillar-counter">01</span>
-              <span className="opacity-40"> / 05</span>
+              <span className="opacity-70"> / 05</span>
             </p>
           </div>
         </div>
@@ -82,11 +82,11 @@ export default function PrinciplesPinnedSection() {
             {/* Right half — full width on mobile, right anchored on desktop */}
             <div className="absolute right-0 top-0 bottom-0 w-full md:w-[54vw] lg:w-[56vw] flex flex-col justify-center px-6 sm:px-12 md:pl-8 lg:pl-16 md:pr-8 lg:pr-24 z-10 pt-[10vh] pb-[14vh]">
               <div className="flex items-center gap-4 mb-10 lg:mb-14">
-                <span className="font-mono text-[10px] tracking-[0.4em] text-turquoise/60">
+                <span className="font-mono text-[10px] tracking-[0.4em] text-turquoise">
                   {pillar.num}
                 </span>
                 <span className="w-12 h-px bg-turquoise/30" />
-                <span className="font-mono text-[10px] tracking-[0.36em] uppercase text-white/35">
+                <span className="font-mono text-[10px] tracking-[0.36em] uppercase text-white/65">
                   {pillar.principle}
                 </span>
               </div>

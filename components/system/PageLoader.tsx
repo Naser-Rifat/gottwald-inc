@@ -66,61 +66,18 @@ export default function GlobalPageLoader() {
   const creepTweenRef = useRef<gsap.core.Tween | null>(null);
 
   // ── Initial page load reveal ──────────────────────────────────────────
+  // First-visit / hard-reload skips the curtain entirely so the hero
+  // paints immediately. This is what crawlers and direct-link landings
+  // hit, so it dominates Core Web Vitals (LCP) and SEO.
+  //
+  // The cinematic curtain still runs for every internal link-click
+  // transition (handled below in the click interceptor), which is when
+  // the brand pacing actually matters.
   useLayoutEffect(() => {
-    // Only run this exact entrance sequence once per hard-reload
     if (hasInitiallyLoaded.current) return;
     hasInitiallyLoaded.current = true;
 
-    // Home page keeps its custom intro overlay — skip entirely without unmounting
-    if (pathname === HOME_PATH) {
-      gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
-      return;
-    }
-
-    const label = resolveLabel(pathname);
-    if (labelTextRef.current) labelTextRef.current.textContent = label;
-
-    document.body.style.overflow = "hidden";
-    isTransitioning.current = true;
-
-    // Force starting positions explicitly so there's NO guess work CSS
-    gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
-    gsap.set(curtainRef.current, { yPercent: 0 });
-    gsap.set([counterRef.current, labelRef.current], { opacity: 1, y: 0 });
-    gsap.set(circleRef.current, { strokeDashoffset: 289.026 });
-
-    if (activeTimeline.current) activeTimeline.current.kill();
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = "";
-        isTransitioning.current = false;
-        gsap.set(overlayRef.current, { pointerEvents: "none" });
-      },
-    });
-    activeTimeline.current = tl;
-
-    // Zero explicitly
-    progressObj.current.val = 0;
-
-    tl.to(progressObj.current, {
-      val: 100,
-      duration: 1.4,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
-        if (circleRef.current) {
-          const p = progressObj.current.val;
-          circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
-        }
-      },
-    });
-
-    tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -24, duration: 0.45, ease: "power3.in", stagger: 0.04 }, "-=0.1");
-    tl.to(curtainRef.current, { yPercent: -100, duration: 1.2, ease: "power4.inOut" }, "-=0.15");
-
-    return () => { tl.kill(); document.body.style.overflow = ""; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
   }, []);
 
   // ── 2. Eagerly Intercept Link Clicks ────────────────────────────────────

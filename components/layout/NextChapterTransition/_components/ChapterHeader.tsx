@@ -18,7 +18,7 @@ export default function ChapterHeader({
       {narrativeLine && (
         <p
           className="text-[11px] tracking-[0.4em] uppercase font-light max-w-xs mx-auto leading-relaxed"
-          style={{ color: accentColor + "70" }}
+          style={{ color: accentColor + "e0" }}
         >
           {narrativeLine}
         </p>
@@ -26,7 +26,7 @@ export default function ChapterHeader({
       <span
         translate="no"
         className="notranslate text-[10px] tracking-[0.5em] uppercase font-semibold"
-        style={{ color: accentColor + "cc" }}
+        style={{ color: accentColor }}
       >
         {t("nextChapter")}
       </span>
