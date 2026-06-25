@@ -312,6 +312,7 @@ export default function GlobalPageLoader() {
       >
         {/* Noise grain */}
         <div
+          suppressHydrationWarning
           className="absolute inset-0 opacity-[0.035] pointer-events-none"
           style={{
             backgroundImage:

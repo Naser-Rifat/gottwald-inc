@@ -103,15 +103,19 @@ export default function PartnershipsClient() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      // 1. Hero entrance — `.hero-reveal` staggered fade-up + kinetic chars.
+      // 1. Hero entrance — `.hero-reveal` staggered slide-up + kinetic chars.
+      // Note: opacity intentionally stays at 1 from SSR so the strapline
+      // `<p>` paints with its text on first frame. That makes it
+      // eligible for LCP at first-paint instead of waiting for the
+      // gsap timeline to lerp opacity to 1 (which Lighthouse simulate
+      // mode was scaling to ~7s render delay). Slide-up motion stays.
       if (heroTextRef.current) {
         const heroChildren =
           heroTextRef.current.querySelectorAll(".hero-reveal");
-        gsap.set(heroChildren, { opacity: 0, y: 30 });
+        gsap.set(heroChildren, { y: 30 });
 
         const heroTl = gsap.timeline({ delay: 0.2 });
         heroTl.to(heroChildren, {
-          opacity: 1,
           y: 0,
           duration: 1,
           stagger: 0.12,
