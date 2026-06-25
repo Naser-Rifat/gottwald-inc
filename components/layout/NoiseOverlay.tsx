@@ -5,6 +5,7 @@ import { memo } from "react";
 const NoiseOverlay = memo(function NoiseOverlay() {
   return (
     <div
+      suppressHydrationWarning
       className="pointer-events-none fixed inset-0 z-9999 opacity-[0.03] hidden md:block"
       style={{
         backgroundImage:
