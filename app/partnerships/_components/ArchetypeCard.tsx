@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import { PARTNERSHIP_ARCHETYPES } from "@/lib/partnershipData";
 
-import ArchetypeCanvas from "./ArchetypeCanvas";
+import LazyArchetypeCanvas from "./LazyArchetypeCanvas";
 
 type PartnershipArchetype = (typeof PARTNERSHIP_ARCHETYPES)[number];
 
@@ -69,7 +69,7 @@ export default function ArchetypeCard({
       {/* Cinematic background canvas */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-2xl transition-transform duration-[1500ms] ease-[cubic-bezier(0.19,1,0.22,1)]">
         <div className="w-full h-full opacity-[0.65] group-hover:opacity-100 group-hover:scale-110 transition-all duration-[2000ms] ease-out will-change-transform">
-          <ArchetypeCanvas index={index} />
+          <LazyArchetypeCanvas index={index} />
         </div>
         <div
           className="absolute inset-0 bg-turquoise/10 mix-blend-color-dodge opacity-0 group-hover:opacity-100 transition-opacity duration-1000"

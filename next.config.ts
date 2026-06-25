@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs";
+import createBundleAnalyzer from "@next/bundle-analyzer";
+
+// Opt-in bundle analyzer. Generate the HTML reports with:
+//   ANALYZE=true npm run build
+// Outputs land in `.next/analyze/{client,nodejs,edge}.html`. We don't
+// run this on every build to keep CI fast and avoid the extra
+// webpack-bundle-analyzer plugin in the hot dev path.
+const withBundleAnalyzer = createBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 // next-intl without URL-based locale routing. Locale is resolved in
 // i18n/request.ts from the googtrans cookie so hero copy (owned by
@@ -153,4 +163,7 @@ const sentryWebpackOptions = {
   },
 };
 
-export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackOptions);
+export default withSentryConfig(
+  withNextIntl(withBundleAnalyzer(nextConfig)),
+  sentryWebpackOptions,
+);

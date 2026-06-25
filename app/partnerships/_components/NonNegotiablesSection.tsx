@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { NON_NEGOTIABLES } from "@/lib/partnershipData";
 
-import StandardCanvas from "./StandardCanvas";
+import LazyStandardCanvas from "./LazyStandardCanvas";
 import StandardsPagination from "./StandardsPagination";
 
 /**
@@ -102,7 +102,7 @@ export default function NonNegotiablesSection() {
                   className="object-cover transition-transform duration-[1500ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-105"
                 />
                 <div className="absolute inset-0 w-full h-full bg-[#0a0c12] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-out z-10 pointer-events-none">
-                  <StandardCanvas index={i} />
+                  <LazyStandardCanvas index={i} />
                 </div>
               </div>
 

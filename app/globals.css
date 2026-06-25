@@ -823,6 +823,20 @@ section[data-journey].dwell-deepened::after {
   100% { transform: translateX(-15%) scale(1); opacity: 0.3; }
 }
 
+/* Per-route mount fade-up. Replaces the framer-motion <motion.div> that
+   used to wrap every `app/template.tsx` page. Same visual signature
+   (opacity 0→1, translateY 10px→0, 800ms ease-out) but it's pure CSS,
+   so framer-motion no longer lives on every route's always-loaded path.
+   `backwards` fill keeps the start state visible at frame 0 so there's
+   no flash of un-animated content before the first paint. */
+@keyframes templateFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.template-fade-in {
+  animation: templateFadeIn 0.8s ease-out backwards;
+}
+
 /* ===== prefers-reduced-motion (Accessibility) =====
    Users with vestibular sensitivity or who've set the OS preference get
    shortened or instant animations across the site. We don't disable
