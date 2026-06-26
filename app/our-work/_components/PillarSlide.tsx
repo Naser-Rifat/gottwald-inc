@@ -45,6 +45,8 @@ export default function PillarSlide({
               src={pillar.image}
               alt={pillar.title}
               fill
+              sizes="(max-width: 640px) 320px, 28vw"
+              quality={70}
               className="object-contain"
             />
           ) : (
