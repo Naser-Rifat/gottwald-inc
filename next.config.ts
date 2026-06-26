@@ -117,6 +117,9 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    // Allowlist the custom quality values used across the app. Next 16
+    // rejects any `quality` prop value not declared here (returns 400).
+    qualities: [50, 60, 65, 70, 75],
     remotePatterns: [
       {
         protocol: "http",

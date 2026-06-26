@@ -213,27 +213,22 @@ export default function AboutClient() {
       });
 
       // 1. Hero "Tuning Sequence" — letter-by-letter elastic arrival.
+      //
+      // The `.tuning-char` spans are server-rendered inside each
+      // `.tuning-line` (see `_components/TuningChars.tsx`). We previously
+      // built them here by clearing `innerHTML` and recreating per-char
+      // spans on hydration — that briefly emptied the SSR-painted text
+      // and pushed Chrome's LCP candidate from FCP to whenever the
+      // per-char structure re-rendered (+~400ms render delay). Querying
+      // the existing nodes keeps the same animation without invalidating
+      // the LCP element.
       const tuningLines = gsap.utils.toArray<HTMLElement>(".tuning-line");
       tuningLines.forEach((line, idx) => {
-        const text = line.textContent || "";
-        line.innerHTML = "";
-        for (const char of text) {
-          const span = document.createElement("span");
-          span.textContent = char === " " ? " " : char;
-          span.style.display = "inline-block";
-          span.style.willChange = "transform, opacity";
-          span.classList.add("tuning-char");
-          line.appendChild(span);
-        }
         const chars = line.querySelectorAll(".tuning-char");
+        if (chars.length === 0) return;
         if (reducedMotion) {
           gsap.set(chars, { yPercent: 0, opacity: 1, scaleY: 1 });
         } else {
-          // CWV-aware tuning: chars start visible (no opacity:0) so the
-          // SSR-painted text remains a valid LCP candidate. The "tuning"
-          // feel comes from a quick scale + y micro-shift rather than a
-          // hide-and-reveal — keeps the brand cadence without pushing
-          // LCP past Lighthouse's 2.5s threshold.
           gsap.fromTo(
             chars,
             { yPercent: 18, scaleY: 0.82 },

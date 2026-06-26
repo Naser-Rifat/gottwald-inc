@@ -1,6 +1,7 @@
 "use client";
 
 import { type Ref } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 
 import {
@@ -85,12 +86,15 @@ export default function EcosystemSection({
             }}
           >
             {ECOSYSTEM_FREQUENCIES.map((eco, index) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 key={`img-${index}`}
                 src={eco.image}
                 alt={eco.name}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                fill
+                sizes="24vw"
+                quality={70}
+                loading={index === 0 ? "eager" : "lazy"}
+                className="object-cover transition-opacity duration-500"
                 style={{
                   opacity: hoveredEcoIndex === index ? 1 : 0,
                 }}

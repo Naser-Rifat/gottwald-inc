@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 
+import TuningChars from "./TuningChars";
+
 // Heavy WebGL canvas (~250KB of Three.js + R3F + 22,500-particle shader).
 // Deferring it off the critical path lets the hero text paint first, which
 // fixes the about-page LCP regression Lighthouse flagged. The wrapper div
@@ -61,7 +63,7 @@ export default function HeroSection() {
               }}
               data-line="1"
             >
-              {t("hero.line1")}
+              <TuningChars text={t("hero.line1")} />
             </span>
           </div>
           <div className="overflow-hidden">
@@ -73,7 +75,7 @@ export default function HeroSection() {
               }}
               data-line="2"
             >
-              {t("hero.line2")}
+              <TuningChars text={t("hero.line2")} />
             </span>
           </div>
 
@@ -106,7 +108,7 @@ export default function HeroSection() {
               }}
               data-line="3"
             >
-              {t("hero.line3")}
+              <TuningChars text={t("hero.line3")} />
             </span>
           </div>
         </h1>
