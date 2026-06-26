@@ -31,6 +31,9 @@ export default function NarrativeCadenceSection() {
           src="/about/about_diagnostic_editorial.png"
           alt="Editorial abstract"
           fill
+          sizes="45vw"
+          quality={65}
+          loading="lazy"
           className="object-cover object-center grayscale-[20%]"
         />
       </div>
