@@ -526,7 +526,10 @@ html[lang="de"] {
    single signature motion moment without crowding the negative space.
    Grain + drifting waveform + corner ticks are the only flourishes. */
 .proof-grain {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.66  0 0 0 0 0.67  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  /* Static SVG file with the proof-grain's specific feColorMatrix
+     teal tint. Inline data URIs caused Chrome to mis-resolve the
+     `url(#n)` filter reference and spam GET /%23n 404 requests. */
+  background-image: url("/svg/noise-proof.svg");
   background-size: 220px 220px;
   mix-blend-mode: overlay;
 }

@@ -1,7 +1,11 @@
 "use client";
 
-const NOISE_SVG_URL =
-  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")";
+// Static SVG file rather than an inline data URI. Chrome/WebKit
+// mis-resolve `url(#filterId)` references inside data-URI SVGs against
+// the parent document, spamming `GET /%23noise 404` requests every
+// frame the overlay is visible. Linking the SVG by file path gives it
+// its own document URL, so the filter reference resolves correctly.
+const NOISE_SVG_URL = "url('/svg/noise-grain.svg')";
 
 /** Subtle SVG fractal-noise grain overlay. */
 export default function NoiseGrain() {
