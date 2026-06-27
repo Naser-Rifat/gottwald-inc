@@ -119,7 +119,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     // Allowlist the custom quality values used across the app. Next 16
     // rejects any `quality` prop value not declared here (returns 400).
-    qualities: [50, 60, 65, 70, 75],
+    // 80 is reserved for the home pillar tiles — the most prominent
+    // hero visuals where the visual quality bump is intentional.
+    qualities: [50, 60, 65, 70, 75, 80],
     remotePatterns: [
       {
         protocol: "http",
