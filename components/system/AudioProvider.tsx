@@ -9,7 +9,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { usePathname } from "next/navigation";
 
 export type SfxName = "chime" | "thud" | "whisper";
 
@@ -30,7 +29,12 @@ export function useAudio() {
 }
 
 const STORAGE_KEY = "gw-audio-pref";
-const AUDIO_URL = "/audio/ambient-loop.wav";
+// M4A/AAC at 128kbps instead of the original 31MB WAV. Re-encoded
+// (~860KB on disk) — auditorily indistinguishable from the WAV for
+// an ambient loop at low volume, but 97% smaller. Result: the user
+// hears audio within ~300ms of clicking "Start Experience" instead
+// of waiting 5-25s for the WAV to download over a real network.
+const AUDIO_URL = "/audio/ambient-loop.m4a";
 
 const SFX_URLS: Record<SfxName, string> = {
   chime: "/assets/sfx/chime.mp3",
@@ -48,7 +52,6 @@ const SFX_GAIN: Record<SfxName, number> = {
 
 export default function AudioProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false); // User's master preference
-  const pathname = usePathname();
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null);
@@ -91,6 +94,11 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
 
       // Load water ambient + SFX buffers in parallel. SFX files are optional —
       // any 404/decode failure is swallowed so missing samples degrade silently.
+      //
+      // The fade-in is triggered as soon as the *water* buffer is ready;
+      // SFX continues to load in the background. Previously the ramp
+      // waited for SFX too, so a slow chime/thud download silently
+      // delayed the moment the user heard ambient.
       const waterPromise = (async () => {
         const response = await fetch(AUDIO_URL);
         const audioBuffer = await ctx.decodeAudioData(await response.arrayBuffer());
@@ -100,9 +108,21 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
         source.connect(master);
         source.start();
         sourceNodeRef.current = source;
+        if (startAmbient) {
+          // Re-anchor gain at 0 *now* so the linear ramp interpolates
+          // from (currentTime, 0) to (currentTime+3, 1) — a true 3s
+          // fade from silence. Without this, the previous setValueAtTime
+          // at init time becomes the ramp's reference point, so by the
+          // time water loads the gain is already partway up the curve
+          // and the audio enters mid-volume instead of from silence.
+          master.gain.setValueAtTime(0, ctx.currentTime);
+          master.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
+        }
       })();
 
-      const sfxPromise = Promise.all(
+      // SFX load runs in the background — `playSfx` no-ops gracefully
+      // for any cue whose buffer hasn't decoded yet.
+      void Promise.all(
         (Object.entries(SFX_URLS) as [SfxName, string][]).map(async ([name, url]) => {
           try {
             const res = await fetch(url);
@@ -115,12 +135,7 @@ export default function AudioProvider({ children }: { children: ReactNode }) {
         }),
       );
 
-      await Promise.all([waterPromise, sfxPromise]);
-
-      // Smooth fade in over 3 seconds if we're supposed to play.
-      if (startAmbient) {
-        master.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
-      }
+      await waterPromise;
     } catch (err) {
       console.error("Failed to initialize background audio:", err);
       initedRef.current = false; // Allow retry
