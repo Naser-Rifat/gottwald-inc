@@ -18,11 +18,11 @@ import { join } from "node:path";
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 
-const ACCENT = "#11A8AB";
-const ACCENT_SOFT = "#0D8A8D";
-const BG = "#020408";
-const TEXT_LIGHT = "#F0F4F8";
-const TEXT_MUTED = "rgba(240,244,248,0.45)";
+const GOLD = "#D4AF37";
+const GOLD_SOFT = "#C9A84C";
+const BG = "#050505";
+const TEXT_LIGHT = "#F5F5F5";
+const TEXT_MUTED = "rgba(245,245,245,0.55)";
 
 type BrandedOgInput = {
   eyebrow?: string;
@@ -57,7 +57,7 @@ export async function brandedOgImage({
           flexDirection: "column",
           justifyContent: "space-between",
           backgroundColor: BG,
-          backgroundImage: `radial-gradient(circle at 25% 20%, rgba(17,168,171,0.12) 0%, rgba(17,168,171,0) 55%), radial-gradient(circle at 80% 85%, rgba(0,37,53,0.25) 0%, rgba(2,4,8,0) 60%)`,
+          backgroundImage: `radial-gradient(circle at 25% 20%, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0) 55%), radial-gradient(circle at 80% 85%, rgba(212,175,55,0.08) 0%, rgba(5,5,5,0) 60%)`,
           padding: "72px 88px",
           fontFamily: "Satoshi",
           color: TEXT_LIGHT,
@@ -68,7 +68,7 @@ export async function brandedOgImage({
           style={{
             position: "absolute",
             inset: 0,
-            border: "1px solid rgba(17,168,171,0.12)",
+            border: "1px solid rgba(212,175,55,0.18)",
             margin: "40px",
             pointerEvents: "none",
           }}
@@ -82,7 +82,7 @@ export async function brandedOgImage({
             letterSpacing: "0.28em",
             textTransform: "uppercase",
             fontWeight: 500,
-            color: ACCENT,
+            color: GOLD,
           }}
         >
           <span style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -90,7 +90,7 @@ export async function brandedOgImage({
               style={{
                 width: 44,
                 height: 1,
-                backgroundColor: ACCENT_SOFT,
+                backgroundColor: GOLD_SOFT,
                 display: "flex",
               }}
             />
@@ -146,7 +146,7 @@ export async function brandedOgImage({
             letterSpacing: "0.08em",
           }}
         >
-          <span style={{ color: ACCENT_SOFT, fontWeight: 500 }}>{footer}</span>
+          <span style={{ color: GOLD_SOFT, fontWeight: 500 }}>{footer}</span>
           <span style={{ fontWeight: 300 }}>
             Standards-led · Operating-grade
           </span>
