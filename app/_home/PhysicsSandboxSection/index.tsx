@@ -12,8 +12,8 @@ import HeroTitleBlock from "./_components/HeroTitleBlock";
 import AmbientOrb from "./_components/AmbientOrb";
 import ScrollIndicator from "./_components/ScrollIndicator";
 
-// Home page tints the GlobalCanvas toward muted gold.
-const HOME_COLOR_SHIFT = "#cda434";
+// Home page tints the GlobalCanvas toward a vibrant cyan/teal to match the first pillar immediately.
+const HOME_COLOR_SHIFT = "#27c6cd";
 
 /**
  * PhysicsSandboxSection — opening hero of the home page. Builds the
