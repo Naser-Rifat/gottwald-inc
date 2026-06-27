@@ -539,6 +539,14 @@ html[lang="de"] {
   animation: proof-signal-drift 9s linear infinite;
   /* MOVE E: per-visit phase offset so the signal isn't always synced. */
   animation-delay: var(--rand-phase-signal, 0s);
+  /* `stroke-dashoffset` is a paint property (not GPU-compositable), so
+     each animation frame repaints the SVG path. `will-change` hints the
+     browser to promote this path to its own layer — repaints still
+     happen, but they're isolated from the rest of the section and don't
+     trigger ancestor repaints. Lighthouse flagged this as a
+     non-composited animation; the layer hint converts it from a
+     full-frame repaint cost to a small isolated one. */
+  will-change: stroke-dashoffset;
 }
 
 @keyframes proof-signal-drift {
