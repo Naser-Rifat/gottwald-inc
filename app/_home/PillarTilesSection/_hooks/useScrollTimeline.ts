@@ -9,6 +9,8 @@ interface UseScrollTimelineArgs {
   slideCount: number;
   /** Fired when the visible slide changes (1-indexed). */
   onActiveSlideChange: (index: number) => void;
+  /** Fired when the scroll trigger enters or leaves back */
+  onToggleActive?: (isActive: boolean) => void;
 }
 
 /**
@@ -24,6 +26,7 @@ export function useScrollTimeline({
   sectionRef,
   slideCount,
   onActiveSlideChange,
+  onToggleActive,
 }: UseScrollTimelineArgs) {
   useEffect(() => {
     const section = sectionRef.current;
@@ -38,6 +41,8 @@ export function useScrollTimeline({
           scrub: 1,
           pin: true,
           anticipatePin: 1,
+          onEnter: () => onToggleActive?.(true),
+          onLeaveBack: () => onToggleActive?.(false),
         },
       });
 

@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 
 import type { Pillar } from "@/lib/types/pillars";
-import { usePageColorShift } from "@/lib/usePageColorShift";
 
 import { useScrollTimeline } from "./_hooks/useScrollTimeline";
 import { useFollowCursor } from "./_hooks/useFollowCursor";
@@ -45,6 +44,7 @@ export default function PillarTilesSection({
   const sectionRef = useRef<HTMLElement>(null);
   const cursorRef = useFollowCursor<HTMLDivElement>();
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   const displayPillars = pillars.slice(0, MAX_PILLARS);
 
@@ -64,6 +64,7 @@ export default function PillarTilesSection({
     sectionRef,
     slideCount: displayPillars.length,
     onActiveSlideChange: setActiveSlide,
+    onToggleActive: setIsActive,
   });
 
   const showCursor = useCallback(() => {
@@ -88,8 +89,22 @@ export default function PillarTilesSection({
 
   const currentAurora = auroraColors[activeSlide];
 
-  // Drive the layout's singleton aurora color
-  usePageColorShift(currentAurora[0]);
+  useEffect(() => {
+    if (isActive) {
+      window.dispatchEvent(
+        new CustomEvent("page-color-shift", {
+          detail: { color: currentAurora[0] },
+        })
+      );
+    } else {
+      // Revert to Home Hero color when scrolled back up
+      window.dispatchEvent(
+        new CustomEvent("page-color-shift", {
+          detail: { color: "#27c6cd" },
+        })
+      );
+    }
+  }, [isActive, currentAurora]);
 
   return (
     <section
