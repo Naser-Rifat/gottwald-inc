@@ -28,6 +28,13 @@ skills-lock.json
 # debug
 npm-debug.log*
 
+# cursor
+ .cursor/
+
+
+# claude
+./claude
+
 # docs
 docs/
 
