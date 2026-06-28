@@ -1,6 +1,32 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { PILLARS_CACHE_TAG } from "@/lib/api/pillars";
+
+// Paths that consume pillar data and must be regenerated after an
+// admin edit. revalidateTag alone purges the fetch data cache; the
+// explicit revalidatePath calls below force the page HTML to be
+// rebuilt on the next request, which is more reliable across Next.js
+// versions / Vercel cache layers.
+const PILLAR_DEPENDENT_PATHS: ReadonlyArray<[string, "page" | "layout"]> = [
+  ["/", "page"],                  // home — pillar tiles section
+  ["/our-work", "page"],          // pillar grid
+  ["/our-work/[slug]", "page"],   // every dynamic pillar detail route
+  ["/llms.txt", "page"],          // AI-discovery feed (uses getPillars)
+  ["/llms-full.txt", "page"],     // expanded AI-discovery feed
+];
+
+// Next.js 16 changed `revalidateTag` to require a second `profile`
+// argument (string | { expire: number }). `{ expire: 0 }` means
+// "immediately expire any cached entry tagged with this." Previously
+// the codebase called the old 1-arg form with `@ts-expect-error`,
+// which compiled but silently no-op'd in Next.js 16 — that's why
+// admin edits were not reaching the public site.
+function purgePillarCache(tag: string): void {
+  revalidateTag(tag, { expire: 0 });
+  for (const [path, type] of PILLAR_DEPENDENT_PATHS) {
+    revalidatePath(path, type);
+  }
+}
 
 // ─── CORS helper ─────────────────────────────────────────────────────────────
 // The admin panel lives on a different origin (Vite dev / admin subdomain),
@@ -68,10 +94,9 @@ export async function POST(request: NextRequest) {
     const tag = (body as { tag?: string }).tag || PILLARS_CACHE_TAG;
 
     // ── Revalidate ────────────────────────────────────────────────────────
-    // @ts-expect-error Types in latest Next.js canary changed unexpectedly
-    revalidateTag(tag);
+    purgePillarCache(tag);
 
-    console.log(`[revalidate] Cache tag "${tag}" purged`);
+    console.log(`[revalidate] Cache tag "${tag}" purged + paths regenerated`);
 
     return json({ revalidated: true, tag, now: Date.now() });
   } catch (err) {
@@ -97,9 +122,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // @ts-expect-error Types in latest Next.js canary changed unexpectedly
-  revalidateTag(PILLARS_CACHE_TAG);
-  console.log(`[revalidate] All pillars cache purged via GET`);
+  purgePillarCache(PILLARS_CACHE_TAG);
+  console.log(`[revalidate] All pillars cache purged + paths regenerated via GET`);
 
   return json({ revalidated: true, tag: PILLARS_CACHE_TAG, now: Date.now() });
 }
