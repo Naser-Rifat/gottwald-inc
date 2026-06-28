@@ -105,11 +105,7 @@ export default function HeroSection({
         }}
       />
 
-      {/* Premium liquid aurora background */}
-      <div className="about-liquid-aurora absolute top-[0%] left-[0%] w-[100vw] h-[100vw] md:w-[80vw] md:h-[80vw] rounded-full mix-blend-screen opacity-[0.06] blur-[120px] z-0 will-change-transform pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-tr from-petrol via-turquoise to-transparent rounded-full animate-[spin_15s_linear_infinite]" />
-        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-gold to-petrol rounded-full animate-[spin_20s_linear_infinite_reverse] mix-blend-overlay" />
-      </div>
+      {/* Legacy liquid aurora removed in favor of global AuroraCanvasBg */}
 
       {/* Ghost echo — "partners." */}
       <div
@@ -192,7 +188,7 @@ export default function HeroSection({
                 ))}
               </span>
               <span
-                className="parallax-slow block whitespace-nowrap text-[clamp(1.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.035em] text-gold pt-1 lg:pt-2 normal-case"
+                className="parallax-slow block whitespace-nowrap text-[clamp(1.8rem,5.6vw,5.4rem)] leading-[0.92] tracking-[-0.035em] text-[#27c6cd] drop-shadow-[0_0_15px_rgba(39,198,205,0.4)] pt-1 lg:pt-2 normal-case"
                 style={{
                   fontFamily: "var(--font-playfair)",
                   fontStyle: "italic",

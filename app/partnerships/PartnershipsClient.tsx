@@ -10,7 +10,9 @@ import NextChapterTransition from "@/components/layout/NextChapterTransition";
 import { usePageColorShift } from "@/lib/usePageColorShift";
 import { useBackgroundMouseParallax } from "@/lib/useBackgroundMouseParallax";
 
+
 import HeroSection from "./_components/HeroSection";
+import VerticalSpineTimeline from "./_components/VerticalSpineTimeline";
 import ProofSection from "./_components/ProofSection";
 import ManifestoSection from "./_components/ManifestoSection";
 import PrincipleSection from "./_components/PrincipleSection";
@@ -20,6 +22,7 @@ import EquilibriumSection from "./_components/EquilibriumSection";
 import DomainsAccordionSection from "./_components/DomainsAccordionSection";
 import SelectionProcessSection from "./_components/SelectionProcessSection";
 import ApplicationFormSection from "./_components/ApplicationFormSection";
+
 /**
  * PartnershipsClient — orchestrator for /partnerships.
  *
@@ -55,8 +58,8 @@ export default function PartnershipsClient() {
     "idle",
   );
 
-  // Partnerships page tints the GlobalCanvas to Deep Obsidian Petrol.
-  usePageColorShift("#020508");
+  // Partnerships page tints the GlobalCanvas to vibrant Cyan/Teal to match the new brand direction.
+  usePageColorShift("#27c6cd");
 
   // Background mouse parallax (watermark + aurora drift) — rAF-gated,
   // passive, reduced-motion aware. Replaces the inlined mousemove handler.
@@ -535,7 +538,7 @@ export default function PartnershipsClient() {
   return (
     <div
       ref={pageRef}
-      className="bg-transparent min-h-screen text-white font-sans overflow-x-hidden selection:bg-turquoise selection:text-black"
+      className="relative min-h-screen w-full bg-transparent text-white selection:bg-white selection:text-black overflow-hidden"
     >
       <div className="fixed top-0 left-0 w-full z-50 px-gutter pointer-events-auto">
         <Header />
