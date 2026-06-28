@@ -222,10 +222,30 @@ export function createVideoTexture(
   };
 
   // Defer play until the video section is actually in view.
-  // rootMargin widened to 1400px (was 700px): the optimised video is ~8 MB
-  // on a fast desktop link, but on a 3G mobile connection that's still
-  // 6-8 seconds. Starting the fetch earlier means the video is more likely
-  // to be ready to play by the time the section reveals.
+  //
+  // rootMargin = 700px: starts the ~8 MB video fetch when the user has
+  // scrolled ~720px on a 1080px viewport. Was 1400px before; on most
+  // desktop viewports that overlapped the initial viewport bounds and
+  // triggered the 8 MB download at page load even when the user never
+  // scrolled to the section. 700px restores the original "scroll-gated"
+  // intent.
+  //
+  // Buffer-vs-bandwidth tradeoff (8 MB / scroll-to-reveal headroom ~1.5-2s):
+  //   - 50+ Mbps (fiber):  ~1.3s download → reveals fully buffered ✓
+  //   - 25 Mbps (mid):     ~2.6s download → may show ~1s buffering on
+  //                        a fast scroll; the poster-frame `<img>` paint
+  //                        from `VIDEO_PANEL_POSTER` covers the gap
+  //   - 10 Mbps (slow):    ~6s download → visible buffering on reveal
+  //   - 2G / save-data:    not reached here — homeScene.ts:131 skips
+  //                        the WebGL video panel entirely when the
+  //                        deviceTier check returns "mobile", and
+  //                        deviceTier itself catches `effectiveType
+  //                        === "2g"|"slow-2g"` and `connection.saveData`.
+  //
+  // Net: most desktop sessions that never reach this section save 8 MB.
+  // The tradeoff is that genuinely slow desktop links (rural DSL, weak
+  // WiFi on a powerful laptop) will see buffering — those users still
+  // see the poster frame, so the section never appears empty.
   const startAnchor = document.getElementById("video-panel-start");
   if (startAnchor) {
     const observer = new IntersectionObserver(
@@ -236,7 +256,7 @@ export function createVideoTexture(
           video.pause();
         }
       },
-      { rootMargin: "1400px 0px" },
+      { rootMargin: "700px 0px" },
     );
     observer.observe(startAnchor);
   } else {
