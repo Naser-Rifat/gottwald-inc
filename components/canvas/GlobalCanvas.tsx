@@ -288,8 +288,8 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
   const mousePosRef = useRef(new THREE.Vector2(0.5, 0.5));
 
   // Page-specific accent color target (lerped smoothly in useFrame)
-  const targetAccentRef = useRef(new THREE.Color("#cda434")); // default Muted Gold
-  const currentAccentRef = useRef(new THREE.Color("#cda434"));
+  const targetAccentRef = useRef(new THREE.Color("#27c6cd")); // default Cyan/Teal (Home Hero)
+  const currentAccentRef = useRef(new THREE.Color("#27c6cd"));
 
   // Choose shader based on device tier
   const fragShader = isMobile ? fragmentShaderMobile : fragmentShaderDesktop;
@@ -309,7 +309,7 @@ const FluidPlane = ({ isMobile }: { isMobile: boolean }) => {
       uColorPetrol: { value: new THREE.Color("#0a4c5a") },
       uColorTurquoise: { value: new THREE.Color("#0f8b8d") },
       uColorGold: { value: new THREE.Color("#cda434") },
-      uColorPage: { value: new THREE.Color("#cda434") }, // starts muted gold (Home)
+      uColorPage: { value: new THREE.Color("#27c6cd") }, // starts Cyan/Teal (Home Hero)
       uPulse: { value: 0 },
     }),
     [],
