@@ -211,11 +211,11 @@ function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
 // the API is sleeping.
 const FETCH_TIMEOUT_MS = 12_000;
 
-// ISR + on-demand revalidation. Pages are cached for 24h (safety net), but
-// the admin webhook at /api/revalidate fires `revalidateTag(PILLARS_CACHE_TAG)`
-// after every save — so real edits show up within ~1 second on the next page
-// load. The 24h TTL only kicks in if the webhook ever fails.
-const REVALIDATE_SECONDS = 60 * 60 * 24;
+// ISR + tag-based on-demand revalidation. Pages are cached for 24h as a safety
+// net, but Django's post_save signal POSTs to /api/revalidate after every
+// pillar edit — purging the cache so the next visitor sees fresh data within
+// ~1 second. Fast site + real-time updates.
+const REVALIDATE_SECONDS = 10;
 
 async function apiFetch<T>(
   endpoint: string,
