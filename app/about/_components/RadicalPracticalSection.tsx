@@ -61,6 +61,9 @@ export default function RadicalPracticalSection() {
               src="/about/about_solved_anchor.png"
               alt="Depth Anchor"
               fill
+              sizes="(max-width: 1023px) 1px, 50vw"
+              quality={50}
+              loading="lazy"
               className="object-contain"
             />
           </div>

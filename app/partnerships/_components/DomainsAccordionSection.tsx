@@ -48,6 +48,9 @@ export default function DomainsAccordionSection({
           src="/images/partnership_domains_bg.png"
           alt="Brutalist Gold Veins"
           fill
+          sizes="(max-width: 1023px) 1px, 70vw"
+          quality={50}
+          loading="lazy"
           className="object-cover object-center"
         />
       </div>

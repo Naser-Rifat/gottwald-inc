@@ -118,6 +118,8 @@ export default function CasesSection({
                       src={current.mark}
                       alt={current.title}
                       fill
+                      sizes="220px"
+                      quality={70}
                       className="object-contain"
                     />
                   </div>
