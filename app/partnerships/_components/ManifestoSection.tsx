@@ -36,6 +36,9 @@ export default function ManifestoSection() {
           src="/images/partnership_manifesto_bg.png"
           alt="Liquid Obsidian"
           fill
+          sizes="(max-width: 1023px) 1px, 70vw"
+          quality={50}
+          loading="lazy"
           className="object-cover object-center"
         />
       </div>
