@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * Closing editorial line — italic Playfair quote + sans-serif coda.
  *

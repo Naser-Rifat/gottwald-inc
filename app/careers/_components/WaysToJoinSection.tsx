@@ -1,5 +1,3 @@
-"use client";
-
 import SpotlightCard from "./SpotlightCard";
 
 const PATHS = [
