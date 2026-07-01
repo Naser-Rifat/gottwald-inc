@@ -1,5 +1,3 @@
-"use client";
-
 import { PARTNERSHIP_PRINCIPLES } from "@/lib/partnershipData";
 
 import ParallaxShard from "./ParallaxShard";

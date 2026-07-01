@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 import { MANIFESTO_LINES } from "@/lib/partnershipData";
