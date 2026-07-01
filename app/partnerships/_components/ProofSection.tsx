@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * "GOTT WALD is a standard." declaration.
  *
