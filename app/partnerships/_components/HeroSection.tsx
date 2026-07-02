@@ -183,7 +183,7 @@ export default function HeroSection({
                     className="kinetic-char inline-block will-change-transform"
                     aria-hidden={ch === " " ? "true" : undefined}
                   >
-                    {ch === " " ? " " : ch}
+                    {ch === " " ? " " : ch}
                   </span>
                 ))}
               </span>
@@ -201,7 +201,7 @@ export default function HeroSection({
                     className="kinetic-char inline-block will-change-transform"
                     aria-hidden={ch === " " ? "true" : undefined}
                   >
-                    {ch === " " ? " " : ch}
+                    {ch === " " ? " " : ch}
                   </span>
                 ))}
               </span>
