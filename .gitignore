@@ -28,8 +28,18 @@ skills-lock.json
 # debug
 npm-debug.log*
 
+# cursor
+.cursor
+
+
+# claude
+.claude
+
 # docs
 docs/
+
+reports/
+
 
 # vercel
 .vercel
@@ -42,3 +52,6 @@ gottwald-admin/.git/
 gottwald-admin/.env
 gottwald-backend/
 
+
+# Original image masters — kept locally, not deployed
+_design-assets/

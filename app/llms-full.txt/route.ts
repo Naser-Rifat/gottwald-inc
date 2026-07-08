@@ -35,7 +35,7 @@ export async function GET() {
     .map((p) => {
       const lines: string[] = [];
       lines.push(`### ${p.title}`);
-      lines.push(`URL: ${SITE_URL}/pillars/${p.slug}`);
+      lines.push(`URL: ${SITE_URL}/our-work/${p.slug}`);
       if (p.description) lines.push(`\n${p.description}`);
       if (p.details) lines.push(`\n${p.details}`);
       if (p.tags && p.tags.length > 0) {
@@ -58,7 +58,7 @@ export async function GET() {
       .filter(([, faqs]) => faqs.length > 0)
       .map(([slug, faqs]) => {
         const title = slugToTitle.get(slug) ?? slug;
-        const url = `${SITE_URL}/pillars/${slug}`;
+        const url = `${SITE_URL}/our-work/${slug}`;
         return `### Pillar: ${title}\nURL: ${url}\n\n` +
           faqs.map((f) => `**Q: ${f.question}**\n\n${f.answer}`).join("\n\n");
       })

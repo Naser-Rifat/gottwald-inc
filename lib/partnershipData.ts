@@ -20,22 +20,27 @@ export const PARTNERSHIP_ARCHETYPES = [
   {
     title: "Strategic PARTNERSHIPS",
     desc: "co-creation, joint delivery, long-term",
+    image: "/images/abstracts/strategic_abstract_1781101563383.png",
   },
   {
     title: "Delivery PARTNERSHIPS",
     desc: "implementation, operations, rollouts, production",
+    image: "/images/abstracts/delivery_abstract_1781101622220.png",
   },
   {
     title: "Technology PARTNERSHIPS",
     desc: "AI, automation, platform, security, infrastructure",
+    image: "/images/abstracts/technology_abstract_1781101634509.png",
   },
   {
     title: "Creative & Media PARTNERSHIPS",
     desc: "brand, film, design, content",
+    image: "/images/abstracts/creative_abstract_1781101646264.png",
   },
   {
     title: "Local Operations PARTNERSHIPS",
     desc: "relocation, regional execution, on-site networks",
+    image: "/images/abstracts/local_abstract_1781101657021.png",
   },
 ];
 
@@ -43,32 +48,38 @@ export const NON_NEGOTIABLES = [
   {
     title: "Integrity",
     desc: "Clear ethics. No shortcuts.",
-    image: "/images/futuristic_standard_1.png",
+    image: "/images/futuristic_standard_1.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Delivery Proof",
     desc: "References, cases, real outcomes — not promises.",
-    image: "/images/futuristic_standard_2.png",
+    image: "/images/futuristic_standard_2.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Systems Thinking",
     desc: "Structure, process hygiene, repeatable quality.",
-    image: "/images/futuristic_standard_3.png",
+    image: "/images/futuristic_standard_3.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Discretion",
     desc: "Confidentiality is reflex. No noise. No name-dropping.",
-    image: "/images/futuristic_standard_4.png",
+    image: "/images/futuristic_standard_4.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Quality Under Pressure",
     desc: "Pressure reveals class — it doesn't create chaos.",
-    image: "/images/futuristic_standard_5.png",
+    image: "/images/futuristic_standard_5.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
   {
     title: "Values Compatibility",
     desc: "Your work must align with our foundation — and never contradict NATURE — ANIMALS — HUMANS.",
-    image: "/images/futuristic_standard_6.png",
+    image: "/images/futuristic_standard_6.webp",
+    video: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
   },
 ];
 

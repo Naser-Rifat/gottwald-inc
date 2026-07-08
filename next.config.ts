@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs";
+import createBundleAnalyzer from "@next/bundle-analyzer";
+
+// Opt-in bundle analyzer. Generate the HTML reports with:
+//   ANALYZE=true npm run build
+// Outputs land in `.next/analyze/{client,nodejs,edge}.html`. We don't
+// run this on every build to keep CI fast and avoid the extra
+// webpack-bundle-analyzer plugin in the hot dev path.
+const withBundleAnalyzer = createBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 // next-intl without URL-based locale routing. Locale is resolved in
 // i18n/request.ts from the googtrans cookie so hero copy (owned by
@@ -71,7 +81,30 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  productionBrowserSourceMaps: true,
+  // Sentry's webpack plugin generates + uploads sourcemaps on its own
+  // (see sentryWebpackOptions below), so we don't need Next.js to ALSO
+  // emit `.js.map` files alongside every chunk and serve them publicly.
+  // Setting this to false saves a meaningful slice of the build output
+  // (the .map files routinely exceed their .js siblings in size) and
+  // keeps DevTools from auto-fetching them on every page load.
+  productionBrowserSourceMaps: false,
+
+  experimental: {
+    // Per-import tree-shaking for libs that ship many entry points.
+    // Without this, a single `import { useFrame } from "@react-three/fiber"`
+    // can pull in the entire library because of broad re-exports. With it,
+    // Next.js rewrites the import to the deep path that webpack can
+    // tree-shake cleanly. Documented as safe by Next.js for these libs.
+    optimizePackageImports: [
+      "gsap",
+      "framer-motion",
+      "@react-three/fiber",
+      "@react-three/drei",
+      "@react-three/postprocessing",
+      "lucide-react",
+      "next-intl",
+    ],
+  },
 
   async headers() {
     return [
@@ -83,6 +116,12 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    formats: ["image/avif", "image/webp"],
+    // Allowlist the custom quality values used across the app. Next 16
+    // rejects any `quality` prop value not declared here (returns 400).
+    // 80 is reserved for the home pillar tiles — the most prominent
+    // hero visuals where the visual quality bump is intentional.
+    qualities: [50, 60, 65, 70, 75, 80],
     remotePatterns: [
       {
         protocol: "http",
@@ -129,4 +168,7 @@ const sentryWebpackOptions = {
   },
 };
 
-export default withSentryConfig(withNextIntl(nextConfig), sentryWebpackOptions);
+export default withSentryConfig(
+  withNextIntl(withBundleAnalyzer(nextConfig)),
+  sentryWebpackOptions,
+);

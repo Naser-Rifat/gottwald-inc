@@ -21,6 +21,11 @@ export default class HomeScene {
   private isDisposed = false;
   private environmentLoaded = false;
   private environmentLoadHandler?: () => void;
+  public mouse = new THREE.Vector2(0, 0);
+  public scrollVelocity = 0;
+  private lastScrollY = 0;
+
+  private visibilityHandler?: () => void;
 
   constructor() {
     this.resizeHandler = () => this.onWindowResized();
@@ -34,6 +39,21 @@ export default class HomeScene {
     }, 1);
 
     window.addEventListener("resize", this.resizeHandler);
+    window.addEventListener("mousemove", this.onMouseMove);
+
+    // Hard-stop the animation loop when the tab is hidden. Browsers
+    // throttle rAF to ~1 Hz on hidden tabs already, but explicitly
+    // calling setAnimationLoop(null) skips even that 1-Hz render and
+    // releases GPU/CPU completely until the tab is visible again.
+    this.visibilityHandler = () => {
+      if (this.isDisposed || !this.renderer) return;
+      if (document.visibilityState === "visible") {
+        this.renderer.setAnimationLoop(this.animate);
+      } else {
+        this.renderer.setAnimationLoop(null);
+      }
+    };
+    document.addEventListener("visibilitychange", this.visibilityHandler);
 
     if (process.env.NODE_ENV === "development") {
       this.initDebug();
@@ -117,11 +137,24 @@ export default class HomeScene {
     this.scene.add(this.projectTiles);
   };
 
+  private onMouseMove = (e: MouseEvent) => {
+    // Normalize to -1 to +1
+    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  };
+
   onScroll = () => {
     if (!this.camera) return;
+
+    // Calculate smoothed scroll velocity
+    const currentScrollY = window.scrollY;
+    const targetVelocity = currentScrollY - this.lastScrollY;
+    this.scrollVelocity = THREE.MathUtils.lerp(this.scrollVelocity, targetVelocity, 0.1);
+    this.lastScrollY = currentScrollY;
+
     // Move the Three.js camera's Y position to match the page scroll.
     this.camera.position.y =
-      (-window.scrollY / window.innerHeight) * this.frustumSize;
+      (-currentScrollY / window.innerHeight) * this.frustumSize;
   };
 
   setCameraFrustumSize = (frustumSize: number) => {
@@ -188,6 +221,10 @@ export default class HomeScene {
 
     // 2. Remove all event listeners
     window.removeEventListener("resize", this.resizeHandler);
+    window.removeEventListener("mousemove", this.onMouseMove);
+    if (this.visibilityHandler) {
+      document.removeEventListener("visibilitychange", this.visibilityHandler);
+    }
     if (this.environmentLoadHandler) {
       window.removeEventListener("scroll", this.environmentLoadHandler);
       window.removeEventListener("pointerdown", this.environmentLoadHandler);

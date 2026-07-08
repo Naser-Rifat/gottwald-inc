@@ -117,7 +117,7 @@ function toArray(val: string | string[] | undefined): string[] {
 const DEFAULT_THEME: PillarTheme = {
   background: "#0a0a0a",
   text: "#f5f5f5",
-  accent: "#c9a84c",
+  accent: "#12a8ac",
 };
 
 function toTheme(val: string | PillarTheme | undefined): PillarTheme {
@@ -211,10 +211,11 @@ function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
 // the API is sleeping.
 const FETCH_TIMEOUT_MS = 12_000;
 
-// ─── ISR Revalidation interval (seconds) ────────────────────────────────────
-// How long Next.js serves a cached page before checking for fresh data.
-// 30s = new pillars appear within 30 seconds on list pages.
-const REVALIDATE_SECONDS = 30;
+// ISR + tag-based on-demand revalidation. Pages are cached for 24h as a safety
+// net, but Django's post_save signal POSTs to /api/revalidate after every
+// pillar edit — purging the cache so the next visitor sees fresh data within
+// ~1 second. Fast site + real-time updates.
+const REVALIDATE_SECONDS = 10;
 
 async function apiFetch<T>(
   endpoint: string,

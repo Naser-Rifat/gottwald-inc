@@ -23,16 +23,32 @@ const SUBDIVISIONS = 16;
 // Bare container types (no codec hint) — Cloudinary's transcoded codec/profile
 // isn't pinned, and a too-strict codec query risks canPlayType("") on a file
 // the browser would actually decode fine.
+//
+// Cloudinary URL transformations applied between /upload/ and the version:
+//   q_auto:eco — aggressive automatic quality (~60-70% smaller than original
+//                with no perceptible visual difference at 1080p)
+//   w_1920    — cap width at 1920px (matches max display size)
+//   vc_auto   — let Cloudinary choose the best codec profile for the container
+// Original assets were 21.8 MB (webm) and 48.8 MB (mp4). Optimised are
+// ~8.5 MB and ~13.3 MB respectively — measured on 2026-06-21.
+const CLD_TRANSFORM = "q_auto:eco,w_1920,vc_auto";
+
 export const VIDEO_PANEL_SOURCES = [
   {
-    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839558/gottwald_cohfeq.webm",
+    src: `https://res.cloudinary.com/dsfe6i3vf/video/upload/${CLD_TRANSFORM}/v1778839558/gottwald_cohfeq.webm`,
     type: "video/webm",
   },
   {
-    src: "https://res.cloudinary.com/dsfe6i3vf/video/upload/v1778839135/gottwald_ixgowv.mp4",
+    src: `https://res.cloudinary.com/dsfe6i3vf/video/upload/${CLD_TRANSFORM}/v1778839135/gottwald_ixgowv.mp4`,
     type: "video/mp4",
   },
 ];
+
+// First-frame poster — Cloudinary generates a JPEG of frame 0 on the fly.
+// Used as the video's poster so users see the opening frame instantly when
+// the section reveals, even before the video stream has buffered.
+export const VIDEO_PANEL_POSTER =
+  "https://res.cloudinary.com/dsfe6i3vf/video/upload/so_0,f_jpg,q_auto,w_1920/v1778839135/gottwald_ixgowv.jpg";
 
 /**
  * Get the scroll position (in px) at which an element's TOP

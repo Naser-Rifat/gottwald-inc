@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AboutClient from "./AboutClient";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import {
   breadcrumbJsonLd,
   aboutPageJsonLd,
