@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import Header from "@/components/Header";
-import FooterSection from "@/components/FooterSection";
+import Header from "@/components/layout/Header";
+import FooterSection from "@/components/layout/FooterSection";
 
 export default function CooperationHubClient() {
   const containerRef = useRef<HTMLDivElement>(null);

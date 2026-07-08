@@ -29,19 +29,6 @@ export default class PillarTiles extends THREE.Group {
     const pillarTile3 = new PillarTile("tile-3", this.homeScene);
     const pillarTile4 = new PillarTile("tile-4", this.homeScene);
 
-    const loader = new GLTFLoader();
-
-    const tile1 = loader.loadAsync("/assets/project-tiles/tile-1.glb");
-    const tile2 = loader.loadAsync("/assets/project-tiles/tile-2.glb");
-    const tile3 = loader.loadAsync("/assets/project-tiles/tile-3.glb");
-    const tile4 = loader.loadAsync("/assets/project-tiles/tile-4.glb");
-    const results = await Promise.all([tile1, tile2, tile3, tile4]);
-
-    pillarTile1.addToPortalScene(results[0].scene);
-    pillarTile2.addToPortalScene(results[1].scene);
-    pillarTile3.addToPortalScene(results[2].scene);
-    pillarTile4.addToPortalScene(results[3].scene);
-
     this.add(pillarTile1, pillarTile2, pillarTile3, pillarTile4);
 
     this.projectTiles.push(pillarTile1);

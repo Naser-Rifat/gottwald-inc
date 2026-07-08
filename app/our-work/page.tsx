@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getPillars } from "@/lib/api/pillars";
 import OurWorkClient from "./OurWorkClient";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import {
   breadcrumbJsonLd,
   collectionPageJsonLd,

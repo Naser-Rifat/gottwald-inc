@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ContactClient from "./ContactClient";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, contactPageJsonLd } from "@/lib/seo";
 
 const CONTACT_DESCRIPTION =

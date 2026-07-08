@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const pillarUrls = pillarSlugs.map((slug) => ({
-    url: `${SITE_URL}/pillars/${slug}`,
+    url: `${SITE_URL}/our-work/${slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.8,

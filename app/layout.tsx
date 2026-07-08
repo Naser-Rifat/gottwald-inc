@@ -1,17 +1,44 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
+import dynamic from "next/dynamic";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
-import GlobalCanvasLoader from "@/components/GlobalCanvasLoader";
-import NoiseOverlay from "@/components/NoiseOverlay";
-import RouteCleanup from "@/components/RouteCleanup";
-import DomSafetyPatch from "@/components/DomSafetyPatch";
-import PageLoader from "@/components/PageLoader";
-import AudioProvider from "@/components/AudioProvider";
-import CookieManager from "@/components/CookieManager";
-import GoogleTranslateRoot from "@/components/GoogleTranslateRoot";
+
+// First-paint critical: small components that must run before paint
+// (DOM patches, route cleanup, the loading screen, the global noise
+// overlay) stay statically imported.
+import NoiseOverlay from "@/components/layout/NoiseOverlay";
+import RouteCleanup from "@/components/system/RouteCleanup";
+import DomSafetyPatch from "@/components/system/DomSafetyPatch";
+import PageLoader from "@/components/system/PageLoader";
+import AudioProvider from "@/components/system/AudioProvider";
+
+// Non-critical: dynamic-import everything that runs after first paint or
+// only reacts to user interaction. This moves ~800 lines of client JS
+// (CookieManager, GoogleTranslate widget, cursor/click effects, the
+// living-environment orchestration, etc.) off the layout's hydration
+// bundle and into per-component chunks that load after the page is
+// interactive. Default ssr:true keeps the markup in the streamed HTML.
+const GlobalCanvasLoader = dynamic(
+  () => import("@/components/canvas/GlobalCanvasLoader"),
+);
+const CookieManager = dynamic(() => import("@/components/system/CookieManager"));
+const GoogleTranslateRoot = dynamic(
+  () => import("@/components/system/GoogleTranslateRoot"),
+);
+const LivingEnvironment = dynamic(
+  () => import("@/components/system/LivingEnvironment"),
+);
+const LiquidClickEffect = dynamic(
+  () => import("@/components/system/LiquidClickEffect"),
+);
+const JourneyIndicator = dynamic(
+  () => import("@/components/system/JourneyIndicator"),
+);
+
+
 import {
   SITE_URL,
   SITE_NAME,
@@ -40,16 +67,19 @@ const satoshi = localFont({
   preload: true,
 });
 
+// Playfair weights trimmed to what's actually used across the site.
+// Dropped 800 — confirmed unused on Playfair-styled elements. Kept 600
+// because CareersClient uses `font-playfair font-semibold italic`.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "900"],
   variable: "--font-playfair",
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#070c14",
   width: "device-width",
   initialScale: 1,
 };
@@ -142,6 +172,12 @@ export const metadata: Metadata = {
     // en self-reference; when /de/ ships, the helper automatically adds it.
     languages: hreflangAlternates("/"),
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? "",
+    },
+  },
 };
 
 export default async function RootLayout({
@@ -211,7 +247,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className="bg-black text-text-primary font-sans antialiased"
+        className="bg-base text-text-primary font-sans antialiased"
         suppressHydrationWarning
       >
         {/* Skip-link: first focusable element on every page. Hidden by
@@ -231,9 +267,16 @@ export default async function RootLayout({
         <NoiseOverlay />
         <CookieManager />
         <GoogleTranslateRoot />
+        {/* Site-wide manifesto wiring — orchestration thread, frequency
+            engine, time-of-day tint, dwell deepening, scroll-velocity pace,
+            per-visit phase seed. Mounted once at the root so every page
+            inherits the living-frequency-space behaviors. */}
+        <LivingEnvironment />
+        <LiquidClickEffect />
+        <JourneyIndicator />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AudioProvider>
-            <main id="main-content" tabIndex={-1} className="outline-none">
+            <main id="main-content" tabIndex={-1} className="outline-none min-h-screen">
               {children}
             </main>
           </AudioProvider>

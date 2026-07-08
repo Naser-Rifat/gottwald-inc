@@ -1,0 +1,391 @@
+"use client";
+
+import React, { useLayoutEffect, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import gsap from "gsap";
+
+// Page labels for each route
+const ROUTE_LABELS: Record<string, string> = {
+  "/about": "ABOUT",
+  "/our-work": "OUR WORK",
+  "/partnerships": "PARTNERSHIPS",
+  "/careers": "CAREERS",
+  "/contact": "CONTACT",
+};
+
+/**
+ * Resolve a human-readable label for the transition overlay.
+ * Static routes get a direct lookup; dynamic /pillars/[slug] routes
+ * are auto-capitalised from the slug itself.
+ */
+function resolveLabel(href: string): string {
+  // Check static map first
+  const [basePath] = href.split("#");
+  if (ROUTE_LABELS[basePath]) return ROUTE_LABELS[basePath];
+
+  // Dynamic pillar routes: "/our-work/my-slug" → "MY SLUG"
+  const pillarMatch = basePath.match(/^\/our-work\/(.+)$/);
+  if (pillarMatch) {
+    return pillarMatch[1].replace(/-/g, " ").toUpperCase();
+  }
+
+  return "LOADING";
+}
+
+// The home page keeps its existing experience — no loader
+const HOME_PATH = "/";
+
+export default function GlobalPageLoader() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const curtainRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+  const labelTextRef = useRef<HTMLHeadingElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null);
+
+  // Track previous route for dynamic back buttons
+  useEffect(() => {
+    const current = sessionStorage.getItem("gw_current_route");
+    if (current && current !== pathname) {
+      sessionStorage.setItem("gw_previous_route", current);
+    }
+    sessionStorage.setItem("gw_current_route", pathname);
+  }, [pathname]);
+
+  // Rigid State Tracking
+  const isTransitioning = useRef(false);
+  const progressObj = useRef({ val: 0 });
+  const activeTimeline = useRef<gsap.core.Timeline | null>(null);
+  const hasInitiallyLoaded = useRef(false);
+  const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingHashRef = useRef<string | null>(null);
+  const pendingHrefRef = useRef<string | null>(null);
+  const creepTweenRef = useRef<gsap.core.Tween | null>(null);
+
+  // ── Initial page load reveal ──────────────────────────────────────────
+  // First-visit / hard-reload skips the curtain entirely so the hero
+  // paints immediately. This is what crawlers and direct-link landings
+  // hit, so it dominates Core Web Vitals (LCP) and SEO.
+  //
+  // The cinematic curtain still runs for every internal link-click
+  // transition (handled below in the click interceptor), which is when
+  // the brand pacing actually matters.
+  useLayoutEffect(() => {
+    if (hasInitiallyLoaded.current) return;
+    hasInitiallyLoaded.current = true;
+
+    gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+  }, []);
+
+  // ── 2. Eagerly Intercept Link Clicks ────────────────────────────────────
+  useEffect(() => {
+    const handleLinkClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest("a");
+      if (!link) return;
+
+      const href = link.getAttribute("href");
+      
+      // Edge-Case Handling: Ignore external, tabs, hash, mailto, etc.
+      // Eager Loader MUST NOT intercept CMD+Click / CTRL+Click
+      // ALSO: Do NOT intercept navigations TO the Home page, let Next.js do it cleanly.
+      if (
+        !href ||
+        href === HOME_PATH ||
+        href.startsWith("http") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        href.startsWith("#") ||
+        link.target === "_blank" ||
+        e.ctrlKey || e.metaKey || e.shiftKey || e.altKey
+      ) {
+        return;
+      }
+
+      // ── Hash-aware routing ──
+      // If href is like "/partnerships#apply" and we are already on "/partnerships",
+      // skip the loader and manually scroll to the target.
+      // Next.js <Link> swallows native hash behavior, so we must handle it ourselves.
+      const [basePath, hash] = href.split("#");
+      if (hash && basePath === pathname) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Update the URL hash without triggering a Next.js navigation
+        window.history.pushState(null, "", `${basePath}#${hash}`);
+        const target = document.getElementById(hash);
+        if (target) {
+          const yOffset = -100; // Account for fixed header
+          const y = target.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+        return;
+      }
+
+      // Ignore if clicking the exact same base path we are already on (no hash)
+      if (basePath === pathname && !hash) return;
+      
+      // If we are currently mid-animation, bypass to avoid glitching
+      if (isTransitioning.current) return;
+
+      // ── BEGIN EAGER MASK ──
+      // Completely shut off Next.js's immediate <Link> chunk-loading reaction
+      e.preventDefault();
+      e.stopPropagation(); 
+      isTransitioning.current = true;
+
+      // Track pending hash and href for post-navigation scroll & fallback
+      pendingHashRef.current = hash || null;
+      pendingHrefRef.current = href;
+
+      const label = resolveLabel(href);
+      if (labelTextRef.current) labelTextRef.current.textContent = label;
+
+      // Guarantee any previous timeline is eradicated to prevent object overwrites 
+      if (activeTimeline.current) activeTimeline.current.kill();
+      if (creepTweenRef.current) creepTweenRef.current.kill();
+
+      document.body.style.overflow = "hidden";
+      gsap.set(overlayRef.current, { autoAlpha: 1, pointerEvents: "auto" });
+      // Instantly cover viewport to avoid old-page flash during route start.
+      gsap.set(curtainRef.current, { yPercent: 0 });
+      gsap.set([counterRef.current, labelRef.current], { opacity: 0, y: 20 });
+      gsap.set(circleRef.current, { strokeDashoffset: 289.026 });
+
+      progressObj.current.val = 0;
+      
+      const tl = gsap.timeline();
+      activeTimeline.current = tl;
+
+      // 1. Wait one frame so the covered state is painted, then route.
+      requestAnimationFrame(() => {
+        React.startTransition(() => {
+          router.push(href);
+        });
+      });
+
+      // ── Nuclear safety: hard redirect if pathname never changes after 8s ──
+      // Unlike the old 4s timer, this does NOT lift the curtain prematurely.
+      // It falls back to a full page load instead.
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = setTimeout(() => {
+        if (isTransitioning.current) {
+          window.location.href = href;
+        }
+      }, 8000);
+
+      // 2. Fade in labels while curtain is settling
+      tl.to([labelRef.current, counterRef.current], { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.05 }, "-=0.3");
+      
+      // 3. Animate counter 0→90 as a visual placeholder while data loads
+      tl.to(progressObj.current, {
+        val: 90,
+        duration: 1.0,
+        ease: "power2.out",
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+          if (circleRef.current) {
+            const p = progressObj.current.val;
+            circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+          }
+        },
+        onComplete: () => {
+          // 4. Slow creep 90→98 so the counter doesn't look frozen while waiting
+          creepTweenRef.current = gsap.to(progressObj.current, {
+            val: 98,
+            duration: 6,
+            ease: "power1.out",
+            onUpdate: () => {
+              if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+              if (circleRef.current) {
+                const p = progressObj.current.val;
+                circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+              }
+            },
+          });
+        },
+      }, "-=0.2");
+    };
+
+    // Capture phase intercepts before React SyntheticEvents
+    document.addEventListener("click", handleLinkClick, { capture: true });
+    return () => {
+      document.removeEventListener("click", handleLinkClick, { capture: true });
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+    };
+  }, [pathname, router]);
+
+  // ── Shared completion logic — reused by both pathname effect and safety timeout ──
+  const forceComplete = () => {
+    if (safetyTimerRef.current) {
+      clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = null;
+    }
+
+    if (activeTimeline.current) activeTimeline.current.kill();
+    
+    const hash = pendingHashRef.current;
+    pendingHashRef.current = null;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = "";
+        isTransitioning.current = false;
+        gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+
+        // ── Post-navigation hash scroll ──
+        // After the loader curtain lifts, scroll to the hash target if one was pending.
+        if (hash) {
+          requestAnimationFrame(() => {
+            const target = document.getElementById(hash);
+            if (target) {
+              const yOffset = -100; // Account for fixed header
+              const y = target.getBoundingClientRect().top + window.scrollY + yOffset;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
+          });
+        }
+      },
+    });
+    activeTimeline.current = tl;
+
+    // Extract the current value explicitly so no object references are shared incorrectly
+    const startVal = Number(counterRef.current?.textContent) || 90;
+    progressObj.current.val = startVal;
+    
+    tl.to(progressObj.current, {
+      val: 100,
+      duration: 0.4,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        if (counterRef.current) counterRef.current.textContent = String(Math.round(progressObj.current.val));
+        if (circleRef.current) {
+          const p = progressObj.current.val;
+          circleRef.current.style.strokeDashoffset = String(289.026 - (289.026 * p) / 100);
+        }
+      },
+    });
+
+    tl.to([counterRef.current, labelRef.current], { opacity: 0, y: -20, duration: 0.4, ease: "power3.in" }, "-=0.05");
+    tl.to(curtainRef.current, { yPercent: -100, duration: 1.1, ease: "power4.inOut" }, "-=0.1");
+  };
+
+  // ── 3. Completion handler (Fires when Next.js finishes routing) ─────────────
+  useEffect(() => {
+    // If the page legitimately navigates back to Home (e.g. via back button)
+    // we ensure the global mask goes away gracefully.
+    if (pathname === HOME_PATH) {
+      gsap.set(overlayRef.current, { autoAlpha: 0, pointerEvents: "none" });
+      isTransitioning.current = false;
+      return;
+    }
+
+    // If a route change happened and we WERE tracking an Eager transition
+    if (isTransitioning.current) {
+      // Kill the slow creep tween so forceComplete starts from current value
+      if (creepTweenRef.current) {
+        creepTweenRef.current.kill();
+        creepTweenRef.current = null;
+      }
+      forceComplete();
+    }
+  }, [pathname]);
+
+  return (
+    <div
+      ref={overlayRef}
+      // Start in a hidden state via invisible/opacity-0 to prevent unstyled flashes!
+      // role="status" + aria-live="polite" announces the loading pause to screen
+      // readers without interrupting other content. The visible counter, route
+      // label, and brand mark remain decorative; the sr-only text below is the
+      // accessible status string.
+      className="fixed inset-0 z-9999 pointer-events-none invisible"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <span className="sr-only">Loading new page content, please wait.</span>
+      <div
+        ref={curtainRef}
+        className="absolute inset-0 bg-[#040404] flex flex-col pointer-events-auto will-change-transform"
+      >
+        {/* Noise grain */}
+        <div
+          suppressHydrationWarning
+          className="absolute inset-0 opacity-[0.035] pointer-events-none"
+          style={{
+            // Static SVG file — see NoiseGrain for why we don't use a
+            // data URI here (Chrome mis-resolves `url(#filterId)`
+            // references and spams 404 requests every frame).
+            backgroundImage: "url('/svg/noise-grain.svg')",
+          }}
+        />
+
+        {/* Top brand mark */}
+        <div className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center gap-4 opacity-50">
+          <span className="font-mono text-gold text-xs tracking-[0.5em] uppercase font-bold">
+            GH
+          </span>
+          <span className="w-10 h-px bg-gold/40" />
+        </div>
+
+        {/* Center Minimal Ring & Label */}
+        <div
+          ref={labelRef}
+          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+        >
+          {/* Small Premium Circular Loader */}
+          <div className="relative flex items-center justify-center w-28 h-28">
+            {/* Background Ring */}
+            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
+              {/* Active Progress Ring */}
+              <circle
+                ref={circleRef}
+                cx="50"
+                cy="50"
+                r="46"
+                fill="none"
+                stroke="#d4af37"
+                strokeWidth="0.5"
+                strokeLinecap="round"
+                strokeDasharray="289.026"
+                strokeDashoffset="289.026"
+                className="transition-[stroke-dashoffset] duration-150 ease-out"
+              />
+            </svg>
+            
+            {/* Center Percentage */}
+            <div className="flex items-baseline gap-[2px]">
+              <span
+                ref={counterRef}
+                className="font-mono text-white/90 text-sm font-medium tabular-nums select-none"
+              >
+                0
+              </span>
+              <span className="font-mono text-white/50 text-[10px] select-none">
+                %
+              </span>
+            </div>
+          </div>
+
+          {/* Minimal Page Route Label */}
+          <h2
+            ref={labelTextRef}
+            className="text-white/40 text-[10px] lg:text-[11px] font-mono tracking-[0.5em] uppercase mt-8 select-none"
+          >
+            HOME
+          </h2>
+        </div>
+
+        {/* Bottom right — pathname */}
+        <div className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 opacity-30 select-none">
+          <span className="font-mono text-[9px] lg:text-[10px] tracking-[0.4em] uppercase text-white/70">
+            Gottwald Holding
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

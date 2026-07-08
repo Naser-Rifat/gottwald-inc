@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
-import FooterSection from "@/components/FooterSection";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import JsonLd from "@/components/JsonLd";
+import Header from "@/components/layout/Header";
+import FooterSection from "@/components/layout/FooterSection";
+import CustomScrollbar from "@/components/layout/CustomScrollbar";
+import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 const PROTOCOLS_DESCRIPTION =
@@ -110,7 +110,7 @@ export default function ProtocolsPage() {
                   <h2 className="text-3xl md:text-5xl lg:text-[54px] font-light leading-[1.1] tracking-tight text-white mb-8">
                     {item.title}
                   </h2>
-                  <p className="text-2xl md:text-3xl font-serif italic text-gold/80">
+                  <p className="text-xl md:text-2xl font-mono uppercase tracking-[0.16em] text-turquoise/80">
                     &quot;{item.intro}&quot;
                   </p>
                 </div>

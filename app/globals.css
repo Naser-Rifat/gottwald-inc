@@ -3,8 +3,12 @@
 @theme {
   /* Base — deep navy, not pure black — gives breathing room */
   --color-base: #070c14;
-  --color-text-primary: #f0f2f5;
-  --color-text-secondary: rgba(240, 242, 245, 0.65);
+  --color-surface-1: #0c1320;       /* cards, sections, panels */
+  --color-surface-2: #131b2b;       /* raised state, hover */
+  --color-edge: rgba(184, 192, 204, 0.08);  /* silver hairline borders */
+  --color-text-primary: #f4f6f9;
+  --color-text-secondary: rgba(240, 242, 245, 0.78);
+  --color-text-muted: rgba(240, 242, 245, 0.48);
 
   /* CI Palette — Petrol · Turquoise · Copper · Silver · Gold */
   --color-petrol: #006d84;      /* Petrol: vibrant teal-blue */
@@ -68,6 +72,13 @@
   ::-webkit-scrollbar-button {
     display: none;
   }
+
+  /* Resonance Cursor — hide system cursor when the custom cursor is mounted
+     on hover-capable devices. Component falls back gracefully on touch. */
+  html.resonance-cursor-active,
+  html.resonance-cursor-active * {
+    cursor: none !important;
+  }
 }
 
 /* ===== Home Content Fade ===== */
@@ -111,19 +122,29 @@
 a.button {
   padding: 16px 26px;
   border-radius: 26px;
+  background-image: linear-gradient(135deg, rgba(0,109,132,0.32), rgba(18,168,172,0.18));
   background-color: rgba(0,109,132,0.15);
-  border: 1px solid rgba(18,168,172,0.25);
+  border: 1px solid rgba(18,168,172,0.4);
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
   color: white;
   cursor: pointer;
   display: inline-block;
+  /* Inner top specular + outer lift = raised metallic feel */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 6px 20px rgba(0,0,0,0.28);
 }
 
 a.button:hover {
-  background-color: rgba(18,168,172,0.25);
-  border-color: rgba(18,168,172,0.5);
+  background-image: linear-gradient(135deg, rgba(18,168,172,0.4), rgba(0,109,132,0.24));
+  border-color: rgba(18,168,172,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 10px 28px rgba(0,109,132,0.32),
+    0 0 24px rgba(18,168,172,0.18);
+  transform: translateY(-1px);
 }
 
 /* ===== Project Tile Modal ===== */
@@ -145,6 +166,12 @@ a.button:hover {
 .project-tile-content.show {
   opacity: 1;
   visibility: visible;
+}
+
+/* WebGL active state hides DOM fallback images */
+.webgl-active .dom-image-layer {
+  opacity: 0 !important;
+  pointer-events: none;
 }
 
 /* ===== Video Panel End Parent ===== */
@@ -218,7 +245,7 @@ button,
     box-shadow 0.3s ease;
 }
 
-/* Magnetic-style elements: gold border glow on hover */
+/* Magnetic-style elements: cool infrastructure glow on hover */
 [data-magnetic] {
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.4s ease,
@@ -227,7 +254,7 @@ button,
 
 [data-magnetic]:hover {
   transform: scale(1.02);
-  box-shadow: 0 0 30px rgba(18, 168, 172, 0.12), 0 0 60px rgba(212, 175, 55, 0.08);
+  box-shadow: 0 0 30px rgba(18, 168, 172, 0.16), 0 0 60px rgba(0, 109, 132, 0.12);
   border-color: rgba(18, 168, 172, 0.35);
 }
 
@@ -236,8 +263,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: rgba(10, 147, 150, 0.5); /* Turquoise focus ring */
-  box-shadow: 0 1px 0 0 rgba(10, 147, 150, 0.3);
+  border-color: rgba(18, 168, 172, 0.5); /* Turquoise focus ring */
+  box-shadow: 0 1px 0 0 rgba(18, 168, 172, 0.3);
 }
 
 /* ===== GPU Layer Promotion for GSAP-Animated Elements ===== */
@@ -335,6 +362,491 @@ html[lang="de"] {
   -webkit-text-fill-color: transparent;
 }
 
+/* ===== Tuning Instrument HUD =====
+   The About page's floating frequency-monitor signature. Re-runs a brief
+   fade/scale each time the section in view changes, simulating a tuner
+   "locking on" to a new transmission. CSS-only — paired with React `key`
+   rotation on the labels to trigger the keyframe on every section switch. */
+@keyframes tuning-hud-name-in {
+  0%   { opacity: 0.25; transform: translateY(4px); letter-spacing: 0.32em; }
+  60%  { opacity: 1;    transform: translateY(0);   letter-spacing: 0.20em; }
+  100% { opacity: 1;    transform: translateY(0);   letter-spacing: 0.18em; }
+}
+@keyframes tuning-hud-freq-in {
+  0%   { opacity: 0.35; transform: scale(0.92); }
+  60%  { opacity: 1;    transform: scale(1.04); }
+  100% { opacity: 1;    transform: scale(1);    }
+}
+.tuning-hud-name {
+  animation: tuning-hud-name-in 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.tuning-hud-freq {
+  animation: tuning-hud-freq-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: inline-block;
+  transform-origin: right center;
+}
+
+/* ===== About: Premium Material System =====
+   A restrained material language for the About journey: atmospheric depth,
+   metallic edges, and selective raised surfaces. These are deliberately
+   sparse so premium moments retain contrast instead of becoming decoration. */
+.about-atmosphere {
+  isolation: isolate;
+}
+
+.about-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 15% 35%,
+    rgba(0,109,132,0.035),
+    transparent 42%
+  );
+}
+
+.about-atmosphere::after {
+  content: none;
+}
+
+/* About imagery behaves like one commissioned visual system, not a stack of
+   unrelated illustrations. Every retained image is cooled, desaturated, and
+   dissolved into the page before variant-specific framing is applied. */
+.about-visual {
+  isolation: isolate;
+}
+
+.about-visual-image {
+  z-index: 0;
+  opacity: 0.38;
+  filter: grayscale(0.78) saturate(0.58) contrast(1.12) brightness(0.82);
+  mix-blend-mode: luminosity;
+}
+
+.about-visual::before,
+.about-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.about-visual::before {
+  background: linear-gradient(135deg, rgba(7, 12, 20, 0.2), rgba(7, 12, 20, 0.72));
+  mix-blend-mode: multiply;
+}
+
+.about-visual::after {
+  z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 8%, #070c14 78%);
+}
+
+.about-visual--hero .about-visual-image {
+  opacity: 0.95;
+  filter: contrast(1.2) brightness(1.15) saturate(1.1);
+  mix-blend-mode: screen;
+}
+
+.about-visual--hero::before {
+  background: none;
+}
+
+.about-visual--hero::after {
+  background: none;
+}
+
+.about-visual--living {
+  -webkit-mask-image: radial-gradient(ellipse at 56% 48%, #000 28%, rgba(0, 0, 0, 0.94) 58%, transparent 90%);
+  mask-image: radial-gradient(ellipse at 56% 48%, #000 28%, rgba(0, 0, 0, 0.94) 58%, transparent 90%);
+}
+
+.about-visual--living .about-visual-image {
+  opacity: 0.8;
+  filter: saturate(0.7) contrast(1.08) brightness(0.86);
+  mix-blend-mode: screen;
+}
+
+.about-visual--living::before {
+  background:
+    linear-gradient(135deg, rgba(7, 12, 20, 0.08), rgba(7, 12, 20, 0.72)),
+    radial-gradient(circle at 68% 32%, rgba(212, 175, 55, 0.07), transparent 30%);
+}
+
+.about-visual--living::after {
+  background: radial-gradient(ellipse at 55% 48%, transparent 38%, rgba(7, 12, 20, 0.7) 90%);
+}
+
+.about-visual--portrait .about-visual-image {
+  opacity: 0.36;
+  filter: grayscale(0.9) saturate(0.42) contrast(1.16) brightness(0.72);
+}
+
+.about-visual--portrait::before {
+  background:
+    linear-gradient(90deg, #070c14 0%, rgba(7, 12, 20, 0.76) 34%, transparent 100%),
+    linear-gradient(180deg, #070c14 0%, transparent 24%, transparent 72%, #070c14 100%);
+}
+
+.about-visual--portrait::after {
+  background: linear-gradient(135deg, rgba(18, 168, 172, 0.05), transparent 52%);
+  mix-blend-mode: screen;
+}
+
+.about-hero-material {
+  isolation: isolate;
+}
+
+.about-hero-material::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 62%, rgba(18,168,172,0.12) 62% 62.06%, transparent 62.06%),
+    linear-gradient(180deg, transparent 0 72%, rgba(212,175,55,0.1) 72% 72.08%, transparent 72.08%),
+    radial-gradient(ellipse at 72% 38%, rgba(0,109,132,0.1), transparent 32%),
+    linear-gradient(135deg, #070c14 0%, #0c1524 58%, #070c14 100%);
+}
+
+.hero-complexity,
+.hero-complexity .tuning-char {
+  color: #eef1f4;
+  -webkit-text-fill-color: #eef1f4;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.16),
+    0 18px 50px rgba(0,0,0,0.28);
+}
+
+/* ===== PROOF Section: Resonance Signature =====
+   Editorial typography is the anchor; these add textural depth and a
+   single signature motion moment without crowding the negative space.
+   Grain + drifting waveform + corner ticks are the only flourishes. */
+.proof-grain {
+  /* Static SVG file with the proof-grain's specific feColorMatrix
+     teal tint. Inline data URIs caused Chrome to mis-resolve the
+     `url(#n)` filter reference and spam GET /%23n 404 requests. */
+  background-image: url("/svg/noise-proof.svg");
+  background-size: 220px 220px;
+  mix-blend-mode: overlay;
+}
+
+.proof-signal {
+  stroke-dasharray: 3 9;
+  animation: proof-signal-drift 9s linear infinite;
+  /* MOVE E: per-visit phase offset so the signal isn't always synced. */
+  animation-delay: var(--rand-phase-signal, 0s);
+  /* `stroke-dashoffset` is a paint property (not GPU-compositable), so
+     each animation frame repaints the SVG path. `will-change` hints the
+     browser to promote this path to its own layer — repaints still
+     happen, but they're isolated from the rest of the section and don't
+     trigger ancestor repaints. Lighthouse flagged this as a
+     non-composited animation; the layer hint converts it from a
+     full-frame repaint cost to a small isolated one. */
+  will-change: stroke-dashoffset;
+}
+
+@keyframes proof-signal-drift {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -240; }
+}
+
+.proof-signal-glow {
+  filter: drop-shadow(0 0 12px rgba(18, 168, 172, 0.32));
+}
+
+/* ===== Partnerships hero cursor glow — idle breath =====
+   When the cursor pauses inside the Partnerships hero, a class is
+   toggled on the glow div by the React handler. This keyframe gently
+   pulses the opacity, with timing borrowed from the LivingEnvironment's
+   --orchestration-pace so the breath stays in step with the rest of the
+   site's signal breath. The phase offset (--rand-phase-orchestration)
+   ensures different sessions begin the breath at different points. */
+.hero-cursor-glow {
+  /* Anchor for translate(-50%, -50%) so the glow centers at (x, y)
+     written by GSAP. The transform is set inline initially; once GSAP
+     starts writing translate via the x/y plugin, the transform string
+     stays anchored at the centered translate. */
+  will-change: transform, opacity;
+}
+
+.hero-cursor-glow--idle {
+  animation: hero-glow-breath var(--orchestration-pace, 9s) ease-in-out
+    infinite;
+  animation-delay: var(--rand-phase-orchestration, 0s);
+}
+
+@keyframes hero-glow-breath {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cursor-glow--idle {
+    animation: none;
+  }
+}
+
+/* ===== Strategic Inquiry signal drift =====
+   Subtle frequency wave at the bottom of the StrategicInquirySection
+   that drifts horizontally in step with the LivingEnvironment's
+   scroll-velocity-driven pace (--orchestration-pace, written by JS in
+   LivingEnvironment.tsx). Per-visit phase offset via --rand-phase-signal
+   ensures different visits begin at different points in the cycle, so
+   the wave never feels "synced from session zero." Brand signal-language
+   anchor for the closing CTA without becoming dashboard decoration. */
+.strategic-signal-drift {
+  animation: strategic-signal-drift var(--orchestration-pace, 11s) linear
+    infinite;
+  animation-delay: var(--rand-phase-signal, 0s);
+}
+
+@keyframes strategic-signal-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strategic-signal-drift {
+    animation: none;
+  }
+}
+
+/* ===== PILLARS Pin Section =====
+   Vertical progress bar that grows top → bottom as user scrolls through
+   all 5 pillar frames. Glows faintly to signal active progress. */
+.pillar-progress-bar {
+  transition: none; /* GSAP drives height directly — no CSS transition lag */
+  box-shadow: 0 0 12px rgba(18, 168, 172, 0.45), 0 0 4px rgba(18, 168, 172, 0.7);
+}
+
+/* ===== Orchestration Thread =====
+   Manifesto-faithful resonance line in the right margin. A vertical
+   gradient holding all 5 brand frequencies as one orchestration —
+   gold (positive) silver (neutral) petrol (depth) turquoise (signal)
+   copper (warmth). Subtle pulse keeps it "alive" so the page reads as
+   a living instrument, not a static document.
+   Literalizes the client manifesto: "Different frequencies — one
+   coherent sound." */
+.orchestration-line {
+  background: linear-gradient(
+    to bottom,
+    rgba(212, 175, 55, 0)     0%,
+    rgba(212, 175, 55, 0.32)  8%,     /* gold — perception/positive */
+    rgba(184, 192, 204, 0.28) 28%,    /* silver — neutral metallic */
+    rgba(0, 109, 132, 0.32)   48%,    /* petrol — depth */
+    rgba(18, 168, 172, 0.42)  68%,    /* turquoise — signal */
+    rgba(192, 120, 64, 0.30)  88%,    /* copper — warmth/decision */
+    rgba(192, 120, 64, 0)     100%
+  );
+  /* MOVE D: pace adapts to scroll velocity (JS writes --orchestration-pace).
+     MOVE E: per-visit phase offset so the breath never lands on the same
+     beat for two different visitors. */
+  animation: orchestration-breath var(--orchestration-pace, 9s) ease-in-out infinite;
+  animation-delay: var(--rand-phase-orchestration, 0s);
+  transform-origin: center;
+  transition: animation-duration 1.6s ease;
+}
+
+@keyframes orchestration-breath {
+  0%, 100% { opacity: 0.85; transform: scaleY(1); }
+  50%      { opacity: 1;    transform: scaleY(0.985); }
+}
+
+/* (Held-breath marker is now its own component <HeldBreath /> driven by
+   GSAP ScrollTrigger — the old static line+dot keyframes are no longer
+   referenced.) */
+
+/* ===== Living Environment: Time-of-Day Tint =====
+   Manifesto: "before the mind understands, something is already happening."
+   The page knows what time you arrived and shifts its underlying frequency
+   subtly. Tints are barely perceptible (~2% alpha + soft-light blend) — felt
+   not seen. Slow 8s transition between states avoids jarring jumps.
+   JS in AboutClient sets `data-time-of-day` on <html>; CSS does the rest. */
+html { --time-tint: transparent; }
+html[data-time-of-day="dawn"]        { --time-tint: rgba(212, 175, 55, 0.022); }
+html[data-time-of-day="morning"]     { --time-tint: rgba(255, 255, 255, 0.010); }
+html[data-time-of-day="afternoon"]   { --time-tint: rgba(18, 168, 172, 0.014); }
+html[data-time-of-day="dusk"]        { --time-tint: rgba(192, 120, 64, 0.022); }
+html[data-time-of-day="evening"]     { --time-tint: rgba(0, 109, 132, 0.022); }
+html[data-time-of-day="deep-night"]  { --time-tint: transparent; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: var(--time-tint);
+  mix-blend-mode: soft-light;
+  transition: background 8s ease;
+}
+
+/* ===== Living Environment: Dwell-Responsive Deepening =====
+   Manifesto: "feeling creates resonance creates trust." Sections the reader
+   actually dwells on (>=10s in view, >50% visible) are rewarded — a thin
+   gold resonance mark fades into the right edge of that section. The page
+   notices you. Marks are permanent for the session. */
+section[data-journey].dwell-deepened::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: clamp(0.6rem, 1.4vw, 1.8rem);
+  transform: translateY(-50%);
+  width: 1px;
+  height: 38px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(212, 175, 55, 0.55),
+    transparent
+  );
+  opacity: 0;
+  animation: dwell-mark-in 2.6s ease-out 0.2s forwards;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@keyframes dwell-mark-in {
+  0%   { opacity: 0; transform: translateY(-50%) scaleY(0.4); }
+  100% { opacity: 1; transform: translateY(-50%) scaleY(1); }
+}
+
+/* ===== Living Environment: Frequency Engine Toggle =====
+   Mute/unmute control for the ambient drone — sits as a small editorial
+   tag in the bottom-right corner. Active dot pulses gently. */
+.frequency-toggle-dot-active {
+  animation: frequency-toggle-pulse 2.2s ease-in-out infinite;
+}
+@keyframes frequency-toggle-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.35); }
+}
+
+/* ===== Careers Hero — Hubtown-style Immersive Scene =====
+   Full-viewport cinematic hero with animated SVG mountains, water surface,
+   floating wireframe diamond, and particle field. All turquoise #12a8ac
+   on deep navy #070c14 to match GOTT WALD brand. */
+
+/* Mountain layers drift subtly for parallax depth */
+@keyframes mountain-drift {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-8px); }
+}
+@keyframes mountain-drift-reverse {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(6px); }
+}
+
+/* Water surface wave animation — horizontal scroll of SVG path */
+@keyframes water-flow {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes water-flow-reverse {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Water shimmer — opacity pulse on the surface */
+@keyframes water-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.7; }
+}
+
+/* Floating wireframe diamond — slow continuous rotation */
+@keyframes diamond-rotate {
+  0%   { transform: translateY(0) rotateY(0deg) rotateX(15deg); }
+  25%  { transform: translateY(-8px) rotateY(90deg) rotateX(15deg); }
+  50%  { transform: translateY(0) rotateY(180deg) rotateX(15deg); }
+  75%  { transform: translateY(8px) rotateY(270deg) rotateX(15deg); }
+  100% { transform: translateY(0) rotateY(360deg) rotateX(15deg); }
+}
+
+/* Diamond inner glow pulse */
+@keyframes diamond-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(18,168,172,0.3), inset 0 0 20px rgba(18,168,172,0.15); }
+  50%      { box-shadow: 0 0 60px rgba(18,168,172,0.5), inset 0 0 40px rgba(18,168,172,0.25); }
+}
+
+/* Diamond reflection in water — inverted, faded */
+@keyframes diamond-reflect {
+  0%   { transform: translateY(0) rotateY(0deg) rotateX(-15deg) scaleY(-1); }
+  25%  { transform: translateY(4px) rotateY(90deg) rotateX(-15deg) scaleY(-1); }
+  50%  { transform: translateY(0) rotateY(180deg) rotateX(-15deg) scaleY(-1); }
+  75%  { transform: translateY(-4px) rotateY(270deg) rotateX(-15deg) scaleY(-1); }
+  100% { transform: translateY(0) rotateY(360deg) rotateX(-15deg) scaleY(-1); }
+}
+
+/* Particles float up from water surface */
+@keyframes careers-float-up {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(var(--sway, 20px)); opacity: 0; }
+}
+
+/* Side nav active indicator pulse */
+@keyframes sidenav-pulse {
+  0%, 100% { opacity: 0.4; width: 8px; }
+  50%      { opacity: 1; width: 16px; }
+}
+
+/* Scroll chevron bounce */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* Scribble Wave Draw Animation */
+@keyframes draw-wave {
+  0%   { stroke-dashoffset: 150; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Star twinkle for background particles */
+@keyframes star-twinkle {
+  0%, 100% { opacity: var(--base-opacity, 0.3); }
+  50%      { opacity: calc(var(--base-opacity, 0.3) * 2.5); }
+}
+
+/* Volumetric cloud drift for the careers page */
+@keyframes cloud-drift {
+  0%   { transform: translateX(-15%) scale(1); opacity: 0.3; }
+  50%  { opacity: 0.7; }
+  100% { transform: translateX(15%) scale(1.15); opacity: 0.3; }
+}
+@keyframes cloud-drift-reverse {
+  0%   { transform: translateX(15%) scale(1.15); opacity: 0.3; }
+  50%  { opacity: 0.6; }
+  100% { transform: translateX(-15%) scale(1); opacity: 0.3; }
+}
+
+/* Per-route mount fade-up. Replaces the framer-motion <motion.div> that
+   used to wrap every `app/template.tsx` page. Same visual signature
+   (opacity 0→1, translateY 10px→0, 800ms ease-out) but it's pure CSS,
+   so framer-motion no longer lives on every route's always-loaded path.
+   `backwards` fill keeps the start state visible at frame 0 so there's
+   no flash of un-animated content before the first paint. */
+@keyframes templateFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.template-fade-in {
+  animation: templateFadeIn 0.8s ease-out backwards;
+}
 
 /* ===== prefers-reduced-motion (Accessibility) =====
    Users with vestibular sensitivity or who've set the OS preference get
@@ -353,4 +865,10 @@ html[lang="de"] {
   }
   /* GSAP/Framer Motion timelines respect this via their own reduced-motion
      APIs; this CSS rule covers vanilla CSS animations and transitions. */
+}
+
+@keyframes orb-float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(1.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
