@@ -16,7 +16,15 @@ const getBackTargetFromSession = () =>
     : BACK_TO_WORK;
 const getBackTargetSSR = () => BACK_TO_WORK;
 import gsap from "gsap";
-import type { Pillar, ContentBlock, Offer } from "@/lib/types/pillars";
+import type {
+  CoachingMatrix,
+  CoachingStage,
+  CoachingStageData,
+  CoachingVariant,
+  ContentBlock,
+  Offer,
+  Pillar,
+} from "@/lib/types/pillars";
 import { useRouter } from "next/navigation";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -359,9 +367,19 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
     return () => mm.revert();
   }, [router]);
 
-  const hasOffers = enrichedProject.offers && enrichedProject.offers.length > 0;
+  const hasCoachingMatrix = Boolean(
+    enrichedProject.coachingMatrix &&
+      Object.keys(enrichedProject.coachingMatrix.tracks || {}).length > 0,
+  );
+  const hasOffers =
+    !hasCoachingMatrix &&
+    enrichedProject.offers &&
+    enrichedProject.offers.length > 0;
+  const hasOffersOrMatrix = hasCoachingMatrix || hasOffers;
   const totalPanels =
-    2 + (enrichedProject.contentBlocks?.length || 0) + (hasOffers ? 1 : 0);
+    2 +
+    (enrichedProject.contentBlocks?.length || 0) +
+    (hasOffersOrMatrix ? 1 : 0);
 
   return (
     <div
@@ -674,20 +692,27 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
           </div>
         </section>
 
-        {/* ═══════ OFFERS PANEL ═══════ */}
-        {enrichedProject.offers && enrichedProject.offers.length > 0 && (
+        {/* ═══════ COACHING MATRIX / OFFERS PANEL ═══════
+            Coaching pillar renders the 3×2×3 matrix in place of the
+            standard 3-tier offers view. Every other pillar keeps its
+            offers block. Only one of the two ever renders. */}
+        {hasCoachingMatrix ? (
+          <CoachingMatrixBlock
+            project={enrichedProject}
+            panelIdx={1}
+            ref={(el) => registerPanel(el, 1)}
+          />
+        ) : hasOffers ? (
           <OffersBlock
             project={enrichedProject}
             panelIdx={1}
             ref={(el) => registerPanel(el, 1)}
           />
-        )}
+        ) : null}
 
         {/* ═══════ DYNAMIC CMS PANELS ═══════ */}
         {enrichedProject.contentBlocks?.map((block, i) => {
-          const hasOffers =
-            enrichedProject.offers && enrichedProject.offers.length > 0;
-          const panelIdx = i + (hasOffers ? 2 : 1);
+          const panelIdx = i + (hasOffersOrMatrix ? 2 : 1);
           switch (block.type) {
             case "showcase":
             case "image":
@@ -763,9 +788,7 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
             registerPanel(
               el,
               (enrichedProject.contentBlocks?.length || 0) +
-                (enrichedProject.offers && enrichedProject.offers.length > 0
-                  ? 2
-                  : 1),
+                (hasOffersOrMatrix ? 2 : 1),
             )
           }
           className="w-full min-h-[60vh] lg:w-screen lg:h-screen shrink-0 flex items-end overflow-hidden relative"
@@ -1214,7 +1237,7 @@ const OffersBlock = forwardRef<
           background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)`,
         }}
       />
-      <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start lg:justify-center">
+      <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start">
         {/* Section header */}
         <div
           className="panel-label relative z-20 flex flex-col gap-2 mb-12"
@@ -1297,7 +1320,7 @@ const OffersBlock = forwardRef<
               >
                 {/* Editorial Glassmorphic Header Plate */}
                 <div
-                  className="w-full pt-10 pb-16 flex flex-col items-center justify-center relative shadow-2xl shrink-0"
+                  className="w-full pt-10 pb-12 flex flex-col items-center justify-center relative shadow-2xl shrink-0"
                   style={{
                     backgroundColor: "rgba(2, 4, 8, 0.4)",
                     clipPath: "polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%)",
@@ -1327,18 +1350,18 @@ const OffersBlock = forwardRef<
                   >
                     {tc.label} Pack
                   </span>
-                  <h3 className="relative z-10 text-2xl lg:text-3xl font-serif text-white text-center px-6 leading-tight drop-shadow-lg">
+                  <h3 className="relative z-10 text-[1.35rem] lg:text-[1.65rem] font-sans font-medium text-white text-center px-6 leading-snug text-balance drop-shadow-md tracking-wide">
                     {offer.title}
                   </h3>
                   {/* Price block — only renders when a numeric price is set;
                       a missing/null price renders as "Contact for quote" so
                       Mathias can leave pricing unset on bespoke packages. */}
                   <div
-                    className="relative z-10 mt-5 flex flex-col items-center gap-1"
+                    className="relative z-10 mt-6 flex flex-col items-center gap-1"
                   >
                     {typeof offer.price === "number" && offer.price >= 0 ? (
                       <span
-                        className="text-3xl lg:text-4xl font-serif text-white tracking-tight tabular-nums"
+                        className="text-[2.25rem] lg:text-[2.75rem] font-sans font-light text-white tracking-tight tabular-nums"
                         style={{
                           textShadow: `0 2px 12px ${tc.accent}55`,
                         }}
@@ -1354,7 +1377,7 @@ const OffersBlock = forwardRef<
                 </div>
 
                 {/* Body List */}
-                <div className="flex flex-col flex-1 px-8 lg:px-10 py-8 relative -mt-6">
+                <div className="flex flex-col flex-1 px-8 lg:px-10 py-8 relative -mt-4">
                   {/* Glow inside edges */}
                   <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
@@ -1363,7 +1386,7 @@ const OffersBlock = forwardRef<
                     }}
                   />
 
-                  <ul className="flex flex-col gap-6 relative z-10 mb-10 flex-1 mt-4">
+                  <ul className="flex flex-col gap-6 relative z-10 mb-8 flex-1 mt-4">
                     {features.map((feature, fIdx) => (
                       <li key={fIdx} className="flex gap-4 items-start">
                         <span
@@ -1440,6 +1463,298 @@ const OffersBlock = forwardRef<
           })}
         </div>
       </div>
+    </section>
+  );
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   COACHING MATRIX BLOCK — only rendered for the coaching-mentoring
+   pillar. Nested tracks × variants × stages structure replaces the
+   standard 3-tier offers view.
+   ═══════════════════════════════════════════════════════════════ */
+
+const STAGE_ORDER: CoachingStage[] = ["session", "intensive", "retainer"];
+const VARIANT_ORDER: CoachingVariant[] = ["business", "personal"];
+const STAGE_LABEL: Record<CoachingStage, string> = {
+  session: "Session",
+  intensive: "Intensive",
+  retainer: "Retainer",
+};
+const VARIANT_LABEL: Record<CoachingVariant, string> = {
+  business: "Business",
+  personal: "Personal",
+};
+
+/* Preferred display order for the known coaching tracks. Postgres JSONB does
+   not guarantee object key ordering, so we sort the API response into this
+   canonical order. Any custom tracks Mathias adds fall in after these,
+   preserving their insertion order. */
+const PREFERRED_TRACK_ORDER = [
+  "leadership-executive",
+  "stress-resilience",
+  "transition",
+];
+
+/* Map each stage to a visual tier so we can reuse the copper/silver/gold
+   color language from OffersBlock. Retainer = most premium = gold. */
+const STAGE_TIER: Record<CoachingStage, "copper" | "silver" | "gold"> = {
+  session: "copper",
+  intensive: "silver",
+  retainer: "gold",
+};
+
+const CoachingMatrixBlock = forwardRef<
+  HTMLElement,
+  { project: Pillar; panelIdx: number }
+>(function CoachingMatrixBlock({ project, panelIdx }, ref) {
+  const router = useRouter();
+  const matrix: CoachingMatrix | undefined = project.coachingMatrix;
+
+  // Order tracks by canonical preferred order; unknown tracks tail-append.
+  const trackKeys = useMemo(() => {
+    if (!matrix) return [];
+    const raw = Object.keys(matrix.tracks);
+    const preferred = PREFERRED_TRACK_ORDER.filter((k) => raw.includes(k));
+    const extras = raw.filter((k) => !PREFERRED_TRACK_ORDER.includes(k));
+    return [...preferred, ...extras];
+  }, [matrix]);
+
+  const [selectedTrack, setSelectedTrack] = useState<string>("");
+  const [selectedVariant, setSelectedVariant] =
+    useState<CoachingVariant>("business");
+
+  // Derive current active track/variant from state + availability so we never
+  // need to sync setState from a useEffect (avoid cascade renders) and never
+  // show an "active" tab whose data doesn't exist.
+  const activeTrack =
+    selectedTrack && trackKeys.includes(selectedTrack)
+      ? selectedTrack
+      : (trackKeys[0] ?? "");
+
+  const track = matrix?.tracks[activeTrack];
+  const availableVariants = useMemo(
+    () => VARIANT_ORDER.filter((v) => Boolean(track?.variants?.[v])),
+    [track],
+  );
+  const activeVariant: CoachingVariant =
+    availableVariants.includes(selectedVariant)
+      ? selectedVariant
+      : (availableVariants[0] ?? "business");
+
+  if (!matrix || trackKeys.length === 0 || !activeTrack) return null;
+
+  const variantData = track?.variants?.[activeVariant];
+  const stages = variantData?.stages ?? {};
+
+  const TIER_CONFIG = {
+    copper: {
+      border: "rgba(192,120,64,0.35)",
+      borderHover: "rgba(192,120,64,0.7)",
+      accent: "#c07840",
+      label: "Session",
+      labelColor: "#c07840",
+    },
+    silver: {
+      border: "rgba(184,192,204,0.30)",
+      borderHover: "rgba(184,192,204,0.65)",
+      accent: "#b8c0cc",
+      label: "Intensive",
+      labelColor: "#b8c0cc",
+    },
+    gold: {
+      border: "rgba(212,175,55,0.40)",
+      borderHover: "rgba(212,175,55,0.80)",
+      accent: "#d4af37",
+      label: "Retainer",
+      labelColor: "#d4af37",
+    },
+  } as const;
+
+  return (
+    <section
+      ref={ref}
+      className="w-full lg:w-screen lg:h-screen shrink-0 flex flex-col justify-center px-6 py-16 lg:py-0 lg:px-15 relative"
+      style={{ background: "transparent" }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at top, ${hexToRgba(project.theme.accent, 0.03)} 0%, transparent 60%)`,
+        }}
+      />
+      <div className="panel-content w-full max-w-[1400px] mx-auto opacity-100 relative z-10 h-full max-h-[calc(100vh-160px)] overflow-y-auto [&::-webkit-scrollbar]:w-0 allow-native-scroll flex flex-col justify-start px-4 lg:px-8 py-12">
+        
+        {/* Section header */}
+        <div className="relative z-20 flex flex-col gap-2 mb-12 lg:mb-16">
+          <div className="flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: project.theme.accent, boxShadow: `0 0 10px ${project.theme.accent}` }} />
+            <span className="text-[9px] tracking-[0.3em] uppercase font-bold text-white/70">
+              {String(panelIdx + 1).padStart(2, "0")} — Coaching Matrix
+            </span>
+          </div>
+        </div>
+
+          {/* Top Controls: Tracks & Variants */}
+          <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-12 mb-16 relative z-20 border-b border-white/[0.05] pb-8">
+            
+            {/* Elegant Track Tabs */}
+            <div className="flex flex-wrap items-center gap-8 lg:gap-14">
+              {trackKeys.map((tk) => {
+                const isActive = tk === activeTrack;
+                return (
+                  <button
+                    key={tk}
+                    type="button"
+                    onClick={() => setSelectedTrack(tk)}
+                    className="group relative pb-4 transition-all duration-500"
+                  >
+                    <span 
+                      className={`block font-serif text-2xl lg:text-3xl tracking-wide transition-all duration-500 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/60'}`}
+                    >
+                      {matrix.tracks[tk]?.label || tk}
+                    </span>
+                    {isActive && (
+                      <span 
+                        className="absolute bottom-[-1px] left-0 h-[2px] w-full transition-all duration-500 bg-gradient-to-r from-transparent via-white to-transparent"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Glassmorphic Variant Pill */}
+            <div className="flex items-center self-start xl:self-end shrink-0">
+              <div className="p-1 rounded-full flex relative backdrop-blur-2xl bg-white/[0.02] border border-white/[0.05]">
+                {VARIANT_ORDER.map((v) => {
+                  const isActive = v === activeVariant;
+                  const available = Boolean(track?.variants?.[v]);
+                  return (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => available && setSelectedVariant(v)}
+                      disabled={!available}
+                      className={`relative px-8 py-2.5 rounded-full text-[9px] tracking-[0.25em] uppercase font-bold transition-all duration-500 ${!available ? 'opacity-20 cursor-not-allowed' : 'hover:text-white'}`}
+                      style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.4)' }}
+                    >
+                      {isActive && (
+                        <span 
+                          className="absolute inset-0 rounded-full"
+                          style={{ 
+                            backgroundColor: hexToRgba(project.theme.accent, 0.15),
+                            border: `1px solid ${hexToRgba(project.theme.accent, 0.4)}`,
+                            boxShadow: `0 0 15px ${hexToRgba(project.theme.accent, 0.2)}`
+                          }}
+                        />
+                      )}
+                      <span className="relative z-10">{VARIANT_LABEL[v]}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Cards: The 3 Stages */}
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-stretch w-full pb-24">
+            {STAGE_ORDER.map((stageKey, idx, arr) => {
+              const stageData: CoachingStageData | undefined = stages[stageKey];
+              const tier = STAGE_TIER[stageKey];
+              const tc = TIER_CONFIG[tier];
+              const isCenter = idx === Math.floor(arr.length / 2);
+              const isEmpty = !stageData;
+
+              return (
+                <div
+                  key={stageKey}
+                  className={`w-full lg:w-1/3 flex flex-col rounded-3xl overflow-hidden group transition-all duration-700 relative backdrop-blur-3xl ${
+                    isCenter ? "lg:-translate-y-4 z-10" : "z-0 opacity-90 hover:opacity-100"
+                  } ${isEmpty ? "opacity-30 grayscale pointer-events-none" : "hover:-translate-y-2 hover:shadow-2xl"}`}
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.015)",
+                    border: `1px solid ${isCenter ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.03)'}`,
+                    boxShadow: isCenter 
+                      ? `0 30px 60px -15px ${tc.accent}15, inset 0 1px 0 0 rgba(255,255,255,0.1)` 
+                      : `0 20px 40px -10px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,0.02)`,
+                  }}
+                >
+                  {/* Subtle Top Inner Glow */}
+                  <div 
+                    className="absolute top-0 left-0 right-0 h-[1px] opacity-50"
+                    style={{ background: `linear-gradient(90deg, transparent, ${tc.accent}, transparent)` }}
+                  />
+
+                  {/* Top Glow Ambient */}
+                  <div 
+                    className="absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-700 group-hover:opacity-40"
+                    style={{ background: `radial-gradient(circle at 50% 0%, ${tc.accent}, transparent 60%)` }} 
+                  />
+
+                  {/* Header / Title Area */}
+                  <div className="px-8 lg:px-12 pt-12 pb-8 flex flex-col items-center text-center relative z-10 shrink-0">
+                    <span className="text-[9px] tracking-[0.35em] font-bold uppercase mb-6 px-4 py-1.5 rounded-full border bg-white/[0.03] backdrop-blur-md transition-colors duration-500"
+                      style={{ color: tc.labelColor, borderColor: 'rgba(255,255,255,0.1)' }}
+                    >
+                      {STAGE_LABEL[stageKey]}
+                    </span>
+                    <h3 className="font-serif text-[1.75rem] leading-snug text-white/90 group-hover:text-white transition-colors">
+                      {stageData?.title || "Not Configured"}
+                    </h3>
+                  </div>
+
+                  {/* Content Area */}
+                  <div className="flex flex-col flex-1 px-8 lg:px-12 pb-12 relative z-10">
+                    {stageData?.description && (
+                      <p className="text-[14px] font-light leading-relaxed text-white/50 group-hover:text-white/70 transition-colors text-center mb-10">
+                        {stageData.description}
+                      </p>
+                    )}
+                    
+                    <div className="mt-auto flex flex-col gap-8 w-full">
+                      {stageData?.deliverable && (
+                        <div className="flex flex-col items-center gap-3 w-full pb-8 border-b border-white/[0.05]">
+                          <span className="text-[9px] tracking-[0.2em] uppercase text-white/40 font-bold">Deliverables</span>
+                          <span className="text-[13px] font-medium leading-relaxed text-white/80 text-center">{stageData.deliverable}</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-[9px] tracking-[0.2em] uppercase text-white/30 font-bold mb-2">Investment</span>
+                        {stageData && typeof stageData.price === "number" && stageData.price >= 0 ? (
+                          <div className="font-serif text-3xl text-white drop-shadow-md">
+                            {formatPrice(stageData.price, stageData.currency ?? "EUR")}
+                          </div>
+                        ) : (
+                          <div className="text-[10px] tracking-[0.25em] uppercase font-bold text-white/50">
+                            {stageData ? "Custom Quote" : "—"}
+                          </div>
+                        )}
+                      </div>
+
+                      {stageData && (
+                        <button
+                          type="button"
+                          onClick={() => router.push("/contact")}
+                          className="w-full py-4 mt-2 rounded-full font-bold uppercase tracking-[0.25em] text-[9px] transition-all duration-500 relative overflow-hidden group/btn"
+                          style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid rgba(255,255,255,0.1)`, color: "#fff" }}
+                        >
+                          <div 
+                            className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"
+                            style={{ background: `linear-gradient(90deg, ${tc.accent}40, ${tc.accent}15)` }}
+                          />
+                          <span className="relative z-10 inline-block transition-transform duration-300 group-hover/btn:scale-105">
+                            INQUIRE
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
     </section>
   );
 });

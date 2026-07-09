@@ -33,6 +33,32 @@ export interface Offer {
   currency?: OfferCurrency;
 }
 
+export type CoachingVariant = "business" | "personal";
+export type CoachingStage = "session" | "intensive" | "retainer";
+
+export interface CoachingStageData {
+  title: string;
+  description: string;
+  deliverable: string;
+  price: number | null;
+  currency: OfferCurrency;
+}
+
+export interface CoachingTrack {
+  label: string;
+  variants: Partial<Record<CoachingVariant, {
+    stages: Partial<Record<CoachingStage, CoachingStageData>>;
+  }>>;
+}
+
+/**
+ * Coaching-only nested offer structure. Only populated for the
+ * "coaching-mentoring" pillar; other pillars omit this field.
+ */
+export interface CoachingMatrix {
+  tracks: Record<string, CoachingTrack>;
+}
+
 export interface Pillar {
   id?: string;
   slug: string;
@@ -47,4 +73,5 @@ export interface Pillar {
   theme: PillarTheme;
   contentBlocks?: ContentBlock[];
   offers?: Offer[];
+  coachingMatrix?: CoachingMatrix;
 }
