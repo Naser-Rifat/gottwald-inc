@@ -1,4 +1,4 @@
-import type { ContentBlock, Offer, Pillar, PillarTheme } from "../types/pillars";
+import type { CoachingMatrix, ContentBlock, Offer, Pillar, PillarTheme } from "../types/pillars";
 
 
 
@@ -28,6 +28,7 @@ interface ApiPillar {
   content_blocks_data?: ApiBlock[];
   offers?: Offer[] | string;
   offers_data?: Offer[] | string;
+  coaching_matrix?: CoachingMatrix | Record<string, unknown> | string;
 }
 
 interface PillarsApiResponse {
@@ -189,7 +190,36 @@ function mapApiToPillar(api: ApiPillar): Pillar {
     theme: toTheme(api.theme),
     contentBlocks: blocks,
     offers: parseOffers(api.offers ?? api.offers_data),
+    coachingMatrix: parseCoachingMatrix(api.coaching_matrix),
   };
+}
+
+/**
+ * Coaching matrix arrives as either a nested object (application/json) or a
+ * JSON string (multipart). Empty {} and malformed input are dropped so the
+ * frontend can treat "no data" as undefined.
+ */
+function parseCoachingMatrix(
+  value: CoachingMatrix | Record<string, unknown> | string | undefined,
+): CoachingMatrix | undefined {
+  if (!value) return undefined;
+  const raw =
+    typeof value === "string"
+      ? (() => {
+          try {
+            return JSON.parse(value);
+          } catch {
+            return null;
+          }
+        })()
+      : value;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const tracks = (raw as Record<string, unknown>).tracks;
+  if (!tracks || typeof tracks !== "object" || Array.isArray(tracks))
+    return undefined;
+  if (Object.keys(tracks as Record<string, unknown>).length === 0)
+    return undefined;
+  return raw as CoachingMatrix;
 }
 
 function parseOffers(value: Offer[] | string | undefined): Offer[] | undefined {
