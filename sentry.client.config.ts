@@ -10,10 +10,10 @@ if (dsn) {
   Sentry.init({
     dsn,
     environment: process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NODE_ENV,
-    // Capture 10% of sessions in production. The site is low-traffic enough
-    // that 100% would still fit the free tier, but 10% leaves headroom for
-    // an unexpected traffic spike without burning quota.
-    tracesSampleRate: 0.1,
+    // Capture 5% of sessions in production. Reduced from 10% to trim
+    // browser-side trace overhead — still enough signal to catch real
+    // regressions at expected traffic levels.
+    tracesSampleRate: 0.05,
     // Replays are disabled by default — they capture user interactions
     // (including sensitive form input) and trigger consent obligations
     // we haven't scoped. Enable explicitly per-page if needed.
