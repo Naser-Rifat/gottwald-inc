@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "preview": "next build && next start",
     "lighthouse": "bunx lighthouse https://gottwald.world --preset=desktop --output=html --output=json --output-path=./lighthouse/baseline --chrome-flags=\"--headless\" --view"
   },
   "dependencies": {
