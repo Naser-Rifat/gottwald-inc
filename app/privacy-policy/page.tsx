@@ -4,6 +4,7 @@ import FooterSection from "@/components/layout/FooterSection";
 import CustomScrollbar from "@/components/layout/CustomScrollbar";
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const PRIVACY_POLICY_DESCRIPTION =
   "Privacy Policy and data protection guidelines for GOTT WALD Holding LLC.";
@@ -11,7 +12,7 @@ const PRIVACY_POLICY_DESCRIPTION =
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: PRIVACY_POLICY_DESCRIPTION,
-  alternates: { canonical: "/privacy-policy" },
+  alternates: { canonical: "/privacy-policy", languages: hreflangAlternates("/privacy-policy") },
   openGraph: {
     title: "Privacy Policy",
     description: PRIVACY_POLICY_DESCRIPTION,

@@ -1,6 +1,7 @@
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import StrategicAssetsClient from "./StrategicAssetsClient";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const STRATEGIC_ASSETS_DESCRIPTION =
   "A curated portfolio of strategic structures, platforms, ventures, and real-world value frameworks.";
@@ -8,7 +9,7 @@ const STRATEGIC_ASSETS_DESCRIPTION =
 export const metadata = {
   title: "Strategic Assets",
   description: STRATEGIC_ASSETS_DESCRIPTION,
-  alternates: { canonical: "/strategic-assets" },
+  alternates: { canonical: "/strategic-assets", languages: hreflangAlternates("/strategic-assets") },
   openGraph: {
     title: "Strategic Assets",
     description: STRATEGIC_ASSETS_DESCRIPTION,

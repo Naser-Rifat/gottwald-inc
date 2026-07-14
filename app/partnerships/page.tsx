@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PartnershipsClient from "./PartnershipsClient";
 import JsonLd from "@/components/system/JsonLd";
+import { hreflangAlternates } from "@/lib/i18n";
 import {
   breadcrumbJsonLd,
   faqJsonLd,
@@ -8,13 +9,14 @@ import {
 } from "@/lib/seo";
 import { partnershipFaqs } from "@/lib/faqs";
 
+// <=155 chars so SERPs render the full snippet without truncation.
 const PARTNERSHIPS_DESCRIPTION =
-  "Apply to become a values-aligned partner in the GOTT WALD 2030 infrastructure cycle. Confidential by default, standards-led by design. Limited selection for principals and operators.";
+  "Apply to partner with GOTT WALD in the 2030 infrastructure cycle. Confidential by default, standards-led by design. For principals and operators only.";
 
 export const metadata: Metadata = {
   title: "Partnerships",
   description: PARTNERSHIPS_DESCRIPTION,
-  alternates: { canonical: "/partnerships" },
+  alternates: { canonical: "/partnerships", languages: hreflangAlternates("/partnerships") },
   openGraph: {
     title: "Partnerships",
     description: PARTNERSHIPS_DESCRIPTION,

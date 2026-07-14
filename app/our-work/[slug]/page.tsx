@@ -12,6 +12,7 @@ import {
   pillarServiceJsonLd,
   faqJsonLd,
 } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 import { getPillarFaqs } from "@/lib/pillarFaqs";
 
 interface Props {
@@ -23,13 +24,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pillar = await getPillar(slug);
   if (!pillar) return { title: "GOTT WALD — Pillar" };
 
-  const metaDescription = pillar.description?.trim()
+  // Truncate at 155 chars to keep the SERP snippet from being cut off.
+  const rawDescription = pillar.description?.trim()
     ? pillar.description.trim()
     : `${pillar.title} — GOTT WALD Holding.`;
+  const metaDescription =
+    rawDescription.length > 155
+      ? rawDescription.slice(0, 152).trimEnd() + "…"
+      : rawDescription;
+  const canonicalPath = `/our-work/${slug}`;
   return {
     title: pillar.title,
     description: metaDescription,
-    alternates: { canonical: `/our-work/${slug}` },
+    alternates: {
+      canonical: canonicalPath,
+      languages: hreflangAlternates(canonicalPath),
+    },
     openGraph: {
       title: `${pillar.title} — GOTT WALD`,
       description: metaDescription,

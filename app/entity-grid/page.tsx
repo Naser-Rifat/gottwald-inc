@@ -1,6 +1,7 @@
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import EntityGridClient from "./EntityGridClient";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const ENTITY_GRID_DESCRIPTION =
   "A structured overview of the holding's operational entities, platforms, and strategic ventures.";
@@ -8,7 +9,7 @@ const ENTITY_GRID_DESCRIPTION =
 export const metadata = {
   title: "Entity Grid",
   description: ENTITY_GRID_DESCRIPTION,
-  alternates: { canonical: "/entity-grid" },
+  alternates: { canonical: "/entity-grid", languages: hreflangAlternates("/entity-grid") },
   openGraph: {
     title: "Entity Grid",
     description: ENTITY_GRID_DESCRIPTION,

@@ -14,9 +14,12 @@ export default function HomeIntroSection() {
           Standards-Led Architecture
         </span>
         
-        <h1 className="text-[clamp(1.5rem,3.5vw,4rem)] font-light uppercase tracking-widest leading-[1.3] max-w-5xl text-center text-white">
+        {/* Demoted to h2: the primary <h1> for the homepage lives in
+            HeroTitleBlock.tsx ("Turning complexity into clarity..."). Two
+            h1s on one page dilutes the topical signal for search + AI engines. */}
+        <h2 className="text-[clamp(1.5rem,3.5vw,4rem)] font-light uppercase tracking-widest leading-[1.3] max-w-5xl text-center text-white">
           We build <span className="font-medium text-white">operating-grade systems</span> helping businesses scale cleanly.
-        </h1>
+        </h2>
 
         {/* Scroll down indicator */}
         <div className="relative w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center mt-20 opacity-60">

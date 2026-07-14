@@ -4,6 +4,7 @@ import FooterSection from "@/components/layout/FooterSection";
 import CustomScrollbar from "@/components/layout/CustomScrollbar";
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const TERMS_OF_USE_DESCRIPTION =
   "Terms and conditions governing access to and use of the GOTT WALD Holding LLC website.";
@@ -11,7 +12,7 @@ const TERMS_OF_USE_DESCRIPTION =
 export const metadata: Metadata = {
   title: "Terms of Use",
   description: TERMS_OF_USE_DESCRIPTION,
-  alternates: { canonical: "/terms-of-use" },
+  alternates: { canonical: "/terms-of-use", languages: hreflangAlternates("/terms-of-use") },
   openGraph: {
     title: "Terms of Use",
     description: TERMS_OF_USE_DESCRIPTION,

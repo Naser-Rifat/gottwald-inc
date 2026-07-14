@@ -24,6 +24,7 @@ import HomeIntroSection from "./_home/HomeIntroSection";
 // page instead of blocking the initial HTML response. See the file for
 // the full rationale.
 import PillarTilesAsync from "./_home/PillarTilesAsync";
+import { hreflangAlternates } from "@/lib/i18n";
 
 // Below-the-fold: dynamic-import to split each section's client JS into
 // its own chunk. Next.js still SSRs the markup (ssr defaults to true) so
@@ -40,8 +41,9 @@ const NextChapterTransition = dynamic(
   () => import("@/components/layout/NextChapterTransition"),
 );
 
+// Trimmed to <=155 chars so SERPs render the full snippet without truncation.
 const HOME_DESCRIPTION =
-  "GOTT WALD Holding LLC — Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets, turning complexity into clarity and decisions into measurable impact.";
+  "GOTT WALD Holding LLC — standards-led holding in Tbilisi, Georgia. Operating-grade systems turning complexity into clarity and decisions into impact.";
 
 const HOME_TITLE = "GOTT WALD Holding — Standards-Led Holding & Operations";
 
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
   // a generic "Home" in the browser tab and search results.
   title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: hreflangAlternates("/") },
   openGraph: {
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
