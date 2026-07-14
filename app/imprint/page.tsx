@@ -4,6 +4,7 @@ import FooterSection from "@/components/layout/FooterSection";
 import CustomScrollbar from "@/components/layout/CustomScrollbar";
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const IMPRINT_DESCRIPTION =
   "Legal and corporate information for GOTT WALD Holding LLC.";
@@ -11,7 +12,7 @@ const IMPRINT_DESCRIPTION =
 export const metadata: Metadata = {
   title: "Imprint / Legal Notice",
   description: IMPRINT_DESCRIPTION,
-  alternates: { canonical: "/imprint" },
+  alternates: { canonical: "/imprint", languages: hreflangAlternates("/imprint") },
   openGraph: {
     title: "Imprint",
     description: IMPRINT_DESCRIPTION,

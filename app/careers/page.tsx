@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
 import CareersClient from "./CareersClient";
 import JsonLd from "@/components/system/JsonLd";
+import { hreflangAlternates } from "@/lib/i18n";
 import {
   breadcrumbJsonLd,
   faqJsonLd,
 } from "@/lib/seo";
 import { careersFaqs } from "@/lib/faqs";
 
+// <=155 chars so SERPs render the full snippet without truncation.
 const CAREERS_DESCRIPTION =
-  "Join GOTT WALD Holding LLC. We are selecting operators who build resilient systems across 9 pillars — discipline, trust, and delivery as non-negotiable. Roles in IT, Consulting, Coaching, Marketing, and more.";
+  "Join GOTT WALD Holding — operators building resilient systems across 9 pillars: IT, Consulting, Coaching, Marketing, Relocation, and more. Tbilisi, GE.";
 
 export const metadata: Metadata = {
   title: "Careers",
   description: CAREERS_DESCRIPTION,
-  alternates: { canonical: "/careers" },
+  alternates: { canonical: "/careers", languages: hreflangAlternates("/careers") },
   openGraph: {
     title: "Careers",
     description: CAREERS_DESCRIPTION,

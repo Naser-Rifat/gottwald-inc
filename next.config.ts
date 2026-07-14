@@ -112,6 +112,25 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      // Marketing HTML — cache at Vercel's edge for 1 hour, serve stale
+      // for up to 1 day while a fresh copy revalidates in the background.
+      // `max-age=0` keeps browsers revalidating so end users see updates
+      // fast; `s-maxage=3600` is the shared-CDN TTL that offloads Next's
+      // per-request render cost. Excludes API routes, the Sentry tunnel,
+      // Next.js internals, and static assets (those already have their
+      // own aggressive cache policies from Next). Note: pages that read
+      // request cookies (e.g. `googtrans` for locale) are still rendered
+      // dynamically per request — this header takes effect once we
+      // migrate cookie-based locale resolution to middleware.
+      {
+        source: "/:path((?!api|monitoring|_next|favicon|robots|sitemap|llms|opengraph-image).*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
 

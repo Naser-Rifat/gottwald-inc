@@ -1,16 +1,20 @@
 /**
  * Internationalisation configuration.
  *
- * Currently English-only. The scaffolding below exists so that adding a
- * German (`de`) version becomes a drop-in exercise:
+ * Currently English-only. Every English page already calls
+ * `hreflangAlternates(canonicalPath)` in its metadata, so flipping German
+ * live is a two-step exercise:
  *
- * 1. Create the translated route (e.g. `app/de/imprint/page.tsx`).
- * 2. Flip the locale's `available: true` below.
- * 3. Call `hreflangAlternates(path)` from that page's metadata and the
- *    English counterpart to emit reciprocal `<link rel="alternate">` tags.
+ * 1. Create the translated route (e.g. `app/de/imprint/page.tsx`) and call
+ *    `hreflangAlternates("/imprint")` from its metadata too.
+ * 2. Flip the `de` locale's `available: true` below.
  *
- * Until `available: true`, we only emit a self-referential `x-default` +
- * `en` hreflang — the honest signal that the site is currently English-only.
+ * The helper returns `undefined` while only one locale is available (so no
+ * hreflang tags render today — a self-referential hreflang on a single-
+ * language site is redundant and Google would ignore it). The moment a
+ * second locale is `available: true`, every page begins emitting an
+ * `x-default` plus one `<link rel="alternate" hreflang="…">` per available
+ * locale — with no further code changes required in individual pages.
  */
 
 import { SITE_URL } from "./seo";

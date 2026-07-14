@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AboutClient from "./AboutClient";
 import JsonLd from "@/components/system/JsonLd";
+import { hreflangAlternates } from "@/lib/i18n";
 import {
   breadcrumbJsonLd,
   aboutPageJsonLd,
@@ -8,13 +9,14 @@ import {
 } from "@/lib/seo";
 import { aboutFaqs } from "@/lib/faqs";
 
+// <=155 chars so SERPs render the full snippet without truncation.
 const ABOUT_DESCRIPTION =
-  "GOTT WALD is not a traditional service provider. It is a unified execution standard — strategy, structure, technology, communication, and human performance built as one integrated system. Headquartered in Tbilisi, Georgia.";
+  "GOTT WALD is a unified execution standard — strategy, structure, technology, and human performance as one integrated system. Based in Tbilisi, Georgia.";
 
 export const metadata: Metadata = {
   title: "About Us",
   description: ABOUT_DESCRIPTION,
-  alternates: { canonical: "/about" },
+  alternates: { canonical: "/about", languages: hreflangAlternates("/about") },
   openGraph: {
     title: "About Us",
     description: ABOUT_DESCRIPTION,

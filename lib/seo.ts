@@ -2,8 +2,10 @@ import type { Pillar } from "./types/pillars";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gottwald.world";
 const SITE_NAME = "GOTT WALD Holding LLC";
+// Meta description — trimmed to ~155 chars so Google renders the full snippet
+// on desktop and mobile SERPs (longer strings get truncated with an ellipsis).
 const DEFAULT_DESCRIPTION =
-  "Standards-led holding company headquartered in Tbilisi, Georgia. We build operating-grade systems for people and strategic assets — turning complexity into clarity, and decisions into measurable impact.";
+  "Standards-led holding company in Tbilisi, Georgia. Operating-grade systems for people and strategic assets — clarity, execution, measurable impact.";
 // Must exist in `public/` for reliable social previews.
 // Choose a wide banner image already present in the repo.
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/about_horizontal_2.png`;

@@ -1,6 +1,7 @@
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import PressMediaKitClient from "./PressMediaKitClient";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const PRESS_MEDIA_KIT_DESCRIPTION =
   "A structured point of access for media inquiries, official materials, and selected brand information.";
@@ -8,7 +9,7 @@ const PRESS_MEDIA_KIT_DESCRIPTION =
 export const metadata = {
   title: "Press & Media Kit",
   description: PRESS_MEDIA_KIT_DESCRIPTION,
-  alternates: { canonical: "/press-media-kit" },
+  alternates: { canonical: "/press-media-kit", languages: hreflangAlternates("/press-media-kit") },
   openGraph: {
     title: "Press & Media Kit",
     description: PRESS_MEDIA_KIT_DESCRIPTION,

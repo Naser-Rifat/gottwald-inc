@@ -13,9 +13,11 @@ export default function HeroSlide({ onMouseEnter }: HeroSlideProps) {
       onMouseEnter={onMouseEnter}
     >
       <p className="text-[11px] md:text-[13px] uppercase tracking-[0.25em] font-semibold text-[#d4af37] mb-6 font-mono drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">BUSINESS STANDARDS</p>
-      <h2 className="text-[clamp(1.8rem,4vw,5rem)] leading-[1.2] font-normal tracking-widest uppercase font-sans text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] max-w-6xl mx-auto">
+      {/* Primary <h1> for the /our-work route. This is the first slide the
+          user sees and the strongest topical signal for the pillars index. */}
+      <h1 className="text-[clamp(1.8rem,4vw,5rem)] leading-[1.2] font-normal tracking-widest uppercase font-sans text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] max-w-6xl mx-auto">
         TRUST. STRUCTURE. PERFORMANCE.
-      </h2>
+      </h1>
       <p className="mt-10 text-white/90 text-[clamp(1.1rem,1.3vw,1.5rem)] font-normal leading-relaxed max-w-2xl mx-auto font-playfair italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
         We build operating-grade systems for people and strategic assets—when outcomes must be clear, execution must be clean, and performance must be repeatable.
       </p>

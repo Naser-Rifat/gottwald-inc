@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ContactClient from "./ContactClient";
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd, contactPageJsonLd } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const CONTACT_DESCRIPTION =
   "Contact GOTT WALD Holding LLC for strategic inquiries, partnership requests, and general communication. Head office in Tbilisi, Georgia.";
@@ -9,7 +10,7 @@ const CONTACT_DESCRIPTION =
 export const metadata: Metadata = {
   title: "Contact",
   description: CONTACT_DESCRIPTION,
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: "/contact", languages: hreflangAlternates("/contact") },
   openGraph: {
     title: "Contact",
     description: CONTACT_DESCRIPTION,

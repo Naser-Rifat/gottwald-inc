@@ -4,6 +4,7 @@ import FooterSection from "@/components/layout/FooterSection";
 import CustomScrollbar from "@/components/layout/CustomScrollbar";
 import JsonLd from "@/components/system/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { hreflangAlternates } from "@/lib/i18n";
 
 const PROTOCOLS_DESCRIPTION =
   "GOTT WALD Holding LLC Protocols. We treat trust, information, and access with discretion. Values come first.";
@@ -11,7 +12,7 @@ const PROTOCOLS_DESCRIPTION =
 export const metadata: Metadata = {
   title: "Protocols",
   description: PROTOCOLS_DESCRIPTION,
-  alternates: { canonical: "/protocols" },
+  alternates: { canonical: "/protocols", languages: hreflangAlternates("/protocols") },
   openGraph: {
     title: "Protocols",
     description: PROTOCOLS_DESCRIPTION,
