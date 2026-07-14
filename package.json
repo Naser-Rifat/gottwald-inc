@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "preview": "next build && next start",
-    "lighthouse": "bunx lighthouse https://gottwald.world --preset=desktop --output=html --output=json --output-path=./lighthouse/baseline --chrome-flags=\"--headless\" --view"
+    "lighthouse": "bunx lighthouse https://gottwald.world --preset=desktop --output=html --output=json --output-path=./lighthouse/baseline --chrome-flags=\"--headless\" --view",
+    "verify:forms": "bash scripts/verify-forms.sh",
+    "verify:forms:live": "bash scripts/verify-forms.sh --live"
   },
   "dependencies": {
     "@react-email/components": "^1.0.10",
