@@ -118,10 +118,19 @@ const nextConfig: NextConfig = {
       // fast; `s-maxage=3600` is the shared-CDN TTL that offloads Next's
       // per-request render cost. Excludes API routes, the Sentry tunnel,
       // Next.js internals, and static assets (those already have their
-      // own aggressive cache policies from Next). Note: pages that read
-      // request cookies (e.g. `googtrans` for locale) are still rendered
-      // dynamically per request — this header takes effect once we
-      // migrate cookie-based locale resolution to middleware.
+      // own aggressive cache policies from Next).
+      //
+      // ACTIVATION PREREQUISITE: this header is emitted today but Vercel's
+      // edge will refuse to cache the response while the root layout calls
+      // `cookies()` for locale detection (i18n/request.ts reads
+      // `googtrans`). Next.js flags any route in that render tree as
+      // dynamic, so the response ships with `Cache-Control: private,
+      // no-store` regardless of what we set below. The header becomes
+      // effective the moment we retire client-side Google Translate in
+      // favour of URL-based routing (`/de/imprint`, `/de/about`, …). At
+      // that point locale is derived from the URL — no cookie, no dynamic
+      // penalty — and every marketing HTML request is served from the
+      // Vercel edge. See lib/i18n.ts for the locale roadmap.
       {
         source: "/:path((?!api|monitoring|_next|favicon|robots|sitemap|llms|opengraph-image).*)",
         headers: [
