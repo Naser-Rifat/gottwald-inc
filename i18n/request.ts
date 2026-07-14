@@ -1,35 +1,36 @@
 import { getRequestConfig } from "next-intl/server";
-import { cookies } from "next/headers";
 
 /**
  * Locale resolution for next-intl (no URL routing mode).
  *
- * We intentionally read from the `googtrans` cookie so next-intl stays in
- * lockstep with the Google Translate pill in the header — GT owns body copy,
- * next-intl owns hero text. One locale source of truth, no drift.
+ * Server-side ALWAYS resolves to English. This is deliberate — reading the
+ * `googtrans` cookie here would force every page render into dynamic mode
+ * (Next.js flags any route in the render tree that touches `cookies()` as
+ * non-cacheable), which cost mobile ~1.5–2 s of extra LCP because Vercel's
+ * edge could never serve pre-rendered HTML.
  *
- * Cookie format written by writeGtCookie():
- *   /en/de   → active locale is "de"
- *   (absent) → EN (source language)
+ * The client-side story:
+ *   1. SSR renders English messages regardless of the cookie.
+ *   2. Google Translate (mounted client-only via GoogleTranslateRoot) picks
+ *      up the `googtrans` cookie during hydration and re-translates body copy
+ *      to German if that's the user's active locale. The inline script in
+ *      layout.tsx also flips <html lang> before first paint so screen readers
+ *      and Chrome's translate-banner see the correct locale.
+ *
+ * Net effect for a returning German visitor: hero copy briefly flashes in
+ * English (the tiny handful of strings owned by next-intl) then GT catches
+ * up. Body copy — which is >95% of the page — comes through GT directly
+ * without a flash. The trade-off is acceptable for the perf win.
+ *
+ * When URL-based DE routing ships (/de/imprint etc.), replace the hard-
+ * coded "en" with the segment parsed from the URL — still no cookies(),
+ * still static-render-friendly.
  */
-
-const SUPPORTED = ["en", "de"] as const;
-type Locale = (typeof SUPPORTED)[number];
-const DEFAULT_LOCALE: Locale = "en";
-
-function parseGtCookie(value: string | undefined): Locale {
-  if (!value) return DEFAULT_LOCALE;
-  const match = value.match(/^\/[^/]+\/(.+)$/);
-  const candidate = match?.[1] as Locale | undefined;
-  return candidate && SUPPORTED.includes(candidate) ? candidate : DEFAULT_LOCALE;
-}
+const DEFAULT_LOCALE = "en";
 
 export default getRequestConfig(async () => {
-  const cookieStore = await cookies();
-  const locale = parseGtCookie(cookieStore.get("googtrans")?.value);
-
   return {
-    locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    locale: DEFAULT_LOCALE,
+    messages: (await import(`../messages/${DEFAULT_LOCALE}.json`)).default,
   };
 });
