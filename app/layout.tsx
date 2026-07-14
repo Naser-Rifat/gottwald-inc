@@ -241,7 +241,11 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(
-              speakableJsonLd("/", ["h1", "h2", ".hero-desc", ".body-line"]),
+              // Selectors kept in sync with rendered markup — `.body-line`
+              // was retired when the hero copy consolidated into `.hero-desc`.
+              // Google Assistant / Alexa read these blocks aloud when the
+              // site is surfaced via voice.
+              speakableJsonLd("/", ["h1", "h2", ".hero-desc"]),
             ),
           }}
         />

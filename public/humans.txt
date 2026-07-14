@@ -1,0 +1,14 @@
+/* TEAM */
+
+    Founder & Patron: Mathias Gottwald
+    Contact: office [at] gottwald.world
+    Location: Tbilisi, Georgia
+
+/* SITE */
+
+    Site: GOTT WALD Holding LLC
+    URL: https://gottwald.world
+    Standards: HTML5, CSS, TypeScript, WebGL
+    Framework: Next.js (App Router)
+    Hosting: Vercel
+    Founded: 2024

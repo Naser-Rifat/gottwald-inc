@@ -163,6 +163,14 @@ export function organizationJsonLd() {
       "@type": "Person",
       name: "Mathias Gottwald",
     },
+    // `founder` is what Google, Perplexity, and ChatGPT actually look for
+    // when resolving "who founded X" and Knowledge Panel executive rows.
+    // We reference the enriched Person node emitted from /about (see
+    // app/about/page.tsx → mathiasFounderNode) so the same identity is
+    // reachable from both the Organization graph and the About page.
+    founder: {
+      "@id": `${SITE_URL}/about#mathias-gottwald`,
+    },
     sameAs: SOCIAL_PROFILES,
   };
 }
