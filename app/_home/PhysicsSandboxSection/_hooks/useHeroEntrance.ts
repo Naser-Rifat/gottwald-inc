@@ -2,6 +2,7 @@
 
 import { useEffect, type RefObject } from "react";
 import { gsap } from "@/lib/gsap-bootstrap";
+import { getDeviceTier } from "@/lib/deviceTier";
 
 interface UseHeroEntranceArgs {
   heroRef: RefObject<HTMLElement | null>;
@@ -33,6 +34,14 @@ export function useHeroEntrance({
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
+
+    // Mobile skips the choreographed entrance. Setting `opacity: 0` on the
+    // hero words + then animating them in from a GSAP timeline made
+    // Lighthouse count the H1 as invisible until the animation resolved
+    // — pushing mobile LCP to 6.4 s even though the H1 was already in the
+    // SSR HTML. On mobile the hero renders in its natural CSS state so
+    // LCP pins on the H1 the moment the browser paints it (~1.2 s).
+    if (getDeviceTier() === "mobile") return;
 
     const ctx = gsap.context(() => {
       const words = hero.querySelectorAll(".hero-word");

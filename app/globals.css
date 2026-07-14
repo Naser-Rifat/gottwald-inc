@@ -872,3 +872,21 @@ section[data-journey].dwell-deepened::after {
   50% { transform: translateY(-15px) rotate(1.5deg); }
   100% { transform: translateY(0px) rotate(0deg); }
 }
+
+/* Mobile-only LCP unlock. Chrome's LCP algorithm skips elements with
+   `mix-blend-*`, so the hero H1 (styled `mix-blend-screen` for the WebGL
+   backdrop on desktop) never registers as a valid LCP candidate on
+   mobile — Lighthouse reports a fallback LCP of 6+ seconds even though
+   the H1 is in the SSR HTML and paints at ~1.2 s.
+   Mobile skips the WebGL backdrop entirely (see WebGLCanvasLoader), so
+   the blend mode no longer serves a visual purpose there. Turning it off
+   at mobile widths unlocks the H1 as an LCP candidate — worth ~15 mobile
+   perf points with zero desktop impact. Also force `opacity: 1` in case
+   any stray GSAP `.set()` slipped through the mobile-skip gate. */
+@media (max-width: 767px) {
+  .hero-title-block h1,
+  .hero-title-block h1 .hero-word {
+    mix-blend-mode: normal !important;
+    opacity: 1 !important;
+  }
+}

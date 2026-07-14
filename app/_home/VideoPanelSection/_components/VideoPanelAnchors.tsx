@@ -60,6 +60,18 @@ export default function VideoPanelAnchors() {
       return;
     }
 
+    // Mobile phones always get the poster. The Cloudinary mp4 is 3.6 MB
+    // — Lighthouse mobile flagged it as the single largest network
+    // request, and downloading it on 4G-throttled connections pushed
+    // mobile LCP past 6 s. The poster is a ~85 KB JPEG that reads the
+    // same visually. Non-mobile devices without WebGL (iPad, touch
+    // laptops) keep the html-video path since they've got bandwidth
+    // and CPU headroom to actually enjoy the reel.
+    if (tier === "mobile") {
+      setFallback("poster");
+      return;
+    }
+
     const conn = (navigator as Navigator & { connection?: ConnectionInfo })
       .connection;
     const mem = (navigator as Navigator & { deviceMemory?: number })
