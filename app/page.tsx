@@ -80,12 +80,15 @@ export default async function Home() {
       <WebGLCanvasLoader />
       <IntroPortal />
 
-      {/* LCP fix: no initial `.fade-out` class — home-content is visible in
-          SSR HTML so Lighthouse can measure LCP. Portal (position:fixed,
-          z-index:9999) covers it visually until WebGL is ready. Fade-in on
-          portal exit still works via loadingGroup's classList.add + remove
-          cycle if a slow-load path needs the transition. */}
-      <div id="home-content">
+      {/* Home-content ships with `.fade-out` (opacity 0) in the SSR HTML.
+          IntroPortal is client-only (`useSyncExternalStore` returns false on
+          the first client render for hydration parity) — so if we shipped
+          the home-content visible, users would see the hero briefly, then
+          the portal would suddenly cover it. `.fade-out` hides it until the
+          portal explicitly reveals it (see IntroPortal.dismissPortal + its
+          safety useEffect). LoadingGroup on desktop also removes the class
+          when the WebGL scene finishes booting. */}
+      <div id="home-content" className="fade-out">
         <PhysicsSandboxSection />
         <VideoPanelSection />
         <HomeIntroSection />
