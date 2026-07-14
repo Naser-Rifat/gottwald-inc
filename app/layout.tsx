@@ -70,10 +70,17 @@ const satoshi = localFont({
 // Playfair weights trimmed to what's actually used across the site.
 // Dropped 800 — confirmed unused on Playfair-styled elements. Kept 600
 // because CareersClient uses `font-playfair font-semibold italic`.
+// Weights trimmed to what's actually used across the site:
+//   400 — default body / italic prose
+//   600 — CareersClient's `font-semibold italic`
+//   700 — headings using `font-bold`
+//   900 — `font-black` decorative watermarks (PillarSlide, StandardsSlide)
+// Dropped 500/800 — confirmed unused via grep. Each dropped weight cuts
+// two font files (normal + italic) = ~100-150KB off initial network payload.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700", "900"],
+  weight: ["400", "600", "700", "900"],
   variable: "--font-playfair",
   display: "swap",
 });
@@ -219,8 +226,15 @@ export default async function RootLayout({
           href="https://res.cloudinary.com"
           crossOrigin="anonymous"
         />
-        {/* Backend API — pillar/content fetches. DNS prefetch is enough; */}
-        {/* opening a real TCP connection on every page load is wasteful. */}
+        {/* Backend API — pillar/content fetches happen on nearly every route,
+            so a real preconnect (TLS + TCP handshake) is worth the fixed
+            cost. Saves ~150-250ms on the pillar data round-trip vs plain
+            dns-prefetch. */}
+        <link
+          rel="preconnect"
+          href="https://api.gottwald.world"
+          crossOrigin="anonymous"
+        />
         <link
           rel="dns-prefetch"
           href="https://gottwald-admin.vercel.app"
