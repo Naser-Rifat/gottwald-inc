@@ -1,8 +1,15 @@
 "use client";
 
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 
-import ShiftCanvas from "./ShiftCanvas";
+// ShiftCanvas pulls in three + @react-three/drei (~800KB). Static import
+// promoted these into shared vendor chunks that shipped to every route's
+// initial bundle (including the mobile home page). Dynamic import scopes
+// the WebGL load to /about visitors only. ssr:false — needs window/WebGL.
+const ShiftCanvas = dynamic(() => import("./ShiftCanvas"), {
+  ssr: false,
+});
 
 import { PROOF_PHASES } from "../_data/proofPhases";
 import { SHIFTS, SHIFT_ROMANS } from "../_data/shifts";

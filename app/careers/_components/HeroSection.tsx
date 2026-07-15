@@ -1,9 +1,17 @@
 "use client";
 
 import { type Ref } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 
-import CareersCanvas from "./CareersCanvas";
+// CareersCanvas pulls in three + @react-three/fiber (~600KB). Static import
+// promoted `three` into shared vendor chunks that leaked into every route's
+// initial bundle (including mobile home). Dynamic import keeps the WebGL
+// scene load-on-mount only for /careers visitors. ssr:false because the
+// canvas needs window/WebGL.
+const CareersCanvas = dynamic(() => import("./CareersCanvas"), {
+  ssr: false,
+});
 
 interface HeroSectionProps {
   /** Owned by the parent for the breathing-pulse animation target. */
