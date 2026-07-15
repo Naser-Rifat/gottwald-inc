@@ -105,6 +105,22 @@ export default async function Home() {
         </>
       )}
 
+      {/* SSR-visible semantic H1 for desktop — kept outside the `.fade-out`
+          wrapper so it's always present in the initial HTML for search
+          crawlers, screen readers, and Lighthouse's heading-structure audit.
+          On desktop the design H1 sits inside PhysicsSandboxSection which
+          starts at opacity:0 (portal exit reveals it), so audit tools that
+          check "H1 visibility" without evaluating post-load CSS may flag it.
+          This screen-reader-only H1 satisfies those audits and gives
+          assistive tech an anchor before the WebGL scene mounts. Zero visual
+          impact (`.sr-only` clips it to 1px). Skipped on mobile because
+          MobileHero already renders a visible H1. */}
+      {!isMobile && (
+        <h1 className="sr-only">
+          GOTT WALD Holding — Standards-Led Holding &amp; Operations, Tbilisi Georgia
+        </h1>
+      )}
+
       {/* Home-content ships with `.fade-out` (opacity 0) in the SSR HTML on
           DESKTOP. IntroPortal is client-only (`useSyncExternalStore` returns
           false on the first client render for hydration parity) — so if we
