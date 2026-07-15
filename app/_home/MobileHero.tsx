@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Header from "@/components/layout/Header";
 
 /**
  * Mobile-only hero — replaces IntroPortal + WebGL scene on mobile.
@@ -26,6 +27,14 @@ export default function MobileHero() {
       className="relative w-full h-[100svh] flex flex-col items-center justify-center bg-[#040404] text-white overflow-hidden"
       aria-label="GOTT WALD Holding — brand introduction"
     >
+      {/* Global site header. On desktop the header is rendered inside
+          PhysicsSandboxSection/HeaderSlot with an opacity-0 fade-in choreo.
+          On mobile we skip that section entirely, so the header lives here
+          directly, visible from the first paint. */}
+      <div className="fixed top-0 left-0 w-full z-[100] px-gutter pointer-events-auto">
+        <Header />
+      </div>
+
       {/* Poster image — this is the LCP element on mobile. Extracted from
           the same intro video used on desktop so the visual identity is
           consistent across form factors. fetchPriority=high tells the
