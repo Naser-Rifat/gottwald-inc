@@ -77,26 +77,6 @@ export default async function Home() {
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", url: "/" }])} />
 
-      {/* SSR-visible LCP anchor — Lighthouse needs a paintable element in
-          the initial HTML to measure LCP. `.fade-out` on home-content hides
-          the real hero to avoid a hydration flicker (see comment below), so
-          without this anchor mobile Lighthouse fails with NO_LCP.
-          Positioned behind the portal (portal is fixed z-9999) with near-
-          zero opacity — real users never see it. aria-hidden keeps it out
-          of the a11y tree. System font stack only (no webfont dependency)
-          so it paints in the first frame instead of at font-swap. */}
-      <h1
-        aria-hidden
-        className="fixed inset-0 flex items-center justify-center pointer-events-none select-none z-0 text-white/[0.02]"
-        style={{
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          fontSize: "clamp(4rem, 12vw, 12rem)",
-          fontWeight: 400,
-        }}
-      >
-        GOTT WALD
-      </h1>
-
       <WebGLCanvasLoader />
       <IntroPortal />
 
