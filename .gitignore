@@ -12,9 +12,13 @@ out/
 lighthouse/
 
 # env files (NEVER commit credentials)
-# .env is tracked intentionally as a safe template (no real secrets)
-.env.local
-.env*.local
+# NOTE: `.env.example` and `.env.local.example` are the ONLY env files
+# permitted in the tree — they must contain placeholders, never real
+# values. Every other .env variant is ignored to prevent secret leaks.
+.env
+.env.*
+!.env.example
+!.env.local.example
 
 # misc
 .DS_Store
