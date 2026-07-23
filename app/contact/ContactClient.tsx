@@ -175,15 +175,21 @@ export default function ContactClient() {
         {/* Content grid — left contact card, right form card. */}
         <section className="content-grid px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 relative">
           {/* Form Watermark — italic "office." ghost echo. */}
+          {/* Wrapped in an `overflow-hidden` container so the ghost text
+              can no longer push the viewport wider than the screen on
+              320 px mobile. Audit dated 2026-07-16 flagged /contact
+              rendering at 352 px on a 320 px viewport (horizontal scroll).
+              Font-size min tightened from 8rem to 4rem so it fits in
+              320 px without relying on the outer clip alone. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-[-5%] right-[-5vw] z-0 select-none opacity-30"
+            className="pointer-events-none absolute bottom-[-5%] right-[-5vw] z-0 select-none opacity-30 max-w-full overflow-hidden"
           >
             <span
               className="contact-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
               style={{
                 fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(8rem, 15vw, 20rem)",
+                fontSize: "clamp(4rem, 15vw, 20rem)",
               }}
             >
               office.

@@ -66,15 +66,19 @@ export default function BackgroundLayers() {
       </div>
 
       {/* Ghost echo — massive italic "contact." floats behind the headline */}
+      {/* Wrapped with `max-w-[100vw] overflow-hidden` to keep the ghost
+          text from pushing horizontal scroll into the viewport on mobile.
+          Font-size min tightened from 12rem to 6rem so it fits comfortably
+          within a 320 px width when scroll-parallax translates it. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-[10%] right-[-10vw] z-[-2] select-none opacity-40"
+        className="pointer-events-none fixed top-[10%] right-[-10vw] z-[-2] select-none opacity-40 max-w-[100vw] overflow-hidden"
       >
         <span
           className="contact-parallax-target block italic font-light text-white/[0.04] leading-[0.78] tracking-[-0.06em] whitespace-nowrap will-change-transform"
           style={{
             fontFamily: "var(--font-playfair)",
-            fontSize: "clamp(12rem, 25vw, 30rem)",
+            fontSize: "clamp(6rem, 25vw, 30rem)",
           }}
         >
           contact.
