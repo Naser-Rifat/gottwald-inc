@@ -43,26 +43,50 @@ function purgePillarCache(tag: string): void {
 // Server-to-server callers (Django backend firing on post_save signals)
 // don't send an Origin header, so they still work unaffected.
 
-// Production origins that legitimately call /api/revalidate. Anything not
-// on this list receives no Access-Control-Allow-Origin header and gets
-// rejected by the browser before the response reaches JS.
+// Origin allowlist per environment. Any Origin header not present in the
+// active set gets no Access-Control-Allow-Origin header — the browser
+// then rejects the response before it reaches JS.
+//
+// Environment split:
+//   Production  — only the public gottwald.world / admin.gottwald.world
+//                 domains. Leaked prod deploy cannot be reached from any
+//                 vercel.app preview URL or a localhost tab.
+//   Preview     — additionally allow the Vercel-issued alias URLs used
+//                 by preview / branch deployments for smoke testing.
+//   Local dev   — additionally allow localhost.
+
 const PRODUCTION_ALLOWED = [
   "https://admin.gottwald.world",     // custom admin panel (Vite)
-  "https://gottwald.world",           // public site (same-origin fetches still preflight in some modes)
-  "https://www.gottwald.world",       // www variant of the public site
+  "https://gottwald.world",           // public site
+  "https://www.gottwald.world",       // www variant
 ] as const;
 
-// Development-only additions. Kept out of production builds so a leaked
-// prod deploy can't be reached from localhost tabs.
-const DEV_ALLOWED =
-  process.env.NODE_ENV === "production"
-    ? ([] as string[])
-    : [
-        "http://localhost:5173",      // Vite dev server (admin panel)
-        "http://localhost:3000",      // Next.js dev / preview
-      ];
+const PREVIEW_ALLOWED = [
+  "https://gottwald-inc-hfaj.vercel.app",         // Vercel alias — main frontend preview
+  "https://gottwald-admin.vercel.app",            // Vercel alias — admin panel preview
+  "https://gottwald-visual-refresh.vercel.app",   // Vercel alias — visual-refresh branch
+] as const;
 
-const ALLOWED_ORIGINS = new Set<string>([...PRODUCTION_ALLOWED, ...DEV_ALLOWED]);
+const LOCAL_ALLOWED = [
+  "http://localhost:5173",            // Vite dev server (admin panel)
+  "http://localhost:3000",            // Next.js dev
+] as const;
+
+// Vercel sets VERCEL_ENV = 'production' | 'preview' | 'development'.
+// Fall back to NODE_ENV when running outside Vercel (self-hosted / local).
+const VERCEL_ENV = process.env.VERCEL_ENV;
+const IS_PROD = VERCEL_ENV === "production";
+const IS_PREVIEW = VERCEL_ENV === "preview";
+const IS_LOCAL = !VERCEL_ENV && process.env.NODE_ENV !== "production";
+
+const ALLOWED_ORIGINS = new Set<string>([
+  ...PRODUCTION_ALLOWED,
+  ...(IS_PREVIEW || IS_LOCAL ? PREVIEW_ALLOWED : []),
+  ...(IS_LOCAL ? LOCAL_ALLOWED : []),
+]);
+// Mark IS_PROD as used (kept for readability; the negative check happens
+// implicitly via IS_PREVIEW / IS_LOCAL above).
+void IS_PROD;
 
 function corsHeaders(request?: Request): HeadersInit {
   const requestOrigin = request?.headers.get("origin") ?? "";
