@@ -42,6 +42,107 @@ function extractEmail(text: string): string | undefined {
   return match ? match[0] : undefined;
 }
 
+/**
+ * Strict email validator — matches the ENTIRE input against a
+ * conservative RFC 5322 subset. Independent audit (2026-07-16)
+ * found the previous flow accepted syntactically invalid addresses
+ * (e.g. `not-an-email`) with HTTP 200 because it relied on the
+ * browser's built-in `type=email` check. Server-side enforcement
+ * is now mandatory.
+ */
+const EMAIL_STRICT_RE =
+  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+function isValidEmail(input: string | undefined): input is string {
+  if (!input) return false;
+  const trimmed = input.trim();
+  // RFC 5321: local-part ≤ 64, domain ≤ 255, total ≤ 254 in practice
+  if (trimmed.length < 3 || trimmed.length > 254) return false;
+  return EMAIL_STRICT_RE.test(trimmed);
+}
+
+// Per-field length caps — enforced server-side so the form can't be
+// abused to fill Resend logs or mailbox with megabytes of text.
+// Audit rating: "Maximum text lengths — 1/10, No effective server-side
+// limits found." These caps are generous but prevent abuse.
+const FIELD_LIMITS: Record<string, number> = {
+  name: 120,
+  contact: 254,
+  email: 254,
+  organization: 200,
+  company: 200,
+  website: 500,
+  country: 100,
+  message: 5000,
+  values_fit: 3000,
+  why_gott_wald: 3000,
+  proof: 2000,
+  references: 2000,
+  capabilities: 2000,
+  capacity: 500,
+  project_range: 500,
+  partnership_type: 100,
+  pillars: 300,
+  nda_readiness: 100,
+  position: 200,
+};
+
+/** Fields REQUIRED per form type. Additional fields are optional. */
+const REQUIRED_FIELDS: Record<string, string[]> = {
+  contact: ["name", "email", "message"],
+  partnership: ["name", "email", "company"],
+  careers: ["name", "email"],
+};
+
+interface ValidationError {
+  field: string;
+  reason: string;
+}
+
+/**
+ * Validate an incoming form submission. Returns list of problems; empty
+ * list means the submission is safe to forward to Resend.
+ */
+function validateSubmission(
+  type: string,
+  fields: Record<string, string>,
+): ValidationError[] {
+  const errors: ValidationError[] = [];
+
+  // 1. Required-field check (per form type). Unknown types fall back to
+  //    the contact form requirements as a safe default.
+  const required = REQUIRED_FIELDS[type] ?? REQUIRED_FIELDS.contact;
+  for (const key of required) {
+    const val = fields[key]?.trim();
+    if (!val) errors.push({ field: key, reason: "required" });
+  }
+
+  // 2. Email format check. If a canonical `email` field is present it
+  //    must parse as a valid address. The legacy `contact` field can
+  //    hold either an email or a phone number — only reject if it looks
+  //    like a bad email attempt (contains @ but doesn't parse).
+  if (fields.email !== undefined && !isValidEmail(fields.email)) {
+    errors.push({ field: "email", reason: "invalid_format" });
+  }
+  if (
+    fields.contact !== undefined &&
+    fields.contact.includes("@") &&
+    !isValidEmail(fields.contact)
+  ) {
+    errors.push({ field: "contact", reason: "invalid_format" });
+  }
+
+  // 3. Per-field length caps (defense against payload abuse).
+  for (const [key, value] of Object.entries(fields)) {
+    const cap = FIELD_LIMITS[key];
+    if (cap && value.length > cap) {
+      errors.push({ field: key, reason: `too_long_max_${cap}` });
+    }
+  }
+
+  return errors;
+}
+
 /* ─── LEGACY HTML BUILDERS ────────────────────────────────────
 const FIELD_LABELS: Record<string, string> = {
   // Partnership
@@ -117,6 +218,24 @@ export async function POST(req: NextRequest) {
 
     if (Object.keys(fields).length === 0 && attachments.length === 0) {
       return NextResponse.json({ error: "No form data provided." }, { status: 400 });
+    }
+
+    // ─── Server-side validation ─────────────────────────────────────────────
+    // The client (browser) MAY validate with `required` + `type=email`, but
+    // those are trivially bypassable via curl / disabled JS / crafted POST.
+    // The audit dated 2026-07-16 flagged this exact bypass: a request with
+    // `email=not-an-email` was previously accepted with HTTP 200. Every
+    // submission is now re-validated here before it can reach Resend.
+    const validationErrors = validateSubmission(type, fields);
+    if (validationErrors.length > 0) {
+      console.warn("[send-email] validation rejected", { ip, type, errors: validationErrors });
+      return NextResponse.json(
+        {
+          error: "Please check the form and try again.",
+          fields: validationErrors,
+        },
+        { status: 400 },
+      );
     }
 
     // Extract a valid replyTo email from the string safely
