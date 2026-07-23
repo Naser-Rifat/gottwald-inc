@@ -8,6 +8,15 @@ interface PillarSlideProps {
   pillar: Pillar;
   /** 1-indexed; drives the `.slide-N` className read by useScrollTimeline. */
   slideIndex: number;
+  /**
+   * Slides are stacked with `absolute inset-0` and revealed via GSAP, so the
+   * browser sees every image as "in viewport" and would fetch all 8 hero
+   * images upfront (~800 KB on mobile). This flag lets the parent gate the
+   * `<Image>` render — true only for slide 1 initially, then progressively
+   * expanded as scroll approaches later slides. Slides for which this is
+   * false render the surrounding link + hover regions but skip the Image.
+   */
+  shouldRenderImage: boolean;
   onHover: () => void;
   onUnhover: () => void;
 }
@@ -18,6 +27,7 @@ const FALLBACK_DETAILS =
 export default function PillarSlide({
   pillar,
   slideIndex,
+  shouldRenderImage,
   onHover,
   onUnhover,
 }: PillarSlideProps) {
@@ -38,15 +48,17 @@ export default function PillarSlide({
             className="relative w-[140%] h-[140%] lg:w-[120%] lg:h-[120%] max-h-[1000px] max-w-[1000px]"
             style={{ animation: "slowRotateFloat 15s ease-in-out infinite" }}
           >
-            <Image
-              src={pillar.image || `/images/our-work/${slideIndex}.png`}
-              alt={pillar.title}
-              fill
-              className="object-contain contrast-150 brightness-[1.15]"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              quality={80}
-              {...(slideIndex === 1 ? { priority: true } : { loading: "lazy" as const })}
-            />
+            {shouldRenderImage && (
+              <Image
+                src={pillar.image || `/images/our-work/${slideIndex}.png`}
+                alt={pillar.title}
+                fill
+                className="object-contain contrast-150 brightness-[1.15]"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={80}
+                {...(slideIndex === 1 ? { priority: true } : { loading: "lazy" as const })}
+              />
+            )}
 
             {/* Invisible hover target — shows/hides the ghost cursor */}
             <Link
