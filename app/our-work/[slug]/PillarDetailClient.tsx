@@ -681,7 +681,6 @@ export default function PillarDetailClient({ project, nextProject }: Props) {
                   sizes="(max-width: 1024px) 80vw, 50vw"
                   className="object-contain"
                   priority
-                  unoptimized
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
                     img.style.display = "none";
@@ -1827,7 +1826,6 @@ const ShowcaseBlock = forwardRef<HTMLElement, BlockProps>(
                 fill
                 sizes="100vw"
                 className="object-cover z-10"
-                unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
                   img.style.display = "none";
@@ -1941,7 +1939,6 @@ const CaseStudyBlock = forwardRef<HTMLElement, BlockProps>(
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover z-10"
-                  unoptimized
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
                     img.style.display = "none";
@@ -2062,7 +2059,6 @@ const StatsBlock = forwardRef<HTMLElement, BlockProps>(function StatsBlock(
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover z-10"
-                unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
                   img.style.display = "none";
@@ -2137,7 +2133,6 @@ const FeatureBlock = forwardRef<HTMLElement, BlockProps>(function FeatureBlock(
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover z-10"
-                unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
                   img.style.display = "none";
@@ -2252,7 +2247,6 @@ const FullbleedBlock = forwardRef<HTMLElement, BlockProps>(
                 fill
                 sizes="100vw"
                 className="object-cover z-10"
-                unoptimized
                 onError={(e) => {
                   const img = e.target as HTMLImageElement;
                   img.style.display = "none";
@@ -2408,7 +2402,6 @@ const RichTextBlock = forwardRef<HTMLElement, BlockProps>(
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover z-10"
-                  unoptimized
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
                     img.style.display = "none";
