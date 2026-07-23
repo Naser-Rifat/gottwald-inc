@@ -43,12 +43,26 @@ function purgePillarCache(tag: string): void {
 // Server-to-server callers (Django backend firing on post_save signals)
 // don't send an Origin header, so they still work unaffected.
 
-const ALLOWED_ORIGINS = new Set<string>([
-  "https://admin.gottwald.world", // production admin (Vercel)
-  "https://gottwald-admin.vercel.app", // Vercel-issued alias
-  "http://localhost:5173", // Vite dev
-  "http://localhost:3000", // Next.js dev proxy fallback
-]);
+// Production origins that legitimately call /api/revalidate. Anything not
+// on this list receives no Access-Control-Allow-Origin header and gets
+// rejected by the browser before the response reaches JS.
+const PRODUCTION_ALLOWED = [
+  "https://admin.gottwald.world",     // custom admin panel (Vite)
+  "https://gottwald.world",           // public site (same-origin fetches still preflight in some modes)
+  "https://www.gottwald.world",       // www variant of the public site
+] as const;
+
+// Development-only additions. Kept out of production builds so a leaked
+// prod deploy can't be reached from localhost tabs.
+const DEV_ALLOWED =
+  process.env.NODE_ENV === "production"
+    ? ([] as string[])
+    : [
+        "http://localhost:5173",      // Vite dev server (admin panel)
+        "http://localhost:3000",      // Next.js dev / preview
+      ];
+
+const ALLOWED_ORIGINS = new Set<string>([...PRODUCTION_ALLOWED, ...DEV_ALLOWED]);
 
 function corsHeaders(request?: Request): HeadersInit {
   const requestOrigin = request?.headers.get("origin") ?? "";
