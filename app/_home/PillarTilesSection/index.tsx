@@ -45,6 +45,14 @@ export default function PillarTilesSection({
   const cursorRef = useFollowCursor<HTMLDivElement>();
   const [activeSlide, setActiveSlide] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  // Slides are z-stacked at absolute inset-0 so native lazy-loading can't
+  // defer them (browser considers them all in viewport). We gate <Image>
+  // rendering manually via a monotonically-growing high-water mark:
+  // slide 1 always renders (priority, above the fold); every additional
+  // slide N joins the DOM once the scroll timeline reaches slide N-1
+  // (one-ahead prefetch). Grows only — scrolling back never unmounts an
+  // already-loaded image.
+  const [maxLoadedSlide, setMaxLoadedSlide] = useState(1);
 
   const displayPillars = pillars.slice(0, MAX_PILLARS);
 
@@ -60,10 +68,20 @@ export default function PillarTilesSection({
     [displayPillars],
   );
 
+  const handleActiveSlideChange = useCallback((idx: number) => {
+    setActiveSlide(idx);
+    // Grow the loaded high-water mark so slide N+1's image is in flight by
+    // the time the reveal animation starts. Never shrinks — scrolling back
+    // uses the already-fetched image without re-mounting.
+    if (idx > 0) {
+      setMaxLoadedSlide((prev) => (idx + 1 > prev ? idx + 1 : prev));
+    }
+  }, []);
+
   useScrollTimeline({
     sectionRef,
     slideCount: displayPillars.length,
-    onActiveSlideChange: setActiveSlide,
+    onActiveSlideChange: handleActiveSlideChange,
     onToggleActive: setIsActive,
   });
 
@@ -124,6 +142,7 @@ export default function PillarTilesSection({
           key={pillar.slug}
           pillar={pillar}
           slideIndex={idx + 1}
+          shouldRenderImage={idx + 1 <= maxLoadedSlide}
           onHover={showCursor}
           onUnhover={hideCursor}
         />

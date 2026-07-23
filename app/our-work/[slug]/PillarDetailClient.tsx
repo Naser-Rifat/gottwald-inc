@@ -1064,19 +1064,21 @@ function normalizeRichTextHtml(html: string): string {
   return raw.includes("\\n") ? raw.replaceAll("\\n", "<br/>") : raw;
 }
 
-/**
- * Format an offer price using Intl.NumberFormat so each currency renders in
- * its native conventional layout — €1.500, $1,500, CHF 1'500, £1,500, ₾1500.
- * Fixed to `de-DE` locale since the primary audience is German-speaking;
- * Intl still formats US/UK/CH/GE currency symbols correctly under this
- * locale. Falls back to a plain "<CCY> <amount>" string if Intl rejects the
- * currency code at runtime (defensive — should never happen in production
- * because the backend validates currency against a strict allow-list).
- */
+// Locale MUST be fixed (not `undefined`) — an undefined locale resolves to
+// the Node default on the server and `navigator.language` on the client,
+// producing different currency layouts (e.g. `$1,500.00` vs `1.500,00 $`)
+// and firing React hydration error #418 on every pillar page. Audit dated
+// 2026-07-16 flagged the repeated #418. Locking to `de-DE` matches the
+// primary German-speaking audience.
+//
+// Side-effect: NON-EUR currencies render in German number layout too —
+// USD as `1.500,00 $`, GBP as `1.500,00 £`, CHF as `1.500,00 CHF`. This is
+// intentional (matches DACH audience conventions); do NOT "fix" it back
+// to `undefined` — that reintroduces #418.
 function formatPrice(price: number, currency: string): string {
   try {
     const isWhole = price % 1 === 0;
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat("de-DE", {
       style: "currency",
       currency,
       minimumFractionDigits: isWhole ? 0 : 2,

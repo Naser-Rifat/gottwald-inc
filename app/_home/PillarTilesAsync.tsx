@@ -1,5 +1,5 @@
 import { getPillars } from "@/lib/api/pillars";
-import PillarTilesSection from "./PillarTilesSection";
+import PillarTilesSectionLazy from "./PillarTilesSectionLazy";
 
 /**
  * Server component that fetches pillars then renders PillarTilesSection.
@@ -16,5 +16,5 @@ import PillarTilesSection from "./PillarTilesSection";
  */
 export default async function PillarTilesAsync() {
   const pillars = await getPillars();
-  return <PillarTilesSection pillars={pillars} />;
+  return <PillarTilesSectionLazy pillars={pillars} />;
 }
