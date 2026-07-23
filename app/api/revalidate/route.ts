@@ -74,8 +74,10 @@ const LOCAL_ALLOWED = [
 
 // Vercel sets VERCEL_ENV = 'production' | 'preview' | 'development'.
 // Fall back to NODE_ENV when running outside Vercel (self-hosted / local).
+// Production is the default when neither env variable indicates otherwise
+// — the branch conditions below only OPEN UP the allowlist for lower
+// environments, so a missed detection fails safe.
 const VERCEL_ENV = process.env.VERCEL_ENV;
-const IS_PROD = VERCEL_ENV === "production";
 const IS_PREVIEW = VERCEL_ENV === "preview";
 const IS_LOCAL = !VERCEL_ENV && process.env.NODE_ENV !== "production";
 
@@ -84,9 +86,6 @@ const ALLOWED_ORIGINS = new Set<string>([
   ...(IS_PREVIEW || IS_LOCAL ? PREVIEW_ALLOWED : []),
   ...(IS_LOCAL ? LOCAL_ALLOWED : []),
 ]);
-// Mark IS_PROD as used (kept for readability; the negative check happens
-// implicitly via IS_PREVIEW / IS_LOCAL above).
-void IS_PROD;
 
 function corsHeaders(request?: Request): HeadersInit {
   const requestOrigin = request?.headers.get("origin") ?? "";
