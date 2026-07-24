@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import AboutClient from "./AboutClient";
 import JsonLd from "@/components/system/JsonLd";
 import { hreflangAlternates } from "@/lib/i18n";
+import { isMobileFromHeaders } from "@/lib/isMobile";
 import {
   breadcrumbJsonLd,
   aboutPageJsonLd,
@@ -55,7 +56,8 @@ const mathiasFounderNode = founderJsonLd({
   sameAs: founderProfiles.length > 0 ? founderProfiles : undefined,
 });
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const isMobile = await isMobileFromHeaders();
   return (
     <>
       <JsonLd
@@ -69,7 +71,7 @@ export default function AboutPage() {
           faqJsonLd(aboutFaqs),
         ]}
       />
-      <AboutClient />
+      <AboutClient isMobile={isMobile} />
     </>
   );
 }

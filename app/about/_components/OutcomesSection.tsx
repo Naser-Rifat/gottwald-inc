@@ -24,6 +24,16 @@ interface OutcomesSectionProps {
   /** Index of the currently active "shift" (0..4) driven by the parent
    *  ScrollTrigger observer reading `.shift-article` enter events. */
   activeShiftIndex: number;
+  /**
+   * Detected via UA server-side (isMobileFromHeaders). When true, skip
+   * ShiftCanvas entirely — its Three.js + drei bundle (~228 KB compressed,
+   * ~900 KB raw, spanning the top four /about chunks) never enters the
+   * network on mobile. Article content still reads fine without the
+   * decorative shader visuals. Deployed PSI (2026-07-24) flagged /about
+   * as score 38 mobile with 219 KB of unused JS — this canvas is the
+   * likely bulk of that number.
+   */
+  isMobile: boolean;
 }
 
 /**
@@ -44,6 +54,7 @@ export default function OutcomesSection({
   activeProofPhase,
   setActiveProofPhase,
   activeShiftIndex,
+  isMobile,
 }: OutcomesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -274,12 +285,19 @@ export default function OutcomesSection({
           </div>
 
           <div className="relative z-10 max-w-[1400px] grid lg:grid-cols-12 gap-8 lg:gap-20">
-            {/* Left Sticky Image Column */}
-            <div className="lg:col-span-5 relative hidden lg:block">
-              <div className="sticky top-[15vh] w-[80%] mx-auto aspect-square flex items-center justify-center pointer-events-none">
-                <ShiftCanvas activeIndex={activeShiftIndex} />
+            {/* Left Sticky Image Column — desktop only. The `hidden lg:block`
+                wrapper below hides it visually on mobile, but the lazy
+                ShiftCanvas chunk still fetched. Gating the whole subtree
+                behind `!isMobile` keeps its ~228 KB compressed / ~900 KB
+                raw Three.js + drei chunks out of the mobile network path
+                entirely. */}
+            {!isMobile && (
+              <div className="lg:col-span-5 relative hidden lg:block">
+                <div className="sticky top-[15vh] w-[80%] mx-auto aspect-square flex items-center justify-center pointer-events-none">
+                  <ShiftCanvas activeIndex={activeShiftIndex} />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Right Scrolling List */}
             <div className="lg:col-span-7 pb-[15vh]">
