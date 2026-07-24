@@ -38,7 +38,19 @@ import CtaSection from "./_components/CtaSection";
  * Each `<...Section />` below is a pure presentational component in
  * `app/about/_components/`. Static copy lives in `app/about/_data/`.
  */
-export default function AboutClient() {
+interface AboutClientProps {
+  /**
+   * Detected via UA in the server component (isMobileFromHeaders) so the
+   * decision is baked into the SSR HTML — no client-side flash. Forwarded
+   * to OutcomesSection so its ~228 KB compressed ShiftCanvas Three.js
+   * chunk is skipped entirely on mobile. Deployed PSI (2026-07-24)
+   * flagged /about at score 38 mobile with 19.6 s TBT and 219 KB of
+   * unused JS; ShiftCanvas is the likely bulk of that.
+   */
+  isMobile: boolean;
+}
+
+export default function AboutClient({ isMobile }: AboutClientProps) {
   const t = useTranslations("about");
   const tNav = useTranslations("nav");
   const router = useRouter();
@@ -596,6 +608,7 @@ export default function AboutClient() {
           activeProofPhase={activeProofPhase}
           setActiveProofPhase={setActiveProofPhase}
           activeShiftIndex={activeShiftIndex}
+          isMobile={isMobile}
         />
         <CasesSection
           activeCaseIndex={activeCaseIndex}
