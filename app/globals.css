@@ -840,9 +840,16 @@ section[data-journey].dwell-deepened::after {
    so framer-motion no longer lives on every route's always-loaded path.
    `backwards` fill keeps the start state visible at frame 0 so there's
    no flash of un-animated content before the first paint. */
+/* Opacity fade removed 2026-07-24: the previous `opacity: 0 → 1` across
+   an 800 ms `backwards` fill kept the entire route subtree effectively
+   invisible for the LCP measurement window, causing Lighthouse's trace
+   engine to return NO_LCP on the home page (deployed PSI on 2026-07-24
+   showed no Performance score). Keeping only the transform preserves
+   the slide-in polish for route transitions without hiding LCP
+   candidates from the trace engine at first paint. */
 @keyframes templateFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(10px); }
+  to   { transform: translateY(0); }
 }
 .template-fade-in {
   animation: templateFadeIn 0.8s ease-out backwards;
