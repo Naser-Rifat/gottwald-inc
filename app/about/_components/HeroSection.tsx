@@ -26,7 +26,24 @@ const AboutWaveCanvas = dynamic(() => import("./AboutWaveCanvas"), {
  * keeping them intact on this subtree is sufficient — no prop wiring
  * needed.
  */
-export default function HeroSection() {
+interface HeroSectionProps {
+  /**
+   * Detected via UA server-side (isMobileFromHeaders). When true, skip
+   * AboutWaveCanvas — a ~250 KB Three.js + R3F + 22,500-particle shader
+   * whose parse + first-frame render was inflating /about's mobile LCP
+   * to 6.1s and TBT to 920ms on deployed PSI (2026-07-26). The section's
+   * dark bg-[#070c14] fills the missing canvas; mobile visitors get the
+   * editorial headline over a solid backdrop instead of the ambient
+   * wave field. Desktop is unchanged.
+   *
+   * Complements the mobile-skip already applied to the ShiftCanvas
+   * (OutcomesSection). Between the two, no Three.js chunk ships on
+   * /about mobile.
+   */
+  isMobile: boolean;
+}
+
+export default function HeroSection({ isMobile }: HeroSectionProps) {
   const t = useTranslations("about");
 
   return (
@@ -34,10 +51,13 @@ export default function HeroSection() {
       data-journey="perception"
       className="hero-section about-hero-material relative w-full h-[100svh] bg-[#070c14] overflow-hidden flex items-end justify-center"
     >
-      {/* Ambient frequency-field anchor */}
-      <div className="about-visual about-visual--hero pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <AboutWaveCanvas />
-      </div>
+      {/* Ambient frequency-field anchor — desktop only. Mobile visitors
+          fall back to the section's solid dark background. */}
+      {!isMobile && (
+        <div className="about-visual about-visual--hero pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          <AboutWaveCanvas />
+        </div>
+      )}
 
       {/* Center — three-line editorial cascade with tension–release rhythm. */}
       <div className="relative z-10 w-full max-w-[1600px] mx-auto px-gutter pb-[15vh]">

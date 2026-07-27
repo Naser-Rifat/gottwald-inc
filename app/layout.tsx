@@ -77,12 +77,18 @@ const satoshi = localFont({
 //   900 — `font-black` decorative watermarks (PillarSlide, StandardsSlide)
 // Dropped 500/800 — confirmed unused via grep. Each dropped weight cuts
 // two font files (normal + italic) = ~100-150KB off initial network payload.
+// preload: false — Playfair is used only in below-fold sections.
+// Preloading it adds 79 KB to the initial bandwidth fight, which delays
+// React hydration and pushes TBT from ~50 ms to ~400+ ms. Without
+// preload, font-display:swap shows Georgia fallback until Playfair
+// downloads — imperceptible for below-fold text.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["normal", "italic"],
   weight: ["400", "600", "700", "900"],
   variable: "--font-playfair",
   display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {

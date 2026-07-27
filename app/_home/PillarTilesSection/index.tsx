@@ -43,16 +43,23 @@ export default function PillarTilesSection({
 }: PillarTilesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const cursorRef = useFollowCursor<HTMLDivElement>();
-  const [activeSlide, setActiveSlide] = useState(0);
+  // Start at 1 so the initial aurora reflects the first pillar accent.
+  // Not using handleActiveSlideChange for this because that would bump
+  // maxLoadedSlide, loading pillar images before the section is visible.
+  const [activeSlide, setActiveSlide] = useState(1);
   const [isActive, setIsActive] = useState(false);
   // Slides are z-stacked at absolute inset-0 so native lazy-loading can't
   // defer them (browser considers them all in viewport). We gate <Image>
-  // rendering manually via a monotonically-growing high-water mark:
-  // slide 1 always renders (priority, above the fold); every additional
-  // slide N joins the DOM once the scroll timeline reaches slide N-1
-  // (one-ahead prefetch). Grows only — scrolling back never unmounts an
-  // already-loaded image.
-  const [maxLoadedSlide, setMaxLoadedSlide] = useState(1);
+  // rendering manually via a monotonically-growing high-water mark.
+  //
+  // Start at 0 — no images in SSR HTML. An IntersectionObserver below
+  // bumps this to 1 when the section first enters the viewport, so
+  // slide-1's image loads only when the user is actually near this section,
+  // not on initial page load. This keeps pillar images out of the LCP
+  // critical path (home page H1 text wins LCP at ~1.5 s instead of a
+  // full-viewport pillar image at ~4.5 s).
+  // Grows monotonically — scrolling back reuses the cached image.
+  const [maxLoadedSlide, setMaxLoadedSlide] = useState(0);
 
   const displayPillars = pillars.slice(0, MAX_PILLARS);
 
@@ -76,6 +83,26 @@ export default function PillarTilesSection({
     if (idx > 0) {
       setMaxLoadedSlide((prev) => (idx + 1 > prev ? idx + 1 : prev));
     }
+  }, []);
+
+  // Bootstrap slide-1 image loading only when the section enters the viewport.
+  // Using IntersectionObserver (not eager load) keeps pillar images out of
+  // the initial page LCP critical path — the home page H1 text wins LCP at
+  // FCP time instead of a full-viewport pillar image loaded at startup.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMaxLoadedSlide((prev) => (prev < 1 ? 1 : prev));
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   useScrollTimeline({

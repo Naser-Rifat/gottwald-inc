@@ -56,7 +56,7 @@ export default function PillarSlide({
                 className="object-contain contrast-150 brightness-[1.15]"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 quality={80}
-                {...(slideIndex === 1 ? { priority: true } : { loading: "lazy" as const })}
+                loading="lazy"
               />
             )}
 

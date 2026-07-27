@@ -596,7 +596,7 @@ export default function AboutClient({ isMobile }: AboutClientProps) {
       </div>
 
       <main>
-        <HeroSection />
+        <HeroSection isMobile={isMobile} />
         <NarrativeCadenceSection />
         <ManifestoAxisSection />
         <PrinciplesIntroSection />

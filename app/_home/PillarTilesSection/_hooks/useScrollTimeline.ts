@@ -46,9 +46,14 @@ export function useScrollTimeline({
         },
       });
 
-      // First slide is visible immediately.
+      // First slide is visible immediately (GSAP visual state only).
+      // Do NOT call onActiveSlideChange here — calling it at mount would
+      // immediately bump maxLoadedSlide from 0→2, loading pillar images
+      // on the initial page load and pushing LCP from 1.5 s to ~4.5 s.
+      // PillarTilesSection initialises activeSlide=1 via its own useEffect,
+      // and the IntersectionObserver bootstraps maxLoadedSlide→1 when the
+      // section actually enters the viewport.
       gsap.set(".slide-1", { autoAlpha: 1, y: 0, scale: 1 });
-      onActiveSlideChange(1);
 
       for (let i = 2; i <= slideCount; i++) {
         const prev = `.slide-${i - 1}`;
