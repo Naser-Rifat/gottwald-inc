@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Header from "@/components/layout/Header";
+import MobileHeroBg from "./MobileHeroBg";
 
 /**
  * Mobile-only hero — replaces IntroPortal + WebGL scene on mobile.
@@ -11,13 +11,13 @@ import Header from "@/components/layout/Header";
  * only a black loading screen. Real Lighthouse mobile scores drop to
  * ~50 as a result.
  *
- * MobileHero renders the SAME brand chrome but with:
- *   • A static Cloudinary poster instead of the WebGL orb (auto-formatted
- *     to AVIF/WebP by Next.js Image + `fetchPriority=high` to prime the
- *     LCP element).
- *   • CSS-only fade-in (no gsap, no JS) so it paints in the first frame.
- *   • Scroll hint at the bottom — no "Start Experience" gate; the user
- *     just scrolls into the content sections.
+ * MobileHero renders a lightweight static hero:
+ *   • Dark bg (#040404) + radial gradient — no external image in SSR HTML,
+ *     nothing competes with the H1 text for LCP.
+ *   • Cloudinary poster fades in via JS after hydration (MobileHeroBg).
+ *     The URL is absent from SSR HTML so the browser never fetches it
+ *     during the LCP window — H1 text wins LCP at FCP time (~1.5 s).
+ *   • Zero GSAP, no Three.js on first paint.
  *
  * Desktop is unaffected — see app/page.tsx for the branching.
  */
@@ -35,26 +35,28 @@ export default function MobileHero() {
         <Header />
       </div>
 
-      {/* Poster image — this is the LCP element on mobile. Extracted from
-          the same intro video used on desktop so the visual identity is
-          consistent across form factors. fetchPriority=high tells the
-          browser to preload this before below-the-fold work. */}
-      <Image
-        src="https://res.cloudinary.com/dsfe6i3vf/video/upload/so_0,f_jpg,q_auto:eco,w_1200/v1778839135/gottwald_ixgowv.jpg"
-        alt=""
-        role="presentation"
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover opacity-40 pointer-events-none select-none"
+      {/* Deferred poster — backgroundImage injected via JS after hydration
+          so it is absent from SSR HTML and never an LCP candidate.
+          Starts at opacity-0; MobileHeroBg fades it to 0.25 on mount. */}
+      <div
+        id="mobile-hero-bg"
+        aria-hidden
+        className="absolute inset-0 pointer-events-none bg-center bg-cover"
+        style={{ opacity: 0, transition: "opacity 1.2s ease" }}
       />
 
-      {/* Vertical vignette so the brand text stays readable over the poster */}
+      {/* Radial vignette — keeps text readable over the poster */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(0,0,0,0.65) 100%)",
+        }}
       />
+
+      {/* Injects backgroundImage + triggers fade after hydration */}
+      <MobileHeroBg />
 
       <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-6 text-center">
         <span className="mb-4 block text-[11px] tracking-[0.4em] uppercase text-white/70 font-semibold">
@@ -70,7 +72,7 @@ export default function MobileHero() {
         </span>
       </div>
 
-      {/* Scroll indicator — CSS-only chevron with a native pulse animation.
+      {/* Scroll indicator — CSS-only with a native pulse animation.
           No JS, no framer-motion, no gsap. */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
         <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-medium mb-3">
@@ -78,6 +80,7 @@ export default function MobileHero() {
         </span>
         <span className="block w-px h-8 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
       </div>
+
     </section>
   );
 }
