@@ -37,7 +37,7 @@ export const sendAcknowledgementEmail = async ({
       return { success: false, error: "No submitter email to acknowledge" };
     }
 
-    const data = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: `GOTT WALD <${fromAddress}>`,
       to: [toEmail],
       // Replies to this auto-ack go to the real inbox, not a noreply black hole.
@@ -46,7 +46,14 @@ export const sendAcknowledgementEmail = async ({
       react: SubmitterAcknowledgement({ type, senderName }),
     });
 
-    return { success: true, ...(data ? {} : {}) };
+    // See sendVarificationEmail.tsx for why this check is required — the SDK
+    // resolves normally (doesn't throw) on API-level rejections.
+    if (error) {
+      console.error("[sendAcknowledgement] Resend API rejected the send:", error);
+      return { success: false, error };
+    }
+
+    return { success: true };
   } catch (error) {
     console.error("[sendAcknowledgement] failed:", error);
     return { success: false, error };

@@ -31,7 +31,7 @@ export const sendVarificationEmail = async ({
     const toAddress =
       process.env.RESEND_TO || "";
 
-    const data = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: `GOTT WALD <${fromAddress}>`,
       to: [toAddress],
       replyTo: replyToEmail,
@@ -42,6 +42,18 @@ export const sendVarificationEmail = async ({
         content: att.content,
       })),
     });
+
+    // resend.emails.send() does NOT throw for API-level rejections (invalid
+    // from address, unverified domain, bad API key, quota exceeded) — those
+    // resolve normally as { data: null, error: {...} }. Without this check,
+    // every one of those failure modes was silently reported as success to
+    // the caller, which is exactly what made "email delivery" unverifiable
+    // in the 2026-07-16 audit (Resend accepted the request, but nothing
+    // confirmed the message actually left Resend's servers).
+    if (error) {
+      console.error("Resend API rejected the send:", error);
+      return { success: false, error };
+    }
 
     return { success: true, data };
   } catch (error) {
