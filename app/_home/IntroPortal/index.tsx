@@ -103,7 +103,11 @@ export default function IntroPortal() {
         onComplete: () => setIsVisible(false),
       });
 
-      tl.to(".portal-reveal", {
+      // Includes .portal-hero-reveal (the H1) so it fades out alongside
+      // the rest of the portal content — it's excluded from the entrance
+      // opacity animation (see usePortalEntrance) but still needs to
+      // disappear on dismiss like everything else.
+      tl.to(".portal-reveal, .portal-hero-reveal", {
         y: -20,
         opacity: 0,
         duration: 0.6,

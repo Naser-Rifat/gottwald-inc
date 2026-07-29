@@ -7,8 +7,17 @@ interface PortalContentProps {
 
 /**
  * First-visit hero: eyebrow + brand title + subtitle + start CTA +
- * skip link. All revealed by the staggered `.portal-reveal` GSAP
- * animation owned by usePortalEntrance.
+ * skip link.
+ *
+ * The H1 carries `.portal-hero-reveal`, not `.portal-reveal` — it gets
+ * its own Phase-1 entrance in usePortalEntrance (transform-only, never
+ * opacity: 0) so it's a valid Largest Contentful Paint candidate from
+ * first paint. Everything else stays on the standard `.portal-reveal`
+ * staggered fade-in, which only plays once the WebGL scene finishes
+ * loading (`isLoaded`) — deployed PSI (2026-07-29) showed this kept
+ * the ENTIRE portal content (including the only large text on the
+ * page) invisible long enough that Lighthouse could never identify an
+ * LCP element, returning NO_LCP on desktop.
  */
 export default function PortalContent({
   onStart,
@@ -22,7 +31,16 @@ export default function PortalContent({
         </span>
       </div>
 
-      <h1 className="portal-reveal text-[clamp(2.5rem,8vw,8rem)] leading-[0.95] font-light tracking-[-0.03em] uppercase text-white mb-6">
+      {/* Inline transform matches usePortalEntrance's Phase-1 gsap.set()
+          starting value exactly. Without this, the H1 would render at
+          its natural (final) position in the SSR HTML, then visibly
+          snap down 20px the instant gsap.set() runs post-hydration,
+          before animating back up — a discontinuity that's only
+          visible now that this element is never opacity: 0. */}
+      <h1
+        className="portal-hero-reveal text-[clamp(2.5rem,8vw,8rem)] leading-[0.95] font-light tracking-[-0.03em] uppercase text-white mb-6"
+        style={{ transform: "translateY(20px)" }}
+      >
         GOTT WALD<br />HOLDING
       </h1>
 
