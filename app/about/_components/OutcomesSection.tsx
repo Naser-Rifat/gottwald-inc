@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 // ShiftCanvas pulls in three + @react-three/drei (~800KB). Static import
@@ -62,6 +62,36 @@ export default function OutcomesSection({
   // off-screen — see the hook for the rationale (large blurred
   // composite layers are expensive even when not in view).
   usePauseAnimationsOffscreen(sectionRef);
+
+  // Mount ShiftCanvas only once this section scrolls near the viewport,
+  // instead of the moment OutcomesSection renders. Deployed PSI desktop
+  // (2026-07-31) showed /about at TBT 20.87s / 26.6s main-thread work —
+  // ShiftCanvas's Three.js + drei init was very likely running
+  // immediately on load despite sitting well below the fold, where no
+  // user sees it for several seconds of real scrolling. rootMargin
+  // starts the fetch/mount ~300px before the section is actually in
+  // view, so there's no visible pop-in for a normally-scrolling user.
+  // A standard Lighthouse run never scrolls, so this reliably keeps
+  // the cost out of the TBT/main-thread measurement window — unlike a
+  // requestIdleCallback-based defer, which does NOT reliably reduce
+  // TBT for content Lighthouse still processes during its trace
+  // (see feedback_lighthouse_defer_gotcha in project memory).
+  const [isNearViewport, setIsNearViewport] = useState(false);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || isMobile) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isMobile]);
 
   return (
     <section
@@ -290,11 +320,15 @@ export default function OutcomesSection({
                 ShiftCanvas chunk still fetched. Gating the whole subtree
                 behind `!isMobile` keeps its ~228 KB compressed / ~900 KB
                 raw Three.js + drei chunks out of the mobile network path
-                entirely. */}
+                entirely. `isNearViewport` additionally defers desktop
+                mount until this section scrolls near view — see the
+                IntersectionObserver above for why. */}
             {!isMobile && (
               <div className="lg:col-span-5 relative hidden lg:block">
                 <div className="sticky top-[15vh] w-[80%] mx-auto aspect-square flex items-center justify-center pointer-events-none">
-                  <ShiftCanvas activeIndex={activeShiftIndex} />
+                  {isNearViewport && (
+                    <ShiftCanvas activeIndex={activeShiftIndex} />
+                  )}
                 </div>
               </div>
             )}

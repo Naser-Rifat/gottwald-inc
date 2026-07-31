@@ -227,11 +227,19 @@ export default function IntroPortalCanvas() {
     <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
       <Canvas
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-        // dpr cap 1.5: retina 2.0 is fragment-shader expensive and the soft
-        // noise shader is visually identical at 1.5. antialias off because
-        // a fullscreen quad has no geometry edges to alias. alpha kept on
-        // because the parent uses mix-blend-screen compositing.
-        dpr={[1, 1.5]}
+        // dpr locked to 1.0 (was capped at 1.5): the fragment shader runs
+        // 6 recursive simplex-noise calls per pixel every frame — cost
+        // scales directly with pixel count, so dropping from 1.5x to 1.0x
+        // cuts fragment-shader work by ~55% (1.5² / 1² = 2.25x fewer
+        // pixels processed). Deployed PSI (2026-07-31) showed the home
+        // page desktop at 23.3s main-thread work with NO_LCP even after
+        // the H1 visibility fix, isolating this shader as the remaining
+        // cost. The soft noise pattern is visually near-identical at 1.0x
+        // — there's no sharp geometry here for retina scaling to help.
+        // antialias off because a fullscreen quad has no geometry edges
+        // to alias. alpha kept on because the parent uses mix-blend-screen
+        // compositing.
+        dpr={[1, 1]}
         gl={{ antialias: false, powerPreference: "high-performance", alpha: true }}
       >
         <PortalMaterial />
