@@ -1,4 +1,4 @@
-import { resend } from "./index";
+import { getResendClient } from "./index";
 import SubmitterAcknowledgement from "@/emails/submitterAcknowledgement";
 
 interface AcknowledgementInput {
@@ -37,7 +37,7 @@ export const sendAcknowledgementEmail = async ({
       return { success: false, error: "No submitter email to acknowledge" };
     }
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResendClient().emails.send({
       from: `GOTT WALD <${fromAddress}>`,
       to: [toEmail],
       // Replies to this auto-ack go to the real inbox, not a noreply black hole.

@@ -1,4 +1,4 @@
-import { resend } from "./index";
+import { getResendClient } from "./index";
 import VarificationEmail from "@/emails/varificationEmail";
 
 interface SubmitterData {
@@ -31,7 +31,7 @@ export const sendVarificationEmail = async ({
     const toAddress =
       process.env.RESEND_TO || "";
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: `GOTT WALD <${fromAddress}>`,
       to: [toAddress],
       replyTo: replyToEmail,
