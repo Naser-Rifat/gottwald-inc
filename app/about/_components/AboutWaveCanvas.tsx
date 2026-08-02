@@ -5,7 +5,15 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // ─── THE GOTT WALD MATRIX (COMPLEXITY INTO INEVITABILITY) ────────────────────
-const GRID_SIZE = 150;
+// GRID_SIZE reduced from 150 to 110 (22,500 -> 12,100 points, ~46% fewer).
+// Deployed PSI on /about desktop (2026-08-02) showed 60/100 with 28.9s
+// main-thread work and TBT 21.35s even after ShiftCanvas (the OTHER
+// WebGL scene on this page) was confirmed lazy-loaded and live — proving
+// this canvas, not ShiftCanvas, is the dominant cost. Every point runs
+// the same 5-layered-wave vertex shader every frame; particle count is
+// the single biggest lever on that per-frame cost. Paired with
+// antialias: false below.
+const GRID_SIZE = 110;
 const PARTICLE_COUNT = GRID_SIZE * GRID_SIZE;
 const SPREAD = 0.6;
 const OFFSET = (GRID_SIZE * SPREAD) / 2;
@@ -260,8 +268,12 @@ export default function AboutWaveCanvas({
     <div className={className} style={{ opacity, transition: 'opacity 1s ease-in-out' }}>
       <Canvas
         camera={{ position: [0, 0, 15], fov: 45 }}
+        // antialias off: points are round-clipped in the fragment shader
+        // (discard past a radius), not geometry edges — AA cost buys
+        // little here relative to its per-frame overhead at 12,100+
+        // points. See GRID_SIZE comment above for the full perf context.
         gl={{
-          antialias: true,
+          antialias: false,
           alpha: true,
           toneMapping: THREE.NoToneMapping,
         }}
