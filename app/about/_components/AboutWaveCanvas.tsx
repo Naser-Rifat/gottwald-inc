@@ -5,15 +5,20 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // ─── THE GOTT WALD MATRIX (COMPLEXITY INTO INEVITABILITY) ────────────────────
-// GRID_SIZE reduced from 150 to 110 (22,500 -> 12,100 points, ~46% fewer).
-// Deployed PSI on /about desktop (2026-08-02) showed 60/100 with 28.9s
-// main-thread work and TBT 21.35s even after ShiftCanvas (the OTHER
-// WebGL scene on this page) was confirmed lazy-loaded and live — proving
-// this canvas, not ShiftCanvas, is the dominant cost. Every point runs
-// the same 5-layered-wave vertex shader every frame; particle count is
-// the single biggest lever on that per-frame cost. Paired with
-// antialias: false below.
-const GRID_SIZE = 110;
+// GRID_SIZE reduced 150 -> 110 -> 40 across two passes (22,500 -> 1,600
+// points, ~93% fewer than original). The first cut (150->110, ~46%
+// fewer) had almost no measurable effect on deployed PSI — TBT and
+// main-thread work stayed within noise of the pre-fix baseline, and
+// "20 long tasks found" was IDENTICAL before and after. That flat
+// result, combined with a local trace showing this same code at TBT
+// 590ms vs PSI's 20.76s on the identical deploy, points to PSI's test
+// infra likely running WebGL without hardware acceleration (software/
+// CPU-emulated rendering) — a regime where shader cost scales far
+// worse with complexity than on a real GPU, so a modest particle cut
+// barely registers. This second, much larger cut is a genuine visual
+// tradeoff, paired with a simplified vertex shader (see bWave calls
+// below) and a proportionally thinner wireframe mesh.
+const GRID_SIZE = 40;
 const PARTICLE_COUNT = GRID_SIZE * GRID_SIZE;
 const SPREAD = 0.6;
 const OFFSET = (GRID_SIZE * SPREAD) / 2;
@@ -132,12 +137,13 @@ const ManifestoMatrixFlow = ({
       vec2 p = pos.xy;
       vPositionXY = p; 
       
-      // The exact mathematical coherence of the Gott Wald brand
+      // Reduced from 5 layered waves to the 2 highest-amplitude ones
+      // (4.2 and 2.4) — these dominate the visible silhouette; the
+      // three dropped layers (1.8, 0.55, 0.75 amplitude) added fine
+      // surface detail at a cost of 3 extra sin/dot/normalize calls
+      // per vertex, every frame, across every point in the grid.
       float z  = bWave(p, 0.030, 0.13, 4.2, vec2( 0.94,  0.34));
-      z += bWave(p, 0.078, 0.24, 1.8, vec2( 0.52,  0.85));
-      z += bWave(p, 0.155, 0.46, 0.55, vec2(-0.36,  0.93));
       z += bWave(p, 0.044, 0.10, 2.4, vec2(-0.80,  0.60));
-      z += bWave(p, 0.112, 0.32, 0.75, vec2( 0.70, -0.72));
       
       // Interactive Mouse Ripple
       vec2 md = p - uMouse;
@@ -219,7 +225,10 @@ const ManifestoMatrixFlow = ({
       
       {/* LAYER 1: The Subtle Quantum Net (Wireframe Mesh) */}
       <mesh ref={wireframeRef} position={[0, 0, -0.1]}>
-        <planeGeometry args={[GRID_SIZE * SPREAD, GRID_SIZE * SPREAD, 60, 60]} />
+        {/* Segment count cut 60,60 -> 24,24 alongside the GRID_SIZE
+            reduction above — same rationale, this mesh runs the
+            identical vertex shader per vertex. */}
+        <planeGeometry args={[GRID_SIZE * SPREAD, GRID_SIZE * SPREAD, 24, 24]} />
         <shaderMaterial
           uniforms={uniforms}
           transparent={true}
